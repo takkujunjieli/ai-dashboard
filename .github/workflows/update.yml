@@ -37,3 +37,25 @@ jobs:
           git add data
           git diff --cached --quiet || git commit -m "chore: 更新数据 $(date -u +%F\ %R)"
           git push
+
+  # 机器人提交不会触发分支式 Pages 构建,所以在这里直接用工作流部署 Pages
+  deploy:
+    needs: update
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main   # 取分支最新提交,包含 update 任务刚推送的数据
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
