@@ -98,18 +98,36 @@ function renderRecommendations(m) {
   $("recommendations").innerHTML = rows.join("") || `<div class="empty">暂无数据</div>`;
 }
 
-/* ---------- 公司新闻(Finnhub) ---------- */
+/* ---------- 公司新闻(Finnhub),按股票筛选 ---------- */
 function renderCompanyNews(m) {
   const all = [];
   for (const [sym, list] of Object.entries(m.company_news || {})) {
     for (const n of list || []) all.push({ ...n, sym });
   }
   all.sort((a, b) => (b.datetime || 0) - (a.datetime || 0));
-  $("company-news").innerHTML = all.slice(0, 30).map((n) => `<div class="item">
-    <div class="meta"><span class="tag">${esc(n.sym)}</span>${esc(n.source || "")} · ${timeAgo(new Date((n.datetime || 0) * 1000).toISOString())}</div>
-    <div class="title"><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.headline)}</a></div>
-    ${n.summary ? `<div class="summary">${esc(n.summary.slice(0, 200))}</div>` : ""}
-  </div>`).join("") || `<div class="empty">暂无数据</div>`;
+  const syms = ["all", ...new Set(all.map((n) => n.sym))];
+  let active = "all";
+
+  const draw = () => {
+    const shown = all.filter((n) => active === "all" || n.sym === active).slice(0, 50);
+    $("company-news").innerHTML = shown.map((n) => `<div class="item">
+      <div class="meta"><span class="tag">${esc(n.sym)}</span>${esc(n.source || "")} · ${timeAgo(new Date((n.datetime || 0) * 1000).toISOString())}</div>
+      <div class="title"><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.headline)}</a></div>
+      ${n.summary ? `<div class="summary">${esc(n.summary.slice(0, 200))}</div>` : ""}
+    </div>`).join("") || `<div class="empty">暂无数据</div>`;
+  };
+
+  $("news-filters").innerHTML = syms.map((s) =>
+    `<button data-sym="${esc(s)}" class="${s === active ? "active" : ""}">${s === "all" ? "全部" : esc(s)}</button>`
+  ).join("");
+  $("news-filters").addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button");
+    if (!btn) return;
+    active = btn.dataset.sym;
+    [...$("news-filters").children].forEach((b) => b.classList.toggle("active", b === btn));
+    draw();
+  });
+  draw();
 }
 
 /* ---------- 信息流(RSS) ---------- */
@@ -119,7 +137,7 @@ function renderFeeds(f) {
   let active = "all";
 
   const draw = () => {
-    const shown = items.filter((i) => active === "all" || i.category === active).slice(0, 80);
+    const shown = items.filter((i) => active === "all" || i.category === active).slice(0, 120);
     $("feeds").innerHTML = shown.map((i) => `<div class="item">
       <div class="meta"><span class="tag ${esc(i.category)}">${CAT_LABEL[i.category] || esc(i.category)}</span>${esc(i.source)} · ${timeAgo(i.published)}</div>
       <div class="title"><a href="${esc(i.link)}" target="_blank" rel="noopener">${esc(i.title)}</a></div>
@@ -151,8 +169,28 @@ function renderErrors(m, f) {
     : "";
 }
 
+/* ---------- Tab 切换(支持 #news / #feeds 直达) ---------- */
+function initTabs() {
+  const nav = $("nav");
+  const names = ["overview", "news", "feeds"];
+  const activate = (name) => {
+    document.querySelectorAll(".tab-panel").forEach((p) => p.classList.toggle("active", p.id === "tab-" + name));
+    nav.querySelectorAll(".tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === name));
+  };
+  nav.addEventListener("click", (ev) => {
+    const btn = ev.target.closest(".tab");
+    if (!btn) return;
+    history.replaceState(null, "", "#" + btn.dataset.tab);
+    activate(btn.dataset.tab);
+    window.scrollTo(0, 0);
+  });
+  const initial = location.hash.slice(1);
+  if (names.includes(initial)) activate(initial);
+}
+
 /* ---------- 入口 ---------- */
 (async function main() {
+  initTabs();
   const [market, feeds] = await Promise.all([
     loadJSON("data/market.json"),
     loadJSON("data/feeds.json"),

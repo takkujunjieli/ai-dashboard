@@ -42,11 +42,18 @@ a:hover { text-decoration: underline; }
 .up { color: var(--up); }
 .down { color: var(--down); }
 
-/* 导航 */
-nav { position: sticky; top: 0; z-index: 5; display: flex; gap: 4px; flex-wrap: wrap;
+/* Tab 导航 */
+nav { position: sticky; top: 0; z-index: 5; display: flex; gap: 6px; flex-wrap: wrap;
   padding: 10px 0; background: var(--bg); border-bottom: 1px solid var(--border); }
-nav a { padding: 5px 12px; border-radius: 16px; font-size: 13px; color: var(--muted); }
-nav a:hover { background: var(--card); color: var(--text); text-decoration: none; }
+nav .tab {
+  padding: 7px 16px; border-radius: 18px; font-size: 14px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--card); color: var(--muted);
+}
+nav .tab:hover { background: var(--card-hover); color: var(--text); }
+nav .tab.active { background: var(--accent); border-color: var(--accent); color: #0b1020; font-weight: 600; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
 
 /* 卡片和表格 */
 .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }

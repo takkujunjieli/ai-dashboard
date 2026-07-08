@@ -15,39 +15,44 @@
 <section id="quotes-strip" class="quotes-strip"></section>
 
 <nav id="nav">
-  <a href="#sec-earnings">财报日历</a>
-  <a href="#sec-surprises">最近财报</a>
-  <a href="#sec-analysts">分析师评级</a>
-  <a href="#sec-news">公司新闻</a>
-  <a href="#sec-feeds">信息流</a>
+  <button class="tab active" data-tab="overview">📊 概览</button>
+  <button class="tab" data-tab="news">📰 公司新闻</button>
+  <button class="tab" data-tab="feeds">🗞️ 信息流</button>
 </nav>
 
 <main>
-  <section id="sec-earnings">
-    <h2>📅 财报日历 <span class="muted">(过去 7 天 ~ 未来 21 天)</span></h2>
-    <div id="earnings-calendar" class="card"></div>
-  </section>
+  <div id="tab-overview" class="tab-panel active">
+    <section id="sec-earnings">
+      <h2>📅 财报日历 <span class="muted">(过去 7 天 ~ 未来 21 天)</span></h2>
+      <div id="earnings-calendar" class="card"></div>
+    </section>
 
-  <section id="sec-surprises">
-    <h2>💰 最近财报 EPS(实际 vs 预期)</h2>
-    <div id="earnings-surprises" class="grid"></div>
-  </section>
+    <section id="sec-surprises">
+      <h2>💰 最近财报 EPS(实际 vs 预期)</h2>
+      <div id="earnings-surprises" class="grid"></div>
+    </section>
 
-  <section id="sec-analysts">
-    <h2>🎯 分析师评级</h2>
-    <div id="recommendations" class="card"></div>
-  </section>
+    <section id="sec-analysts">
+      <h2>🎯 分析师评级</h2>
+      <div id="recommendations" class="card"></div>
+    </section>
+  </div>
 
-  <section id="sec-news">
-    <h2>📰 公司新闻 <span class="muted">(近 3 天,来自 Finnhub)</span></h2>
-    <div id="company-news" class="card list"></div>
-  </section>
+  <div id="tab-news" class="tab-panel">
+    <section id="sec-news">
+      <h2>📰 公司新闻 <span class="muted">(近 3 天,来自 Finnhub)</span></h2>
+      <div id="news-filters" class="chips"></div>
+      <div id="company-news" class="card list"></div>
+    </section>
+  </div>
 
-  <section id="sec-feeds">
-    <h2>🗞️ 信息流 <span class="muted">(新闻源 / 大V / YouTube / 社区)</span></h2>
-    <div id="feed-filters" class="chips"></div>
-    <div id="feeds" class="card list"></div>
-  </section>
+  <div id="tab-feeds" class="tab-panel">
+    <section id="sec-feeds">
+      <h2>🗞️ 信息流 <span class="muted">(新闻源 / 大V / YouTube / 社区)</span></h2>
+      <div id="feed-filters" class="chips"></div>
+      <div id="feeds" class="card list"></div>
+    </section>
+  </div>
 
   <section id="sec-errors">
     <div id="errors" class="muted small"></div>
