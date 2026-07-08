@@ -27,18 +27,18 @@ sources:
   # ---------- YouTube 频道 ----------
   # 固定格式: https://www.youtube.com/feeds/videos.xml?channel_id=<频道ID>
   # 找频道ID: 打开频道主页 → 右键查看网页源代码 → 搜索 "channelId"
-  - name: Bloomberg Television
-    category: youtube
-    url: https://www.youtube.com/feeds/videos.xml?channel_id=UCIALMKvObZNtJ6AmdCLP7Lg
+  # - name: Bloomberg Television
+  #   category: youtube
+  #   url: https://www.youtube.com/feeds/videos.xml?channel_id=UCIALMKvObZNtJ6AmdCLP7Lg
 
   # ---------- Reddit ----------
   - name: r/stocks 热帖
     category: community
     url: https://www.reddit.com/r/stocks/hot/.rss?limit=25
 
-  # - name: r/wallstreetbets 热帖
-  #   category: community
-  #   url: https://www.reddit.com/r/wallstreetbets/hot/.rss?limit=25
+  - name: r/wallstreetbets 热帖
+    category: community
+    url: https://www.reddit.com/r/wallstreetbets/hot/.rss?limit=25
 
   # ---------- X / Twitter 大V(官方 API 收费,走 RSSHub 桥接) ----------
   # 公共实例 rsshub.app 可能限流,稳定使用建议自建 RSSHub(免费,可部署在 Vercel)
