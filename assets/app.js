@@ -137,9 +137,15 @@ function renderFeeds(f) {
   let active = "all";
 
   const draw = () => {
-    const shown = items.filter((i) => active === "all" || i.category === active).slice(0, 120);
+    let shown = items.filter((i) => active === "all" || i.category === active);
+    if (active === "community") {
+      // 社区帖按热度(点赞 + 2×评论)排序,无热度数据时退回时间序
+      shown = [...shown].sort((a, b) =>
+        (b.heat || 0) - (a.heat || 0) || (b.published || "").localeCompare(a.published || ""));
+    }
+    shown = shown.slice(0, 120);
     $("feeds").innerHTML = shown.map((i) => `<div class="item">
-      <div class="meta"><span class="tag ${esc(i.category)}">${CAT_LABEL[i.category] || esc(i.category)}</span>${esc(i.source)} · ${timeAgo(i.published)}</div>
+      <div class="meta"><span class="tag ${esc(i.category)}">${CAT_LABEL[i.category] || esc(i.category)}</span>${esc(i.source)} · ${timeAgo(i.published)}${i.heat != null ? ` · <span class="heat">▲ ${i.score} · 💬 ${i.comments}</span>` : ""}</div>
       <div class="title"><a href="${esc(i.link)}" target="_blank" rel="noopener">${esc(i.title)}</a></div>
       ${i.summary ? `<div class="summary">${esc(i.summary)}</div>` : ""}
     </div>`).join("") || `<div class="empty">暂无内容</div>`;

@@ -5,6 +5,7 @@
 """
 import calendar
 import json
+import os
 import re
 import time
 from datetime import datetime, timedelta, timezone
@@ -16,6 +17,27 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 UA = "stock-dashboard/1.0 (personal RSS reader)"  # Reddit 等站点会拦截默认 python UA
+
+# Reddit 已封锁匿名 JSON API,拿点赞/评论数需要免费的 OAuth 凭证
+# 注册: https://www.reddit.com/prefs/apps → create app → 类型选 script
+REDDIT_ID = os.environ.get("REDDIT_CLIENT_ID", "").strip()
+REDDIT_SECRET = os.environ.get("REDDIT_CLIENT_SECRET", "").strip()
+_reddit_token: str | None = None
+
+
+def reddit_token() -> str:
+    global _reddit_token
+    if _reddit_token is None:
+        resp = requests.post(
+            "https://www.reddit.com/api/v1/access_token",
+            auth=(REDDIT_ID, REDDIT_SECRET),
+            data={"grant_type": "client_credentials"},
+            headers={"User-Agent": UA},
+            timeout=30,
+        )
+        resp.raise_for_status()
+        _reddit_token = resp.json()["access_token"]
+    return _reddit_token
 MAX_PER_SOURCE = 20
 MAX_AGE_DAYS = 10
 SUMMARY_LEN = 280
@@ -33,9 +55,41 @@ def entry_time(entry) -> datetime | None:
 
 def clean_summary(entry) -> str:
     raw = getattr(entry, "summary", "") or ""
-    text = TAG_RE.sub(" ", raw)
+    return clean_text(raw)
+
+
+def clean_text(raw: str) -> str:
+    text = TAG_RE.sub(" ", raw or "")
     text = re.sub(r"\s+", " ", text).strip()
     return text[:SUMMARY_LEN] + ("…" if len(text) > SUMMARY_LEN else "")
+
+
+def parse_reddit(src: dict, payload: dict, cutoff: datetime) -> list[dict]:
+    """解析 Reddit JSON API,带点赞/评论数,热度 = 点赞 + 2×评论(Reddit 不公开浏览数)。"""
+    items = []
+    for child in payload.get("data", {}).get("children", []):
+        d = child.get("data", {})
+        if d.get("stickied"):  # 跳过置顶公告帖
+            continue
+        ts = datetime.fromtimestamp(d.get("created_utc", 0), tz=timezone.utc)
+        if ts < cutoff:
+            continue
+        score = int(d.get("score", 0))
+        comments = int(d.get("num_comments", 0))
+        items.append({
+            "source": src["name"],
+            "category": src.get("category", "community"),
+            "title": (d.get("title") or "").strip(),
+            "link": "https://www.reddit.com" + d.get("permalink", ""),
+            "published": ts.isoformat(timespec="seconds"),
+            "summary": clean_text(d.get("selftext", "")),
+            "score": score,
+            "comments": comments,
+            "heat": score + 2 * comments,
+        })
+        if len(items) >= MAX_PER_SOURCE:
+            break
+    return items
 
 
 def main() -> None:
@@ -43,15 +97,36 @@ def main() -> None:
     cutoff = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
     items, errors = [], []
 
+    reddit_degraded = False
     for idx, src in enumerate(sources):
         if idx:
             time.sleep(2)  # 源之间稍作间隔,避免同站(如 Reddit)限流
         try:
-            resp = requests.get(src["url"], headers={"User-Agent": UA}, timeout=30)
+            url, headers = src["url"], {"User-Agent": UA}
+            is_reddit = "reddit.com" in url and ".json" in url
+            if is_reddit:
+                if REDDIT_ID and REDDIT_SECRET:
+                    # 官方 OAuth API: 免费 100 次/分钟,能拿到点赞/评论数
+                    url = url.replace("www.reddit.com", "oauth.reddit.com").replace(".json", "")
+                    headers["Authorization"] = f"bearer {reddit_token()}"
+                else:
+                    # 匿名 JSON 已被 Reddit 封锁,回退到 RSS(无热度数据)
+                    url = re.sub(r"\.json", "/.rss", url)
+                    is_reddit = False
+                    reddit_degraded = True
+
+            resp = requests.get(url, headers=headers, timeout=30)
             if resp.status_code == 429:  # 限流则等待后重试一次
                 time.sleep(15)
-                resp = requests.get(src["url"], headers={"User-Agent": UA}, timeout=30)
+                resp = requests.get(url, headers=headers, timeout=30)
             resp.raise_for_status()
+
+            if is_reddit:
+                new_items = parse_reddit(src, resp.json(), cutoff)
+                items.extend(new_items)
+                print(f"✓ {src['name']}: {len(new_items)} 条(含热度)")
+                continue
+
             feed = feedparser.parse(resp.content)
             if feed.bozo and not feed.entries:
                 raise ValueError(f"RSS 解析失败: {feed.bozo_exception}")
@@ -75,6 +150,12 @@ def main() -> None:
         except Exception as exc:  # noqa: BLE001 单个源失败不阻塞整体
             errors.append({"source": src["name"], "error": str(exc)})
             print(f"✗ {src['name']}: {exc}")
+
+    if reddit_degraded:
+        errors.append({
+            "source": "Reddit",
+            "error": "未配置 REDDIT_CLIENT_ID/SECRET,已回退到 RSS(社区帖无热度数据),配置方法见 README",
+        })
 
     items.sort(key=lambda i: i["published"] or "", reverse=True)
     dest = ROOT / "data" / "feeds.json"

@@ -30,6 +30,21 @@ gh secret set FINNHUB_API_KEY   # 粘贴你的 key
 
 之后 Actions 会在每个交易日盘前(UTC 13:00)和每天盘后(UTC 22:30)自动更新。
 
+## 可选: Reddit 热度排序
+
+Reddit 已封锁匿名 JSON API,想让社区热帖按 **热度(点赞 + 2×评论)** 排序而非时间序,需要免费的 OAuth 凭证(2 分钟):
+
+1. 打开 <https://www.reddit.com/prefs/apps> → **create app** → 类型选 **script**,name/redirect uri 随便填
+2. 创建后拿到 client id(app 名字下方的一串字符)和 secret
+3. 配置到 GitHub:
+
+```bash
+gh secret set REDDIT_CLIENT_ID
+gh secret set REDDIT_CLIENT_SECRET
+```
+
+不配置也能正常运行:Reddit 源自动回退到 RSS,只是没有热度数据(Reddit 不公开浏览数,所以热度用点赞数代替)。
+
 ## 自定义
 
 - **关注的股票**: 编辑 [config/watchlist.yml](config/watchlist.yml)

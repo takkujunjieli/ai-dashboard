@@ -32,13 +32,14 @@ sources:
   #   url: https://www.youtube.com/feeds/videos.xml?channel_id=UCIALMKvObZNtJ6AmdCLP7Lg
 
   # ---------- Reddit ----------
+  # 用 .json 端点(而非 .rss)以获取点赞数/评论数,信息流里社区帖按热度排序
   - name: r/stocks 热帖
     category: community
-    url: https://www.reddit.com/r/stocks/hot/.rss?limit=25
+    url: https://www.reddit.com/r/stocks/hot.json?limit=25
 
   - name: r/wallstreetbets 热帖
     category: community
-    url: https://www.reddit.com/r/wallstreetbets/hot/.rss?limit=25
+    url: https://www.reddit.com/r/wallstreetbets/hot.json?limit=25
 
   # ---------- X / Twitter 大V(官方 API 收费,走 RSSHub 桥接) ----------
   # 公共实例 rsshub.app 可能限流,稳定使用建议自建 RSSHub(免费,可部署在 Vercel)

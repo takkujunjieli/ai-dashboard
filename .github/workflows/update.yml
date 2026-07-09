@@ -29,6 +29,9 @@ jobs:
 
       - name: 抓取 RSS 信息流
         run: python scripts/fetch_feeds.py
+        env:
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
 
       - name: 提交数据
         run: |
