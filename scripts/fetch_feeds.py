@@ -104,21 +104,22 @@ def main() -> None:
         try:
             url, headers = src["url"], {"User-Agent": UA}
             is_reddit = "reddit.com" in url and ".json" in url
-            if is_reddit:
-                if REDDIT_ID and REDDIT_SECRET:
-                    # 官方 OAuth API: 免费 100 次/分钟,能拿到点赞/评论数
-                    url = url.replace("www.reddit.com", "oauth.reddit.com").replace(".json", "")
-                    headers["Authorization"] = f"bearer {reddit_token()}"
-                else:
-                    # 匿名 JSON 已被 Reddit 封锁,回退到 RSS(无热度数据)
-                    url = re.sub(r"\.json", "/.rss", url)
-                    is_reddit = False
-                    reddit_degraded = True
+            if is_reddit and REDDIT_ID and REDDIT_SECRET:
+                # 官方 OAuth API: 免费 100 次/分钟,最稳
+                url = url.replace("www.reddit.com", "oauth.reddit.com").replace(".json", "")
+                headers["Authorization"] = f"bearer {reddit_token()}"
 
             resp = requests.get(url, headers=headers, timeout=30)
             if resp.status_code == 429:  # 限流则等待后重试一次
                 time.sleep(15)
                 resp = requests.get(url, headers=headers, timeout=30)
+
+            if is_reddit and resp.status_code in (403, 429):
+                # 匿名 JSON 被 Reddit 拒绝 → 回退 RSS,靠 hot 榜排名排序(无具体数值)
+                resp = requests.get(re.sub(r"\.json", "/.rss", src["url"]),
+                                    headers={"User-Agent": UA}, timeout=30)
+                is_reddit = False
+                reddit_degraded = True
             resp.raise_for_status()
 
             if is_reddit:
@@ -135,14 +136,17 @@ def main() -> None:
                 ts = entry_time(entry)
                 if ts and ts < cutoff:
                     continue
-                items.append({
+                item = {
                     "source": src["name"],
                     "category": src.get("category", "news"),
                     "title": (getattr(entry, "title", "") or "").strip(),
                     "link": getattr(entry, "link", ""),
                     "published": ts.isoformat(timespec="seconds") if ts else None,
                     "summary": clean_summary(entry),
-                })
+                }
+                if item["category"] == "community":
+                    item["rank"] = count  # hot 榜排名,无热度数值时用它排序
+                items.append(item)
                 count += 1
                 if count >= MAX_PER_SOURCE:
                     break
@@ -154,7 +158,7 @@ def main() -> None:
     if reddit_degraded:
         errors.append({
             "source": "Reddit",
-            "error": "未配置 REDDIT_CLIENT_ID/SECRET,已回退到 RSS(社区帖无热度数据),配置方法见 README",
+            "error": "匿名 JSON 被拒,已回退 RSS — 社区帖按 hot 榜排名排序但无点赞/评论数;配置 OAuth 可显示数值,见 README",
         })
 
     items.sort(key=lambda i: i["published"] or "", reverse=True)

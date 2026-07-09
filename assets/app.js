@@ -139,9 +139,11 @@ function renderFeeds(f) {
   const draw = () => {
     let shown = items.filter((i) => active === "all" || i.category === active);
     if (active === "community") {
-      // 社区帖按热度(点赞 + 2×评论)排序,无热度数据时退回时间序
+      // 社区帖按热度(点赞 + 2×评论)排序;无数值时按 Reddit hot 榜排名;都没有则时间序
       shown = [...shown].sort((a, b) =>
-        (b.heat || 0) - (a.heat || 0) || (b.published || "").localeCompare(a.published || ""));
+        (b.heat || 0) - (a.heat || 0)
+        || (a.rank ?? 999) - (b.rank ?? 999)
+        || (b.published || "").localeCompare(a.published || ""));
     }
     shown = shown.slice(0, 120);
     $("feeds").innerHTML = shown.map((i) => `<div class="item">
