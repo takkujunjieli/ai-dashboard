@@ -5,6 +5,13 @@ const esc = (t) => { const d = document.createElement("div"); d.textContent = t 
 const fmtDT = (iso) => iso ? new Date(iso).toLocaleString("zh-CN", { hour12: false }) : "—";
 const CAT_LABEL = { news: "新闻", kol: "大V", youtube: "视频", community: "社区" };
 
+let MARKET = null;
+let FEEDS = null;
+let feedCat = "all";
+// 全局股票筛选(多选),空集 = 全部;记住上次的选择
+let selected = new Set(JSON.parse(localStorage.getItem("tickerFilter") || "[]"));
+const isSel = (sym) => selected.size === 0 || selected.has(sym);
+
 function timeAgo(iso) {
   if (!iso) return "";
   const s = (Date.now() - new Date(iso).getTime()) / 1000;
@@ -21,10 +28,42 @@ async function loadJSON(path) {
   } catch { return null; }
 }
 
+/* ---------- 全局股票筛选 ---------- */
+function renderTickerFilter() {
+  const syms = MARKET?.watchlist || [];
+  $("ticker-filter").innerHTML = [
+    `<button data-sym="__all" class="${selected.size === 0 ? "active" : ""}">全部</button>`,
+    ...syms.map((s) => `<button data-sym="${esc(s)}" class="${selected.has(s) ? "active" : ""}">${esc(s)}</button>`),
+  ].join("");
+}
+
+function initTickerFilter() {
+  $("ticker-filter").addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button");
+    if (!btn) return;
+    if (btn.dataset.sym === "__all") selected.clear();
+    else if (selected.has(btn.dataset.sym)) selected.delete(btn.dataset.sym);
+    else selected.add(btn.dataset.sym);
+    localStorage.setItem("tickerFilter", JSON.stringify([...selected]));
+    renderAll();
+  });
+}
+
+/* 信息流条目按选中股票匹配:标题/摘要里出现 $TSLA 或独立的 TSLA(区分大小写);
+   单字母代码(如 U)只认 $U,避免误匹配普通单词 */
+function feedMatches(i) {
+  if (selected.size === 0) return true;
+  const text = `${i.title || ""} ${i.summary || ""}`;
+  return [...selected].some((sym) => {
+    const re = sym.length >= 2 ? new RegExp(`\\b\\$?${sym}\\b`) : new RegExp(`\\$${sym}\\b`);
+    return re.test(text);
+  });
+}
+
 /* ---------- 行情条 ---------- */
 function renderQuotes(m) {
   const el = $("quotes-strip");
-  const syms = m.watchlist || Object.keys(m.quotes || {});
+  const syms = (m.watchlist || Object.keys(m.quotes || {})).filter(isSel);
   el.innerHTML = syms.map((s) => {
     const q = (m.quotes || {})[s];
     if (!q || q.c == null) return "";
@@ -40,7 +79,7 @@ function renderQuotes(m) {
 
 /* ---------- 财报日历 ---------- */
 function renderCalendar(m) {
-  const rows = m.earnings_calendar || [];
+  const rows = (m.earnings_calendar || []).filter((e) => isSel(e.symbol));
   const hourLabel = { bmo: "盘前", amc: "盘后", dmh: "盘中" };
   const today = new Date().toISOString().slice(0, 10);
   const fmtRev = (v) => v == null ? "—" : (v / 1e9).toFixed(2) + "B";
@@ -56,121 +95,108 @@ function renderCalendar(m) {
       <td>${fmtRev(e.revenueEstimate)}</td>
       <td>${fmtRev(e.revenueActual)}</td>
     </tr>`).join("")}
-  </table>` : `<div class="empty">窗口期内 watchlist 没有财报安排</div>`;
+  </table>` : `<div class="empty">窗口期内没有财报安排</div>`;
 }
 
 /* ---------- 最近财报 EPS surprise ---------- */
 function renderSurprises(m) {
   const data = m.earnings_surprises || {};
-  const cards = Object.entries(data).filter(([, v]) => Array.isArray(v) && v.length).map(([sym, list]) => {
-    const rows = list.slice(0, 4).map((r) => {
-      const pct = r.surprisePercent;
-      const cls = pct == null ? "" : pct >= 0 ? "up" : "down";
-      return `<tr>
-        <td>${esc(r.period ?? "")}</td>
-        <td>${r.actual?.toFixed(2) ?? "—"}</td>
-        <td>${r.estimate?.toFixed(2) ?? "—"}</td>
-        <td class="${cls}">${pct == null ? "—" : (pct >= 0 ? "+" : "") + pct.toFixed(1) + "%"}</td>
-      </tr>`;
-    }).join("");
-    return `<div class="card"><b>${esc(sym)}</b>
-      <table><tr><th>季度</th><th>实际</th><th>预期</th><th>Surprise</th></tr>${rows}</table>
-    </div>`;
-  });
+  const cards = Object.entries(data)
+    .filter(([sym, v]) => isSel(sym) && Array.isArray(v) && v.length)
+    .map(([sym, list]) => {
+      const rows = list.slice(0, 4).map((r) => {
+        const pct = r.surprisePercent;
+        const cls = pct == null ? "" : pct >= 0 ? "up" : "down";
+        return `<tr>
+          <td>${esc(r.period ?? "")}</td>
+          <td>${r.actual?.toFixed(2) ?? "—"}</td>
+          <td>${r.estimate?.toFixed(2) ?? "—"}</td>
+          <td class="${cls}">${pct == null ? "—" : (pct >= 0 ? "+" : "") + pct.toFixed(1) + "%"}</td>
+        </tr>`;
+      }).join("");
+      return `<div class="card"><b>${esc(sym)}</b>
+        <table><tr><th>季度</th><th>实际</th><th>预期</th><th>Surprise</th></tr>${rows}</table>
+      </div>`;
+    });
   $("earnings-surprises").innerHTML = cards.join("") || `<div class="card empty">暂无数据</div>`;
 }
 
 /* ---------- 分析师评级 ---------- */
 function renderRecommendations(m) {
   const data = m.recommendations || {};
-  const rows = Object.entries(data).filter(([, v]) => Array.isArray(v) && v.length).map(([sym, list]) => {
-    const r = list[0]; // 最新一期
-    const total = (r.strongBuy + r.buy + r.hold + r.sell + r.strongSell) || 1;
-    const seg = (n, cls) => n ? `<div class="${cls}" style="width:${(n / total * 100).toFixed(1)}%"></div>` : "";
-    return `<div class="rec-row">
-      <div class="rec-sym">${esc(sym)}</div>
-      <div class="rec-bar">
-        ${seg(r.strongBuy, "rb-sbuy")}${seg(r.buy, "rb-buy")}${seg(r.hold, "rb-hold")}${seg(r.sell, "rb-sell")}${seg(r.strongSell, "rb-ssell")}
-      </div>
-      <div class="rec-nums">强买 ${r.strongBuy} · 买 ${r.buy} · 持有 ${r.hold} · 卖 ${r.sell} · 强卖 ${r.strongSell}</div>
-    </div>`;
-  });
+  const rows = Object.entries(data)
+    .filter(([sym, v]) => isSel(sym) && Array.isArray(v) && v.length)
+    .map(([sym, list]) => {
+      const r = list[0]; // 最新一期
+      const total = (r.strongBuy + r.buy + r.hold + r.sell + r.strongSell) || 1;
+      const seg = (n, cls) => n ? `<div class="${cls}" style="width:${(n / total * 100).toFixed(1)}%"></div>` : "";
+      return `<div class="rec-row">
+        <div class="rec-sym">${esc(sym)}</div>
+        <div class="rec-bar">
+          ${seg(r.strongBuy, "rb-sbuy")}${seg(r.buy, "rb-buy")}${seg(r.hold, "rb-hold")}${seg(r.sell, "rb-sell")}${seg(r.strongSell, "rb-ssell")}
+        </div>
+        <div class="rec-nums">强买 ${r.strongBuy} · 买 ${r.buy} · 持有 ${r.hold} · 卖 ${r.sell} · 强卖 ${r.strongSell}</div>
+      </div>`;
+    });
   $("recommendations").innerHTML = rows.join("") || `<div class="empty">暂无数据</div>`;
 }
 
-/* ---------- 公司新闻(Finnhub),按股票筛选 ---------- */
+/* ---------- 公司新闻(Finnhub),跟随全局筛选 ---------- */
 function renderCompanyNews(m) {
   const all = [];
   for (const [sym, list] of Object.entries(m.company_news || {})) {
+    if (!isSel(sym)) continue;
     for (const n of list || []) all.push({ ...n, sym });
   }
   all.sort((a, b) => (b.datetime || 0) - (a.datetime || 0));
-  const syms = ["all", ...new Set(all.map((n) => n.sym))];
-  let active = "all";
-
-  const draw = () => {
-    const shown = all.filter((n) => active === "all" || n.sym === active).slice(0, 50);
-    $("company-news").innerHTML = shown.map((n) => `<div class="item">
-      <div class="meta"><span class="tag">${esc(n.sym)}</span>${esc(n.source || "")} · ${timeAgo(new Date((n.datetime || 0) * 1000).toISOString())}</div>
-      <div class="title"><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.headline)}</a></div>
-      ${n.summary ? `<div class="summary">${esc(n.summary.slice(0, 200))}</div>` : ""}
-    </div>`).join("") || `<div class="empty">暂无数据</div>`;
-  };
-
-  $("news-filters").innerHTML = syms.map((s) =>
-    `<button data-sym="${esc(s)}" class="${s === active ? "active" : ""}">${s === "all" ? "全部" : esc(s)}</button>`
-  ).join("");
-  $("news-filters").addEventListener("click", (ev) => {
-    const btn = ev.target.closest("button");
-    if (!btn) return;
-    active = btn.dataset.sym;
-    [...$("news-filters").children].forEach((b) => b.classList.toggle("active", b === btn));
-    draw();
-  });
-  draw();
+  $("company-news").innerHTML = all.slice(0, 50).map((n) => `<div class="item">
+    <div class="meta"><span class="tag">${esc(n.sym)}</span>${esc(n.source || "")} · ${timeAgo(new Date((n.datetime || 0) * 1000).toISOString())}</div>
+    <div class="title"><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.headline)}</a></div>
+    ${n.summary ? `<div class="summary">${esc(n.summary.slice(0, 200))}</div>` : ""}
+  </div>`).join("") || `<div class="empty">暂无数据</div>`;
 }
 
 /* ---------- 信息流(RSS) ---------- */
-function renderFeeds(f) {
-  const items = f.items || [];
-  const cats = ["all", ...new Set(items.map((i) => i.category))];
-  let active = "all";
-
-  const draw = () => {
-    let shown = items.filter((i) => active === "all" || i.category === active);
-    if (active === "community") {
-      // 社区帖按热度(点赞 + 2×评论)排序;无数值时按 Reddit hot 榜排名;都没有则时间序
-      shown = [...shown].sort((a, b) =>
-        (b.heat || 0) - (a.heat || 0)
-        || (a.rank ?? 999) - (b.rank ?? 999)
-        || (b.published || "").localeCompare(a.published || ""));
-    }
-    shown = shown.slice(0, 120);
-    $("feeds").innerHTML = shown.map((i) => `<div class="item">
-      <div class="meta"><span class="tag ${esc(i.category)}">${CAT_LABEL[i.category] || esc(i.category)}</span>${esc(i.source)} · ${timeAgo(i.published)}${i.heat != null ? ` · <span class="heat">▲ ${i.score} · 💬 ${i.comments}</span>` : ""}</div>
-      <div class="title"><a href="${esc(i.link)}" target="_blank" rel="noopener">${esc(i.title)}</a></div>
-      ${i.summary ? `<div class="summary">${esc(i.summary)}</div>` : ""}
-    </div>`).join("") || `<div class="empty">暂无内容</div>`;
-  };
-
+function renderFeedFilters() {
+  const cats = ["all", ...new Set((FEEDS?.items || []).map((i) => i.category))];
   $("feed-filters").innerHTML = cats.map((c) =>
-    `<button data-cat="${esc(c)}" class="${c === active ? "active" : ""}">${c === "all" ? "全部" : (CAT_LABEL[c] || esc(c))}</button>`
+    `<button data-cat="${esc(c)}" class="${c === feedCat ? "active" : ""}">${c === "all" ? "全部" : (CAT_LABEL[c] || esc(c))}</button>`
   ).join("");
+}
+
+function initFeedFilters() {
   $("feed-filters").addEventListener("click", (ev) => {
     const btn = ev.target.closest("button");
     if (!btn) return;
-    active = btn.dataset.cat;
-    [...$("feed-filters").children].forEach((b) => b.classList.toggle("active", b === btn));
-    draw();
+    feedCat = btn.dataset.cat;
+    [...$("feed-filters").children].forEach((b) => b.classList.toggle("active", b.dataset.cat === feedCat));
+    renderFeeds();
   });
-  draw();
+}
+
+function renderFeeds() {
+  const items = FEEDS?.items || [];
+  let shown = items.filter((i) => (feedCat === "all" || i.category === feedCat) && feedMatches(i));
+  if (feedCat === "community") {
+    // 社区帖按热度(点赞 + 2×评论)排序;无数值时按 Reddit hot 榜排名;都没有则时间序
+    shown = [...shown].sort((a, b) =>
+      (b.heat || 0) - (a.heat || 0)
+      || (a.rank ?? 999) - (b.rank ?? 999)
+      || (b.published || "").localeCompare(a.published || ""));
+  }
+  shown = shown.slice(0, 120);
+  $("feeds").innerHTML = shown.map((i) => `<div class="item">
+    <div class="meta"><span class="tag ${esc(i.category)}">${CAT_LABEL[i.category] || esc(i.category)}</span>${esc(i.source)} · ${timeAgo(i.published)}${i.heat != null ? ` · <span class="heat">▲ ${i.score} · 💬 ${i.comments}</span>` : ""}</div>
+    <div class="title"><a href="${esc(i.link)}" target="_blank" rel="noopener">${esc(i.title)}</a></div>
+    ${i.summary ? `<div class="summary">${esc(i.summary)}</div>` : ""}
+  </div>`).join("") || `<div class="empty">${selected.size ? "选中的股票没有匹配的内容(信息流按标题/摘要里的代码匹配)" : "暂无内容"}</div>`;
 }
 
 /* ---------- 错误汇总 ---------- */
-function renderErrors(m, f) {
+function renderErrors() {
   const msgs = [
-    ...(m?.errors || []),
-    ...((f?.errors || []).map((e) => `${e.source}: ${e.error}`)),
+    ...(MARKET?.errors || []),
+    ...((FEEDS?.errors || []).map((e) => `${e.source}: ${e.error}`)),
   ];
   $("errors").innerHTML = msgs.length
     ? `<details><summary>⚠️ ${msgs.length} 个数据源抓取失败(点开查看)</summary><ul>${msgs.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></details>`
@@ -196,26 +222,39 @@ function initTabs() {
   if (names.includes(initial)) activate(initial);
 }
 
+function renderAll() {
+  renderTickerFilter();
+  if (MARKET) {
+    renderQuotes(MARKET);
+    renderCalendar(MARKET);
+    renderSurprises(MARKET);
+    renderRecommendations(MARKET);
+    renderCompanyNews(MARKET);
+  }
+  if (FEEDS) renderFeeds();
+  renderErrors();
+}
+
 /* ---------- 入口 ---------- */
 (async function main() {
   initTabs();
-  const [market, feeds] = await Promise.all([
+  initTickerFilter();
+  initFeedFilters();
+
+  [MARKET, FEEDS] = await Promise.all([
     loadJSON("data/market.json"),
     loadJSON("data/feeds.json"),
   ]);
 
-  const times = [market?.updated_at, feeds?.updated_at].filter(Boolean);
+  // watchlist 变动后清掉已失效的选择
+  const watch = new Set(MARKET?.watchlist || []);
+  selected = new Set([...selected].filter((s) => watch.has(s)));
+
+  const times = [MARKET?.updated_at, FEEDS?.updated_at].filter(Boolean);
   $("updated").textContent = times.length
     ? "最后更新: " + fmtDT(times.sort().at(-1))
     : "还没有数据 — 先运行一次抓取脚本或 GitHub Actions";
 
-  if (market) {
-    renderQuotes(market);
-    renderCalendar(market);
-    renderSurprises(market);
-    renderRecommendations(market);
-    renderCompanyNews(market);
-  }
-  if (feeds) renderFeeds(feeds);
-  renderErrors(market, feeds);
+  renderFeedFilters();
+  renderAll();
 })();

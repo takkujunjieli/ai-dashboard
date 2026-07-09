@@ -86,6 +86,10 @@ tr:last-child td { border-bottom: none; }
 .tag.kol { background: #7c3aed; } .tag.youtube { background: #b91c1c; }
 .tag.community { background: #0e7490; } .tag.news { background: #374151; }
 
+/* 全局股票筛选 */
+.ticker-filter { padding: 4px 0 10px; border-bottom: 1px solid var(--border); }
+.ticker-filter button { font-size: 12px; padding: 4px 11px; }
+
 /* 分类筛选 chips */
 .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
 .chips button {
