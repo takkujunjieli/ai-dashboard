@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-07-08T23:34:56+00:00",
+ "updated_at": "2026-07-09T02:30:25+00:00",
  "watchlist": [
   "AMD",
   "CCL",
@@ -7,7 +7,16 @@
   "TSLA",
   "U",
   "HOOD",
-  "MU"
+  "MU",
+  "RKLB",
+  "COIN",
+  "FIG",
+  "RIVN",
+  "AAOI",
+  "SPCX",
+  "LITE",
+  "INTC",
+  "KLAR"
  ],
  "quotes": {
   "AMD": {
@@ -79,6 +88,96 @@
    "o": 902.64,
    "pc": 938.38,
    "t": 1783540800
+  },
+  "RKLB": {
+   "c": 83.35,
+   "d": -0.06,
+   "dp": -0.0719,
+   "h": 86.5,
+   "l": 81,
+   "o": 86.5,
+   "pc": 83.41,
+   "t": 1783540800
+  },
+  "COIN": {
+   "c": 159.36,
+   "d": -4.15,
+   "dp": -2.5381,
+   "h": 161.6,
+   "l": 156.2,
+   "o": 159.285,
+   "pc": 163.51,
+   "t": 1783540800
+  },
+  "FIG": {
+   "c": 21.67,
+   "d": -0.52,
+   "dp": -2.3434,
+   "h": 22.235,
+   "l": 21.3401,
+   "o": 21.81,
+   "pc": 22.19,
+   "t": 1783540800
+  },
+  "RIVN": {
+   "c": 16.66,
+   "d": 0.17,
+   "dp": 1.0309,
+   "h": 16.79,
+   "l": 15.4307,
+   "o": 15.67,
+   "pc": 16.49,
+   "t": 1783540800
+  },
+  "AAOI": {
+   "c": 114.44,
+   "d": 0.03,
+   "dp": 0.0262,
+   "h": 118.1,
+   "l": 110.5,
+   "o": 113.02,
+   "pc": 114.41,
+   "t": 1783540800
+  },
+  "SPCX": {
+   "c": 148.3,
+   "d": -1.17,
+   "dp": -0.7828,
+   "h": 152.93,
+   "l": 145.2,
+   "o": 152.55,
+   "pc": 149.47,
+   "t": 1783540800
+  },
+  "LITE": {
+   "c": 707.1,
+   "d": 8.19,
+   "dp": 1.1718,
+   "h": 719.12,
+   "l": 683.395,
+   "o": 688.9,
+   "pc": 698.91,
+   "t": 1783540800
+  },
+  "INTC": {
+   "c": 110.24,
+   "d": -0.15,
+   "dp": -0.1359,
+   "h": 110.49,
+   "l": 104.41,
+   "o": 108.3,
+   "pc": 110.39,
+   "t": 1783540800
+  },
+  "KLAR": {
+   "c": 19.03,
+   "d": -0.39,
+   "dp": -2.0082,
+   "h": 19.24,
+   "l": 18.29,
+   "o": 18.89,
+   "pc": 19.42,
+   "t": 1783540800
   }
  },
  "earnings_calendar": [
@@ -94,6 +193,17 @@
    "revenueActual": null
   },
   {
+   "symbol": "INTC",
+   "date": "2026-07-23",
+   "hour": "amc",
+   "quarter": 2,
+   "year": 2026,
+   "epsEstimate": 0.214,
+   "epsActual": null,
+   "revenueEstimate": 14672729100,
+   "revenueActual": null
+  },
+  {
    "symbol": "HOOD",
    "date": "2026-07-29",
    "hour": "amc",
@@ -102,6 +212,39 @@
    "epsEstimate": 0.426,
    "epsActual": null,
    "revenueEstimate": 1243824720,
+   "revenueActual": null
+  },
+  {
+   "symbol": "AAOI",
+   "date": "2026-07-30",
+   "hour": "",
+   "quarter": 2,
+   "year": 2026,
+   "epsEstimate": 0.0153,
+   "epsActual": null,
+   "revenueEstimate": 194287968,
+   "revenueActual": null
+  },
+  {
+   "symbol": "COIN",
+   "date": "2026-07-30",
+   "hour": "amc",
+   "quarter": 2,
+   "year": 2026,
+   "epsEstimate": 0.0106,
+   "epsActual": null,
+   "revenueEstimate": 1389828774,
+   "revenueActual": null
+  },
+  {
+   "symbol": "RIVN",
+   "date": "2026-07-30",
+   "hour": "amc",
+   "quarter": 2,
+   "year": 2026,
+   "epsEstimate": -0.6471,
+   "epsActual": null,
+   "revenueEstimate": 1478342049,
    "revenueActual": null
   }
  ],
@@ -399,6 +542,333 @@
     "year": 2025,
     "quarter": 4
    }
+  ],
+  "RKLB": [
+   {
+    "symbol": "RKLB",
+    "estimate": -0.0815,
+    "actual": -0.07,
+    "period": "2026-03-31",
+    "surprise": 0.0115,
+    "surprisePercent": 14.1104,
+    "year": 2026,
+    "quarter": 1
+   },
+   {
+    "symbol": "RKLB",
+    "estimate": -0.0942,
+    "actual": -0.09,
+    "period": "2025-12-31",
+    "surprise": 0.0042,
+    "surprisePercent": 4.4586,
+    "year": 2025,
+    "quarter": 4
+   },
+   {
+    "symbol": "RKLB",
+    "estimate": -0.1064,
+    "actual": -0.03,
+    "period": "2025-09-30",
+    "surprise": 0.0764,
+    "surprisePercent": 71.8045,
+    "year": 2025,
+    "quarter": 3
+   },
+   {
+    "symbol": "RKLB",
+    "estimate": -0.1167,
+    "actual": -0.13,
+    "period": "2025-06-30",
+    "surprise": -0.0133,
+    "surprisePercent": -11.3967,
+    "year": 2025,
+    "quarter": 2
+   }
+  ],
+  "COIN": [
+   {
+    "symbol": "COIN",
+    "estimate": 0.3241,
+    "actual": -1.49,
+    "period": "2026-03-31",
+    "surprise": -1.8141,
+    "surprisePercent": -559.7346,
+    "year": 2026,
+    "quarter": 1
+   },
+   {
+    "symbol": "COIN",
+    "estimate": 0.5931,
+    "actual": -2.49,
+    "period": "2025-12-31",
+    "surprise": -3.0831,
+    "surprisePercent": -519.828,
+    "year": 2025,
+    "quarter": 4
+   },
+   {
+    "symbol": "COIN",
+    "estimate": 1.0786,
+    "actual": 1.5,
+    "period": "2025-09-30",
+    "surprise": 0.4214,
+    "surprisePercent": 39.0692,
+    "year": 2025,
+    "quarter": 3
+   },
+   {
+    "symbol": "COIN",
+    "estimate": 1.2813,
+    "actual": 1.96,
+    "period": "2025-06-30",
+    "surprise": 0.6787,
+    "surprisePercent": 52.9696,
+    "year": 2025,
+    "quarter": 2
+   }
+  ],
+  "FIG": [
+   {
+    "symbol": "FIG",
+    "estimate": 0.0642,
+    "actual": 0.1,
+    "period": "2026-03-31",
+    "surprise": 0.0358,
+    "surprisePercent": 55.7632,
+    "year": 2026,
+    "quarter": 1
+   },
+   {
+    "symbol": "FIG",
+    "estimate": 0.0662,
+    "actual": 0.08,
+    "period": "2025-12-31",
+    "surprise": 0.0138,
+    "surprisePercent": 20.8459,
+    "year": 2025,
+    "quarter": 4
+   },
+   {
+    "symbol": "FIG",
+    "estimate": 0.0467,
+    "actual": 0.1,
+    "period": "2025-09-30",
+    "surprise": 0.0533,
+    "surprisePercent": 114.1328,
+    "year": 2025,
+    "quarter": 3
+   },
+   {
+    "symbol": "FIG",
+    "estimate": 0.0808,
+    "actual": 0.09,
+    "period": "2025-06-30",
+    "surprise": 0.0092,
+    "surprisePercent": 11.3861,
+    "year": 2025,
+    "quarter": 2
+   }
+  ],
+  "RIVN": [
+   {
+    "symbol": "RIVN",
+    "estimate": -0.6293,
+    "actual": -0.57,
+    "period": "2026-03-31",
+    "surprise": 0.0593,
+    "surprisePercent": 9.4232,
+    "year": 2026,
+    "quarter": 1
+   },
+   {
+    "symbol": "RIVN",
+    "estimate": -0.6939,
+    "actual": -0.54,
+    "period": "2025-12-31",
+    "surprise": 0.1539,
+    "surprisePercent": 22.179,
+    "year": 2025,
+    "quarter": 4
+   },
+   {
+    "symbol": "RIVN",
+    "estimate": -0.7329,
+    "actual": -0.65,
+    "period": "2025-09-30",
+    "surprise": 0.0829,
+    "surprisePercent": 11.3112,
+    "year": 2025,
+    "quarter": 3
+   },
+   {
+    "symbol": "RIVN",
+    "estimate": -0.6608,
+    "actual": -0.8,
+    "period": "2025-06-30",
+    "surprise": -0.1392,
+    "surprisePercent": -21.0654,
+    "year": 2025,
+    "quarter": 2
+   }
+  ],
+  "AAOI": [
+   {
+    "symbol": "AAOI",
+    "estimate": -0.0495,
+    "actual": -0.07,
+    "period": "2026-03-31",
+    "surprise": -0.0205,
+    "surprisePercent": -41.4141,
+    "year": 2026,
+    "quarter": 1
+   },
+   {
+    "symbol": "AAOI",
+    "estimate": -0.1151,
+    "actual": -0.01,
+    "period": "2025-12-31",
+    "surprise": 0.1051,
+    "surprisePercent": 91.3119,
+    "year": 2025,
+    "quarter": 4
+   },
+   {
+    "symbol": "AAOI",
+    "estimate": -0.0902,
+    "actual": -0.09,
+    "period": "2025-09-30",
+    "surprise": 0.0002,
+    "surprisePercent": 0.2217,
+    "year": 2025,
+    "quarter": 3
+   },
+   {
+    "symbol": "AAOI",
+    "estimate": -0.0757,
+    "actual": -0.16,
+    "period": "2025-06-30",
+    "surprise": -0.0843,
+    "surprisePercent": -111.3606,
+    "year": 2025,
+    "quarter": 2
+   }
+  ],
+  "SPCX": [],
+  "LITE": [
+   {
+    "symbol": "LITE",
+    "estimate": 2.3335,
+    "actual": 2.37,
+    "period": "2026-03-31",
+    "surprise": 0.0365,
+    "surprisePercent": 1.5642,
+    "year": 2026,
+    "quarter": 3
+   },
+   {
+    "symbol": "LITE",
+    "estimate": 1.4224,
+    "actual": 1.67,
+    "period": "2025-12-31",
+    "surprise": 0.2476,
+    "surprisePercent": 17.4072,
+    "year": 2026,
+    "quarter": 2
+   },
+   {
+    "symbol": "LITE",
+    "estimate": 1.0486,
+    "actual": 1.1,
+    "period": "2025-09-30",
+    "surprise": 0.0514,
+    "surprisePercent": 4.9018,
+    "year": 2026,
+    "quarter": 1
+   },
+   {
+    "symbol": "LITE",
+    "estimate": 0.8169,
+    "actual": 0.88,
+    "period": "2025-06-30",
+    "surprise": 0.0631,
+    "surprisePercent": 7.7243,
+    "year": 2025,
+    "quarter": 4
+   }
+  ],
+  "INTC": [
+   {
+    "symbol": "INTC",
+    "estimate": 0.014,
+    "actual": 0.29,
+    "period": "2026-03-31",
+    "surprise": 0.276,
+    "surprisePercent": 1971.4286,
+    "year": 2026,
+    "quarter": 1
+   },
+   {
+    "symbol": "INTC",
+    "estimate": 0.0829,
+    "actual": 0.15,
+    "period": "2025-12-31",
+    "surprise": 0.0671,
+    "surprisePercent": 80.9409,
+    "year": 2025,
+    "quarter": 4
+   },
+   {
+    "symbol": "INTC",
+    "estimate": 0.01,
+    "actual": 0.23,
+    "period": "2025-09-30",
+    "surprise": 0.22,
+    "surprisePercent": 2200,
+    "year": 2025,
+    "quarter": 3
+   },
+   {
+    "symbol": "INTC",
+    "estimate": 0.0121,
+    "actual": 0.1,
+    "period": "2025-06-30",
+    "surprise": 0.0879,
+    "surprisePercent": 726.4463,
+    "year": 2025,
+    "quarter": 2
+   }
+  ],
+  "KLAR": [
+   {
+    "symbol": "KLAR",
+    "estimate": -0.1877,
+    "actual": -0.01,
+    "period": "2026-03-31",
+    "surprise": 0.1777,
+    "surprisePercent": 94.6723,
+    "year": 2026,
+    "quarter": 1
+   },
+   {
+    "symbol": "KLAR",
+    "estimate": -0.0229,
+    "actual": -0.12,
+    "period": "2025-12-31",
+    "surprise": -0.0971,
+    "surprisePercent": -424.0175,
+    "year": 2025,
+    "quarter": 4
+   },
+   {
+    "symbol": "KLAR",
+    "estimate": -0.2548,
+    "actual": -0.25,
+    "period": "2025-09-30",
+    "surprise": 0.0048,
+    "surprisePercent": 1.8838,
+    "year": 2025,
+    "quarter": 3
+   }
   ]
  },
  "recommendations": {
@@ -667,6 +1137,321 @@
     "sell": 1,
     "strongSell": 0
    }
+  ],
+  "RKLB": [
+   {
+    "symbol": "RKLB",
+    "period": "2026-07-01",
+    "strongBuy": 7,
+    "buy": 15,
+    "hold": 4,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "RKLB",
+    "period": "2026-06-01",
+    "strongBuy": 7,
+    "buy": 15,
+    "hold": 5,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "RKLB",
+    "period": "2026-05-01",
+    "strongBuy": 7,
+    "buy": 14,
+    "hold": 6,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "RKLB",
+    "period": "2026-04-01",
+    "strongBuy": 7,
+    "buy": 12,
+    "hold": 7,
+    "sell": 0,
+    "strongSell": 0
+   }
+  ],
+  "COIN": [
+   {
+    "symbol": "COIN",
+    "period": "2026-07-01",
+    "strongBuy": 11,
+    "buy": 19,
+    "hold": 11,
+    "sell": 1,
+    "strongSell": 2
+   },
+   {
+    "symbol": "COIN",
+    "period": "2026-06-01",
+    "strongBuy": 11,
+    "buy": 19,
+    "hold": 11,
+    "sell": 1,
+    "strongSell": 2
+   },
+   {
+    "symbol": "COIN",
+    "period": "2026-05-01",
+    "strongBuy": 11,
+    "buy": 17,
+    "hold": 12,
+    "sell": 1,
+    "strongSell": 2
+   },
+   {
+    "symbol": "COIN",
+    "period": "2026-04-01",
+    "strongBuy": 11,
+    "buy": 17,
+    "hold": 13,
+    "sell": 0,
+    "strongSell": 2
+   }
+  ],
+  "FIG": [
+   {
+    "symbol": "FIG",
+    "period": "2026-07-01",
+    "strongBuy": 3,
+    "buy": 4,
+    "hold": 11,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "FIG",
+    "period": "2026-06-01",
+    "strongBuy": 2,
+    "buy": 4,
+    "hold": 11,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "FIG",
+    "period": "2026-05-01",
+    "strongBuy": 2,
+    "buy": 4,
+    "hold": 11,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "FIG",
+    "period": "2026-04-01",
+    "strongBuy": 2,
+    "buy": 4,
+    "hold": 10,
+    "sell": 0,
+    "strongSell": 0
+   }
+  ],
+  "RIVN": [
+   {
+    "symbol": "RIVN",
+    "period": "2026-07-01",
+    "strongBuy": 5,
+    "buy": 14,
+    "hold": 10,
+    "sell": 4,
+    "strongSell": 1
+   },
+   {
+    "symbol": "RIVN",
+    "period": "2026-06-01",
+    "strongBuy": 5,
+    "buy": 14,
+    "hold": 10,
+    "sell": 4,
+    "strongSell": 1
+   },
+   {
+    "symbol": "RIVN",
+    "period": "2026-05-01",
+    "strongBuy": 6,
+    "buy": 14,
+    "hold": 10,
+    "sell": 4,
+    "strongSell": 1
+   },
+   {
+    "symbol": "RIVN",
+    "period": "2026-04-01",
+    "strongBuy": 6,
+    "buy": 13,
+    "hold": 11,
+    "sell": 5,
+    "strongSell": 1
+   }
+  ],
+  "AAOI": [
+   {
+    "symbol": "AAOI",
+    "period": "2026-07-01",
+    "strongBuy": 2,
+    "buy": 7,
+    "hold": 4,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "AAOI",
+    "period": "2026-06-01",
+    "strongBuy": 2,
+    "buy": 7,
+    "hold": 4,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "AAOI",
+    "period": "2026-05-01",
+    "strongBuy": 2,
+    "buy": 7,
+    "hold": 4,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "AAOI",
+    "period": "2026-04-01",
+    "strongBuy": 2,
+    "buy": 7,
+    "hold": 4,
+    "sell": 0,
+    "strongSell": 0
+   }
+  ],
+  "SPCX": [
+   {
+    "symbol": "SPCX",
+    "period": "2026-07-01",
+    "strongBuy": 6,
+    "buy": 6,
+    "hold": 4,
+    "sell": 1,
+    "strongSell": 0
+   }
+  ],
+  "LITE": [
+   {
+    "symbol": "LITE",
+    "period": "2026-07-01",
+    "strongBuy": 9,
+    "buy": 18,
+    "hold": 6,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "LITE",
+    "period": "2026-06-01",
+    "strongBuy": 8,
+    "buy": 17,
+    "hold": 6,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "LITE",
+    "period": "2026-05-01",
+    "strongBuy": 8,
+    "buy": 16,
+    "hold": 6,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "LITE",
+    "period": "2026-04-01",
+    "strongBuy": 7,
+    "buy": 17,
+    "hold": 6,
+    "sell": 0,
+    "strongSell": 0
+   }
+  ],
+  "INTC": [
+   {
+    "symbol": "INTC",
+    "period": "2026-07-01",
+    "strongBuy": 5,
+    "buy": 13,
+    "hold": 34,
+    "sell": 3,
+    "strongSell": 0
+   },
+   {
+    "symbol": "INTC",
+    "period": "2026-06-01",
+    "strongBuy": 4,
+    "buy": 13,
+    "hold": 32,
+    "sell": 4,
+    "strongSell": 0
+   },
+   {
+    "symbol": "INTC",
+    "period": "2026-05-01",
+    "strongBuy": 4,
+    "buy": 14,
+    "hold": 33,
+    "sell": 3,
+    "strongSell": 0
+   },
+   {
+    "symbol": "INTC",
+    "period": "2026-04-01",
+    "strongBuy": 4,
+    "buy": 9,
+    "hold": 35,
+    "sell": 3,
+    "strongSell": 1
+   }
+  ],
+  "KLAR": [
+   {
+    "symbol": "KLAR",
+    "period": "2026-07-01",
+    "strongBuy": 8,
+    "buy": 11,
+    "hold": 10,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "KLAR",
+    "period": "2026-06-01",
+    "strongBuy": 7,
+    "buy": 10,
+    "hold": 9,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "KLAR",
+    "period": "2026-05-01",
+    "strongBuy": 7,
+    "buy": 10,
+    "hold": 8,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "KLAR",
+    "period": "2026-04-01",
+    "strongBuy": 7,
+    "buy": 10,
+    "hold": 6,
+    "sell": 0,
+    "strongSell": 0
+   }
   ]
  },
  "company_news": {
@@ -785,6 +1570,39 @@
   "CCL": [
    {
     "category": "company",
+    "datetime": 1783559555,
+    "headline": "Carnival (CCL) Completes Celebration Key Pier Early As Capacity Doubles",
+    "id": 140847071,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "CCL",
+    "source": "Yahoo",
+    "summary": "Carnival has completed the pier extension at Celebration Key on Grand Bahama Island ahead of schedule. The expansion doubles operational capacity at the private destination for Carnival cruise brands. The upgraded pier is intended to support higher guest volumes and deeper Caribbean deployment for the company. The latest development at Celebration Key comes as Carnival (NYSE:CCL) trades around $25.64, with the stock down 10.1% over the past week and 17.1% year to date. Over a 3 year period,...",
+    "url": "https://finnhub.io/api/news?id=6eb9e7a23d309edc69e5f7328b199a894dada6133cc87eb38ff6290398cd5cb9"
+   },
+   {
+    "category": "company",
+    "datetime": 1783556489,
+    "headline": "Carnival (CCL) Stock Looks Discounted On Earnings But Weighed By Risks",
+    "id": 140847072,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "CCL",
+    "source": "Yahoo",
+    "summary": "Carnival stock has pulled back recently, yet the broader valuation checks still lean cheap, which sits uneasily alongside a mixed news flow that highlights both strong booking trends and rising cost and demand concerns. Over the past 3 years, Carnival has delivered a 42.2% gain, which suggests the recovery story is already partly reflected in the share price. Record booking visibility and higher pricing can support investors' expectations for future earnings, while pressure from fuel costs,...",
+    "url": "https://finnhub.io/api/news?id=cb4be4c011a829a3a5b0a4066d6126bb40384c4d026aaadad7d4003c1904f856"
+   },
+   {
+    "category": "company",
+    "datetime": 1783553611,
+    "headline": "BMO Capital Initiates Coverage of Carnival (CCL) with Market Perform Recommendation",
+    "id": 140846193,
+    "image": "",
+    "related": "CCL",
+    "source": "Fintel",
+    "summary": "",
+    "url": "https://finnhub.io/api/news?id=69480db0db1e5e44392031f4aacb2a3093ee31b2c7454063ce8a2f6e0ba30429"
+   },
+   {
+    "category": "company",
     "datetime": 1783540320,
     "headline": "Why Viking and Royal Caribbean Rule Cruising",
     "id": 140845580,
@@ -859,42 +1677,31 @@
     "source": "CNBC",
     "summary": "These are the stocks posting the largest moves premarket.",
     "url": "https://finnhub.io/api/news?id=65ec690e9909d48208e4e6b61fd1efee6de977b8dd8be3badf11ed3382a8d8c5"
-   },
-   {
-    "category": "company",
-    "datetime": 1783487538,
-    "headline": "BMO Capital Initiates Coverage On Carnival with Market Perform Rating, Announces Price Target of $30",
-    "id": 140844953,
-    "image": "",
-    "related": "CCL",
-    "source": "Benzinga",
-    "summary": "BMO Capital  analyst Tristan Thomas-Martin   initiates coverage on Carnival (NYSE:CCL) with a Market Perform rating and announces Price Target of $30.",
-    "url": "https://finnhub.io/api/news?id=8e57367ead0b6b8a0a9b1c7f7a489acb8a5b2a432bf2bf0508159906884770f9"
-   },
-   {
-    "category": "company",
-    "datetime": 1783477025,
-    "headline": "RCL Vs NCLH Vs CCL: Why A Wall Street Analyst Picked Royal Caribbean And Got Cautious On The Rest",
-    "id": 140837537,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "CCL",
-    "source": "Yahoo",
-    "summary": "BMO said Royal Caribbean has stronger execution, customer retention and better long-term upside.",
-    "url": "https://finnhub.io/api/news?id=1228d11de13e6dcc03d0452eaf34ac4fdb7cd7b6df8ff58323ae7a3bab220888"
-   },
-   {
-    "category": "company",
-    "datetime": 1783447443,
-    "headline": "Dow tumbles 600 points as oil jumps with Trump saying attacks on Iran to continue: Live updates",
-    "id": 140842719,
-    "image": "https://image.cnbcfm.com/api/v1/image/108332121-1783522073629-gettyimages-2285213561-mms16766_78cokiza.jpeg?v=1783522113&w=1920&h=1080",
-    "related": "CCL",
-    "source": "CNBC",
-    "summary": "U.S. President Donald Trump told the NATO summit in Turkey that the ceasefire with Iran is \"over.\"",
-    "url": "https://finnhub.io/api/news?id=9dadf140096398f85a5fa9be9d2490158acbb06dbf9c1241a424992f52af09e3"
    }
   ],
   "SNDK": [
+   {
+    "category": "company",
+    "datetime": 1783561072,
+    "headline": "Dow Jones Futures, Oil Prices Rise Amid Iran News; Nvidia, Valero, Dell, SpaceX In Focus",
+    "id": 140846987,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SNDK",
+    "source": "Yahoo",
+    "summary": "Tech futures rose overnight after Nvidia, Dell and other AI stocks bounced and SpaceX hit a new low. Oil prices kept rising on Iran news.",
+    "url": "https://finnhub.io/api/news?id=0a6920a50699fc277243fb3db865114d9c39980f5d9c0db3a78e350101c08aed"
+   },
+   {
+    "category": "company",
+    "datetime": 1783550580,
+    "headline": "Memory Stock Sell-Off: Is This the Time to Buy Micron Technology and Sandisk Like There's No Tomorrow?",
+    "id": 140846261,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SNDK",
+    "source": "Yahoo",
+    "summary": "Micron and Sandisk have pulled back significantly after reaching 52-week highs last month.",
+    "url": "https://finnhub.io/api/news?id=5625fdbc448b29c97f4385c8b9c9635fb7c2d448f6a191884766d49581dcc872"
+   },
    {
     "category": "company",
     "datetime": 1783546962,
@@ -982,31 +1789,31 @@
     "source": "Yahoo",
     "summary": "Stock Market Today: The Dow Jones index dropped Wednesday after Trump declared the ceasefire is \"over.\" Micron and Sandisk dived.",
     "url": "https://finnhub.io/api/news?id=e8166282549e2c454a0a9438bb01f287cf9d1aaf2ed4bfe7cacd9be6991380d8"
-   },
-   {
-    "category": "company",
-    "datetime": 1783529146,
-    "headline": "Can SanDisk Outperform the Semiconductor Sector in 2026?",
-    "id": 140843449,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "SNDK",
-    "source": "Yahoo",
-    "summary": "SanDisk (NASDAQ:SNDK | SNDK Price Prediction) has become the strangest stock in the S&P 500. Shares are up 634.87% year to date, dwarfing the 67.8% gain on the VanEck Semiconductor ETF. Behind the move is a genuine business transformation. Q3 FY26 revenue hit $5.95 billion, up 251.03% year over year, with datacenter revenue exploding 645%. ... Can SanDisk Outperform the Semiconductor Sector in 2026?",
-    "url": "https://finnhub.io/api/news?id=d784c5b7086e73a553ea693fb5304cce1219d07a0536c258932691a4ea5f7d2b"
-   },
-   {
-    "category": "company",
-    "datetime": 1783527960,
-    "headline": "Micron, Broadcom, Valero Energy, Delta, SpaceX, and More Stocks That Explain Today’s Market",
-    "id": 140843323,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "SNDK",
-    "source": "Yahoo",
-    "summary": "Stocks fall broadly as the Iran War cease-fire appears to be over. Crude prices rise, pushing many oil stocks higher.",
-    "url": "https://finnhub.io/api/news?id=301cb15f57d9faa514eb7b70cb77ac82bfe85055a7b77b4efd267cf8581eee8b"
    }
   ],
   "TSLA": [
+   {
+    "category": "company",
+    "datetime": 1783559820,
+    "headline": "Tesla’s Model Y just got a sharper Rivian threat",
+    "id": 140847006,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "TSLA",
+    "source": "Yahoo",
+    "summary": "Tesla (TSLA) has spent years turning the Model Y into the benchmark for electric SUVs. That supremacy has been a big advantage for Tesla. It has scale, brand awareness, manufacturing knowledge, and a car that helped define the electric vehicle category for the mainstream market. But Rivian ...",
+    "url": "https://finnhub.io/api/news?id=b907399b0545713ebf1dc1a584a2e7aea3894c1d8508733949764c0d6dcb129b"
+   },
+   {
+    "category": "company",
+    "datetime": 1783548020,
+    "headline": "Dow Ends Lower To Record Worst Day In Nearly A Month As US-Iran Jitters Push Oil Prices — TSLA, NVDA, BE, AAPL, WBD  In Focus",
+    "id": 140846270,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "TSLA",
+    "source": "Yahoo",
+    "summary": "President Donald Trump said a ceasefire with Iran may be over, and \"it will get much worse\" if Iran continues to bomb ships.",
+    "url": "https://finnhub.io/api/news?id=7c74e8f0211ea4220db73f846015c9534c0a956ddd5a3db4b83aef0ed7345f41"
+   },
    {
     "category": "company",
     "datetime": 1783547220,
@@ -1094,28 +1901,6 @@
     "source": "Yahoo",
     "summary": "Sunrun plans to install compute nodes inside residential homes and pay people to power the miniature data centers.",
     "url": "https://finnhub.io/api/news?id=e2e90cdd2542e418d284356d76ff91653f50e35c20fd0aead42e8cd62af35591"
-   },
-   {
-    "category": "company",
-    "datetime": 1783535637,
-    "headline": "'Big Short' Michael Burry Bets Against Nvidia and Tesla Again",
-    "id": 140844416,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "TSLA",
-    "source": "Yahoo",
-    "summary": "Michael Burry Sounds Alarm on Nvidia, Tesla With Fresh Bearish Bets",
-    "url": "https://finnhub.io/api/news?id=88bfa91d76e4fd70786c9e6f0c857d8bd06fef5d5fc8373f5750a7e0b71b91ad"
-   },
-   {
-    "category": "company",
-    "datetime": 1783535280,
-    "headline": "Why a Tesla-SpaceX Merger Is No Sure Thing",
-    "id": 140844417,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "TSLA",
-    "source": "Yahoo",
-    "summary": "BNP Paribas analyst James Picariello doesn’t see a Tesla-SpaceX merger happening any time soon. He ticks off several reasons why.",
-    "url": "https://finnhub.io/api/news?id=902cd3d103f6a922f49ecb29302777fd8e52efb52b42e2650a2821ffcac92b9d"
    }
   ],
   "U": [],
@@ -1234,6 +2019,61 @@
   "MU": [
    {
     "category": "company",
+    "datetime": 1783555200,
+    "headline": "$130 Billion in AI Data Centers were Just Blocked. Where Does the AI Boom Go Now",
+    "id": 140846999,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "MU",
+    "source": "Yahoo",
+    "summary": "Communities across the U.S. blocked or delayed around $130 billion in AI data centers in a single quarter, and those projects are now looking for somewhere to go.",
+    "url": "https://finnhub.io/api/news?id=72fc1ab799f6643f47988997e294f65b761e4041561877792d055aa8de5dc257"
+   },
+   {
+    "category": "company",
+    "datetime": 1783550940,
+    "headline": "Ford Joins Its Partner Micron on the Coveted Zacks Rank #1 (Strong Buy) List",
+    "id": 140846309,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "MU",
+    "source": "Yahoo",
+    "summary": "After announcing a long-term strategic partnership with Micron Technology, Ford has joined its semiconductor partner on the coveted Zacks Rank #1 (Strong Buy) list.",
+    "url": "https://finnhub.io/api/news?id=c8f553d0a657e6c04a8c9d0515e1da799fb41f043cb57c9b2e2e8ce22cb59037"
+   },
+   {
+    "category": "company",
+    "datetime": 1783550580,
+    "headline": "Memory Stock Sell-Off: Is This the Time to Buy Micron Technology and Sandisk Like There's No Tomorrow?",
+    "id": 140846261,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "MU",
+    "source": "Yahoo",
+    "summary": "Micron and Sandisk have pulled back significantly after reaching 52-week highs last month.",
+    "url": "https://finnhub.io/api/news?id=5625fdbc448b29c97f4385c8b9c9635fb7c2d448f6a191884766d49581dcc872"
+   },
+   {
+    "category": "company",
+    "datetime": 1783545600,
+    "headline": "Best Stocks to Buy Now in July: CEG for Value, Growth, and 70% Upside",
+    "id": 140846277,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "MU",
+    "source": "Yahoo",
+    "summary": "Buy Constellation Energy (CEG) stock now for long-term growth, dividends, value, and 70% upside as the nuclear power giant and 21st-Century energy star attempts to find its footing at a key technical level.",
+    "url": "https://finnhub.io/api/news?id=5a2216b12f7661993c22d8922e6155e8a58c29c3038185ad5993275a19022e6c"
+   },
+   {
+    "category": "company",
+    "datetime": 1783543268,
+    "headline": "Is Micron (MU) One of the Most Profitable Cheap Stocks to Buy Right Now?",
+    "id": 140846312,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "MU",
+    "source": "Yahoo",
+    "summary": "Micron Technology, Inc. (NASDAQ:MU) is one of the 12 Most Profitable Cheap Stocks to Buy Right Now. On June 29, Cantor Fitzgerald raised its price target on Micron Technology, Inc. (NASDAQ:MU) from $1,500 to $2,000 and maintained its Overweight rating on the stock. This update came after the company’s disclosure of strategic customer agreements, which […]",
+    "url": "https://finnhub.io/api/news?id=e2c205ccdf2cb5f1d7cff2e5ba5ad2e1fd10efaedaae2ad2932ee0bed38873a1"
+   },
+   {
+    "category": "company",
     "datetime": 1783539172,
     "headline": "Nvidia Stock Is Cheaper Than It's Been Since the AI Boom Began",
     "id": 140844351,
@@ -1278,14 +2118,678 @@
    },
    {
     "category": "company",
-    "datetime": 1783536909,
-    "headline": "Every Memory Stock Is Now in a Bear Market: Is Micron, SanDisk, or Applied Materials the Best Buy?",
-    "id": 140844358,
+    "datetime": 1783537200,
+    "headline": "Micron Stock Drops 10%+ After Earnings - Is This a Buying Opportunity?",
+    "id": 140846313,
     "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
     "related": "MU",
     "source": "Yahoo",
-    "summary": "The memory-chip complex has sold off hard from recent peaks. In light of this, investors are asking which of Micron Technology (NASDAQ:MU), SanDisk (NASDAQ:SNDK), or Applied Materials (NASDAQ:AMAT) they should actually own after the drawdown. According to Carson Group chief market strategist Ryan Detrick, from recent highs Micron stock is down 22%, Applied Materials stock ... Every Memory Stock Is Now in a Bear Market: Is Micron, SanDisk, or Applied Materials the Best Buy?",
-    "url": "https://finnhub.io/api/news?id=ad6437eaf266ea2bff41c3bac9535a586a1a3e9da48b4328f62cfbbbbfcb14d8"
+    "summary": "MU's post-earnings pullback comes despite record results and strong AI memory demand, with growth guidance and analyst targets remaining upbeat.",
+    "url": "https://finnhub.io/api/news?id=cb77437643e9db078b3598c7f214c354c2aa028b48fb3b8ac4a45fb8059a45a4"
+   }
+  ],
+  "RKLB": [
+   {
+    "category": "company",
+    "datetime": 1783540200,
+    "headline": "Better Space Stock to Buy Before 2026 Runs Out: SpaceX vs. Rocket Lab",
+    "id": 140844650,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "RKLB",
+    "source": "Yahoo",
+    "summary": "SpaceX and Rocket Lab are two popular stocks for investors seeking exposure to the growing space economy.",
+    "url": "https://finnhub.io/api/news?id=bb07eab438600fa7b3599b922f2eb7324e0c72f91c487aa337ec8b5b52aa4938"
+   },
+   {
+    "category": "company",
+    "datetime": 1783530982,
+    "headline": "Former Merck and NASA Veterans Join SpaceMD as Space Pharma Momentum Builds",
+    "id": 140843423,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "RKLB",
+    "source": "Yahoo",
+    "summary": "By Karen Roman Redwire Corporation (NYSE: RDW) said it designated Paul Reichert and Niki Werkheiser to serve at strategic advisory roles at Space Microgravity Development (SpaceMD), Redwire’s venture company focused […]",
+    "url": "https://finnhub.io/api/news?id=2702b66ac2ac5c03c36756010c05b66cc8e79917f95f9b0300663e0c8fe0c4a7"
+   },
+   {
+    "category": "company",
+    "datetime": 1783530703,
+    "headline": "Rocket Lab Bull-Case Target Set at $293 by Morgan Stanley",
+    "id": 140843273,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "RKLB",
+    "source": "Yahoo",
+    "summary": "Shares of Rocket Lab (NASDAQ:RKLB) have been on a wild ride lately, with the stock down 17.94% over the past week and 24.23% over the past month as the broader space complex has sold off hard since SpaceX’s June 2026 IPO. Even after the pullback, RKLB is still up 19.57% year to date, 114.53% over ... Rocket Lab Bull-Case Target Set at $293 by Morgan Stanley",
+    "url": "https://finnhub.io/api/news?id=4c057fd57f8ca80db11b2262a8694e8799c8bcad1f75ada6cf4d06c1ae51885a"
+   },
+   {
+    "category": "company",
+    "datetime": 1783527520,
+    "headline": "Rocket Lab (RKLB) Nails VICTUS HAZE Mission, Is The Valuation Still About Right?",
+    "id": 140843661,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "RKLB",
+    "source": "Yahoo",
+    "summary": "Rocket Lab (RKLB) is back in focus after confirming mission success on the U.S. Space Force’s VICTUS HAZE program, a rapid response operation that tested the company’s end to end launch and on orbit capabilities. See our latest analysis for Rocket Lab. Despite the VICTUS HAZE success, a series of contract wins, and the planned Iridium acquisition, Rocket Lab’s share price has been under pressure recently, with a 1 month share price return of down 24.23% but a 1 year total shareholder return...",
+    "url": "https://finnhub.io/api/news?id=237a4f0d27a9ccbfe86b325854850c6e8687991b19c6c79c2a1a876872284a92"
+   },
+   {
+    "category": "company",
+    "datetime": 1783523510,
+    "headline": "Can Rocket Lab (RKLB) Justify Its Price After The $8b Deal?",
+    "id": 140842071,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "RKLB",
+    "source": "Yahoo",
+    "summary": "Rocket Lab stock has delivered a very large 3 year return, yet its current valuation picture is mixed, with a Discounted Cash Flow (DCF) estimate that looks roughly in line with the market price while traditional multiples lean expensive and the broader checks point away from a clear bargain. Over the past 3 years, Rocket Lab has returned roughly 12x, which puts extra focus on whether recent gains are already pricing in much of the growth story. The planned Iridium acquisition and growing...",
+    "url": "https://finnhub.io/api/news?id=39bd5e024817aa71760b818047a4d486ca7c1173a9f1c03c86ebfca950e45803"
+   },
+   {
+    "category": "company",
+    "datetime": 1783521780,
+    "headline": "The Reason Behind Blue Origin’s Eye-Popping Valuation",
+    "id": 140841599,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "RKLB",
+    "source": "Yahoo",
+    "summary": "Space is the hot new sector on Wall Street, and market optimism has sent Jeff Bezos’ Blue Origin valuation to the moon.  Wednesday, CNBC reported that Blue Origin raised $10 billion, valuing the rocket company at $130 billion.  Blue Origin didn’t immediately return a request for comment.",
+    "url": "https://finnhub.io/api/news?id=ff3357b1ce5570fc518044d027c6392a73c6b8be8a48ca68fdacb59cf803f382"
+   },
+   {
+    "category": "company",
+    "datetime": 1783519560,
+    "headline": "Can Rocket Lab's Contract Assets Support Long-Term Growth?",
+    "id": 140841935,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "RKLB",
+    "source": "Yahoo",
+    "summary": "RKLB expands long-term revenue visibility as rising contract assets reflect continued execution across launch and space systems programs.",
+    "url": "https://finnhub.io/api/news?id=704f9737c854d0a066416d4e9f23d85e74f60733e3d4033002c09e12550e74b8"
+   },
+   {
+    "category": "company",
+    "datetime": 1783516252,
+    "headline": "Can Rocket Lab Stock Become the Next SpaceX-Like Success Story?",
+    "id": 140840339,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "RKLB",
+    "source": "Yahoo",
+    "summary": "Rocket Lab (NASDAQ:RKLB) is doing something rare in aerospace. It is building a fully vertically integrated space platform while still burning cash. Q1 revenue hit $200.35 million, up 63.5% year over year, backlog reached $2.20 billion, and management just announced an $8 billion acquisition of Iridium Communications. Shares are up 33.44% year to date to ... Can Rocket Lab Stock Become the Next SpaceX-Like Success Story?",
+    "url": "https://finnhub.io/api/news?id=07f00ddec215bb71256927562a5d97c79e1da4579e87cd1ef46f1f75184bfd19"
+   },
+   {
+    "category": "company",
+    "datetime": 1783512000,
+    "headline": "Early Q3 Trend Reversal",
+    "id": 140841560,
+    "image": "",
+    "related": "RKLB",
+    "source": "SeekingAlpha",
+    "summary": "",
+    "url": "https://finnhub.io/api/news?id=ad8d411e93d365583b72e2187a54a1c534b5266fd4e190db83d1d277b4149607"
+   },
+   {
+    "category": "company",
+    "datetime": 1783510367,
+    "headline": "What RKLB Stock Does When Markets Panic",
+    "id": 140839675,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "RKLB",
+    "source": "Yahoo",
+    "summary": "Record contracts and mission successes paint a strong picture, but the stock's behavior during market shocks reveals a much steeper risk profile.",
+    "url": "https://finnhub.io/api/news?id=aeed75b69aec8c436b989d74255bccc00c5d2725a57aba9b3cc0d2c082f5f5ed"
+   }
+  ],
+  "COIN": [
+   {
+    "category": "company",
+    "datetime": 1783561874,
+    "headline": "Bitcoin, Ethereum, XRP, Dogecoin Slide as Trump Warns Iran Strikes Could Get 'Much Worse': Analyst Flags Major 'Wall' BTC Bulls Must Break",
+    "id": 140847070,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "COIN",
+    "source": "Yahoo",
+    "summary": "Leading cryptocurrencies fell alongside stocks on Wednesday as the U.S. strikes against Iran threaten peace negotiations. Cryptocurrency24-Hour Gains +/-Price (Recorded at 9:20 p.m. EDT)Bitcoin (CRYPTO: BTC)-1.90%$62,323.71Ethereum (CRYPTO: ETH) -1.76%$1,744.96XRP (CRYPTO: XRP) -1.87%$1.09Solana (CRYPTO: SOL) -2.44%$78.29Dogecoin (CRYPTO: DOGE) -2.07%$0.07265 Crypto Market Shakes Bitcoin slipped under $61,500, then climbed back above $62,000 overnight. Ethereum oscillated within the $1,700 regio",
+    "url": "https://finnhub.io/api/news?id=b83ba0f00335a4f8d1923cb74aa7898c115e2896d18c0c86e29d943cb8f79dbc"
+   },
+   {
+    "category": "company",
+    "datetime": 1783543238,
+    "headline": "Paradigm Raises $1.2 Billion Fund as Crypto VC Pushes Further Into AI",
+    "id": 140845610,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "COIN",
+    "source": "Yahoo",
+    "summary": "The investment firm said its fourth fund will back AI, robotics, and crypto startups as it broadens beyond digital assets.",
+    "url": "https://finnhub.io/api/news?id=91b61797fe2e6cb3a60979911c496a9d78ad842a4620ae0a87ea95c4ae426034"
+   },
+   {
+    "category": "company",
+    "datetime": 1783530780,
+    "headline": "UK Authorization Strengthens Coinbase's Global Growth Strategy?",
+    "id": 140844603,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "COIN",
+    "source": "Yahoo",
+    "summary": "COIN's UK authorization expands its investment services, advancing its push to build a globally regulated everything exchange.",
+    "url": "https://finnhub.io/api/news?id=5a3bc7d2a7bea840d3728ec9694ac45b43dd2612c6d6c49aa228bd94827bc7c6"
+   },
+   {
+    "category": "company",
+    "datetime": 1783529697,
+    "headline": "Trump declares Iran ceasefire over; bitcoin and crypto markets drop",
+    "id": 140843578,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "COIN",
+    "source": "Yahoo",
+    "summary": "Scott Melker dives into bitcoin and crypto market performance after President Trump declares the Iran ceasefire over, Japanese companies buying bitcoin, Robinhood's new blockchain hitting $100M in one week, and other big crypto headlines.  \"The Daily Wolf with Scott Melker\" airs every day at 12:00 p.m. Tune in for your daily dose of all things crypto. Make sure to also check out Yahoo Finance's crypto hub to find the latest crypto-related news.",
+    "url": "https://finnhub.io/api/news?id=29fea38bfdd8eb35fcbfdd4c7db1f14c2e0c1185dfe8facf123fd5ff621f88e7"
+   },
+   {
+    "category": "company",
+    "datetime": 1783526542,
+    "headline": "ETHA vs. IBIT: Does Ethereum or Bitcoin Belong in Your Portfolio?",
+    "id": 140843483,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "COIN",
+    "source": "Yahoo",
+    "summary": "The iShares Ethereum Trust ETF (NASDAQ:ETHA) and the iShares Bitcoin Trust ETF (NASDAQ:IBIT) look like siblings from the same BlackRock nursery: identical wrappers, same Coinbase custodian, spot crypto exposure through a familiar ticker. The choice between them is not cosmetic. Since IBIT’s January 11, 2024 launch, it has returned 35.64%. ETHA, launched July 23, 2024, ... ETHA vs. IBIT: Does Ethereum or Bitcoin Belong in Your Portfolio?",
+    "url": "https://finnhub.io/api/news?id=5cb087dd368096e1e25e81a9d1f1c0c408636deb45b46d5276508e843ef4591a"
+   },
+   {
+    "category": "company",
+    "datetime": 1783526400,
+    "headline": "Top 3 Crypto Treasury Stocks to Watch Near Key Support Levels",
+    "id": 140843580,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "COIN",
+    "source": "Yahoo",
+    "summary": "MSTR, Metaplanet, and COIN test support at $100, ¥200, and $150. See which crypto treasury stocks look strongest now.",
+    "url": "https://finnhub.io/api/news?id=6119158e77c4157cd7b031b903190a5f972db05e9c6745d3ef8574177c1c7a9d"
+   },
+   {
+    "category": "company",
+    "datetime": 1783524280,
+    "headline": "SpaceX Sparks Bitcoin Speculation With $88 Test Transfer To Coinbase After Six Months Of Wallet Silence",
+    "id": 140842051,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "COIN",
+    "source": "Yahoo",
+    "summary": "SpaceX holds approximately 18,712 BTC worth over $1.1 billion, making it one of the largest corporate Bitcoin holders globally.",
+    "url": "https://finnhub.io/api/news?id=94f5b437eebe7ef29d05ed361112224e6bda250a158c9ef7bed6857ae10714d5"
+   },
+   {
+    "category": "company",
+    "datetime": 1783518000,
+    "headline": "Bitcoin Drops After Trump Says U.S.-Iran Cease-Fire Is Over",
+    "id": 140840590,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "COIN",
+    "source": "Yahoo",
+    "summary": "President Donald Trump signals that the cease-fire with Iran is over, sparking a broad and brutal selloff in risk assets.",
+    "url": "https://finnhub.io/api/news?id=af7e5d3755e885368dd74969bb8481fd12fabd6ccd8947a5ee162d73b24d1d03"
+   },
+   {
+    "category": "company",
+    "datetime": 1783517709,
+    "headline": "6 Financials Stocks Whale Activity In Today’s Session",
+    "id": 140844008,
+    "image": "https://cdn.benzinga.com/files/images/story/2025/11/06/aggregated_options_3.jpg?width=2048&height=1536",
+    "related": "COIN",
+    "source": "Benzinga",
+    "summary": "This whale alert can help traders discover the next big trading opportunities.\nWhales are entities with large sums of money and we track their transactions here at Benzinga on our options activity scanner.\nTraders will",
+    "url": "https://finnhub.io/api/news?id=73247463e7109eaa421c1a76020d6f6a1466453ef6fdbacccec33710709d7214"
+   },
+   {
+    "category": "company",
+    "datetime": 1783517460,
+    "headline": "SpaceX Shifts Bitcoin Out Of Crypto Wallet",
+    "id": 140840437,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "COIN",
+    "source": "Yahoo",
+    "summary": "Elon Musk’s SpaceX (NASDAQ: $SPCX) has moved some Bitcoin (CRYPTO: $BTC) out of its digital wallet, the first...",
+    "url": "https://finnhub.io/api/news?id=d0e7d8b973947661903752223b5bd9163b4a4f43b8a0546ebe89d667214567fe"
+   }
+  ],
+  "FIG": [
+   {
+    "category": "company",
+    "datetime": 1783507137,
+    "headline": "Figma Stock Battles 200-Day Moving Average: Is the BofA Buy Rating Enough?",
+    "id": 140846085,
+    "image": "https://cdn.benzinga.com/files/images/story/2026/07/08/Figma.jpg?width=2048&height=1536",
+    "related": "FIG",
+    "source": "Benzinga",
+    "summary": "Figma shares are trading lower Wednesday as risk appetite cools and traders digest a recent bullish analyst reset.",
+    "url": "https://finnhub.io/api/news?id=97dd98958fbccbe36a798d91b69aa4573c313d27f9a1938c4e7c23f80754cd24"
+   },
+   {
+    "category": "company",
+    "datetime": 1783430432,
+    "headline": "Chip Rout Drags Nasdaq 100 Lower, Oil Climbs: Stock Market Today",
+    "id": 140832288,
+    "image": "https://cdn.benzinga.com/files/images/story/2026/07/07/Stock-Market-Crash-Over-City-Backdrop.jpg?width=2048&height=1536",
+    "related": "FIG",
+    "source": "Benzinga",
+    "summary": "A deepening chipmaker slide pulls all major U.S. indexes lower Tuesday while oil climbs on a Strait of Hormuz strike and defensive sectors led the tape.",
+    "url": "https://finnhub.io/api/news?id=88838d918ef36a68dd9a57ba3da664535632ea5d2c95962d93187f73ced0a534"
+   },
+   {
+    "category": "company",
+    "datetime": 1783429239,
+    "headline": "Figma Isn’t Losing To AI, It’s Winning Because of It: Analyst",
+    "id": 140835708,
+    "image": "https://cdn.benzinga.com/files/images/story/2026/07/07/Figma.jpg?width=2048&height=1536",
+    "related": "FIG",
+    "source": "Benzinga",
+    "summary": "Figma (NYSE: FIG) stock jumps 10% as BofA reinstates coverage with a Buy rating and $30 target, citing strong AI growth.",
+    "url": "https://finnhub.io/api/news?id=13d9445f648cf74f954e58a4002f9021c4374c33cca3aca3a9726a7e89bfd29e"
+   },
+   {
+    "category": "company",
+    "datetime": 1783405895,
+    "headline": "B of A Securities Reinstates Buy on Figma, Announces $30 Price Target",
+    "id": 140835709,
+    "image": "",
+    "related": "FIG",
+    "source": "Benzinga",
+    "summary": "B of A Securities  analyst Tal Liani   reinstates Figma (NYSE:FIG) with a Buy and announces $30 price target.",
+    "url": "https://finnhub.io/api/news?id=2afed8f2083eef5f279aa46e5fb746f66794633440a7a55bc671b1ae1cac9eaf"
+   },
+   {
+    "category": "company",
+    "datetime": 1783315721,
+    "headline": "Groq Founder Jonathan Ross Says 'I Was a Terrible Leader,' Admits Mistakes Cost Years",
+    "id": 140821748,
+    "image": "https://cdn.benzinga.com/files/images/story/2026/07/06/Stock-Market-Trading-Graph--Investment-C.jpg?width=2048&height=1536",
+    "related": "FIG",
+    "source": "Benzinga",
+    "summary": "Hiring mistakes delayed Groq&#39;s growth by 3-4 years as founder Ross learned to transition from engineer to manager.",
+    "url": "https://finnhub.io/api/news?id=42739aac0a1e5cd6723021c154d026cb584e38cd6dc40dded01aab3eb11e21fe"
+   }
+  ],
+  "RIVN": [
+   {
+    "category": "company",
+    "datetime": 1783509444,
+    "headline": "BNP Paribas Maintains Outperform on Rivian Automotive, Raises Price Target to $24",
+    "id": 140841423,
+    "image": "",
+    "related": "RIVN",
+    "source": "Benzinga",
+    "summary": "BNP Paribas  analyst James Picariello   maintains Rivian Automotive (NASDAQ:RIVN) with a Outperform and raises the price target from $22 to $24.",
+    "url": "https://finnhub.io/api/news?id=768f03382d1faf8f9c2d4cb058ebd3674720c688cd45bd82e2f0303bc405a629"
+   },
+   {
+    "category": "company",
+    "datetime": 1783508641,
+    "headline": "Stock Of The Day: Where Will The Rivian Selloff End?",
+    "id": 140841424,
+    "image": "",
+    "related": "RIVN",
+    "source": "Benzinga",
+    "summary": "Rivian Automotive (RIVN) shares are in a steep downtrend. If they reach the $12.90 level the selloff may end.",
+    "url": "https://finnhub.io/api/news?id=b23eda2a1299554888cd4aa8c2e187845f59f7c109b3180b02d10cd7c62b2450"
+   },
+   {
+    "category": "company",
+    "datetime": 1783498288,
+    "headline": "Rivian Stock Slips as Fresh Cash Comes With Dilution Concern",
+    "id": 140841425,
+    "image": "https://cdn.benzinga.com/files/images/story/2026/07/08/Rivian-Automotive.jpg?width=2048&height=1536",
+    "related": "RIVN",
+    "source": "Benzinga",
+    "summary": "Rivian Stock Offering pressures shares as investors weigh dilution concerns against stronger deliveries and a raised 2026 outlook.",
+    "url": "https://finnhub.io/api/news?id=9b39c75d251f5320a87ccabce5fe10284a4070c83c7bad09a6c166e25d935204"
+   },
+   {
+    "category": "company",
+    "datetime": 1783496354,
+    "headline": "Samsung's Blowout Quarter Triggers a Chip Rout, Then Iran Reignites Overnight",
+    "id": 140838493,
+    "image": "https://www.chartmill.com/images/uploads/THUMBNAILS_CHARTMILL_1000_528_52_a9bda6e9e7.webp",
+    "related": "RIVN",
+    "source": "ChartMill",
+    "summary": "Semiconductor stocks got hammered Tuesday after Samsung's record quarter failed to convince investors AI memory demand keeps accelerating, while software names quietly rebounded. Rivian tumbled on a surprise capital raise, Fiserv drew takeover interest, and overnight U.S. strikes on more than 80 Iranian targets pushed oil and gold higher heading into Wednesday's open.",
+    "url": "https://finnhub.io/api/news?id=7798d50e53e3cdfd9e435de512860f2cb2636945c78acdaf00a2825b16f7c8b8"
+   },
+   {
+    "category": "company",
+    "datetime": 1783478451,
+    "headline": "Nasdaq Dips Over 300 Points as Chip Stocks Fall: Investor Sentiment Weakens, Greed Index In 'Fear' Zone",
+    "id": 140840989,
+    "image": "https://cdn.benzinga.com/files/images/story/2026/07/08/Fear-and-Greed.jpg?width=2048&height=1536",
+    "related": "RIVN",
+    "source": "Benzinga",
+    "summary": "Market sentiment slightly declines as Nasdaq falls. Crinetics shares soar, Rivian shares dip. Trade deficit rises.",
+    "url": "https://finnhub.io/api/news?id=7920b1211b46b14ecb8d2e10a5503332be52b4ffa9f1d8574ac57e5a4671ed26"
+   },
+   {
+    "category": "company",
+    "datetime": 1783475541,
+    "headline": "Rivian Takes A Major Step Forward (Rating Upgrade)",
+    "id": 140837882,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2279687396/image_2279687396.jpg?io=getty-c-w1536",
+    "related": "RIVN",
+    "source": "SeekingAlpha",
+    "summary": "Rivian plunged on an equity offering despite stronger deliveries and raised guidance. Read here for a detailed investment analysis of RIVN stock.",
+    "url": "https://finnhub.io/api/news?id=cfa6483d062aa22953cb0290b569c77cd08cf0bbf3a5f21be04df8cc8ccecfcf"
+   },
+   {
+    "category": "company",
+    "datetime": 1783435653,
+    "headline": "Jefferies Maintains Hold on Rivian Automotive, Raises Price Target to $17",
+    "id": 140841427,
+    "image": "",
+    "related": "RIVN",
+    "source": "Benzinga",
+    "summary": "Jefferies  analyst Philippe Houchois   maintains Rivian Automotive (NASDAQ:RIVN) with a Hold and raises the price target from $16 to $17.",
+    "url": "https://finnhub.io/api/news?id=d7fb762d009e66b9b3c71f504b9a71c073c8d9b5b8559be7363a7ea7fe6e7995"
+   },
+   {
+    "category": "company",
+    "datetime": 1783431309,
+    "headline": "10 Consumer Discretionary Stocks With Whale Alerts In Today’s Session",
+    "id": 140833670,
+    "image": "https://cdn.benzinga.com/files/images/story/2025/11/06/aggregated_options_3.jpg?width=2048&height=1536",
+    "related": "RIVN",
+    "source": "Benzinga",
+    "summary": "This whale alert can help traders discover the next big trading opportunities.\nWhales are entities with large sums of money and we track their transactions here at Benzinga on our options activity scanner.\nTraders often",
+    "url": "https://finnhub.io/api/news?id=766ae518d734e8b69ca87209e0999222809e8ead4113a893b919d95e73b57f21"
+   },
+   {
+    "category": "company",
+    "datetime": 1783430432,
+    "headline": "Chip Rout Drags Nasdaq 100 Lower, Oil Climbs: Stock Market Today",
+    "id": 140832288,
+    "image": "https://cdn.benzinga.com/files/images/story/2026/07/07/Stock-Market-Crash-Over-City-Backdrop.jpg?width=2048&height=1536",
+    "related": "RIVN",
+    "source": "Benzinga",
+    "summary": "A deepening chipmaker slide pulls all major U.S. indexes lower Tuesday while oil climbs on a Strait of Hormuz strike and defensive sectors led the tape.",
+    "url": "https://finnhub.io/api/news?id=88838d918ef36a68dd9a57ba3da664535632ea5d2c95962d93187f73ced0a534"
+   },
+   {
+    "category": "company",
+    "datetime": 1783429591,
+    "headline": "Crude Oil Moves Higher; Rivian Automotive Shares Plunge",
+    "id": 140833303,
+    "image": "https://cdn.benzinga.com/files/images/story/2026/07/07/Oil-Pump-Jacks-And-Refinery-Silhouettes-.jpg?width=2048&height=1536",
+    "related": "RIVN",
+    "source": "Benzinga",
+    "summary": "US stocks decline on Tuesday, with Nasdaq falling 0.61% and S&amp;P 500 dropping 0.24%. Consumer staples shares rise 1.8% while tech stocks fall 2.1%. Logistics Manager&#39;s Index records strongest growth since March 2022.",
+    "url": "https://finnhub.io/api/news?id=3c12632f648b234e51ea7b27df7c562daf5a0c9ee0496ee5d2b68414fe6ea463"
+   }
+  ],
+  "AAOI": [],
+  "SPCX": [
+   {
+    "category": "company",
+    "datetime": 1783562730,
+    "headline": "Dow Jones Futures, Oil Prices Rise Amid Iran News; Nvidia, Valero, Dell, SpaceX In Focus",
+    "id": 140846987,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SPCX",
+    "source": "Yahoo",
+    "summary": "Tech futures rose overnight after Nvidia, Dell and other AI stocks bounced and SpaceX hit a new low. Oil prices kept rising on Iran news.",
+    "url": "https://finnhub.io/api/news?id=0a6920a50699fc277243fb3db865114d9c39980f5d9c0db3a78e350101c08aed"
+   },
+   {
+    "category": "company",
+    "datetime": 1783560166,
+    "headline": "SpaceX Stock Falls 35% From Peak Even After Nasdaq-100 Inclusion",
+    "id": 140847027,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SPCX",
+    "source": "Yahoo",
+    "summary": "SpaceX stock trades 35% below its peak after Nasdaq-100 inclusion, as index buying failed to offset heavy selling.",
+    "url": "https://finnhub.io/api/news?id=a1975e9db5a1d9c6f0cb27d254c57a87685cb2458e164e75d8b11d8624ef0deb"
+   },
+   {
+    "category": "company",
+    "datetime": 1783555051,
+    "headline": "Dow Jones Futures: Oil Spikes On Iran News, But Nvidia, Valero, Dell Rise; SpaceX Hits New Low",
+    "id": 140845435,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SPCX",
+    "source": "Yahoo",
+    "summary": "The Dow Jones slid with most stocks as oil prices jumped. The Nasdaq rose as Nvidia, Dell and AI plays bounced. SpaceX hit a new low.",
+    "url": "https://finnhub.io/api/news?id=278c70057720c2ca03bfe9a4b5ebfa753bdb376ba58d46b567e240abec53057f"
+   },
+   {
+    "category": "company",
+    "datetime": 1783553760,
+    "headline": "SpaceX Stock Is Down 35% From Its High Just 1 Day After Joining the Nasdaq-100. Is the Dip a Buy?",
+    "id": 140846255,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SPCX",
+    "source": "Yahoo",
+    "summary": "A spot in the index was supposed to be the catalyst. So why are shares back near their post-IPO low?",
+    "url": "https://finnhub.io/api/news?id=f119dded40db23ad376dba6cf4b1afa4ffc1708d3b17b038f163905e1b2e3503"
+   },
+   {
+    "category": "company",
+    "datetime": 1783551187,
+    "headline": "VC's space appetite outlives SpaceX's IPO as Blue Origin eyes $10B raise",
+    "id": 140846461,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SPCX",
+    "source": "Yahoo",
+    "summary": "Anadolu/Getty Images Blue Origin is tapping outside investors for the first time, reportedly looking to raise $10 billion at a $130 billion pre-money valuation, a sign that appetite for private space companies has persisted past SpaceX’s blockbuster IPO. Blue Origin’s decision to raise outside capital coincides with a rise in investor interest in space startups, not for rocket launches but as key AI infrastructure via data centers in space. In a May CNBC interview, Jeff Bezos said space data cen",
+    "url": "https://finnhub.io/api/news?id=e519409d41d3b46c9b7604f79d74bf8fab79b5d4e642b91ceaf9e2c02e3d3c68"
+   },
+   {
+    "category": "company",
+    "datetime": 1783544580,
+    "headline": "Why SpaceX’s Multi-Billion Dollar Debt Sale Is Already Losing Money for Investors",
+    "id": 140845471,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SPCX",
+    "source": "Yahoo",
+    "summary": "SpaceX’s  $25 billion bond deal in late June has proven to be a dud amid apparent investor concern that the company will rely on the debt markets for its massive projected capital spending over the coming years.  In a widely hyped sale, SpaceX sold the $25 billion of debt following its IPO in five bond tranches with maturities ranging from five years to 30 years.  There were reports that the deal was more than three times oversubscribed and SpaceX was able to price the bonds at narrower yield premiums above U.S. Treasuries than had been expected.",
+    "url": "https://finnhub.io/api/news?id=4b45bc7c2865ad942ac7699c1817df74f3242b2e9dbf679cef36b722798b9a80"
+   },
+   {
+    "category": "company",
+    "datetime": 1783544489,
+    "headline": "Jeff Bezos's Blue Origin is looking to fuel growth. What does that mean for rival SpaceX?",
+    "id": 140845465,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SPCX",
+    "source": "Yahoo",
+    "summary": "SpaceX (SPCX) rival Blue Origin, which is owned by Amazon (AMZN) founder Jeff Bezos, is reportedly seeking $10 billion in fresh funding. Yahoo Finance Breaking Business News Reporter Jake Conley breaks down the details.",
+    "url": "https://finnhub.io/api/news?id=d0fbb7adcbc1eb5c8753b277a9d6cbf5b8dc2a4d6ba4e42bfcf0b1a67da6801c"
+   },
+   {
+    "category": "company",
+    "datetime": 1783543611,
+    "headline": "SpaceXAI launches Grok 4.5 model for coding, agentic tasks",
+    "id": 140845439,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SPCX",
+    "source": "Yahoo",
+    "summary": "SpaceXAI on Wednesday launched the Grok 4.5 AI model, calling it the company's most intelligent offering to date designed ‌for coding and agentic tasks. Here are some details: • SpaceXAI said Grok 4.5 ‌was trained across tens of thousands of Nvidia GB300 graphics processing units, with a focus ​on meticulous data filtering, deduplication and quality scoring. \"We've partnered with SpaceXAI to train Grok 4.5,\" popular AI coding agent Cursor said.",
+    "url": "https://finnhub.io/api/news?id=b9991df6a31129c57213d8d80d4f47973813c315970f250bf5ed098a926515d8"
+   },
+   {
+    "category": "company",
+    "datetime": 1783541656,
+    "headline": "BofA Initiates SpaceX Coverage at $235 Price Target, Sees Multiple Billion-Dollar Businesses",
+    "id": 140845451,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SPCX",
+    "source": "Yahoo",
+    "summary": "Bank of America’s aerospace desk put a first-ever number on the most closely watched private company in the space economy. Ron Epstein, senior aerospace analyst at Bank of America Securities, initiated coverage of SpaceX (NASDAQ: SPCX) with a $235 base case price target derived from a 2045 discounted cash flow model. The call reframes the ... BofA Initiates SpaceX Coverage at $235 Price Target, Sees Multiple Billion-Dollar Businesses",
+    "url": "https://finnhub.io/api/news?id=1b32af37a5ec5655eba4137c4cf4d0dacd96a98f5535a8c2800ea8d9a198739c"
+   },
+   {
+    "category": "company",
+    "datetime": 1783540200,
+    "headline": "Better Space Stock to Buy Before 2026 Runs Out: SpaceX vs. Rocket Lab",
+    "id": 140844650,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SPCX",
+    "source": "Yahoo",
+    "summary": "SpaceX and Rocket Lab are two popular stocks for investors seeking exposure to the growing space economy.",
+    "url": "https://finnhub.io/api/news?id=bb07eab438600fa7b3599b922f2eb7324e0c72f91c487aa337ec8b5b52aa4938"
+   }
+  ],
+  "LITE": [
+   {
+    "category": "company",
+    "datetime": 1783541544,
+    "headline": "Lumentum Holdings (LITE) Could Be 86% Undervalued Despite Russell Index Removals",
+    "id": 140845593,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "LITE",
+    "source": "Yahoo",
+    "summary": "Lumentum Holdings (LITE) has just been removed from several Russell equity benchmarks, including the Russell 2500, Russell 2500 Growth and Value, Russell Midcap Value and multiple Russell 3000 Value indices. See our latest analysis for Lumentum Holdings. The index removals coincide with short term pressure on Lumentum Holdings, with the share price down 4.42% over the last day and 19.08% over the past month. However, the year to date share price return of 81.01% sits alongside a very large 1...",
+    "url": "https://finnhub.io/api/news?id=49f8ad497f78e07aae9bb0b16ceb97f8b942d41d2757790cbc37fadbef5214b7"
+   },
+   {
+    "category": "company",
+    "datetime": 1783536514,
+    "headline": "How Lumentum Holdings Inc. (LITE) Became a Critical Piece of the AI Boom",
+    "id": 140844361,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "LITE",
+    "source": "Yahoo",
+    "summary": "Lumentum Holdings Inc. (NASDAQ:LITE) is one of the 15 Best Stocks to Buy for the Second Half of 2026. On June 9, in a new episode of “The Rundown,” Lumentum Holdings Inc. (NASDAQ:LITE) CEO Michael Hurlston said the company has benefited from the rapid shift from copper to fiber optics inside AI data centers. He […]",
+    "url": "https://finnhub.io/api/news?id=01cb4cc96b5d8094f3b8d1abb82b6527c702769cb28bbf9e6c2eff5335e120f3"
+   },
+   {
+    "category": "company",
+    "datetime": 1783514100,
+    "headline": "Wednesday's pre-market session: top gainers and losers in the S&P500 index",
+    "id": 140839974,
+    "image": "https://www.chartmill.com/images/uploads/CM_Premarket_Movers_Small_free_90289f6b81.webp",
+    "related": "LITE",
+    "source": "ChartMill",
+    "summary": "Stay updated with the S&P500 stocks that are on the move in today's pre-market session.",
+    "url": "https://finnhub.io/api/news?id=ec8843d6c8224e9622ac1006028d42faed76988dfd28d5a93e7856793c594033"
+   },
+   {
+    "category": "company",
+    "datetime": 1783435440,
+    "headline": "Lumentum Stock Skyrockets 700% in a Year: Is It Still a Buy?",
+    "id": 140831555,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "LITE",
+    "source": "Yahoo",
+    "summary": "LITE's 700% rally has been fueled by AI and cloud demand, but strong fundamentals and optical networking growth keep its buy case intact.",
+    "url": "https://finnhub.io/api/news?id=b21538907781b8bb92ade19a1fb62c4c4565166bd985daa54babe5468db6c6f5"
+   },
+   {
+    "category": "company",
+    "datetime": 1783434540,
+    "headline": "LITE Expands Co-Packaged Optics: Can It Become the Next Growth Driver?",
+    "id": 140831258,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "LITE",
+    "source": "Yahoo",
+    "summary": "Lumentum is expanding its CPO portfolio as AI infrastructure demand rises, with commercial deployments expected to support revenue and earnings growth.",
+    "url": "https://finnhub.io/api/news?id=4c0e0029280ba8e8db30b4d81fcf986160ff9681b46146088dc718be4d46e047"
+   },
+   {
+    "category": "company",
+    "datetime": 1783428319,
+    "headline": "Stocks making the biggest moves midday: SpaceX, GE Vernova, Crinetics Pharmaceuticals, Rivian & more",
+    "id": 140832339,
+    "image": "https://image.cnbcfm.com/api/v1/image/108321360-17812891372026-06-12t182423z_83870851_rc2fslai0haj_rtrmadp_0_spacex-ipo-california.jpeg?v=1781289188&w=1920&h=1080",
+    "related": "LITE",
+    "source": "CNBC",
+    "summary": "Here are some of the companies making headlines in midday trading.",
+    "url": "https://finnhub.io/api/news?id=46c5e09411d8bcbed1515bf6da0dbfca71752d4b52eb881dd94a2e11b591e58c"
+   },
+   {
+    "category": "company",
+    "datetime": 1783416263,
+    "headline": "Lumentum: The Market Is Counting Lasers While The Business Model Changes Underneath It",
+    "id": 140829766,
+    "image": "",
+    "related": "LITE",
+    "source": "SeekingAlpha",
+    "summary": "",
+    "url": "https://finnhub.io/api/news?id=6b0d3d532d620ab34840ca25d86df79693e6649c02392431b10cccdf48400879"
+   },
+   {
+    "category": "company",
+    "datetime": 1783371600,
+    "headline": "Monday's after hours session: top gainers and losers",
+    "id": 140824127,
+    "image": "https://www.chartmill.com/images/uploads/CM_Aftermarket_Movers_Small_free_e077945a19.webp",
+    "related": "LITE",
+    "source": "ChartMill",
+    "summary": "Discover the top movers in Monday's after-hours session and stay informed about the post-market dynamics.",
+    "url": "https://finnhub.io/api/news?id=ad7870f7f628aa53007478fa19eef55b905682796ca389f23cbc1caa7ac629c4"
+   },
+   {
+    "category": "company",
+    "datetime": 1783360603,
+    "headline": "Northland Raises Lumentum (LITE) Price Target as AI Data Center Optics Outlook Improves",
+    "id": 140823638,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "LITE",
+    "source": "Yahoo",
+    "summary": "Lumentum Holdings Inc. (NASDAQ:LITE) is one of the 7 Underperforming Data Center Stocks to Buy According to Short Sellers. On June 12, Saiyi He of CMB International Securities started coverage of Lumentum Holdings Inc. (NASDAQ:LITE) with a Buy rating. The analyst set a price target of $1070 for the stock. The firm’s assigned price target […]",
+    "url": "https://finnhub.io/api/news?id=703d375666a794205b9125fb049218fc868c6b9572a002471d57aa99880f9304"
+   },
+   {
+    "category": "company",
+    "datetime": 1783332291,
+    "headline": "Millennium-Backed Trader Gains 61% With Bets on AI Backbone",
+    "id": 140819201,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "LITE",
+    "source": "Yahoo",
+    "summary": "(Bloomberg) -- As Wall Street debates whether the billions of dollars being plowed into artificial intelligence will ever pay off, hedge fund manager Val Zlatev is making record profits for his firm by betting on the picks and shovels used to power the AI rush.Most Read from BloombergOil, Gas Tankers Cross Hormuz Via Oman-Side Route After U-TurnsGreece Offers Bounty to Catch Ravenous Fish Lured by Warming SeaThe Supertanker Tycoon Making Millions on Hormuz Shuttle RunsModi’s Flagship Biofuel Pus",
+    "url": "https://finnhub.io/api/news?id=9cbdf00830dccb604ea9a00f050cb9892dbb0add76e8b38eb32e4f64671fbdf0"
+   }
+  ],
+  "INTC": [
+   {
+    "category": "company",
+    "datetime": 1783539780,
+    "headline": "Should You Buy Intel Stock Before July 23?",
+    "id": 140844347,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "INTC",
+    "source": "Yahoo",
+    "summary": "Shares of Intel have delivered terrific gains to investors so far this year, but is the rally sustainable?",
+    "url": "https://finnhub.io/api/news?id=68a9e1bd7642bdc432621e59ede5e98e70d8532578d40723c793cd83b9b4ebfe"
+   },
+   {
+    "category": "company",
+    "datetime": 1783539172,
+    "headline": "Nvidia Stock Is Cheaper Than It's Been Since the AI Boom Began",
+    "id": 140844351,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "INTC",
+    "source": "Yahoo",
+    "summary": "Nvidia Loses $1 Trillion in Value as Chip Rivals Race Ahead",
+    "url": "https://finnhub.io/api/news?id=bbb38537c01d8be774edc057405a3b07ac23398707f31c59814c3e28df11e818"
+   },
+   {
+    "category": "company",
+    "datetime": 1783536568,
+    "headline": "Apple and Intel Corporation (INTC) Chip Deal makes Strategic Sense but Production is Years Away",
+    "id": 140844373,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "INTC",
+    "source": "Yahoo",
+    "summary": "Intel Corporation (NASDAQ:INTC) is one of the Best Stocks To Buy. On June 24, Reuters reported that a potential Apple and Intel Corporation (NASDAQ:INTC) chip manufacturing agreement could strengthen the latter’s contract chip business. It could also expand Apple’s manufacturing capacity even though analysts said commercial production remains years away. Reuters noted neither company has […]",
+    "url": "https://finnhub.io/api/news?id=b4b53ddc72fbca52dfc2d5277e2c8467f104d38e631778cd3331dc69a288670a"
+   },
+   {
+    "category": "company",
+    "datetime": 1783536507,
+    "headline": "Bull vs Bear case of Advanced Micro Devices, Inc. (AMD)",
+    "id": 140844362,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "INTC",
+    "source": "Yahoo",
+    "summary": "Advanced Micro Devices, Inc. (NASDAQ:AMD) is one of the Best Stocks To Buy. On July 1, Schwab Network’s Fast Market featured Kevin Hincks and Tom White discussing Advanced Micro Devices, Inc. (NASDAQ:AMD) after Wells Fargo raised its price target to $615 from $505. The firm noted sustained demand for EPYC server processors, pricing power, and a stronger […]",
+    "url": "https://finnhub.io/api/news?id=0d2ee7452c15b4cf7dddc81ce8c2d2f355f1e8558dd8e6ce2e26bd75a66c5f8c"
    },
    {
     "category": "company",
@@ -1293,21 +2797,10 @@
     "headline": "NVDA, AVGO, MU, INTC Stocks Gain: Top Wall Street Traders See No Signs Of Panic In Chips Or AI Even As Correction Territory Looms",
     "id": 140844363,
     "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "MU",
+    "related": "INTC",
     "source": "Yahoo",
     "summary": "A recent sell-off in high-flying chipmakers and momentum stocks is being viewed by Wall Street as an orderly unwinding of profits rather than a fundamental flaw in the artificial intelligence boom.",
     "url": "https://finnhub.io/api/news?id=ca8218f6dfd5d494cad1f3e656214355692ab71fb8c1c523beae2ef749fba576"
-   },
-   {
-    "category": "company",
-    "datetime": 1783536149,
-    "headline": "Micron Slides 25% From Recent Peak",
-    "id": 140844426,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "MU",
-    "source": "Yahoo",
-    "summary": "AI memory leader retreats sharply from June peak",
-    "url": "https://finnhub.io/api/news?id=f2a21c1062bcfe1fec54a97597ce46241398cf75f5e87c334f9ce714b0e54d95"
    },
    {
     "category": "company",
@@ -1315,32 +2808,100 @@
     "headline": "Micron, Broadcom, Palantir, Delta, SpaceX, and More Stocks That Explain Today’s Market",
     "id": 140844400,
     "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "MU",
+    "related": "INTC",
     "source": "Yahoo",
     "summary": "Stocks fall broadly as the Iran war cease-fire appears to be over. Crude prices rise, pushing many oil stocks higher.",
     "url": "https://finnhub.io/api/news?id=45854c77af1654d14b7b09b1adeb3222998018077d44d2110fb62f8e56cb0224"
    },
    {
     "category": "company",
-    "datetime": 1783534020,
-    "headline": "Qualcomm AI Factory Bet Comes as the Semiconductor Pendulum Swings",
-    "id": 140844428,
+    "datetime": 1783534534,
+    "headline": "Broadcom Spikes 5% on Expanded Apple Chip Deal; Intel and AMD Drift Lower",
+    "id": 140844375,
     "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "MU",
+    "related": "INTC",
     "source": "Yahoo",
-    "summary": "Qualcomm just announced a major foray into the AI industry, but the broader semiconductor space is under pressure.",
-    "url": "https://finnhub.io/api/news?id=4e366424f92832cd422e4d70aefd9edebe9b347b7db4a02847927943be02d8c0"
+    "summary": "Broadcom (NASDAQ:AVGO) stock is outperforming the semiconductor sector today, climbing 5% to $390 after Apple announced an expanded multiyear chip agreement with the company. Meanwhile, Intel (NASDAQ:INTC) stock is down 2% to $108, while Advanced Micro Devices (NASDAQ:AMD) stock is lower by 1% to $513. The contrasting moves suggest that investors are rewarding Broadcom for ... Broadcom Spikes 5% on Expanded Apple Chip Deal; Intel and AMD Drift Lower",
+    "url": "https://finnhub.io/api/news?id=eabd7e9498d72582ab9e9301ab6ff3a37cf0e98aa86d26eca14a4db694ef9b0d"
    },
    {
     "category": "company",
-    "datetime": 1783533900,
-    "headline": "Which S&P500 stocks are the most active on Wednesday?",
-    "id": 140843729,
-    "image": "https://www.chartmill.com/images/uploads/CM_Most_Active_Stocks_Small_free_fec0650b7f.webp",
-    "related": "MU",
-    "source": "ChartMill",
-    "summary": "Stay informed about the most active stocks in the S&P500 index on Wednesday's session. Discover the stocks that are generating the highest trading volume and driving market activity.",
-    "url": "https://finnhub.io/api/news?id=b7ae88f58f85107ca732d90f2356fd2f10470cdad3c1297cd02720376ebfb5d5"
+    "datetime": 1783533313,
+    "headline": "Nvidia Rises on China and AI Partnership Buzz",
+    "id": 140844451,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "INTC",
+    "source": "Yahoo",
+    "summary": "China reportedly allows limited H200 purchases",
+    "url": "https://finnhub.io/api/news?id=b09e148dab941722be8b4805968bfb0d78d17c2c53f95a324d701bd3b5f38f51"
+   },
+   {
+    "category": "company",
+    "datetime": 1783532708,
+    "headline": "Price Prediction: Intel Soared 450% in a Year. Will The Rally Continue?",
+    "id": 140843264,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "INTC",
+    "source": "Yahoo",
+    "summary": "Intel (NASDAQ:INTC) has done the unthinkable. Shares are up 443.35% over the past year, transforming a left-for-dead turnaround story into one of the market’s most talked-about rallies. The question is whether the run has more room or whether the price has outrun the fundamentals. Our 24/7 Wall St. price target for Intel is $103.26 over ... Price Prediction: Intel Soared 450% in a Year. Will The Rally Continue?",
+    "url": "https://finnhub.io/api/news?id=22e3b548057e8273a31cdcb53a63384d23222609922689e2b23de9b516381de7"
+   },
+   {
+    "category": "company",
+    "datetime": 1783530362,
+    "headline": "Nvidia, Chip Stocks Waver Amid U.S.-Iran War Flare-Up",
+    "id": 140843276,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "INTC",
+    "source": "Yahoo",
+    "summary": "Nvidia stock and shares of other semiconductor companies wavered on Wednesday as the U.S.-Iran conflict dominated the headlines.",
+    "url": "https://finnhub.io/api/news?id=1cda23d1e683b96e7761d0c051b665ef0da31e7ce4035f43153154c4444ff272"
+   }
+  ],
+  "KLAR": [
+   {
+    "category": "company",
+    "datetime": 1783507672,
+    "headline": "JP Morgan Maintains Overweight on Klarna, Raises Price Target to $22",
+    "id": 140843763,
+    "image": "",
+    "related": "KLAR",
+    "source": "Benzinga",
+    "summary": "JP Morgan  analyst Tien-Tsin Huang   maintains Klarna (NYSE:KLAR) with a Overweight and raises the price target from $20 to $22.",
+    "url": "https://finnhub.io/api/news?id=75e1e4cef52a4134cd2842ebd9c4125941486773c27061c62bd0e2f9f02d76f4"
+   },
+   {
+    "category": "company",
+    "datetime": 1783499386,
+    "headline": "Barclays Initiates Coverage On Klarna with Equal-Weight Rating, Announces Price Target of $20",
+    "id": 140843764,
+    "image": "",
+    "related": "KLAR",
+    "source": "Benzinga",
+    "summary": "Barclays  analyst Nik Cremo   initiates coverage on Klarna (NYSE:KLAR) with a Equal-Weight rating and announces Price Target of $20.",
+    "url": "https://finnhub.io/api/news?id=c7e00bc5eebe2749f2ef6890754a2a3a1ebb1d9030bd18302eda6b7250324d1c"
+   },
+   {
+    "category": "company",
+    "datetime": 1783419037,
+    "headline": "TD Cowen Maintains Hold on Klarna, Raises Price Target to $19",
+    "id": 140834354,
+    "image": "",
+    "related": "KLAR",
+    "source": "Benzinga",
+    "summary": "TD Cowen  analyst Moshe Orenbuch   maintains Klarna (NYSE:KLAR) with a Hold and raises the price target from $17 to $19.",
+    "url": "https://finnhub.io/api/news?id=6e4ed564c83f58e0bbd9708596f12c26633db75271f0c2fd91895a65ced20666"
+   },
+   {
+    "category": "company",
+    "datetime": 1783327259,
+    "headline": "Klarna Applies For U.S. Banking License To Open A Utah-Chartered Industrial Bank",
+    "id": 140820599,
+    "image": "",
+    "related": "KLAR",
+    "source": "Benzinga",
+    "summary": "Klarna has operated as a licensed bank in Europe since 2017 and serves U.S. customers through valued partner banks. Since 2019, Klarna has provided Americans with access to over $91.3 billion in responsible credit,",
+    "url": "https://finnhub.io/api/news?id=03d822cfb47cfe2f4ea08b475a1191007ae21417b4719296570778390fb87f34"
    }
   ]
  },
