@@ -116,8 +116,12 @@ def main() -> None:
 
             if is_reddit and resp.status_code in (403, 429):
                 # 匿名 JSON 被 Reddit 拒绝 → 回退 RSS,靠 hot 榜排名排序(无具体数值)
-                resp = requests.get(re.sub(r"\.json", "/.rss", src["url"]),
-                                    headers={"User-Agent": UA}, timeout=30)
+                rss_url = re.sub(r"\.json", "/.rss", src["url"])
+                time.sleep(5)
+                resp = requests.get(rss_url, headers={"User-Agent": UA}, timeout=30)
+                if resp.status_code == 429:
+                    time.sleep(20)
+                    resp = requests.get(rss_url, headers={"User-Agent": UA}, timeout=30)
                 is_reddit = False
                 reddit_degraded = True
             resp.raise_for_status()
