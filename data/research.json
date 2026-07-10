@@ -1,18 +1,25 @@
 {
- "updated_at": "2026-07-10T02:09:49+00:00",
+ "updated_at": "2026-07-10T02:21:45+00:00",
  "tickers": {
   "TSLA": {
    "options": {
     "call_premium": 933340899.0,
-    "put_premium": 206002493.0,
+    "put_premium": 205840045.0,
     "call_vol": 1365457,
-    "put_vol": 669669,
+    "put_vol": 669661,
     "call_oi": 799527,
-    "put_oi": 623547,
+    "put_oi": 623545,
     "atm_iv": 0.4947377186889649,
     "pcr_vol": 0.49,
     "pcr_oi": 0.78,
-    "oi_changes": [],
+    "oi_changes": [
+     {
+      "exp": "2026-07-17",
+      "strike": 740.0,
+      "side": "put",
+      "delta": -2
+     }
+    ],
     "contracts": 1176
    }
   },
@@ -43,7 +50,7 @@
     "pcr_vol": 1.29,
     "pcr_oi": 1.96,
     "oi_changes": [],
-    "contracts": 1573
+    "contracts": 1565
    }
   }
  },
