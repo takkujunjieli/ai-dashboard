@@ -64,11 +64,11 @@ def fetch_snapshots(symbols: list) -> dict:
     return out
 
 
-def fetch_bars(sym: str, mult: int, days: int) -> list:
-    """分钟 K 线 [t(ms), o, h, l, c, v, vw]。"""
+def fetch_bars(sym: str, mult: int, timespan: str, days: int) -> list:
+    """K 线 [t(ms), o, h, l, c, v, vw]。"""
     to = date.today()
     frm = to - timedelta(days=days)
-    data = mget(f"/v2/aggs/ticker/{sym}/range/{mult}/minute/{frm}/{to}",
+    data = mget(f"/v2/aggs/ticker/{sym}/range/{mult}/{timespan}/{frm}/{to}",
                 adjusted="true", sort="asc", limit=50000)
     return [[r["t"], r["o"], r["h"], r["l"], r["c"], r["v"], r.get("vw")]
             for r in (data.get("results") or [])][-BAR_KEEP:]
@@ -251,6 +251,19 @@ def summarize_options(sym: str, contracts: list, spot: float | None,
                        "atm_iv": (sum(d["_ivs"]) / len(d["_ivs"])) if d["_ivs"] else None}
                       for e, d in sorted(by_exp.items())][:MAX_EXPIRATIONS]
 
+    # 按行权价聚合的 OI/成交量(交易页行权价梯用),现价 ±25%
+    strike_agg: dict[float, dict] = {}
+    for c in contracts:
+        side = "call" if c["type"] == "call" else "put"
+        a = strike_agg.setdefault(c["strike"], {"call_oi": 0, "put_oi": 0,
+                                                "call_vol": 0, "put_vol": 0})
+        a[f"{side}_oi"] += c["oi"]
+        a[f"{side}_vol"] += c["vol"]
+    if spot:
+        lo, hi = spot * 0.75, spot * 1.25
+        strike_agg = {k: v for k, v in strike_agg.items() if lo <= k <= hi}
+    s["by_strike"] = [{"strike": k, **v} for k, v in sorted(strike_agg.items())]
+
     # 当日最活跃行权价(按成交量)
     s["top_strikes"] = [{"exp": c["exp"], "strike": c["strike"],
                          "side": "call" if c["type"] == "call" else "put",
@@ -306,20 +319,22 @@ def main() -> None:
     use_massive_options = bool(KEY)
     for sym in research:
         entry = {}
-        # K线: 1分钟(当日+昨日) 和 5分钟(5天),Massive 优先、雅虎兜底
-        for key_name, mult, days, y_iv, y_pd in (
-                ("bars_1m", 1, 2, "1m", "2d"), ("bars_5m", 5, 7, "5m", "5d")):
+        # K线: 1分钟(当日+昨日)、5分钟(5天)、日线(6个月),Massive 优先、雅虎兜底
+        for key_name, mult, timespan, days, y_iv, y_pd in (
+                ("bars_1m", 1, "minute", 2, "1m", "2d"),
+                ("bars_5m", 5, "minute", 7, "5m", "5d"),
+                ("bars_d", 1, "day", 183, "1d", "6mo")):
             bars = None
             if KEY:
                 try:
-                    bars = fetch_bars(sym, mult, days)
-                    entry[f"src_{key_name[-2:]}"] = "massive"
+                    bars = fetch_bars(sym, mult, timespan, days)
+                    entry[f"src_{key_name.split('_')[1]}"] = "massive"
                 except Exception as exc:  # noqa: BLE001
                     out["errors"].append(f"{sym} {key_name}(massive): {exc}")
             if not bars:
                 try:
                     bars = bars_yahoo(sym, y_iv, y_pd)
-                    entry[f"src_{key_name[-2:]}"] = "yahoo"
+                    entry[f"src_{key_name.split('_')[1]}"] = "yahoo"
                 except Exception as exc:  # noqa: BLE001
                     out["errors"].append(f"{sym} {key_name}(yahoo): {exc}")
             if bars:

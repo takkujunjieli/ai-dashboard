@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>短线研究台</title>
+<title>短线研究台 · 信息页</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -18,14 +18,13 @@
 
 <nav id="nav">
   <button class="tab active" data-tab="home">🏠 主页</button>
-  <button class="tab" data-tab="stock">📈 个股</button>
-  <button class="tab" data-tab="options">🎯 期权</button>
   <button class="tab" data-tab="news">📰 新闻</button>
   <button class="tab" data-tab="social">💬 社区</button>
+  <a class="tab tab-link" href="trading.html">⚡ 交易台 ↗</a>
 </nav>
 
 <main>
-  <!-- ================= 主页: ticker set + 概览 ================= -->
+  <!-- ================= 主页: 概览 ================= -->
   <div id="tab-home" class="tab-panel active">
     <section>
       <h2>💰 最近财报 EPS <span class="muted">(实际 vs 预期)</span></h2>
@@ -35,61 +34,6 @@
     <section>
       <h2>🎯 分析师评级</h2>
       <div id="recommendations" class="card"></div>
-    </section>
-  </div>
-
-  <!-- ================= 个股: 分钟K线 + Short ================= -->
-  <div id="tab-stock" class="tab-panel">
-    <section>
-      <h2>📈 个股 <span class="muted">(分钟 K 线 · RSI/EMA/VWAP · 做空数据 · Massive 实时)</span></h2>
-      <div id="bar-gran" class="chips">
-        <button data-g="1m">1 分钟(当日)</button>
-        <button data-g="5m" class="active">5 分钟(两日)</button>
-      </div>
-      <div id="stock-cards"></div>
-      <p class="muted small">K 线与指标来自 Massive(Stocks Advanced,实时),失败时回退雅虎;
-        short interest 由 FINRA 双周结算,short volume 占比每日更新。
-        深度数据只覆盖 config/ticker_sets.json 里 research 组的标的。</p>
-    </section>
-  </div>
-
-  <!-- ================= 期权: 链上指标 + GEX ================= -->
-  <div id="tab-options" class="tab-panel">
-    <section>
-      <h2>🎯 期权链指标 <span class="muted">(Premium · 成交量 · OI 变化,45 天内到期)</span></h2>
-      <div id="opt-cards"></div>
-    </section>
-
-    <section>
-      <h2>⚡ Gamma Exposure <span class="muted">(盘中动态)</span></h2>
-
-      <div class="card gex-controls">
-        <div class="ctl-row">
-          <label>开始 <input type="datetime-local" id="gex-start" title="留空 = 立即开始"></label>
-          <label>结束 <input type="datetime-local" id="gex-end" title="留空 = 只采集一次"></label>
-          <label>间隔
-            <select id="gex-gap">
-              <option value="5">5 分钟</option>
-              <option value="10">10 分钟</option>
-              <option value="15">15 分钟</option>
-              <option value="30" selected>30 分钟</option>
-              <option value="60">60 分钟</option>
-            </select>
-          </label>
-        </div>
-        <div class="ctl-row">
-          <input type="password" id="gex-pat" placeholder="GitHub PAT(只授权本仓库 Actions,仅存本机浏览器)">
-          <button id="gex-start-btn">▶ 启动采集</button>
-          <button id="gex-stop-btn">⏹ 停止</button>
-          <button id="gex-refresh-btn">🔄 刷新数据</button>
-        </div>
-        <div id="gex-status" class="muted small"></div>
-      </div>
-
-      <div id="gex-cards" class="gex-grid"></div>
-      <p class="muted small">采集会同时更新 K线/期权链/GEX。GEX = gamma × 未平仓量 × 100 × 现价² × 1%,
-        call 为正、put 为负;正 GEX 区域做市商压制波动,负 GEX 区域放大波动,flip 为多空分界。
-        时间按你的本地时区填写。</p>
     </section>
   </div>
 
@@ -126,9 +70,9 @@
 </main>
 
 <footer class="muted small">
-  数据来源: Massive · Finnhub · 雅虎期权链 · 公开 RSS — 仅供个人研究参考,不构成投资建议
+  数据来源: Massive · Finnhub · 公开 RSS — 仅供个人研究参考,不构成投资建议
 </footer>
 
-<script src="assets/app.js"></script>
+<script type="module" src="assets/app.js"></script>
 </body>
 </html>

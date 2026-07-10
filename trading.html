@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>短线研究台 · 交易台</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="trading">
+<header>
+  <h1>⚡ 交易台 <a class="muted small" href="index.html">← 信息页</a></h1>
+  <div class="hdr-right">
+    <span id="poll-status" class="muted small"></span>
+    <button id="refresh-btn" class="mini-btn">🔄 刷新</button>
+  </div>
+</header>
+
+<!-- research 组迷你行情卡,兼作切票器 -->
+<div id="mini-cards" class="quotes-strip mini-strip"></div>
+
+<!-- 工具栏: 周期 / 行权价梯模式 / 关键指标 -->
+<div class="wb-toolbar">
+  <div id="tf-chips" class="chips">
+    <button data-tf="1m">1分</button>
+    <button data-tf="5m" class="active">5分</button>
+    <button data-tf="15m">15分</button>
+    <button data-tf="1d">日线</button>
+  </div>
+  <div id="ladder-mode" class="chips">
+    <button data-m="gex" class="active">梯:GEX</button>
+    <button data-m="oi">梯:OI</button>
+    <button data-m="vol">梯:量</button>
+  </div>
+  <div id="wb-stats" class="stat-row"></div>
+</div>
+
+<!-- 主区: K线 + 行权价梯 -->
+<div class="wb-main">
+  <div class="wb-chart">
+    <div id="chart"></div>
+    <div class="sub-title muted small">盘中净 GEX 走势(随采集累积)</div>
+    <div id="gex-sub"></div>
+  </div>
+  <div class="wb-ladder">
+    <div class="sub-title muted small" id="ladder-title">行权价梯 · GEX</div>
+    <div id="ladder-box"><svg id="ladder" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  </div>
+</div>
+
+<!-- 期权详细面板 -->
+<section>
+  <h2>🎯 期权面板 <span class="muted" id="opt-src"></span></h2>
+  <div id="opt-panel"></div>
+</section>
+
+<!-- 采集控制 -->
+<section>
+  <h2>🎛️ 盘中采集控制</h2>
+  <div class="card gex-controls">
+    <div class="ctl-row">
+      <label>开始 <input type="datetime-local" id="gex-start" title="留空 = 立即开始"></label>
+      <label>结束 <input type="datetime-local" id="gex-end" title="留空 = 只采集一次"></label>
+      <label>间隔
+        <select id="gex-gap">
+          <option value="5">5 分钟</option>
+          <option value="10">10 分钟</option>
+          <option value="15">15 分钟</option>
+          <option value="30" selected>30 分钟</option>
+          <option value="60">60 分钟</option>
+        </select>
+      </label>
+    </div>
+    <div class="ctl-row">
+      <input type="password" id="gex-pat" placeholder="GitHub PAT(只授权本仓库 Actions,仅存本机浏览器;也用于 60 秒自动轮询)">
+      <button id="gex-start-btn">▶ 启动采集</button>
+      <button id="gex-stop-btn">⏹ 停止</button>
+    </div>
+    <div id="gex-status" class="muted small"></div>
+  </div>
+</section>
+
+<div id="errors" class="muted small"></div>
+
+<footer class="muted small">
+  K线/指标: Massive(实时,回退雅虎) · 期权: Massive/雅虎(15分钟延迟) · GEX/OI 为最近采集快照 — 仅供个人研究参考
+</footer>
+
+<script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
+<script type="module" src="assets/trading.js"></script>
+</body>
+</html>
