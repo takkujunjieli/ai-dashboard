@@ -18,7 +18,6 @@ import time
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-import yaml
 import yfinance as yf
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -101,7 +100,7 @@ def compute_gex(sym: str) -> dict:
 
 
 def main() -> None:
-    tickers = yaml.safe_load((ROOT / "config" / "options_watchlist.yml").read_text())["tickers"]
+    tickers = json.loads((ROOT / "config" / "ticker_sets.json").read_text())["research"]
     now = datetime.now(timezone.utc)
     out = {"updated_at": now.isoformat(timespec="seconds"), "source": "yahoo",
            "tickers": {}, "errors": []}

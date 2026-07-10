@@ -3,62 +3,62 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>股市信息 Dashboard</title>
+<title>短线研究台</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <header>
-  <h1>📈 股市信息 Dashboard</h1>
+  <h1>📈 短线研究台</h1>
   <div id="updated" class="muted">加载中…</div>
 </header>
 
 <section id="quotes-strip" class="quotes-strip"></section>
 
+<div id="set-selector" class="chips set-selector"></div>
 <div id="ticker-filter" class="chips ticker-filter"></div>
 
 <nav id="nav">
-  <button class="tab active" data-tab="overview">📊 概览</button>
-  <button class="tab" data-tab="news">📰 公司新闻</button>
-  <button class="tab" data-tab="feeds">🗞️ 信息流</button>
-  <button class="tab" data-tab="gex">⚡ GEX</button>
+  <button class="tab active" data-tab="home">🏠 主页</button>
+  <button class="tab" data-tab="stock">📈 个股</button>
+  <button class="tab" data-tab="options">🎯 期权</button>
+  <button class="tab" data-tab="news">📰 新闻</button>
+  <button class="tab" data-tab="social">💬 社区</button>
 </nav>
 
 <main>
-  <div id="tab-overview" class="tab-panel active">
-    <section id="sec-earnings">
-      <h2>📅 财报日历 <span class="muted">(过去 7 天 ~ 未来 21 天)</span></h2>
-      <div id="earnings-calendar" class="card"></div>
-    </section>
-
-    <section id="sec-surprises">
-      <h2>💰 最近财报 EPS(实际 vs 预期)</h2>
+  <!-- ================= 主页: ticker set + 概览 ================= -->
+  <div id="tab-home" class="tab-panel active">
+    <section>
+      <h2>💰 最近财报 EPS <span class="muted">(实际 vs 预期)</span></h2>
       <div id="earnings-surprises" class="grid"></div>
     </section>
 
-    <section id="sec-analysts">
+    <section>
       <h2>🎯 分析师评级</h2>
       <div id="recommendations" class="card"></div>
     </section>
   </div>
 
-  <div id="tab-news" class="tab-panel">
-    <section id="sec-news">
-      <h2>📰 公司新闻 <span class="muted">(近 3 天,来自 Finnhub,跟随顶部筛选)</span></h2>
-      <div id="company-news" class="card list"></div>
+  <!-- ================= 个股: 分钟K线 + Short ================= -->
+  <div id="tab-stock" class="tab-panel">
+    <section>
+      <h2>📈 个股 <span class="muted">(5 分钟 K 线 · Short Interest · 数据源 Massive)</span></h2>
+      <div id="stock-cards"></div>
+      <p class="muted small">K 线为最近 2 个交易日的 5 分钟 OHLCV;short interest 由 FINRA 每两周结算一次。
+        Massive 免费版 K 线为盘后数据,Stocks Starter 及以上为盘中 15 分钟延迟。
+        深度数据只覆盖 config/ticker_sets.json 里 research 组的标的。</p>
     </section>
   </div>
 
-  <div id="tab-feeds" class="tab-panel">
-    <section id="sec-feeds">
-      <h2>🗞️ 信息流 <span class="muted">(新闻源 / 大V / YouTube / 社区)</span></h2>
-      <div id="feed-filters" class="chips"></div>
-      <div id="feeds" class="card list"></div>
+  <!-- ================= 期权: 链上指标 + GEX ================= -->
+  <div id="tab-options" class="tab-panel">
+    <section>
+      <h2>🎯 期权链指标 <span class="muted">(Premium · 成交量 · OI 变化,45 天内到期)</span></h2>
+      <div id="opt-cards" class="grid"></div>
     </section>
-  </div>
 
-  <div id="tab-gex" class="tab-panel">
-    <section id="sec-gex">
-      <h2>⚡ 期权 Gamma Exposure <span class="muted">(雅虎期权链 · 盘中动态)</span></h2>
+    <section>
+      <h2>⚡ Gamma Exposure <span class="muted">(盘中动态)</span></h2>
 
       <div class="card gex-controls">
         <div class="ctl-row">
@@ -84,9 +84,36 @@
       </div>
 
       <div id="gex-cards" class="gex-grid"></div>
-      <p class="muted small">GEX = gamma × 未平仓量 × 100 × 现价² × 1%,call 为正、put 为负(做市商对冲惯例)。
-        正 GEX 区域做市商高抛低吸(压制波动),负 GEX 区域追涨杀跌(放大波动),flip 为多空分界。
-        数据来自雅虎期权链(约 15 分钟延迟),gamma 由 IV 用 Black-Scholes 现算;时间按你的本地时区填写。</p>
+      <p class="muted small">采集会同时更新 K线/期权链/GEX。GEX = gamma × 未平仓量 × 100 × 现价² × 1%,
+        call 为正、put 为负;正 GEX 区域做市商压制波动,负 GEX 区域放大波动,flip 为多空分界。
+        时间按你的本地时区填写。</p>
+    </section>
+  </div>
+
+  <!-- ================= 新闻: 财报日历 + 宏观 + 公司 ================= -->
+  <div id="tab-news" class="tab-panel">
+    <section>
+      <h2>📅 财报日历 <span class="muted">(过去 7 天 ~ 未来 21 天)</span></h2>
+      <div id="earnings-calendar" class="card"></div>
+    </section>
+
+    <section>
+      <h2>🌍 宏观 / 市场新闻 <span class="muted">(RSS 源)</span></h2>
+      <div id="news-feeds" class="card list"></div>
+    </section>
+
+    <section>
+      <h2>🏢 公司新闻 <span class="muted">(近 3 天,来自 Finnhub,跟随顶部筛选)</span></h2>
+      <div id="company-news" class="card list"></div>
+    </section>
+  </div>
+
+  <!-- ================= 社区: Reddit / X / 视频 ================= -->
+  <div id="tab-social" class="tab-panel">
+    <section>
+      <h2>💬 社区 / 大V <span class="muted">(Reddit 按热度 · X · YouTube)</span></h2>
+      <div id="social-filters" class="chips"></div>
+      <div id="social-feeds" class="card list"></div>
     </section>
   </div>
 
@@ -96,7 +123,7 @@
 </main>
 
 <footer class="muted small">
-  数据来源: Finnhub 免费 API + 公开 RSS · 仅供个人参考,不构成投资建议
+  数据来源: Massive · Finnhub · 雅虎期权链 · 公开 RSS — 仅供个人研究参考,不构成投资建议
 </footer>
 
 <script src="assets/app.js"></script>

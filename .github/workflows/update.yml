@@ -33,6 +33,11 @@ jobs:
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
 
+      - name: 抓取研究数据(K线/short/期权,EOD 基线)
+        run: python scripts/fetch_research.py
+        env:
+          MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+
       - name: 提交数据
         run: |
           git config user.name "github-actions[bot]"

@@ -1,10 +1,25 @@
-# 📈 股市信息 Dashboard
+# 📈 短线研究台
 
-每天自动收集股市信息的静态 dashboard,零服务器成本:
+短线研究系统,静态托管零服务器成本。五个分页:
 
-- **结构化数据**(免费 API,无爬虫): 财报日历、EPS 实际 vs 预期、分析师评级、公司新闻 — 来自 [Finnhub 免费版](https://finnhub.io)(60 次/分钟)
-- **信息流**(免费 RSS): 新闻网站、财报电话会议全文、YouTube 频道、Reddit 社区、X/雪球大V(经 RSSHub 桥接)
-- **运行方式**: GitHub Actions 每天定时抓取 → JSON 存进仓库 → GitHub Pages 托管页面
+| 分页 | 内容 | 数据源 |
+|---|---|---|
+| 🏠 主页 | ticker set 切换 + 行情 + EPS + 分析师评级 | Finnhub |
+| 📈 个股 | 5 分钟 K 线(OHLCV)、Short Interest | Massive |
+| 🎯 期权 | C/P Premium、成交量、OI 及变化、ATM IV、盘中 GEX | Massive(未配置回退雅虎) |
+| 📰 新闻 | 财报日历、宏观/市场 RSS、公司新闻 | Finnhub + RSS |
+| 💬 社区 | Reddit(按热度)、X/雪球(RSSHub)、YouTube | RSS |
+
+**运行方式**: GitHub Actions 定时/手动抓取 → JSON 存进仓库 → GitHub Pages 托管页面。
+盘中采集(K线/期权/GEX)在期权页选好 开始/结束/间隔 一键启动。
+
+**ticker 分组**: [config/ticker_sets.json](config/ticker_sets.json) —
+`research` 是深度数据(K线/期权)覆盖的标的(建议 ≤5 只),`sets` 是主页可切换的分组。
+
+**Massive key(可选但推荐)**: 注册 <https://massive.com> 免费拿 key,然后
+`gh secret set MASSIVE_API_KEY`。免费版限速 5 次/分钟、K 线为盘后数据;
+Stocks Starter($29/月)起为盘中 15 分钟延迟;期权链快照需 Options Starter,
+未开通时期权指标自动回退雅虎期权链(免费)。
 
 ## 快速开始
 

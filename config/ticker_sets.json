@@ -1,0 +1,10 @@
+{
+  "_说明": "research = 深度数据(分钟K线/short/期权链)只抓这一组,Massive 免费版限速 5 次/分钟,建议 ≤5 只; sets = 主页可切换的分组,空数组表示不过滤",
+  "research": ["TSLA", "AMD", "MU"],
+  "sets": {
+    "全部": [],
+    "短线重点": ["TSLA", "AMD", "MU"],
+    "芯片": ["AMD", "MU", "SNDK", "LITE", "INTC", "AAOI"],
+    "新股": ["FIG", "KLAR", "SPCX", "RKLB"]
+  }
+}

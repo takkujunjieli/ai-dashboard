@@ -1,19 +1,23 @@
-/* 股市信息 Dashboard — 纯前端渲染,从 data/*.json 读取抓取结果 */
+/* 短线研究台 — 纯前端渲染,从 data/*.json 读取抓取结果 */
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => { const d = document.createElement("div"); d.textContent = t ?? ""; return d.innerHTML; };
 const fmtDT = (iso) => iso ? new Date(iso).toLocaleString("zh-CN", { hour12: false }) : "—";
 const CAT_LABEL = { news: "新闻", kol: "大V", youtube: "视频", community: "社区" };
+const SOCIAL_CATS = ["community", "kol", "youtube"];
 
 const REPO = "takkujunjieli/stock-dashboard";
 
-let MARKET = null;
-let FEEDS = null;
-let GEX = null;
-let GEXH = null;
-let feedCat = "all";
+let MARKET = null;   // Finnhub: 行情/财报/评级/公司新闻
+let FEEDS = null;    // RSS: 新闻/社区/大V
+let GEX = null;      // GEX 快照
+let GEXH = null;     // GEX 盘中序列
+let RESEARCH = null; // Massive/雅虎: K线/short/期权链指标
+let SETS = null;     // config/ticker_sets.json
+let socialCat = "all";
 // 全局股票筛选(多选),空集 = 全部;记住上次的选择
 let selected = new Set(JSON.parse(localStorage.getItem("tickerFilter") || "[]"));
+let activeSet = localStorage.getItem("tickerSet") || null;
 const isSel = (sym) => selected.size === 0 || selected.has(sym);
 
 function timeAgo(iso) {
@@ -24,6 +28,14 @@ function timeAgo(iso) {
   return Math.floor(s / 86400) + " 天前";
 }
 
+const fmtMoney = (v) => {
+  if (v == null) return "—";
+  const abs = Math.abs(v);
+  const s = abs >= 1e9 ? (abs / 1e9).toFixed(2) + "B" : abs >= 1e6 ? (abs / 1e6).toFixed(1) + "M" : (abs / 1e3).toFixed(0) + "K";
+  return (v < 0 ? "-$" : "$") + s;
+};
+const fmtNum = (v) => v == null ? "—" : v >= 1e6 ? (v / 1e6).toFixed(2) + "M" : v >= 1e3 ? (v / 1e3).toFixed(1) + "K" : String(v);
+
 async function loadJSON(path) {
   try {
     const r = await fetch(path + "?t=" + Date.now());
@@ -32,7 +44,7 @@ async function loadJSON(path) {
   } catch { return null; }
 }
 
-/* GEX 数据走 GitHub contents API 拿最新提交(采集期间 Pages 不重新部署),失败退回 Pages 相对路径 */
+/* 盘中数据走 GitHub contents API 拿最新提交(采集期间 Pages 不重新部署),失败退回 Pages 相对路径 */
 async function loadFreshJSON(path) {
   try {
     const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}?t=${Date.now()}`,
@@ -42,7 +54,27 @@ async function loadFreshJSON(path) {
   return loadJSON(path);
 }
 
-/* ---------- 全局股票筛选 ---------- */
+/* ---------- Ticker set 选择(主页顶部,作用于全站) ---------- */
+function renderSetSelector() {
+  const sets = SETS?.sets || {};
+  $("set-selector").innerHTML = Object.keys(sets).map((name) =>
+    `<button data-set="${esc(name)}" class="${name === activeSet ? "active" : ""}">${esc(name)}</button>`
+  ).join("");
+}
+
+function initSetSelector() {
+  $("set-selector").addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button");
+    if (!btn) return;
+    activeSet = btn.dataset.set;
+    selected = new Set(SETS?.sets?.[activeSet] || []);
+    localStorage.setItem("tickerSet", activeSet);
+    localStorage.setItem("tickerFilter", JSON.stringify([...selected]));
+    renderAll();
+  });
+}
+
+/* ---------- 单票筛选(可在 set 基础上微调) ---------- */
 function renderTickerFilter() {
   const syms = MARKET?.watchlist || [];
   $("ticker-filter").innerHTML = [
@@ -58,6 +90,8 @@ function initTickerFilter() {
     if (btn.dataset.sym === "__all") selected.clear();
     else if (selected.has(btn.dataset.sym)) selected.delete(btn.dataset.sym);
     else selected.add(btn.dataset.sym);
+    activeSet = null;  // 手动微调后不再对应某个 set
+    localStorage.removeItem("tickerSet");
     localStorage.setItem("tickerFilter", JSON.stringify([...selected]));
     renderAll();
   });
@@ -91,28 +125,7 @@ function renderQuotes(m) {
   }).join("") || `<div class="empty">暂无行情数据(检查 FINNHUB_API_KEY)</div>`;
 }
 
-/* ---------- 财报日历 ---------- */
-function renderCalendar(m) {
-  const rows = (m.earnings_calendar || []).filter((e) => isSel(e.symbol));
-  const hourLabel = { bmo: "盘前", amc: "盘后", dmh: "盘中" };
-  const today = new Date().toISOString().slice(0, 10);
-  const fmtRev = (v) => v == null ? "—" : (v / 1e9).toFixed(2) + "B";
-  const fmtEps = (v) => v == null ? "—" : Number(v).toFixed(2);
-  $("earnings-calendar").innerHTML = rows.length ? `<table>
-    <tr><th>日期</th><th>代码</th><th>时段</th><th>EPS 预期</th><th>EPS 实际</th><th>营收预期</th><th>营收实际</th></tr>
-    ${rows.map((e) => `<tr class="${e.date === today ? "today-row" : ""}">
-      <td>${esc(e.date)}${e.date === today ? " ⭐" : ""}</td>
-      <td><b>${esc(e.symbol)}</b></td>
-      <td>${hourLabel[e.hour] || "—"}</td>
-      <td>${fmtEps(e.epsEstimate)}</td>
-      <td>${e.epsActual != null ? `<span class="${e.epsActual >= (e.epsEstimate ?? -1e9) ? "up" : "down"}">${fmtEps(e.epsActual)}</span>` : "—"}</td>
-      <td>${fmtRev(e.revenueEstimate)}</td>
-      <td>${fmtRev(e.revenueActual)}</td>
-    </tr>`).join("")}
-  </table>` : `<div class="empty">窗口期内没有财报安排</div>`;
-}
-
-/* ---------- 最近财报 EPS surprise ---------- */
+/* ---------- 主页: 最近财报 EPS ---------- */
 function renderSurprises(m) {
   const data = m.earnings_surprises || {};
   const cards = Object.entries(data)
@@ -135,7 +148,7 @@ function renderSurprises(m) {
   $("earnings-surprises").innerHTML = cards.join("") || `<div class="card empty">暂无数据</div>`;
 }
 
-/* ---------- 分析师评级 ---------- */
+/* ---------- 主页: 分析师评级 ---------- */
 function renderRecommendations(m) {
   const data = m.recommendations || {};
   const rows = Object.entries(data)
@@ -155,7 +168,150 @@ function renderRecommendations(m) {
   $("recommendations").innerHTML = rows.join("") || `<div class="empty">暂无数据</div>`;
 }
 
-/* ---------- 公司新闻(Finnhub),跟随全局筛选 ---------- */
+/* ---------- 个股页: 5分钟K线 ---------- */
+function candleChart(bars) {
+  // 取最近 2 个交易日(按美东日期分组)
+  const dayOf = (t) => new Date(t).toLocaleDateString("en-US", { timeZone: "America/New_York" });
+  const days = [...new Set(bars.map((b) => dayOf(b[0])))].slice(-2);
+  const rows = bars.filter((b) => days.includes(dayOf(b[0])));
+  if (!rows.length) return "";
+  const W = 640, H = 240, volH = 40, pad = 6, axisY = 14;
+  const priceH = H - volH - axisY;
+  const n = rows.length, bw = (W - pad * 2) / n;
+  const hi = Math.max(...rows.map((r) => r[2]));
+  const lo = Math.min(...rows.map((r) => r[3]));
+  const maxV = Math.max(...rows.map((r) => r[5]), 1);
+  const y = (v) => pad + (hi - v) / ((hi - lo) || 1) * (priceH - pad * 2);
+  const parts = [];
+  let lastDay = null;
+  rows.forEach((r, i) => {
+    const [t, o, h, l, c, v] = r;
+    const x = pad + i * bw, xm = x + bw / 2;
+    const up = c >= o;
+    const color = up ? "#34d399" : "#f87171";
+    // 换日分隔线
+    const d = dayOf(t);
+    if (lastDay && d !== lastDay) {
+      parts.push(`<line x1="${x.toFixed(1)}" y1="0" x2="${x.toFixed(1)}" y2="${H - axisY}" stroke="#2a3550" stroke-dasharray="3 4"/>`);
+      parts.push(`<text x="${(x + 3).toFixed(1)}" y="${H - 3}" fill="#8b96ad" font-size="9">${d}</text>`);
+    }
+    lastDay = d;
+    parts.push(`<line x1="${xm.toFixed(1)}" y1="${y(h).toFixed(1)}" x2="${xm.toFixed(1)}" y2="${y(l).toFixed(1)}" stroke="${color}" stroke-width="0.8"/>`);
+    const bh = Math.max(Math.abs(y(o) - y(c)), 0.8);
+    parts.push(`<rect x="${(x + 0.5).toFixed(1)}" y="${Math.min(y(o), y(c)).toFixed(1)}" width="${Math.max(bw - 1, 0.8).toFixed(1)}" height="${bh.toFixed(1)}" fill="${color}"><title>${new Date(t).toLocaleString("zh-CN", { hour12: false })}\nO ${o} H ${h} L ${l} C ${c}\nV ${fmtNum(v)}</title></rect>`);
+    const vh = v / maxV * (volH - 4);
+    parts.push(`<rect x="${(x + 0.5).toFixed(1)}" y="${(H - axisY - vh).toFixed(1)}" width="${Math.max(bw - 1, 0.8).toFixed(1)}" height="${vh.toFixed(1)}" fill="${color}" opacity="0.45"/>`);
+  });
+  const last = rows[rows.length - 1][4];
+  return `<svg viewBox="0 0 ${W} ${H}" class="gex-chart" xmlns="http://www.w3.org/2000/svg">
+    ${parts.join("")}
+    <line x1="${pad}" y1="${y(last).toFixed(1)}" x2="${W - pad}" y2="${y(last).toFixed(1)}" stroke="#60a5fa" stroke-width="0.7" stroke-dasharray="2 3"/>
+    <text x="${W - pad}" y="${(y(last) - 3).toFixed(1)}" fill="#60a5fa" font-size="10" text-anchor="end">${last}</text>
+    <text x="${pad}" y="${(pad + 8)}" fill="#8b96ad" font-size="10">${hi.toFixed(2)}</text>
+    <text x="${pad}" y="${(priceH - 2)}" fill="#8b96ad" font-size="10">${lo.toFixed(2)}</text>
+  </svg>`;
+}
+
+function renderStock() {
+  const el = $("stock-cards");
+  const entries = Object.entries(RESEARCH?.tickers || {}).filter(([s]) => isSel(s));
+  if (!entries.length) {
+    el.innerHTML = `<div class="card empty">${(RESEARCH?.errors || [])[0] ? esc(RESEARCH.errors[0]) : "暂无研究数据 — 在期权页启动一次采集,或等每日更新"}</div>`;
+    return;
+  }
+  el.innerHTML = entries.map(([sym, d]) => {
+    const sh = d.short;
+    const shortHtml = sh ? `
+      <div class="stat-row">
+        <span>Short Interest <b>${fmtNum(sh.short_interest)}</b> 股</span>
+        <span>Days to Cover <b>${sh.days_to_cover ?? "—"}</b></span>
+        <span>日均量 <b>${fmtNum(sh.avg_daily_volume)}</b></span>
+        <span class="muted">结算日 ${esc(sh.settlement_date || "—")}</span>
+      </div>` : `<div class="muted small">short interest 暂无(需要 MASSIVE_API_KEY)</div>`;
+    return `<div class="card stock-card">
+      <div class="gex-head"><b>${esc(sym)}</b>${d.bars?.length ? `<span class="muted">${d.bars.length} 根 5 分钟K线</span>` : ""}</div>
+      ${d.bars?.length ? candleChart(d.bars) : `<div class="empty">暂无K线(需要 MASSIVE_API_KEY,免费版为盘后数据)</div>`}
+      ${shortHtml}
+    </div>`;
+  }).join("");
+}
+
+/* ---------- 期权页: 链上指标 ---------- */
+function renderOptions() {
+  const el = $("opt-cards");
+  const entries = Object.entries(RESEARCH?.tickers || {})
+    .filter(([s, d]) => isSel(s) && d.options);
+  if (!entries.length) {
+    el.innerHTML = `<div class="card empty">暂无期权链数据 — 启动一次采集,或等每日更新</div>`;
+    return;
+  }
+  const src = RESEARCH?.options_source === "massive" ? "Massive" : "雅虎(回退)";
+  el.innerHTML = entries.map(([sym, d]) => {
+    const o = d.options;
+    const premTotal = (o.call_premium + o.put_premium) || 1;
+    const cw = (o.call_premium / premTotal * 100).toFixed(1);
+    const oiRows = (o.oi_changes || []).map((c) => `<tr>
+      <td>${esc(c.exp)}</td><td>${c.strike}</td>
+      <td class="${c.side === "call" ? "up" : "down"}">${c.side === "call" ? "Call" : "Put"}</td>
+      <td class="${c.delta >= 0 ? "up" : "down"}">${c.delta >= 0 ? "+" : ""}${fmtNum(c.delta)}</td>
+    </tr>`).join("");
+    return `<div class="card">
+      <div class="gex-head"><b>${esc(sym)}</b><span class="muted">${o.contracts} 合约 · 源 ${src}</span>
+        ${o.atm_iv ? `<span>ATM IV <b>${(o.atm_iv * 100).toFixed(1)}%</b></span>` : ""}</div>
+      <div class="prem-bar"><div class="prem-call" style="width:${cw}%"></div></div>
+      <div class="stat-row">
+        <span>Premium C <b class="up">${fmtMoney(o.call_premium)}</b></span>
+        <span>P <b class="down">${fmtMoney(o.put_premium)}</b></span>
+      </div>
+      <div class="stat-row">
+        <span>成交量 C <b>${fmtNum(o.call_vol)}</b> / P <b>${fmtNum(o.put_vol)}</b>${o.pcr_vol != null ? ` <span class="muted">PCR ${o.pcr_vol}</span>` : ""}</span>
+      </div>
+      <div class="stat-row">
+        <span>OI C <b>${fmtNum(o.call_oi)}</b> / P <b>${fmtNum(o.put_oi)}</b>${o.pcr_oi != null ? ` <span class="muted">PCR ${o.pcr_oi}</span>` : ""}</span>
+      </div>
+      ${oiRows ? `<details><summary class="muted small">OI 变化 Top ${o.oi_changes.length}(vs 上次采集)</summary>
+        <table><tr><th>到期</th><th>行权价</th><th>方向</th><th>ΔOI</th></tr>${oiRows}</table></details>`
+        : `<div class="muted small">OI 变化需要两次采集后显示</div>`}
+    </div>`;
+  }).join("");
+}
+
+/* ---------- 新闻页: 财报日历 ---------- */
+function renderCalendar(m) {
+  const rows = (m.earnings_calendar || []).filter((e) => isSel(e.symbol));
+  const hourLabel = { bmo: "盘前", amc: "盘后", dmh: "盘中" };
+  const today = new Date().toISOString().slice(0, 10);
+  const fmtRev = (v) => v == null ? "—" : (v / 1e9).toFixed(2) + "B";
+  const fmtEps = (v) => v == null ? "—" : Number(v).toFixed(2);
+  $("earnings-calendar").innerHTML = rows.length ? `<table>
+    <tr><th>日期</th><th>代码</th><th>时段</th><th>EPS 预期</th><th>EPS 实际</th><th>营收预期</th><th>营收实际</th></tr>
+    ${rows.map((e) => `<tr class="${e.date === today ? "today-row" : ""}">
+      <td>${esc(e.date)}${e.date === today ? " ⭐" : ""}</td>
+      <td><b>${esc(e.symbol)}</b></td>
+      <td>${hourLabel[e.hour] || "—"}</td>
+      <td>${fmtEps(e.epsEstimate)}</td>
+      <td>${e.epsActual != null ? `<span class="${e.epsActual >= (e.epsEstimate ?? -1e9) ? "up" : "down"}">${fmtEps(e.epsActual)}</span>` : "—"}</td>
+      <td>${fmtRev(e.revenueEstimate)}</td>
+      <td>${fmtRev(e.revenueActual)}</td>
+    </tr>`).join("")}
+  </table>` : `<div class="empty">窗口期内没有财报安排</div>`;
+}
+
+/* ---------- 信息流条目渲染(新闻页和社区页共用) ---------- */
+const feedItem = (i) => `<div class="item">
+  <div class="meta"><span class="tag ${esc(i.category)}">${CAT_LABEL[i.category] || esc(i.category)}</span>${esc(i.source)} · ${timeAgo(i.published)}${i.heat != null ? ` · <span class="heat">▲ ${i.score} · 💬 ${i.comments}</span>` : ""}</div>
+  <div class="title"><a href="${esc(i.link)}" target="_blank" rel="noopener">${esc(i.title)}</a></div>
+  ${i.summary ? `<div class="summary">${esc(i.summary)}</div>` : ""}
+</div>`;
+
+/* ---------- 新闻页: 宏观/市场 RSS ---------- */
+function renderNewsFeeds() {
+  const items = (FEEDS?.items || []).filter((i) => i.category === "news" && feedMatches(i)).slice(0, 60);
+  $("news-feeds").innerHTML = items.map(feedItem).join("")
+    || `<div class="empty">${selected.size ? "选中的股票没有匹配的新闻(按标题/摘要里的代码匹配)" : "暂无内容"}</div>`;
+}
+
+/* ---------- 公司新闻(Finnhub) ---------- */
 function renderCompanyNews(m) {
   const all = [];
   for (const [sym, list] of Object.entries(m.company_news || {})) {
@@ -170,43 +326,40 @@ function renderCompanyNews(m) {
   </div>`).join("") || `<div class="empty">暂无数据</div>`;
 }
 
-/* ---------- 信息流(RSS) ---------- */
-function renderFeedFilters() {
-  const cats = ["all", ...new Set((FEEDS?.items || []).map((i) => i.category))];
-  $("feed-filters").innerHTML = cats.map((c) =>
-    `<button data-cat="${esc(c)}" class="${c === feedCat ? "active" : ""}">${c === "all" ? "全部" : (CAT_LABEL[c] || esc(c))}</button>`
+/* ---------- 社区页: Reddit / X / 视频 ---------- */
+function renderSocialFilters() {
+  const present = new Set((FEEDS?.items || []).map((i) => i.category));
+  const cats = ["all", ...SOCIAL_CATS.filter((c) => present.has(c))];
+  $("social-filters").innerHTML = cats.map((c) =>
+    `<button data-cat="${esc(c)}" class="${c === socialCat ? "active" : ""}">${c === "all" ? "全部" : (CAT_LABEL[c] || esc(c))}</button>`
   ).join("");
 }
 
-function initFeedFilters() {
-  $("feed-filters").addEventListener("click", (ev) => {
+function initSocialFilters() {
+  $("social-filters").addEventListener("click", (ev) => {
     const btn = ev.target.closest("button");
     if (!btn) return;
-    feedCat = btn.dataset.cat;
-    [...$("feed-filters").children].forEach((b) => b.classList.toggle("active", b.dataset.cat === feedCat));
-    renderFeeds();
+    socialCat = btn.dataset.cat;
+    [...$("social-filters").children].forEach((b) => b.classList.toggle("active", b.dataset.cat === socialCat));
+    renderSocial();
   });
 }
 
-function renderFeeds() {
-  const items = FEEDS?.items || [];
-  let shown = items.filter((i) => (feedCat === "all" || i.category === feedCat) && feedMatches(i));
-  if (feedCat === "community") {
-    // 社区帖按热度(点赞 + 2×评论)排序;无数值时按 Reddit hot 榜排名;都没有则时间序
-    shown = [...shown].sort((a, b) =>
-      (b.heat || 0) - (a.heat || 0)
-      || (a.rank ?? 999) - (b.rank ?? 999)
-      || (b.published || "").localeCompare(a.published || ""));
-  }
-  shown = shown.slice(0, 120);
-  $("feeds").innerHTML = shown.map((i) => `<div class="item">
-    <div class="meta"><span class="tag ${esc(i.category)}">${CAT_LABEL[i.category] || esc(i.category)}</span>${esc(i.source)} · ${timeAgo(i.published)}${i.heat != null ? ` · <span class="heat">▲ ${i.score} · 💬 ${i.comments}</span>` : ""}</div>
-    <div class="title"><a href="${esc(i.link)}" target="_blank" rel="noopener">${esc(i.title)}</a></div>
-    ${i.summary ? `<div class="summary">${esc(i.summary)}</div>` : ""}
-  </div>`).join("") || `<div class="empty">${selected.size ? "选中的股票没有匹配的内容(信息流按标题/摘要里的代码匹配)" : "暂无内容"}</div>`;
+function renderSocial() {
+  const items = (FEEDS?.items || []).filter((i) =>
+    SOCIAL_CATS.includes(i.category)
+    && (socialCat === "all" || i.category === socialCat)
+    && feedMatches(i));
+  // 社区帖按热度(点赞 + 2×评论)排序;无数值时按 Reddit hot 榜排名;都没有则时间序
+  const shown = [...items].sort((a, b) =>
+    (b.heat || 0) - (a.heat || 0)
+    || (a.rank ?? 999) - (b.rank ?? 999)
+    || (b.published || "").localeCompare(a.published || "")).slice(0, 120);
+  $("social-feeds").innerHTML = shown.map(feedItem).join("")
+    || `<div class="empty">${selected.size ? "选中的股票没有匹配的内容(按标题/摘要里的代码匹配)" : "暂无内容"}</div>`;
 }
 
-/* ---------- 期权 GEX ---------- */
+/* ---------- 期权页: GEX ---------- */
 const fmtGex = (v) => {
   const abs = Math.abs(v);
   const s = abs >= 1e9 ? (v / 1e9).toFixed(2) + "B" : (v / 1e6).toFixed(0) + "M";
@@ -286,7 +439,7 @@ function renderGex() {
   }).join("");
 }
 
-/* ---------- GEX 采集控制(GitHub Actions API) ---------- */
+/* ---------- 采集控制(GitHub Actions API) ---------- */
 const ghHeaders = (pat) => ({
   Accept: "application/vnd.github+json",
   Authorization: `Bearer ${pat}`,
@@ -352,11 +505,14 @@ function initGexControls() {
 
   $("gex-refresh-btn").addEventListener("click", async () => {
     setGexStatus("刷新数据中…");
-    [GEX, GEXH] = await Promise.all([
+    [GEX, GEXH, RESEARCH] = await Promise.all([
       loadFreshJSON("data/gex.json"),
       loadFreshJSON("data/gex_history.json"),
+      loadFreshJSON("data/research.json"),
     ]);
     renderGex();
+    renderOptions();
+    renderStock();
     refreshGexStatus();
   });
 }
@@ -367,16 +523,18 @@ function renderErrors() {
     ...(MARKET?.errors || []),
     ...((FEEDS?.errors || []).map((e) => `${e.source}: ${e.error}`)),
     ...(GEX?.errors || []),
+    ...(RESEARCH?.errors || []),
   ];
   $("errors").innerHTML = msgs.length
-    ? `<details><summary>⚠️ ${msgs.length} 个数据源抓取失败(点开查看)</summary><ul>${msgs.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></details>`
+    ? `<details><summary>⚠️ ${msgs.length} 条数据源提示(点开查看)</summary><ul>${msgs.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></details>`
     : "";
 }
 
-/* ---------- Tab 切换(支持 #news / #feeds 直达) ---------- */
+/* ---------- Tab 切换(支持 #stock / #options 等直达,兼容旧锚点) ---------- */
 function initTabs() {
   const nav = $("nav");
-  const names = ["overview", "news", "feeds", "gex"];
+  const names = ["home", "stock", "options", "news", "social"];
+  const legacy = { overview: "home", feeds: "social", gex: "options" };
   const activate = (name) => {
     document.querySelectorAll(".tab-panel").forEach((p) => p.classList.toggle("active", p.id === "tab-" + name));
     nav.querySelectorAll(".tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === name));
@@ -388,11 +546,13 @@ function initTabs() {
     activate(btn.dataset.tab);
     window.scrollTo(0, 0);
   });
-  const initial = location.hash.slice(1);
+  let initial = location.hash.slice(1);
+  initial = legacy[initial] || initial;
   if (names.includes(initial)) activate(initial);
 }
 
 function renderAll() {
+  renderSetSelector();
   renderTickerFilter();
   if (MARKET) {
     renderQuotes(MARKET);
@@ -401,7 +561,9 @@ function renderAll() {
     renderRecommendations(MARKET);
     renderCompanyNews(MARKET);
   }
-  if (FEEDS) renderFeeds();
+  if (FEEDS) { renderNewsFeeds(); renderSocial(); }
+  renderStock();
+  renderOptions();
   renderGex();
   renderErrors();
 }
@@ -409,15 +571,18 @@ function renderAll() {
 /* ---------- 入口 ---------- */
 (async function main() {
   initTabs();
+  initSetSelector();
   initTickerFilter();
-  initFeedFilters();
+  initSocialFilters();
   initGexControls();
 
-  [MARKET, FEEDS, GEX, GEXH] = await Promise.all([
+  [MARKET, FEEDS, GEX, GEXH, RESEARCH, SETS] = await Promise.all([
     loadJSON("data/market.json"),
     loadJSON("data/feeds.json"),
     loadFreshJSON("data/gex.json"),
     loadFreshJSON("data/gex_history.json"),
+    loadFreshJSON("data/research.json"),
+    loadJSON("config/ticker_sets.json"),
   ]);
   refreshGexStatus();
 
@@ -425,11 +590,11 @@ function renderAll() {
   const watch = new Set(MARKET?.watchlist || []);
   selected = new Set([...selected].filter((s) => watch.has(s)));
 
-  const times = [MARKET?.updated_at, FEEDS?.updated_at].filter(Boolean);
+  const times = [MARKET?.updated_at, FEEDS?.updated_at, RESEARCH?.updated_at].filter(Boolean);
   $("updated").textContent = times.length
     ? "最后更新: " + fmtDT(times.sort().at(-1))
     : "还没有数据 — 先运行一次抓取脚本或 GitHub Actions";
 
-  renderFeedFilters();
+  renderSocialFilters();
   renderAll();
 })();

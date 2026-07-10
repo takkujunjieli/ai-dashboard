@@ -86,9 +86,20 @@ tr:last-child td { border-bottom: none; }
 .tag.kol { background: #7c3aed; } .tag.youtube { background: #b91c1c; }
 .tag.community { background: #0e7490; } .tag.news { background: #374151; }
 
-/* 全局股票筛选 */
+/* ticker set 选择 + 全局股票筛选 */
+.set-selector { padding: 6px 0 2px; }
+.set-selector button { font-weight: 600; border-style: dashed; }
+.set-selector button.active { border-style: solid; }
 .ticker-filter { padding: 4px 0 10px; border-bottom: 1px solid var(--border); }
 .ticker-filter button { font-size: 12px; padding: 4px 11px; }
+
+/* 个股 / 期权卡片 */
+.stock-card { margin-bottom: 14px; }
+.stat-row { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; padding: 5px 0; color: var(--muted); }
+.stat-row b { color: var(--text); }
+.prem-bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: var(--down); margin: 8px 0 2px; }
+.prem-bar .prem-call { background: var(--up); height: 100%; }
+details summary { cursor: pointer; padding: 4px 0; }
 
 /* 分类筛选 chips */
 .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
