@@ -91,7 +91,7 @@ tr:last-child td { border-bottom: none; }
 .ticker-filter button { font-size: 12px; padding: 4px 11px; }
 
 /* 个股 / 期权卡片 */
-.stock-card { margin-bottom: 14px; }
+.stock-card, #opt-cards .card { margin-bottom: 14px; }
 .stat-row { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; padding: 5px 0; color: var(--muted); }
 .stat-row b { color: var(--text); }
 .prem-bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: var(--down); margin: 8px 0 2px; }

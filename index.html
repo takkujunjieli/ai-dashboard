@@ -41,10 +41,14 @@
   <!-- ================= 个股: 分钟K线 + Short ================= -->
   <div id="tab-stock" class="tab-panel">
     <section>
-      <h2>📈 个股 <span class="muted">(5 分钟 K 线 · Short Interest · 数据源 Massive)</span></h2>
+      <h2>📈 个股 <span class="muted">(分钟 K 线 · RSI/EMA/VWAP · 做空数据 · Massive 实时)</span></h2>
+      <div id="bar-gran" class="chips">
+        <button data-g="1m">1 分钟(当日)</button>
+        <button data-g="5m" class="active">5 分钟(两日)</button>
+      </div>
       <div id="stock-cards"></div>
-      <p class="muted small">K 线为最近 2 个交易日的 5 分钟 OHLCV,取 Massive 与雅虎中较新者——
-        盘中通常来自雅虎(约 15 分钟内延迟,免费),盘后为 Massive 官方数据;short interest 由 FINRA 每两周结算一次。
+      <p class="muted small">K 线与指标来自 Massive(Stocks Advanced,实时),失败时回退雅虎;
+        short interest 由 FINRA 双周结算,short volume 占比每日更新。
         深度数据只覆盖 config/ticker_sets.json 里 research 组的标的。</p>
     </section>
   </div>
@@ -53,7 +57,7 @@
   <div id="tab-options" class="tab-panel">
     <section>
       <h2>🎯 期权链指标 <span class="muted">(Premium · 成交量 · OI 变化,45 天内到期)</span></h2>
-      <div id="opt-cards" class="grid"></div>
+      <div id="opt-cards"></div>
     </section>
 
     <section>

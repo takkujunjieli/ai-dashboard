@@ -84,19 +84,23 @@ function feedMatches(i) {
   });
 }
 
-/* ---------- 行情条 ---------- */
+/* ---------- 行情条(优先 Massive 实时快照,回退 Finnhub) ---------- */
 function renderQuotes(m) {
   const el = $("quotes-strip");
-  const syms = (m.watchlist || Object.keys(m.quotes || {})).filter(isSel);
+  const snaps = RESEARCH?.snapshots || {};
+  const syms = (m?.watchlist || Object.keys(m?.quotes || {})).filter(isSel);
   el.innerHTML = syms.map((s) => {
-    const q = (m.quotes || {})[s];
+    const snap = snaps[s];
+    const q = snap?.price != null
+      ? { c: snap.price, d: snap.chg, dp: snap.chg_pct }
+      : (m?.quotes || {})[s];
     if (!q || q.c == null) return "";
-    const cls = q.d >= 0 ? "up" : "down";
-    const sign = q.d >= 0 ? "+" : "";
+    const cls = (q.d ?? 0) >= 0 ? "up" : "down";
+    const sign = (q.d ?? 0) >= 0 ? "+" : "";
     return `<div class="quote-card">
       <div class="sym">${esc(s)}</div>
       <div class="price">${q.c.toFixed(2)}</div>
-      <div class="chg ${cls}">${sign}${q.d?.toFixed(2)} (${sign}${q.dp?.toFixed(2)}%)</div>
+      <div class="chg ${cls}">${sign}${q.d?.toFixed(2) ?? "—"} (${sign}${q.dp?.toFixed(2) ?? "—"}%)</div>
     </div>`;
   }).join("") || `<div class="empty">暂无行情数据(检查 FINNHUB_API_KEY)</div>`;
 }
@@ -144,11 +148,13 @@ function renderRecommendations(m) {
   $("recommendations").innerHTML = rows.join("") || `<div class="empty">暂无数据</div>`;
 }
 
-/* ---------- 个股页: 5分钟K线 ---------- */
-function candleChart(bars) {
-  // 取最近 2 个交易日(按美东日期分组)
+/* ---------- 个股页: 分钟K线 ---------- */
+let barGran = localStorage.getItem("barGran") || "5m";
+
+function candleChart(bars, showDays = 2) {
+  // 取最近 N 个交易日(按美东日期分组)
   const dayOf = (t) => new Date(t).toLocaleDateString("en-US", { timeZone: "America/New_York" });
-  const days = [...new Set(bars.map((b) => dayOf(b[0])))].slice(-2);
+  const days = [...new Set(bars.map((b) => dayOf(b[0])))].slice(-showDays);
   const rows = bars.filter((b) => days.includes(dayOf(b[0])));
   if (!rows.length) return "";
   const W = 640, H = 240, volH = 40, pad = 6, axisY = 14;
@@ -188,6 +194,19 @@ function candleChart(bars) {
   </svg>`;
 }
 
+function initBarGran() {
+  const box = $("bar-gran");
+  [...box.children].forEach((b) => b.classList.toggle("active", b.dataset.g === barGran));
+  box.addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button");
+    if (!btn) return;
+    barGran = btn.dataset.g;
+    localStorage.setItem("barGran", barGran);
+    [...box.children].forEach((b) => b.classList.toggle("active", b === btn));
+    renderStock();
+  });
+}
+
 function renderStock() {
   const el = $("stock-cards");
   const entries = Object.entries(RESEARCH?.tickers || {}).filter(([s]) => isSel(s));
@@ -196,17 +215,35 @@ function renderStock() {
     return;
   }
   el.innerHTML = entries.map(([sym, d]) => {
-    const sh = d.short;
-    const shortHtml = sh ? `
+    const bars = barGran === "1m" ? d.bars_1m : d.bars_5m;
+    const src = barGran === "1m" ? d.src_1m : d.src_5m;
+    const ind = d.ind || {};
+    const emaTrend = ind.ema9_m != null && ind.ema21_m != null
+      ? (ind.ema9_m >= ind.ema21_m
+        ? `<span class="up">EMA9/21 ↑ 多头</span>` : `<span class="down">EMA9/21 ↓ 空头</span>`)
+      : "";
+    const indHtml = (ind.rsi_d != null || ind.rsi_m != null || d.vwap != null) ? `
       <div class="stat-row">
-        <span>Short Interest <b>${fmtNum(sh.short_interest)}</b> 股</span>
-        <span>Days to Cover <b>${sh.days_to_cover ?? "—"}</b></span>
-        <span>日均量 <b>${fmtNum(sh.avg_daily_volume)}</b></span>
-        <span class="muted">结算日 ${esc(sh.settlement_date || "—")}</span>
-      </div>` : `<div class="muted small">short interest 暂无(需要 MASSIVE_API_KEY)</div>`;
+        ${ind.rsi_m != null ? `<span>RSI(1m) <b>${ind.rsi_m}</b></span>` : ""}
+        ${ind.rsi_d != null ? `<span>RSI(日) <b>${ind.rsi_d}</b></span>` : ""}
+        ${d.vwap != null ? `<span>VWAP <b>${d.vwap}</b></span>` : ""}
+        ${emaTrend}
+      </div>` : "";
+    const sh = d.short;
+    const sv = (d.short_vol || [])[0];
+    const svTrend = (d.short_vol || []).slice(0, 5).reverse()
+      .map((r) => r.ratio != null ? (r.ratio * 100).toFixed(0) : "—").join("/");
+    const shortHtml = (sh || sv) ? `
+      <div class="stat-row">
+        ${sh ? `<span>Short Interest <b>${fmtNum(sh.short_interest)}</b></span>
+        <span>DTC <b>${sh.days_to_cover ?? "—"}</b></span>
+        <span class="muted">结算 ${esc(sh.settlement_date || "—")}</span>` : ""}
+        ${sv?.ratio != null ? `<span>空头成交占比 <b>${(sv.ratio * 100).toFixed(1)}%</b> <span class="muted">(${esc(sv.date || "")},近5日 ${svTrend}%)</span></span>` : ""}
+      </div>` : `<div class="muted small">做空数据暂无(需要 MASSIVE_API_KEY)</div>`;
     return `<div class="card stock-card">
-      <div class="gex-head"><b>${esc(sym)}</b>${d.bars?.length ? `<span class="muted">${d.bars.length} 根 5 分钟K线 · 源 ${d.bars_source === "massive" ? "Massive" : "雅虎(盘中)"}</span>` : ""}</div>
-      ${d.bars?.length ? candleChart(d.bars) : `<div class="empty">暂无K线数据</div>`}
+      <div class="gex-head"><b>${esc(sym)}</b>${bars?.length ? `<span class="muted">${bars.length} 根 · 源 ${src === "massive" ? "Massive 实时" : "雅虎"}</span>` : ""}</div>
+      ${indHtml}
+      ${bars?.length ? candleChart(bars, barGran === "1m" ? 1 : 2) : `<div class="empty">暂无K线数据</div>`}
       ${shortHtml}
     </div>`;
   }).join("");
@@ -231,9 +268,22 @@ function renderOptions() {
       <td class="${c.side === "call" ? "up" : "down"}">${c.side === "call" ? "Call" : "Put"}</td>
       <td class="${c.delta >= 0 ? "up" : "down"}">${c.delta >= 0 ? "+" : ""}${fmtNum(c.delta)}</td>
     </tr>`).join("");
+    const expRows = (o.by_expiry || []).map((e) => `<tr>
+      <td>${esc(e.exp)}</td>
+      <td><span class="up">${fmtMoney(e.call_premium)}</span> / <span class="down">${fmtMoney(e.put_premium)}</span></td>
+      <td>${fmtNum(e.call_vol)} / ${fmtNum(e.put_vol)}</td>
+      <td>${fmtNum(e.call_oi)} / ${fmtNum(e.put_oi)}</td>
+      <td>${e.atm_iv != null ? (e.atm_iv * 100).toFixed(1) + "%" : "—"}</td>
+    </tr>`).join("");
+    const hotRows = (o.top_strikes || []).map((t) => `<tr>
+      <td>${esc(t.exp)}</td><td>${t.strike}</td>
+      <td class="${t.side === "call" ? "up" : "down"}">${t.side === "call" ? "Call" : "Put"}</td>
+      <td>${fmtNum(t.vol)}</td><td>${fmtNum(t.oi)}</td><td>${fmtMoney(t.premium)}</td>
+    </tr>`).join("");
     return `<div class="card">
       <div class="gex-head"><b>${esc(sym)}</b><span class="muted">${o.contracts} 合约 · 源 ${src}</span>
-        ${o.atm_iv ? `<span>ATM IV <b>${(o.atm_iv * 100).toFixed(1)}%</b></span>` : ""}</div>
+        ${o.atm_iv ? `<span>ATM IV <b>${(o.atm_iv * 100).toFixed(1)}%</b></span>` : ""}
+        ${o.max_pain != null ? `<span class="flip">Max Pain ${o.max_pain}<span class="muted">(${esc(o.max_pain_exp || "")})</span></span>` : ""}</div>
       <div class="prem-bar"><div class="prem-call" style="width:${cw}%"></div></div>
       <div class="stat-row">
         <span>Premium C <b class="up">${fmtMoney(o.call_premium)}</b></span>
@@ -241,10 +291,12 @@ function renderOptions() {
       </div>
       <div class="stat-row">
         <span>成交量 C <b>${fmtNum(o.call_vol)}</b> / P <b>${fmtNum(o.put_vol)}</b>${o.pcr_vol != null ? ` <span class="muted">PCR ${o.pcr_vol}</span>` : ""}</span>
-      </div>
-      <div class="stat-row">
         <span>OI C <b>${fmtNum(o.call_oi)}</b> / P <b>${fmtNum(o.put_oi)}</b>${o.pcr_oi != null ? ` <span class="muted">PCR ${o.pcr_oi}</span>` : ""}</span>
       </div>
+      ${expRows ? `<details open><summary class="muted small">按到期日分解</summary>
+        <table><tr><th>到期</th><th>Prem C/P</th><th>量 C/P</th><th>OI C/P</th><th>ATM IV</th></tr>${expRows}</table></details>` : ""}
+      ${hotRows ? `<details><summary class="muted small">当日最活跃行权价 Top ${o.top_strikes.length}</summary>
+        <table><tr><th>到期</th><th>行权价</th><th>方向</th><th>成交量</th><th>OI</th><th>Premium</th></tr>${hotRows}</table></details>` : ""}
       ${oiRows ? `<details><summary class="muted small">OI 变化 Top ${o.oi_changes.length}(vs 上次采集)</summary>
         <table><tr><th>到期</th><th>行权价</th><th>方向</th><th>ΔOI</th></tr>${oiRows}</table></details>`
         : `<div class="muted small">OI 变化需要两次采集后显示</div>`}
@@ -549,6 +601,7 @@ function renderAll() {
   initTickerFilter();
   initSocialFilters();
   initGexControls();
+  initBarGran();
 
   [MARKET, FEEDS, GEX, GEXH, RESEARCH] = await Promise.all([
     loadJSON("data/market.json"),
