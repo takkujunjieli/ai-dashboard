@@ -229,8 +229,8 @@ function renderStock() {
         <span class="muted">结算日 ${esc(sh.settlement_date || "—")}</span>
       </div>` : `<div class="muted small">short interest 暂无(需要 MASSIVE_API_KEY)</div>`;
     return `<div class="card stock-card">
-      <div class="gex-head"><b>${esc(sym)}</b>${d.bars?.length ? `<span class="muted">${d.bars.length} 根 5 分钟K线</span>` : ""}</div>
-      ${d.bars?.length ? candleChart(d.bars) : `<div class="empty">暂无K线(需要 MASSIVE_API_KEY,免费版为盘后数据)</div>`}
+      <div class="gex-head"><b>${esc(sym)}</b>${d.bars?.length ? `<span class="muted">${d.bars.length} 根 5 分钟K线 · 源 ${d.bars_source === "massive" ? "Massive" : "雅虎(盘中)"}</span>` : ""}</div>
+      ${d.bars?.length ? candleChart(d.bars) : `<div class="empty">暂无K线数据</div>`}
       ${shortHtml}
     </div>`;
   }).join("");

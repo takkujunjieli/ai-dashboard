@@ -47,13 +47,23 @@ def mget(path: str, **params):
 
 
 def fetch_bars(sym: str) -> list:
-    """5 分钟 K 线,[t(ms), o, h, l, c, v] 压缩数组。"""
+    """Massive 5 分钟 K 线,[t(ms), o, h, l, c, v] 压缩数组。免费版为盘后数据。"""
     to = date.today()
     frm = to - timedelta(days=BAR_DAYS)
     data = mget(f"/v2/aggs/ticker/{sym}/range/5/minute/{frm}/{to}",
                 adjusted="true", sort="asc", limit=5000)
     return [[r["t"], r["o"], r["h"], r["l"], r["c"], r["v"]]
             for r in (data.get("results") or [])][-800:]
+
+
+def bars_yahoo(sym: str) -> list:
+    """雅虎 5 分钟 K 线(免费,盘中约 15 分钟内延迟),结构同上。"""
+    import yfinance as yf
+    df = yf.Ticker(sym).history(period="5d", interval="5m")
+    return [[int(ts.timestamp() * 1000),
+             round(float(r["Open"]), 4), round(float(r["High"]), 4),
+             round(float(r["Low"]), 4), round(float(r["Close"]), 4), int(r["Volume"])]
+            for ts, r in df.iterrows()][-800:]
 
 
 def fetch_short(sym: str) -> dict:
@@ -175,12 +185,24 @@ def main() -> None:
     use_massive_options = bool(KEY)
     for sym in tickers:
         entry = {}
-        # --- 股票: K线 + short interest(需要 Massive key) ---
+        # --- K线: Massive(免费版盘后) 和 雅虎(盘中) 都取,谁新用谁 ---
+        bars_m = bars_y = None
         if KEY:
             try:
-                entry["bars"] = fetch_bars(sym)
+                bars_m = fetch_bars(sym)
             except Exception as exc:  # noqa: BLE001
-                out["errors"].append(f"{sym} K线: {exc}")
+                out["errors"].append(f"{sym} K线(massive): {exc}")
+        try:
+            bars_y = bars_yahoo(sym)
+        except Exception as exc:  # noqa: BLE001
+            out["errors"].append(f"{sym} K线(yahoo): {exc}")
+        last_t = lambda b: b[-1][0] if b else 0  # noqa: E731
+        if bars_m or bars_y:
+            use_m = last_t(bars_m) >= last_t(bars_y)
+            entry["bars"] = bars_m if use_m else bars_y
+            entry["bars_source"] = "massive" if use_m else "yahoo"
+        # --- short interest(需要 Massive key) ---
+        if KEY:
             try:
                 entry["short"] = fetch_short(sym)
             except Exception as exc:  # noqa: BLE001
