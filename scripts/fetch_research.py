@@ -119,6 +119,27 @@ def fetch_short_volume(sym: str) -> list:
     return out
 
 
+def fetch_news(sym: str) -> list:
+    """Massive ticker 新闻(近 3 天,带每票情绪分析)。所有 Stocks 档位可用。"""
+    since = (datetime.now(timezone.utc) - timedelta(days=3)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    rows = (mget("/v2/reference/news", ticker=sym, limit=15,
+                 sort="published_utc", order="desc",
+                 **{"published_utc.gte": since}).get("results")) or []
+    out = []
+    for r in rows:
+        senti = next((i for i in (r.get("insights") or []) if i.get("ticker") == sym), {})
+        out.append({
+            "title": r.get("title"),
+            "url": r.get("article_url"),
+            "published": r.get("published_utc"),
+            "source": (r.get("publisher") or {}).get("name"),
+            "summary": (r.get("description") or "")[:300],
+            "sentiment": senti.get("sentiment"),
+            "reason": senti.get("sentiment_reasoning"),
+        })
+    return out
+
+
 def session_vwap(bars_1m: list) -> float | None:
     """当日(最后一个交易日)VWAP,由 1 分钟线计算。"""
     if not bars_1m:
@@ -326,6 +347,10 @@ def main() -> None:
                 entry["short_vol"] = fetch_short_volume(sym)
             except Exception as exc:  # noqa: BLE001
                 out["errors"].append(f"{sym} short volume: {exc}")
+            try:
+                entry["news"] = fetch_news(sym)
+            except Exception as exc:  # noqa: BLE001
+                out["errors"].append(f"{sym} 新闻(massive): {exc}")
 
         # 期权
         contracts = None
@@ -351,7 +376,7 @@ def main() -> None:
             entry["options"]["contracts"] = len(contracts)
 
         out["tickers"][sym] = entry
-        done = [k for k in ("bars_1m", "bars_5m", "ind", "short", "short_vol", "options") if entry.get(k)]
+        done = [k for k in ("bars_1m", "bars_5m", "ind", "short", "short_vol", "news", "options") if entry.get(k)]
         print(f"✓ {sym}: {'/'.join(done) or '无数据'}")
 
     if not KEY:

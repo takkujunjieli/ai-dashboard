@@ -85,6 +85,9 @@ tr:last-child td { border-bottom: none; }
   background: var(--border); color: var(--text); margin-right: 6px; }
 .tag.kol { background: #7c3aed; } .tag.youtube { background: #b91c1c; }
 .tag.community { background: #0e7490; } .tag.news { background: #374151; }
+.tag.senti-pos { background: #065f46; color: #6ee7b7; }
+.tag.senti-neg { background: #7f1d1d; color: #fca5a5; }
+.tag.senti-neu { background: #374151; color: #cbd5e1; }
 
 /* 全局股票筛选 */
 .ticker-filter { padding: 8px 0 10px; border-bottom: 1px solid var(--border); }

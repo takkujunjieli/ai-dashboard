@@ -339,19 +339,50 @@ function renderNewsFeeds() {
     || `<div class="empty">${selected.size ? "选中的股票没有匹配的新闻(按标题/摘要里的代码匹配)" : "暂无内容"}</div>`;
 }
 
-/* ---------- 公司新闻(Finnhub) ---------- */
+/* ---------- 公司新闻(Massive 带情绪 + Finnhub,合并去重) ---------- */
+const SENTI = {
+  positive: { label: "看多", cls: "senti-pos" },
+  negative: { label: "看空", cls: "senti-neg" },
+  neutral: { label: "中性", cls: "senti-neu" },
+};
+
 function renderCompanyNews(m) {
   const all = [];
-  for (const [sym, list] of Object.entries(m.company_news || {})) {
+  // Massive 新闻(research 组,带情绪)
+  for (const [sym, d] of Object.entries(RESEARCH?.tickers || {})) {
     if (!isSel(sym)) continue;
-    for (const n of list || []) all.push({ ...n, sym });
+    for (const n of d.news || []) {
+      all.push({ sym, t: Date.parse(n.published) || 0, source: n.source,
+                 title: n.title, url: n.url, summary: n.summary,
+                 sentiment: n.sentiment, reason: n.reason });
+    }
   }
-  all.sort((a, b) => (b.datetime || 0) - (a.datetime || 0));
-  $("company-news").innerHTML = all.slice(0, 50).map((n) => `<div class="item">
-    <div class="meta"><span class="tag">${esc(n.sym)}</span>${esc(n.source || "")} · ${timeAgo(new Date((n.datetime || 0) * 1000).toISOString())}</div>
-    <div class="title"><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.headline)}</a></div>
-    ${n.summary ? `<div class="summary">${esc(n.summary.slice(0, 200))}</div>` : ""}
-  </div>`).join("") || `<div class="empty">暂无数据</div>`;
+  // Finnhub 公司新闻(其余票 + 补充)
+  for (const [sym, list] of Object.entries(m?.company_news || {})) {
+    if (!isSel(sym)) continue;
+    for (const n of list || []) {
+      all.push({ sym, t: (n.datetime || 0) * 1000, source: n.source,
+                 title: n.headline, url: n.url, summary: (n.summary || "").slice(0, 200) });
+    }
+  }
+  // 按 标的+标题前缀 去重(两源常收录同一篇),带情绪的优先
+  all.sort((a, b) => (b.sentiment ? 1 : 0) - (a.sentiment ? 1 : 0));
+  const seen = new Set();
+  const deduped = all.filter((n) => {
+    const key = n.sym + "|" + (n.title || "").toLowerCase().slice(0, 60);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  deduped.sort((a, b) => b.t - a.t);
+  $("company-news").innerHTML = deduped.slice(0, 50).map((n) => {
+    const s = SENTI[n.sentiment];
+    return `<div class="item">
+      <div class="meta"><span class="tag">${esc(n.sym)}</span>${s ? `<span class="tag ${s.cls}" title="${esc(n.reason || "")}">${s.label}</span>` : ""}${esc(n.source || "")} · ${timeAgo(new Date(n.t).toISOString())}</div>
+      <div class="title"><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)}</a></div>
+      ${n.summary ? `<div class="summary">${esc(n.summary)}</div>` : ""}
+    </div>`;
+  }).join("") || `<div class="empty">暂无数据</div>`;
 }
 
 /* ---------- 社区页: Reddit / X / 视频 ---------- */
