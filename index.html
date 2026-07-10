@@ -20,6 +20,7 @@
   <button class="tab active" data-tab="overview">📊 概览</button>
   <button class="tab" data-tab="news">📰 公司新闻</button>
   <button class="tab" data-tab="feeds">🗞️ 信息流</button>
+  <button class="tab" data-tab="gex">⚡ GEX</button>
 </nav>
 
 <main>
@@ -52,6 +53,40 @@
       <h2>🗞️ 信息流 <span class="muted">(新闻源 / 大V / YouTube / 社区)</span></h2>
       <div id="feed-filters" class="chips"></div>
       <div id="feeds" class="card list"></div>
+    </section>
+  </div>
+
+  <div id="tab-gex" class="tab-panel">
+    <section id="sec-gex">
+      <h2>⚡ 期权 Gamma Exposure <span class="muted">(Tradier · 盘中动态)</span></h2>
+
+      <div class="card gex-controls">
+        <div class="ctl-row">
+          <label>开始 <input type="datetime-local" id="gex-start" title="留空 = 立即开始"></label>
+          <label>结束 <input type="datetime-local" id="gex-end" title="留空 = 只采集一次"></label>
+          <label>间隔
+            <select id="gex-gap">
+              <option value="5">5 分钟</option>
+              <option value="10">10 分钟</option>
+              <option value="15">15 分钟</option>
+              <option value="30" selected>30 分钟</option>
+              <option value="60">60 分钟</option>
+            </select>
+          </label>
+        </div>
+        <div class="ctl-row">
+          <input type="password" id="gex-pat" placeholder="GitHub PAT(只授权本仓库 Actions,仅存本机浏览器)">
+          <button id="gex-start-btn">▶ 启动采集</button>
+          <button id="gex-stop-btn">⏹ 停止</button>
+          <button id="gex-refresh-btn">🔄 刷新数据</button>
+        </div>
+        <div id="gex-status" class="muted small"></div>
+      </div>
+
+      <div id="gex-cards" class="gex-grid"></div>
+      <p class="muted small">GEX = gamma × 未平仓量 × 100 × 现价² × 1%,call 为正、put 为负(做市商对冲惯例)。
+        正 GEX 区域做市商高抛低吸(压制波动),负 GEX 区域追涨杀跌(放大波动),flip 为多空分界。
+        数据 15 分钟延迟,greeks 约每小时更新;时间按你的本地时区填写。</p>
     </section>
   </div>
 

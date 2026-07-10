@@ -45,6 +45,26 @@ gh secret set REDDIT_CLIENT_SECRET
 
 不配置也能正常运行:Reddit 源自动回退到 RSS,只是没有热度数据(Reddit 不公开浏览数,所以热度用点赞数代替)。
 
+## 可选: 盘中动态 GEX(期权 Gamma Exposure)
+
+「⚡ GEX」分页显示期权做市商的 gamma 敞口:按行权价的正负分布、净 GEX、gamma flip 点位,
+以及当日盘中净 GEX 走势。数据来自 Tradier(免费 sandbox,15 分钟延迟,greeks 每小时更新)。
+
+**配置(一次性):**
+
+1. 注册 <https://developer.tradier.com> → 拿 **Sandbox Access Token**
+2. `gh secret set TRADIER_TOKEN` 
+3. 创建一个 fine-grained PAT 用于在页面上启动采集:
+   GitHub → Settings → Developer settings → Fine-grained tokens → Generate:
+   - Repository access: **Only select repositories** → 只选本仓库
+   - Permissions → Repository permissions → **Actions: Read and write**
+   PAT 粘贴在 GEX 分页的输入框里,只保存在你自己浏览器的 localStorage,不会上传。
+
+**使用:** 在 GEX 分页选开始/结束时间(本地时区)和间隔(5~60 分钟) → ▶ 启动采集。
+workflow 会循环采集到结束时间(超过 Actions 单次 6h 上限会自动续跑);⏹ 停止随时取消;
+🔄 刷新数据直接从仓库拉最新快照,不用等 Pages 部署。
+关注哪些标的改 [config/options_watchlist.yml](config/options_watchlist.yml)(建议 ≤5 只)。
+
 ## 自定义
 
 - **关注的股票**: 编辑 [config/watchlist.yml](config/watchlist.yml)

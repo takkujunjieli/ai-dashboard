@@ -1,0 +1,6 @@
+# 盘中 GEX 关注的期权标的
+# Tradier sandbox 限速约 60 次/分钟,每只票约 7 次请求,建议 ≤5 只
+tickers:
+  - TSLA
+  - AMD
+  - MU

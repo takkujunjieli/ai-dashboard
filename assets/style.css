@@ -98,5 +98,25 @@ tr:last-child td { border-bottom: none; }
 }
 .chips button.active { background: var(--accent); border-color: var(--accent); color: #0b1020; font-weight: 600; }
 
+/* GEX 分页 */
+.gex-controls .ctl-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+.gex-controls label { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.gex-controls input, .gex-controls select {
+  background: var(--bg); color: var(--text); border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 9px; font-size: 13px; color-scheme: dark;
+}
+.gex-controls input[type="password"] { flex: 1; min-width: 220px; }
+.gex-controls button {
+  padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--card-hover); color: var(--text); font-size: 13px; cursor: pointer;
+}
+.gex-controls button:hover { border-color: var(--accent); }
+#gex-start-btn { background: var(--accent); border-color: var(--accent); color: #0b1020; font-weight: 600; }
+.gex-grid { display: grid; gap: 12px; margin-top: 14px; }
+.gex-head { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; margin-bottom: 8px; }
+.gex-head b { font-size: 16px; }
+.gex-head .flip { color: #fbbf24; }
+.gex-chart { width: 100%; height: auto; display: block; margin-top: 6px; }
+
 footer { margin-top: 50px; text-align: center; }
 .empty { color: var(--muted); padding: 8px 0; }
