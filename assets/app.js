@@ -13,11 +13,9 @@ let FEEDS = null;    // RSS: 新闻/社区/大V
 let GEX = null;      // GEX 快照
 let GEXH = null;     // GEX 盘中序列
 let RESEARCH = null; // Massive/雅虎: K线/short/期权链指标
-let SETS = null;     // config/ticker_sets.json
 let socialCat = "all";
 // 全局股票筛选(多选),空集 = 全部;记住上次的选择
 let selected = new Set(JSON.parse(localStorage.getItem("tickerFilter") || "[]"));
-let activeSet = localStorage.getItem("tickerSet") || null;
 const isSel = (sym) => selected.size === 0 || selected.has(sym);
 
 function timeAgo(iso) {
@@ -54,27 +52,7 @@ async function loadFreshJSON(path) {
   return loadJSON(path);
 }
 
-/* ---------- Ticker set 选择(主页顶部,作用于全站) ---------- */
-function renderSetSelector() {
-  const sets = SETS?.sets || {};
-  $("set-selector").innerHTML = Object.keys(sets).map((name) =>
-    `<button data-set="${esc(name)}" class="${name === activeSet ? "active" : ""}">${esc(name)}</button>`
-  ).join("");
-}
-
-function initSetSelector() {
-  $("set-selector").addEventListener("click", (ev) => {
-    const btn = ev.target.closest("button");
-    if (!btn) return;
-    activeSet = btn.dataset.set;
-    selected = new Set(SETS?.sets?.[activeSet] || []);
-    localStorage.setItem("tickerSet", activeSet);
-    localStorage.setItem("tickerFilter", JSON.stringify([...selected]));
-    renderAll();
-  });
-}
-
-/* ---------- 单票筛选(可在 set 基础上微调) ---------- */
+/* ---------- 单票筛选(多选) ---------- */
 function renderTickerFilter() {
   const syms = MARKET?.watchlist || [];
   $("ticker-filter").innerHTML = [
@@ -90,8 +68,6 @@ function initTickerFilter() {
     if (btn.dataset.sym === "__all") selected.clear();
     else if (selected.has(btn.dataset.sym)) selected.delete(btn.dataset.sym);
     else selected.add(btn.dataset.sym);
-    activeSet = null;  // 手动微调后不再对应某个 set
-    localStorage.removeItem("tickerSet");
     localStorage.setItem("tickerFilter", JSON.stringify([...selected]));
     renderAll();
   });
@@ -552,7 +528,6 @@ function initTabs() {
 }
 
 function renderAll() {
-  renderSetSelector();
   renderTickerFilter();
   if (MARKET) {
     renderQuotes(MARKET);
@@ -571,18 +546,16 @@ function renderAll() {
 /* ---------- 入口 ---------- */
 (async function main() {
   initTabs();
-  initSetSelector();
   initTickerFilter();
   initSocialFilters();
   initGexControls();
 
-  [MARKET, FEEDS, GEX, GEXH, RESEARCH, SETS] = await Promise.all([
+  [MARKET, FEEDS, GEX, GEXH, RESEARCH] = await Promise.all([
     loadJSON("data/market.json"),
     loadJSON("data/feeds.json"),
     loadFreshJSON("data/gex.json"),
     loadFreshJSON("data/gex_history.json"),
     loadFreshJSON("data/research.json"),
-    loadJSON("config/ticker_sets.json"),
   ]);
   refreshGexStatus();
 
