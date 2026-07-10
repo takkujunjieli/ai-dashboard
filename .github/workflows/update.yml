@@ -38,8 +38,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data
-          git diff --cached --quiet || git commit -m "chore: 更新数据 $(date -u +%F\ %R)"
-          git push
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: 更新数据 $(date -u +%F\ %R)"
+            git pull --rebase origin main
+            git push || { git pull --rebase origin main && git push; }
+          fi
 
   # 机器人提交不会触发分支式 Pages 构建,所以在这里直接用工作流部署 Pages
   deploy:
