@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""用 Tradier API 抓期权链(greeks + 未平仓量)并计算 Gamma Exposure(GEX)。
+"""用 yfinance(雅虎财经,无需注册/无需 key)抓期权链并计算 Gamma Exposure(GEX)。
 
-需要环境变量 TRADIER_TOKEN(免费注册: https://developer.tradier.com → sandbox token)。
-sandbox 数据 15 分钟延迟,greeks 由 ORATS 提供、约每小时更新——对 GEX 足够,
-因为核心输入 OI 每天只更新一次,盘中变化主要来自现价。
-有券商账户的话可设 TRADIER_ENV=production 用实时数据。
+雅虎期权链带未平仓量(OI)和隐含波动率(IV)但不带 greeks——
+gamma 用 Black-Scholes 从 IV 现算,对 GEX 用途足够准确。数据约 15 分钟延迟。
+GEX 的核心输入 OI 每天只更新一次,盘中变化主要来自现价和 IV。
 
 GEX(每行权价) = gamma × OI × 100 × 现价² × 1%,call 记正、put 记负(做市商对冲惯例)
 gamma flip   = 净 GEX 累计值由负转正的行权价位置
@@ -14,55 +13,40 @@ gamma flip   = 净 GEX 累计值由负转正的行权价位置
   data/gex_history.json  当日盘中净 GEX 时间序列(隔日自动清空)
 """
 import json
-import os
-import sys
+import math
 import time
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-import requests
 import yaml
+import yfinance as yf
 
 ROOT = Path(__file__).resolve().parent.parent
-TOKEN = os.environ.get("TRADIER_TOKEN", "").strip()
-ENV = os.environ.get("TRADIER_ENV", "sandbox").strip()
-BASE = "https://api.tradier.com" if ENV == "production" else "https://sandbox.tradier.com"
-HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
-
+RISK_FREE = 0.04      # 无风险利率,对 gamma 影响很小,取常数即可
 MAX_DTE = 45          # 只统计 45 天内到期的合约(gamma 集中在近月)
 MAX_EXPIRATIONS = 5   # 每只票最多取 5 个到期日
 STRIKE_BAND = 0.25    # 分布图只输出现价 ±25% 的行权价(净值/flip 仍按全部计算)
 
 
-def get(path: str, **params):
-    resp = None
-    for _ in range(3):
-        resp = requests.get(f"{BASE}{path}", params=params, headers=HEADERS, timeout=30)
-        if resp.status_code == 429:
-            time.sleep(10)
-            continue
-        resp.raise_for_status()
-        time.sleep(1.1)  # sandbox 限速约 60 次/分钟
-        return resp.json()
-    resp.raise_for_status()
-
-
-def as_list(v):
-    if v is None:
-        return []
-    return v if isinstance(v, list) else [v]
+def bs_gamma(spot: float, strike: float, t_years: float, iv: float) -> float:
+    """Black-Scholes gamma(call 和 put 相同)。"""
+    if iv <= 0 or t_years <= 0 or spot <= 0 or strike <= 0:
+        return 0.0
+    d1 = (math.log(spot / strike) + (RISK_FREE + iv * iv / 2) * t_years) / (iv * math.sqrt(t_years))
+    return math.exp(-d1 * d1 / 2) / math.sqrt(2 * math.pi) / (spot * iv * math.sqrt(t_years))
 
 
 def compute_gex(sym: str) -> dict:
-    q = get("/v1/markets/quotes", symbols=sym)["quotes"]["quote"]
-    spot = q.get("last") or q.get("close") or q.get("prevclose")
-    if not spot:
+    tk = yf.Ticker(sym)
+    try:
+        spot = float(tk.fast_info["last_price"])
+    except (KeyError, TypeError):
+        spot = float(tk.history(period="1d")["Close"].iloc[-1])
+    if not spot or spot != spot:
         raise ValueError("拿不到现价")
 
-    exps = as_list((get("/v1/markets/options/expirations", symbol=sym)
-                    .get("expirations") or {}).get("date"))
     today = date.today()
-    picked = [d for d in exps
+    picked = [d for d in tk.options
               if 0 <= (date.fromisoformat(d) - today).days <= MAX_DTE][:MAX_EXPIRATIONS]
     if not picked:
         raise ValueError("45 天内没有可用到期日(该标的可能没有期权)")
@@ -70,17 +54,23 @@ def compute_gex(sym: str) -> dict:
     strikes: dict[float, list[float]] = {}  # strike -> [call gamma·OI, put gamma·OI]
     contracts = 0
     for d in picked:
-        chain = get("/v1/markets/options/chains", symbol=sym, expiration=d, greeks="true")
-        for o in as_list((chain.get("options") or {}).get("option")):
-            gamma = (o.get("greeks") or {}).get("gamma") or 0
-            oi = o.get("open_interest") or 0
-            if not gamma or not oi:
-                continue
-            slot = strikes.setdefault(float(o["strike"]), [0.0, 0.0])
-            slot[0 if o.get("option_type") == "call" else 1] += gamma * oi
-            contracts += 1
+        # +0.5 天近似当天剩余交易时间,避免 0DTE 除零
+        t_years = ((date.fromisoformat(d) - today).days + 0.5) / 365
+        chain = tk.option_chain(d)
+        for side, df in ((0, chain.calls), (1, chain.puts)):
+            for row in df.itertuples():
+                oi, iv = row.openInterest, row.impliedVolatility
+                if oi is None or oi != oi or not oi or iv is None or iv != iv:
+                    continue  # 过滤 NaN/0
+                g = bs_gamma(spot, float(row.strike), t_years, float(iv))
+                if not g:
+                    continue
+                slot = strikes.setdefault(float(row.strike), [0.0, 0.0])
+                slot[side] += g * float(oi)
+                contracts += 1
+        time.sleep(0.5)  # 对雅虎接口客气一点
     if not contracts:
-        raise ValueError("期权链里没有带 greeks 的合约(sandbox 的 greeks 每小时更新,稍后再试)")
+        raise ValueError("期权链里没有有效合约(可能被雅虎限流,稍后再试)")
 
     scale = 100 * spot * spot * 0.01  # 合约乘数 × spot² × 1%
     rows = [{"strike": k,
@@ -89,20 +79,20 @@ def compute_gex(sym: str) -> dict:
              "net": (c - p) * scale}
             for k, (c, p) in sorted(strikes.items())]
 
-    # gamma flip: 从低行权价向高累计净 GEX,由负转正的位置
-    flip = None
+    # gamma flip: 累计净 GEX 的过零点;可能有多个(深度虚值区噪音),取离现价最近的
+    crossings = []
     cum = 0.0
     prev_cum = prev_k = None
     for r in rows:
         cum += r["net"]
-        if prev_cum is not None and prev_cum < 0 <= cum:
-            flip = round((prev_k + r["strike"]) / 2, 2)
-            break
+        if prev_cum is not None and (prev_cum < 0) != (cum < 0):
+            crossings.append((prev_k + r["strike"]) / 2)
         prev_cum, prev_k = cum, r["strike"]
+    flip = round(min(crossings, key=lambda k: abs(k - spot)), 2) if crossings else None
 
     lo, hi = spot * (1 - STRIKE_BAND), spot * (1 + STRIKE_BAND)
     return {
-        "spot": spot,
+        "spot": round(spot, 2),
         "net_gex": sum(r["net"] for r in rows),
         "flip": flip,
         "expirations": picked,
@@ -113,14 +103,8 @@ def compute_gex(sym: str) -> dict:
 def main() -> None:
     tickers = yaml.safe_load((ROOT / "config" / "options_watchlist.yml").read_text())["tickers"]
     now = datetime.now(timezone.utc)
-    out = {"updated_at": now.isoformat(timespec="seconds"), "env": ENV,
+    out = {"updated_at": now.isoformat(timespec="seconds"), "source": "yahoo",
            "tickers": {}, "errors": []}
-
-    if not TOKEN:
-        print("警告: 未设置 TRADIER_TOKEN,跳过 GEX", file=sys.stderr)
-        out["errors"].append("未设置 TRADIER_TOKEN,GEX 未更新(注册 developer.tradier.com,见 README)")
-        (ROOT / "data" / "gex.json").write_text(json.dumps(out, ensure_ascii=False, indent=1))
-        return
 
     for sym in tickers:
         try:

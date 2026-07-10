@@ -48,17 +48,18 @@ gh secret set REDDIT_CLIENT_SECRET
 ## 可选: 盘中动态 GEX(期权 Gamma Exposure)
 
 「⚡ GEX」分页显示期权做市商的 gamma 敞口:按行权价的正负分布、净 GEX、gamma flip 点位,
-以及当日盘中净 GEX 走势。数据来自 Tradier(免费 sandbox,15 分钟延迟,greeks 每小时更新)。
+以及当日盘中净 GEX 走势。数据来自雅虎期权链(yfinance,**无需注册任何账号**,约 15 分钟延迟),
+gamma 由 IV 用 Black-Scholes 现算。
 
-**配置(一次性):**
+**配置(一次性,只需一个 PAT 用于页面上的启动按钮):**
 
-1. 注册 <https://developer.tradier.com> → 拿 **Sandbox Access Token**
-2. `gh secret set TRADIER_TOKEN` 
-3. 创建一个 fine-grained PAT 用于在页面上启动采集:
-   GitHub → Settings → Developer settings → Fine-grained tokens → Generate:
-   - Repository access: **Only select repositories** → 只选本仓库
-   - Permissions → Repository permissions → **Actions: Read and write**
-   PAT 粘贴在 GEX 分页的输入框里,只保存在你自己浏览器的 localStorage,不会上传。
+创建 fine-grained PAT: GitHub → Settings → Developer settings → Fine-grained tokens → Generate:
+
+- Repository access: **Only select repositories** → 只选本仓库
+- Permissions → Repository permissions → **Actions: Read and write**
+
+PAT 粘贴在 GEX 分页的输入框里,只保存在你自己浏览器的 localStorage,不会上传。
+(在仓库 Actions 页手动 Run workflow 也可以,不需要 PAT。)
 
 **使用:** 在 GEX 分页选开始/结束时间(本地时区)和间隔(5~60 分钟) → ▶ 启动采集。
 workflow 会循环采集到结束时间(超过 Actions 单次 6h 上限会自动续跑);⏹ 停止随时取消;

@@ -267,7 +267,7 @@ function renderGex() {
   const el = $("gex-cards");
   const entries = Object.entries(GEX?.tickers || {}).filter(([s]) => isSel(s));
   if (!entries.length) {
-    const hint = (GEX?.errors || []).length ? esc(GEX.errors[0]) : "还没有 GEX 数据,配置 TRADIER_TOKEN 后在上方启动采集";
+    const hint = (GEX?.errors || []).length ? esc(GEX.errors[0]) : "还没有 GEX 数据,在上方启动一次采集";
     el.innerHTML = `<div class="card empty">${hint}</div>`;
     return;
   }

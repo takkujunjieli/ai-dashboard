@@ -43,7 +43,6 @@ jobs:
 
       - name: 采集循环
         env:
-          TRADIER_TOKEN: ${{ secrets.TRADIER_TOKEN }}
           GH_TOKEN: ${{ github.token }}
           START: ${{ inputs.start }}
           END: ${{ inputs.end }}
