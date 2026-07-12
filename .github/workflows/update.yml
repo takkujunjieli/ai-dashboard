@@ -45,8 +45,9 @@ jobs:
           git add data
           if ! git diff --cached --quiet; then
             git commit -m "chore: 更新数据 $(date -u +%F\ %R)"
-            git pull --rebase origin main
-            git push || { git pull --rebase origin main && git push; }
+            # -X theirs: 与并行的盘中采集撞车时,生成的数据文件直接用本次的,避免冲突失败
+            git pull --rebase -X theirs origin main
+            git push || { git pull --rebase -X theirs origin main && git push; }
           fi
 
   # 机器人提交不会触发分支式 Pages 构建,所以在这里直接用工作流部署 Pages

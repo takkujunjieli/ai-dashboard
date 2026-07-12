@@ -72,8 +72,9 @@ jobs:
             git add data/gex.json data/gex_history.json data/research.json data/oi_prev.json
             if ! git diff --cached --quiet; then
               git commit -m "chore: GEX 快照 $(date -u +%H:%M)"
-              git pull --rebase origin main || true
-              git push || { git pull --rebase origin main && git push; }
+              # -X theirs: 生成文件与并行运行冲突时用本次的
+              git pull --rebase -X theirs origin main || true
+              git push || { git pull --rebase -X theirs origin main && git push; }
             fi
 
             now=$(date -u +%s)
