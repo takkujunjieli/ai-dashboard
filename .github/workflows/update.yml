@@ -37,6 +37,7 @@ jobs:
         run: python scripts/fetch_research.py
         env:
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+          MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
 
       - name: 提交数据
         run: |

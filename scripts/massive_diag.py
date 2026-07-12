@@ -23,10 +23,13 @@ TESTS = [
     ("options snapshot", f"/v3/snapshot/options/TSLA?limit=1"),
 ]
 
+REDACT = (lambda s: s.replace(KEY, "***")) if KEY else (lambda s: s)
+
 print(f"now={datetime.now(timezone.utc).isoformat(timespec='seconds')} base={BASE}")
 for name, path in TESTS:
     try:
-        r = requests.get(f"{BASE}{path}", headers=H, timeout=30)
+        r = requests.get(f"{BASE}{path}", headers=H, timeout=30,
+                         params={"apiKey": KEY} if KEY else None)
         info = ""
         if r.ok:
             body = r.json()
@@ -38,6 +41,6 @@ for name, path in TESTS:
                 info = json.dumps(body, ensure_ascii=False)[:140]
         else:
             info = r.text[:140]
-        print(f"[{r.status_code}] {name}: {info}")
+        print(REDACT(f"[{r.status_code}] {name}: {info}"))
     except Exception as exc:  # noqa: BLE001
-        print(f"[ERR] {name}: {exc}")
+        print(REDACT(f"[ERR] {name}: {exc}"))

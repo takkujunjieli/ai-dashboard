@@ -30,8 +30,15 @@ MAX_EXPIRATIONS = 6
 BAR_KEEP = 800  # 每个粒度最多保留的 bar 数
 
 
+def redact(exc) -> str:
+    """报错里可能带完整 URL(含 apiKey 查询参数),公开仓库的日志必须脱敏。"""
+    return str(exc).replace(KEY, "***") if KEY else str(exc)
+
+
 def mget(path: str, **params):
     url = path if path.startswith("http") else f"{BASE}{path}"
+    if KEY:
+        params.setdefault("apiKey", KEY)  # 兼容只认查询参数的网关;官方两种都支持
     resp = None
     for _ in range(3):
         resp = requests.get(url, params=params, headers=HEADERS, timeout=30)
@@ -314,7 +321,7 @@ def main() -> None:
         try:
             out["snapshots"] = fetch_snapshots(watchlist)
         except Exception as exc:  # noqa: BLE001
-            out["errors"].append(f"实时快照: {exc}")
+            out["errors"].append(f"实时快照: {redact(exc)}")
 
     use_massive_options = bool(KEY)
     for sym in research:
@@ -330,13 +337,13 @@ def main() -> None:
                     bars = fetch_bars(sym, mult, timespan, days)
                     entry[f"src_{key_name.split('_')[1]}"] = "massive"
                 except Exception as exc:  # noqa: BLE001
-                    out["errors"].append(f"{sym} {key_name}(massive): {exc}")
+                    out["errors"].append(f"{sym} {key_name}(massive): {redact(exc)}")
             if not bars:
                 try:
                     bars = bars_yahoo(sym, y_iv, y_pd)
                     entry[f"src_{key_name.split('_')[1]}"] = "yahoo"
                 except Exception as exc:  # noqa: BLE001
-                    out["errors"].append(f"{sym} {key_name}(yahoo): {exc}")
+                    out["errors"].append(f"{sym} {key_name}(yahoo): {redact(exc)}")
             if bars:
                 entry[key_name] = bars
         entry["vwap"] = session_vwap(entry.get("bars_1m") or [])
@@ -351,21 +358,21 @@ def main() -> None:
                 try:
                     ind[name] = latest_indicator(sym, kind, ts, win)
                 except Exception as exc:  # noqa: BLE001
-                    out["errors"].append(f"{sym} 指标{name}: {exc}")
+                    out["errors"].append(f"{sym} 指标{name}: {redact(exc)}")
             entry["ind"] = ind
 
             try:
                 entry["short"] = fetch_short(sym)
             except Exception as exc:  # noqa: BLE001
-                out["errors"].append(f"{sym} short interest: {exc}")
+                out["errors"].append(f"{sym} short interest: {redact(exc)}")
             try:
                 entry["short_vol"] = fetch_short_volume(sym)
             except Exception as exc:  # noqa: BLE001
-                out["errors"].append(f"{sym} short volume: {exc}")
+                out["errors"].append(f"{sym} short volume: {redact(exc)}")
             try:
                 entry["news"] = fetch_news(sym)
             except Exception as exc:  # noqa: BLE001
-                out["errors"].append(f"{sym} 新闻(massive): {exc}")
+                out["errors"].append(f"{sym} 新闻(massive): {redact(exc)}")
 
         # 期权
         contracts = None
@@ -377,13 +384,13 @@ def main() -> None:
                 if exc.response is not None and exc.response.status_code in (401, 403):
                     use_massive_options = False  # 没开 Options 套餐,后续都走雅虎
                 else:
-                    out["errors"].append(f"{sym} 期权(massive): {exc}")
+                    out["errors"].append(f"{sym} 期权(massive): {redact(exc)}")
         if contracts is None:
             try:
                 contracts = options_yahoo(sym)
                 out["options_source"] = out["options_source"] or "yahoo"
             except Exception as exc:  # noqa: BLE001
-                out["errors"].append(f"{sym} 期权(yahoo): {exc}")
+                out["errors"].append(f"{sym} 期权(yahoo): {redact(exc)}")
         if contracts:
             spot = (out["snapshots"].get(sym) or {}).get("price") \
                 or (entry.get("bars_1m") or entry.get("bars_5m") or [[0] * 5])[-1][4] or None
