@@ -55,24 +55,12 @@
 
 <!-- 采集控制 -->
 <section>
-  <h2>🎛️ 盘中采集控制</h2>
+  <h2>🎛️ 采集控制 <span class="muted">(交易日 ET 9:30-16:00 自动滚动采集,此处仅手动补充)</span></h2>
   <div class="card gex-controls">
     <div class="ctl-row">
-      <label>开始 <input type="datetime-local" id="gex-start" title="留空 = 立即开始"></label>
-      <label>结束 <input type="datetime-local" id="gex-end" title="留空 = 只采集一次"></label>
-      <label>间隔
-        <select id="gex-gap">
-          <option value="5">5 分钟</option>
-          <option value="10">10 分钟</option>
-          <option value="15">15 分钟</option>
-          <option value="30" selected>30 分钟</option>
-          <option value="60">60 分钟</option>
-        </select>
-      </label>
-    </div>
-    <div class="ctl-row">
-      <input type="password" id="gex-pat" placeholder="GitHub PAT(只授权本仓库 Actions,仅存本机浏览器;也用于 60 秒自动轮询)">
-      <button id="gex-start-btn">▶ 启动采集</button>
+      <input type="password" id="gex-pat" placeholder="GitHub PAT(只授权本仓库 Actions,仅存本机浏览器;填了自动刷新提速到 60 秒)">
+      <button id="gex-start-btn">▶ 启动至收盘</button>
+      <button id="gex-once-btn">🔁 单轮采集</button>
       <button id="gex-stop-btn">⏹ 停止</button>
     </div>
     <div id="gex-status" class="muted small"></div>

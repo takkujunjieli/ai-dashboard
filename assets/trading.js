@@ -219,6 +219,7 @@ function renderStats() {
   const sv = (d.short_vol || [])[0];
   const chips = [];
   const add = (k, v, cls = "") => v != null && chips.push(`<span>${k} <b class="${cls}">${v}</b></span>`);
+  add("数据", d.asof ? new Date(d.asof).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }) : null);
   add("RSI(1m)", d.ind?.rsi_m);
   add("RSI(日)", d.ind?.rsi_d);
   add("VWAP", d.vwap);
@@ -296,31 +297,31 @@ async function refreshRunStatus() {
   } catch { setGexStatus("采集状态: 查询失败(可能限流,稍后再试)"); }
 }
 
+async function dispatchSession(inputs, label) {
+  const pat = $("gex-pat").value.trim();
+  if (!pat) { setGexStatus("⚠️ 需要 GitHub PAT(fine-grained,只授权本仓库 Actions 读写)"); return; }
+  setPat(pat); startPolling();
+  setGexStatus(`正在启动${label}…`);
+  try {
+    const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/gex.yml/dispatches`, {
+      method: "POST", headers: ghHeaders(pat), body: JSON.stringify({ ref: "main", inputs }),
+    });
+    if (r.status !== 204) throw new Error(`HTTP ${r.status}: ${(await r.json())?.message || ""}`);
+    setGexStatus(`✅ ${label}已启动,几秒后刷新状态…`);
+    setTimeout(refreshRunStatus, 5000);
+  } catch (e) { setGexStatus(`❌ 启动失败: ${esc(e.message)}(检查 PAT 权限)`); }
+}
+
 function initControls() {
   $("gex-pat").value = getPat();
-  // 粘贴/修改 PAT 即保存(仅本机 localStorage)并开启 60 秒自动轮询
+  // 粘贴/修改 PAT 即保存(仅本机 localStorage),自动轮询提速到 60 秒
   $("gex-pat").addEventListener("change", () => {
     setPat($("gex-pat").value.trim());
-    if (getPat()) { startPolling(); refreshData(); }
-    else if (pollTimer) { clearInterval(pollTimer); pollTimer = null; renderAll(true); }
+    startPolling();
+    refreshData();
   });
-  $("gex-start-btn").addEventListener("click", async () => {
-    const pat = $("gex-pat").value.trim();
-    if (!pat) { setGexStatus("⚠️ 需要 GitHub PAT(fine-grained,只授权本仓库 Actions 读写)"); return; }
-    setPat(pat); startPolling();
-    const toIso = (v) => v ? new Date(v).toISOString().replace(/\.\d{3}Z$/, "Z") : "";
-    const inputs = { start: toIso($("gex-start").value), end: toIso($("gex-end").value), gap: $("gex-gap").value };
-    if (inputs.end && inputs.start && inputs.end <= inputs.start) { setGexStatus("⚠️ 结束时间要晚于开始时间"); return; }
-    setGexStatus("正在启动…");
-    try {
-      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/gex.yml/dispatches`, {
-        method: "POST", headers: ghHeaders(pat), body: JSON.stringify({ ref: "main", inputs }),
-      });
-      if (r.status !== 204) throw new Error(`HTTP ${r.status}: ${(await r.json())?.message || ""}`);
-      setGexStatus("✅ 已启动,几秒后刷新状态…");
-      setTimeout(refreshRunStatus, 5000);
-    } catch (e) { setGexStatus(`❌ 启动失败: ${esc(e.message)}(检查 PAT 权限)`); }
-  });
+  $("gex-start-btn").addEventListener("click", () => dispatchSession({}, "滚动会话"));
+  $("gex-once-btn").addEventListener("click", () => dispatchSession({ once: "true" }, "单轮采集"));
   $("gex-stop-btn").addEventListener("click", async () => {
     const pat = $("gex-pat").value.trim();
     if (!pat) { setGexStatus("⚠️ 停止需要 PAT"); return; }
@@ -358,7 +359,7 @@ function renderAll(keepRange = false) {
   if (lr) chart.timeScale().setVisibleLogicalRange(lr);
   const upd = RESEARCH?.updated_at || GEX?.updated_at;
   $("poll-status").textContent = (upd ? `数据 ${fmtDT(upd)}` : "暂无数据")
-    + (pollTimer ? " · 自动刷新中(60s)" : getPat() ? "" : " · 填 PAT 开启自动刷新");
+    + ` · 自动刷新(${getPat() ? "60秒" : "5分钟,填 PAT 提速"})`;
 }
 
 async function refreshData() {
@@ -367,9 +368,10 @@ async function refreshData() {
   refreshRunStatus();
 }
 
+/* 无 PAT 也自动轮询:匿名 5 分钟(3文件×12次/时 < 60次/时限额),有 PAT 60 秒 */
 function startPolling() {
-  if (pollTimer || !getPat()) return;
-  pollTimer = setInterval(refreshData, 60_000);
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(refreshData, getPat() ? 60_000 : 300_000);
 }
 
 /* ---------- 交互绑定 ---------- */

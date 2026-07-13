@@ -360,38 +360,69 @@ def summarize_options(sym: str, contracts: list, spot: float | None,
 
 # ---------- 主流程 ----------
 
-def main() -> None:
-    # 深度数据覆盖整个 watchlist(与信息页一致)
-    watchlist = yaml.safe_load((ROOT / "config" / "watchlist.yml").read_text())["tickers"]
-    research = watchlist
-    now = datetime.now(timezone.utc)
-    out = {"updated_at": now.isoformat(timespec="seconds"),
-           "snapshots": {}, "tickers": {}, "errors": [], "options_source": None}
-    gex_out = {"updated_at": out["updated_at"], "tickers": {}, "errors": []}
+EXTRAS_TTL = int(os.environ.get("EXTRAS_TTL", "3600"))  # 指标/short/新闻/日线的刷新周期(秒)
+EXTRAS_KEYS = ("ind", "short", "short_vol", "news", "bars_d", "src_d", "extras_asof")
 
-    prev_path = ROOT / "data" / "oi_prev.json"
-    oi_prev, oi_next = {}, {}
-    if prev_path.exists():
+
+def load_json(path: Path, default):
+    if path.exists():
         try:
-            oi_prev = json.loads(prev_path.read_text()).get("oi", {})
+            return json.loads(path.read_text())
         except json.JSONDecodeError:
             pass
+    return default
 
-    # 全 watchlist 实时快照(1 次调用)
+
+def extras_fresh(old: dict, now: datetime) -> bool:
+    ts = old.get("extras_asof")
+    if not ts:
+        return False
+    try:
+        return (now - datetime.fromisoformat(ts)).total_seconds() < EXTRAS_TTL
+    except ValueError:
+        return False
+
+
+def main(tickers: list | None = None, merge: bool = False) -> None:
+    """tickers=None 抓全 watchlist;merge=True 增量合并进现有 JSON(滚动采集的批模式)。"""
+    watchlist = yaml.safe_load((ROOT / "config" / "watchlist.yml").read_text())["tickers"]
+    targets = [t for t in (tickers or watchlist) if t in watchlist] or watchlist
+    now = datetime.now(timezone.utc)
+    now_iso = now.isoformat(timespec="seconds")
+
+    prev = load_json(ROOT / "data" / "research.json", {}) if merge else {}
+    out = {"updated_at": now_iso, "snapshots": {},
+           "tickers": dict(prev.get("tickers") or {}),
+           "errors": [], "options_source": prev.get("options_source")}
+    gex_prev = load_json(ROOT / "data" / "gex.json", {}) if merge else {}
+    gex_out = {"updated_at": now_iso,
+               "tickers": dict(gex_prev.get("tickers") or {}), "errors": []}
+
+    oi_path = ROOT / "data" / "oi_prev.json"
+    oi_all = load_json(oi_path, {}).get("oi", {})
+    oi_next: dict = {}
+
+    # 全 watchlist 实时快照(1 次调用,批模式下也整表刷新)
     if KEY:
         try:
             out["snapshots"] = fetch_snapshots(watchlist)
         except Exception as exc:  # noqa: BLE001
             out["errors"].append(f"实时快照: {redact(exc)}")
+    if merge and not out["snapshots"]:
+        out["snapshots"] = prev.get("snapshots") or {}
 
     use_massive_options = bool(KEY)
-    for sym in research:
-        entry = {}
-        # K线: 1分钟(当日+昨日)、5分钟(5天)、日线(6个月),Massive 优先、雅虎兜底
-        for key_name, mult, timespan, days, y_iv, y_pd in (
-                ("bars_1m", 1, "minute", 2, "1m", "2d"),
-                ("bars_5m", 5, "minute", 7, "5m", "5d"),
-                ("bars_d", 1, "day", 183, "1d", "6mo")):
+    for sym in targets:
+        old = (prev.get("tickers") or {}).get(sym, {}) if merge else {}
+        entry = {"asof": now_iso}
+        skip_extras = extras_fresh(old, now)
+
+        # K线: 1分钟/5分钟每批都刷;日线属于低频层
+        specs = [("bars_1m", 1, "minute", 2, "1m", "2d"),
+                 ("bars_5m", 5, "minute", 7, "5m", "5d")]
+        if not skip_extras:
+            specs.append(("bars_d", 1, "day", 183, "1d", "6mo"))
+        for key_name, mult, timespan, days, y_iv, y_pd in specs:
             bars = None
             if KEY:
                 try:
@@ -409,8 +440,12 @@ def main() -> None:
                 entry[key_name] = bars
         entry["vwap"] = session_vwap(entry.get("bars_1m") or [])
 
-        # 技术指标(需要 Massive)
-        if KEY:
+        # 低频层: 指标/short/新闻/日线,每 EXTRAS_TTL 秒刷一次,批模式下沿用旧值
+        if skip_extras:
+            for k in EXTRAS_KEYS:
+                if k in old:
+                    entry[k] = old[k]
+        elif KEY:
             ind = {}
             for name, kind, ts, win in (("rsi_d", "rsi", "day", 14),
                                         ("rsi_m", "rsi", "minute", 14),
@@ -421,7 +456,6 @@ def main() -> None:
                 except Exception as exc:  # noqa: BLE001
                     out["errors"].append(f"{sym} 指标{name}: {redact(exc)}")
             entry["ind"] = ind
-
             try:
                 entry["short"] = fetch_short(sym)
             except Exception as exc:  # noqa: BLE001
@@ -434,8 +468,9 @@ def main() -> None:
                 entry["news"] = fetch_news(sym)
             except Exception as exc:  # noqa: BLE001
                 out["errors"].append(f"{sym} 新闻(massive): {redact(exc)}")
+            entry["extras_asof"] = now_iso
 
-        # 期权
+        # 期权(每批都刷,GEX 由链上 gamma 一并算出)
         contracts = None
         if use_massive_options:
             try:
@@ -455,43 +490,47 @@ def main() -> None:
         if contracts:
             spot = (out["snapshots"].get(sym) or {}).get("price") \
                 or (entry.get("bars_1m") or entry.get("bars_5m") or [[0] * 5])[-1][4] or None
-            entry["options"] = summarize_options(sym, contracts, spot, oi_prev, oi_next)
+            entry["options"] = summarize_options(sym, contracts, spot, oi_all, oi_next)
             entry["options"]["contracts"] = len(contracts)
-            gex = compute_gex(contracts, spot)  # GEX 直接由链上 gamma 计算
+            gex = compute_gex(contracts, spot)
             if gex:
                 gex_out["tickers"][sym] = gex
 
         out["tickers"][sym] = entry
         done = [k for k in ("bars_1m", "bars_5m", "ind", "short", "short_vol", "news", "options") if entry.get(k)]
-        print(f"✓ {sym}: {'/'.join(done) or '无数据'}")
+        print(f"✓ {sym}: {'/'.join(done) or '无数据'}{'(低频层沿用)' if skip_extras else ''}")
 
     if not KEY:
         out["errors"].append("未设置 MASSIVE_API_KEY:快照/指标/short 未抓取,K线与期权走雅虎回退")
 
     (ROOT / "data" / "research.json").write_text(json.dumps(out, ensure_ascii=False, indent=1))
     if oi_next:
-        prev_path.write_text(json.dumps(
-            {"date": now.date().isoformat(), "oi": oi_next}, ensure_ascii=False))
+        oi_all.update(oi_next)  # 只更新本批标的的合约,保留其他标的的存档
+        oi_path.write_text(json.dumps(
+            {"date": now.date().isoformat(), "oi": oi_all}, ensure_ascii=False))
 
     # GEX 快照 + 当日盘中净 GEX 序列(隔日清空)
     (ROOT / "data" / "gex.json").write_text(json.dumps(gex_out, ensure_ascii=False, indent=1))
     hist_path = ROOT / "data" / "gex_history.json"
-    hist = {"date": "", "points": []}
-    if hist_path.exists():
-        try:
-            hist = json.loads(hist_path.read_text())
-        except json.JSONDecodeError:
-            pass
+    hist = load_json(hist_path, {"date": "", "points": []})
     today_str = now.date().isoformat()
     if hist.get("date") != today_str:
         hist = {"date": today_str, "points": []}
-    for sym, g in gex_out["tickers"].items():
-        hist["points"].append({"t": out["updated_at"], "sym": sym,
-                               "net": g["net_gex"], "spot": g["spot"]})
+    for sym in targets:
+        g = gex_out["tickers"].get(sym)
+        if g:
+            hist["points"].append({"t": now_iso, "sym": sym,
+                                   "net": g["net_gex"], "spot": g["spot"]})
     hist_path.write_text(json.dumps(hist, ensure_ascii=False, indent=1))
     print(f"已写入 research/gex/gex_history(期权源: {out['options_source']}, "
-          f"GEX {len(gex_out['tickers'])} 只, 错误 {len(out['errors'])} 条)")
+          f"本批 {len(targets)} 只, 错误 {len(out['errors'])} 条)")
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--tickers", help="逗号分隔的标的,默认全 watchlist")
+    ap.add_argument("--merge", action="store_true", help="增量合并进现有 JSON(滚动采集批模式)")
+    args = ap.parse_args()
+    main([s.strip().upper() for s in args.tickers.split(",") if s.strip()] if args.tickers else None,
+         args.merge)

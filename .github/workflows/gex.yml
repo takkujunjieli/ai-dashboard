@@ -1,28 +1,30 @@
-name: 盘中采集
-run-name: "盘中采集 GEX+研究数据 (间隔 ${{ inputs.gap }} 分钟)"
+name: 盘中滚动采集
+run-name: "盘中滚动采集${{ inputs.once == 'true' && ' (单轮)' || '' }}"
 
-# 由 dashboard「⚡ GEX」分页的控制面板触发(也可在 Actions 页手动填参数)
+# 交易日自动运行:开盘前启动、按批滚动至收盘;也可从交易台/Actions 手动触发
 on:
+  schedule:
+    - cron: "25 13 * * 1-5"   # UTC 13:25:夏令时开盘前 5 分钟,冬令时提前 65 分钟(脚本会等到 ET 9:30)
   workflow_dispatch:
     inputs:
-      start:
-        description: "开始时间(UTC ISO,如 2026-07-10T13:30:00Z;留空=立即开始)"
+      once:
+        description: "true = 只跑一轮就结束(不限交易时段,测试/补数据用)"
         required: false
-        default: ""
+        default: "false"
       end:
-        description: "结束时间(UTC ISO;留空=只采集一次)"
+        description: "结束时间(UTC ISO,留空 = 收盘 ET 16:00)"
         required: false
         default: ""
-      gap:
-        description: "采集间隔(分钟)"
+      batch:
+        description: "每批标的数"
         required: false
-        default: "30"
+        default: "3"
 
 permissions:
   contents: write
-  actions: write   # 接近 6h 上限时自动续跑
+  actions: write   # 接近 6h 上限时续派接力
 
-# 重复点启动时,新会话替换旧会话
+# 同一时刻只保留一个采集会话
 concurrency:
   group: gex-collect
   cancel-in-progress: true
@@ -41,52 +43,12 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      - name: 采集循环
+      - name: 滚动采集会话
         env:
           GH_TOKEN: ${{ github.token }}
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
           MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
-          START: ${{ inputs.start }}
-          END: ${{ inputs.end }}
-          GAP: ${{ inputs.gap }}
-        run: |
-          set -e
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          now=$(date -u +%s)
-          start_s=$now
-          [ -n "$START" ] && start_s=$(date -d "$START" +%s)
-          end_s=0
-          [ -n "$END" ] && end_s=$(date -d "$END" +%s)
-
-          if [ "$start_s" -gt "$now" ]; then
-            echo "等待 $(( start_s - now ))s 到开始时间 $START"
-            sleep $(( start_s - now ))
-          fi
-
-          job_start=$(date -u +%s)
-          while :; do
-            python scripts/fetch_research.py
-
-            git add data/gex.json data/gex_history.json data/research.json data/oi_prev.json
-            if ! git diff --cached --quiet; then
-              git commit -m "chore: GEX 快照 $(date -u +%H:%M)"
-              # -X theirs: 生成文件与并行运行冲突时用本次的
-              git pull --rebase -X theirs origin main || true
-              git push || { git pull --rebase -X theirs origin main && git push; }
-            fi
-
-            now=$(date -u +%s)
-            [ "$end_s" -eq 0 ] && break                       # 未填结束时间,只采集一次
-            [ $(( now + GAP * 60 )) -ge "$end_s" ] && break   # 下一轮已超过结束时间
-
-            # 接近 6h 上限(含等待时间共 5h20m)时,续一个 run 接力剩余时段
-            if [ $(( now - job_start )) -gt 19200 ]; then
-              echo "接近单次运行上限,续跑至 $END"
-              gh workflow run gex.yml -R "$GITHUB_REPOSITORY" \
-                -f start="" -f end="$END" -f gap="$GAP"
-              break
-            fi
-            sleep $(( GAP * 60 ))
-          done
+          ONCE: ${{ inputs.once || 'false' }}
+          END: ${{ inputs.end || '' }}
+          BATCH: ${{ inputs.batch || '3' }}
+        run: python scripts/collect_session.py
