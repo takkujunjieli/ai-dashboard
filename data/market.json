@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-07-12T23:23:51+00:00",
+ "updated_at": "2026-07-13T00:58:18+00:00",
  "watchlist": [
   "AMD",
   "CCL",
@@ -182,28 +182,6 @@
  },
  "earnings_calendar": [
   {
-   "symbol": "TSLA",
-   "date": "2026-07-22",
-   "hour": "amc",
-   "quarter": 2,
-   "year": 2026,
-   "epsEstimate": 0.4784,
-   "epsActual": null,
-   "revenueEstimate": 25534054668,
-   "revenueActual": null
-  },
-  {
-   "symbol": "INTC",
-   "date": "2026-07-23",
-   "hour": "amc",
-   "quarter": 2,
-   "year": 2026,
-   "epsEstimate": 0.214,
-   "epsActual": null,
-   "revenueEstimate": 14672729100,
-   "revenueActual": null
-  },
-  {
    "symbol": "HOOD",
    "date": "2026-07-29",
    "hour": "amc",
@@ -245,6 +223,17 @@
    "epsEstimate": -0.6471,
    "epsActual": null,
    "revenueEstimate": 1478342049,
+   "revenueActual": null
+  },
+  {
+   "symbol": "KLAR",
+   "date": "2026-08-03",
+   "hour": "",
+   "quarter": 2,
+   "year": 2026,
+   "epsEstimate": -0.0547,
+   "epsActual": null,
+   "revenueEstimate": 1012653144,
    "revenueActual": null
   }
  ],
@@ -1458,6 +1447,17 @@
   "AMD": [
    {
     "category": "company",
+    "datetime": 1783895100,
+    "headline": "Best Artificial Intelligence (AI) Stock: AMD, Nvidia, or Broadcom",
+    "id": 140881846,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "AMD",
+    "source": "Yahoo",
+    "summary": "This trio is dominating the AI computing space.",
+    "url": "https://finnhub.io/api/news?id=f8f440b5020fec9773812b6e07bb077dc0b0761cadf62b52cd0675093362cfce"
+   },
+   {
+    "category": "company",
     "datetime": 1783875600,
     "headline": "3 AI Infrastructure Stocks That Could Double by 2027",
     "id": 140878493,
@@ -1554,17 +1554,6 @@
     "source": "Yahoo",
     "summary": "Coinbase stock closed up over 0.4% on Friday with retail sentiment remaining neutral, and chatter on Stocktwits remained at ‘normal’ levels.",
     "url": "https://finnhub.io/api/news?id=ab7f824b4a60713d700d448380767dcc2735d4fd0314647216c2bc08ad5ac5ff"
-   },
-   {
-    "category": "company",
-    "datetime": 1783779302,
-    "headline": "AMD Stock Is Up 160% in 2026 and Analysts Still Love It",
-    "id": 140873493,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "AMD",
-    "source": "Yahoo",
-    "summary": "With Advanced Micro Devices' stock soaring so far this year, analysts show their love for this fabless semiconductor company.",
-    "url": "https://finnhub.io/api/news?id=41c20e79cee3746bd7ac1d0ce3e0bf0eee18c2e259a3cdcbd9ea2ce72a56d125"
    }
   ],
   "CCL": [
@@ -1589,97 +1578,20 @@
     "source": "Yahoo",
     "summary": "Sparks flew today in Monfalcone, Italy, as Carnival Cruise Line marked a major milestone with the traditional steel-cutting ceremony for its newest ship, Carnival Destiny—arriving in summer 2029 as the first of three vessels in its next-generation of ships, officially named Ace Class. Held at the Fincantieri shipyard, the event revealed the ship's name and showcased a 3D hologram offering a first look at the future of Carnival cruising.",
     "url": "https://finnhub.io/api/news?id=20634fb8a4c7d68937d4e013935b1ff20165081244720dbb24e110800c9ef749"
-   },
-   {
-    "category": "company",
-    "datetime": 1783632942,
-    "headline": "Why Carnival (CCL) Stock Is Up Today",
-    "id": 140855904,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "CCL",
-    "source": "Yahoo",
-    "summary": "Shares of cruise ship company Carnival (NYSE:CCL) jumped 5.3% in the afternoon session after the company announced its board of directors declared a quarterly dividend of $0.15 per share.",
-    "url": "https://finnhub.io/api/news?id=025c47303ea4f575e2ef8a93eb9ab6b9b50afa0de5dfc59aab8acc3cac7ec3b3"
-   },
-   {
-    "category": "company",
-    "datetime": 1783628142,
-    "headline": "Why Are Norwegian Cruise Line (NCLH) Shares Soaring Today",
-    "id": 140855905,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "CCL",
-    "source": "Yahoo",
-    "summary": "Shares of cruise company Norwegian Cruise Line (NYSE:NCLH) jumped 7.7% in the afternoon session after Morgan Stanley boosted its price target on the stock, signaling growing confidence in the cruise company's financial prospects.",
-    "url": "https://finnhub.io/api/news?id=783dbd1bd22b00902c382a0f3bebdaff8a5a9f36cfd6a37831a5fb92f47efba2"
-   },
-   {
-    "category": "company",
-    "datetime": 1783618417,
-    "headline": "Norwegian Cruise Line Jumps 8%, Carnival Climbs 5%, Royal Caribbean Rises 3% in Cruise-Stock Rebound",
-    "id": 140853376,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "CCL",
-    "source": "Yahoo",
-    "summary": "Cruise stocks are staging a sharp rebound at midday Thursday. Norwegian Cruise Line Holdings (NYSE:NCLH) is leading the group, up 8% to $20, while Carnival (NYSE:CCL) shares trade up 5% to $27 and Royal Caribbean Cruises (NYSE:RCL) shares are up 3% to $289. The bounce follows a rough stretch for the group. NCLH stock had ... Norwegian Cruise Line Jumps 8%, Carnival Climbs 5%, Royal Caribbean Rises 3% in Cruise-Stock Rebound",
-    "url": "https://finnhub.io/api/news?id=73dc21ff42916b146e90d918ee39b6cec1f570927aaf4047ac979c3f26b38686"
-   },
-   {
-    "category": "company",
-    "datetime": 1783602900,
-    "headline": "CARNIVAL CORPORATION DECLARES DIVIDEND",
-    "id": 140851097,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "CCL",
-    "source": "Yahoo",
-    "summary": "Carnival Corporation Ltd. (NYSE: CCL) (the \"Company\") has announced that its board of directors has declared a dividend of $0.15 per share.",
-    "url": "https://finnhub.io/api/news?id=7f14580884b74a6d544ecf84281eae3ee11480dc3108d035369448b0fdec97e6"
-   },
-   {
-    "category": "company",
-    "datetime": 1783600860,
-    "headline": "Can Royal Caribbean Offset Europe Weakness With Caribbean Strength?",
-    "id": 140852343,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "CCL",
-    "source": "Yahoo",
-    "summary": "RCL is betting on Caribbean strength, new destinations and positive yields to cushion Europe-related pressure in 2026.",
-    "url": "https://finnhub.io/api/news?id=b1a21b46ee06242eee6f78d8c9ace14f66867e86730093277a3e9bc28c366c09"
-   },
-   {
-    "category": "company",
-    "datetime": 1783590240,
-    "headline": "Company News for July 9, 2026",
-    "id": 140850084,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "CCL",
-    "source": "Yahoo",
-    "summary": "Companies in The News Are: PENG, EPAC, NVDA, CCL.",
-    "url": "https://finnhub.io/api/news?id=e85709e4c8bf6fd3572379f007a667a866c0fcf65daefd5839cda5a2c78759b6"
-   },
-   {
-    "category": "company",
-    "datetime": 1783566903,
-    "headline": "Is Carnival (CCL) Betting Too Heavily on Private Islands With Its Celebration Key Expansion?",
-    "id": 140847608,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "CCL",
-    "source": "Yahoo",
-    "summary": "Carnival Corporation recently completed the extension of its Celebration Key pier on Grand Bahama Island, adding two new berths so the destination can now host up to four ships and roughly 13,000 guests per day while supporting thousands of local jobs and billions of dollars in projected long-term economic impact for The Bahamas. The pier expansion, which unlocks roughly 200 extra ship calls and about 700,000 more guest arrivals annually, underlines how Carnival is deepening its reliance on...",
-    "url": "https://finnhub.io/api/news?id=c0d8b9cecb391a4980bea77a32c135986381fb0c4f28e945e67990a6a0ec3862"
-   },
-   {
-    "category": "company",
-    "datetime": 1783563188,
-    "headline": "Carnival (CCL) Slides On Oil Price Fears, Is It 28% Undervalued?",
-    "id": 140847609,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "CCL",
-    "source": "Yahoo",
-    "summary": "Carnival (CCL) is back in focus after its shares declined sharply in recent sessions, as rising oil prices raised concerns about cruise fuel costs and the stock was removed from several Russell growth indices. See our latest analysis for Carnival. At a share price of $25.64, Carnival’s recent declines, including a 7 day share price return of down 10.1% and year to date share price return of down 17.1%, contrast with a 3 year total shareholder return of 42.2%. This suggests near term momentum...",
-    "url": "https://finnhub.io/api/news?id=1a70dbc78cc5f9e651018b098ccb0a8ce47c092d5f4b02a5eaff1f6398d59301"
    }
   ],
   "SNDK": [
+   {
+    "category": "company",
+    "datetime": 1783900279,
+    "headline": "Dow Jones Futures Fall, Oil Prices Rise Amid New U.S.-Iran Attacks; Nvidia, Micron, Sandisk Near Buy Points",
+    "id": 140881841,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SNDK",
+    "source": "Yahoo",
+    "summary": "futures loom amid U.S.-Iran attacks. Taiwan Semi, Goldman and GE earnings are ahead. Nvidia, Sandisk, Micron are near buy points.",
+    "url": "https://finnhub.io/api/news?id=b06ddb0234e8d87d24a4614cd77f5ffc1c2a0c22e560e548f4f6d2aa4ba942d8"
+   },
    {
     "category": "company",
     "datetime": 1783879080,
@@ -1778,17 +1690,6 @@
     "source": "Yahoo",
     "summary": "Taiwan Semi, Goldman and GE Aerospace are big earnings due with the market improving. Nvidia, Sandisk, Micron, Robinhood are near buy points.",
     "url": "https://finnhub.io/api/news?id=f0cd72579578342a3b822663dc7c762ec7496fa7e0b373a8e0f449a2256a310e"
-   },
-   {
-    "category": "company",
-    "datetime": 1783796400,
-    "headline": "SK Hynix's Nasdaq Debut Just Became the Largest U.S. Listing by a Foreign Company",
-    "id": 140872967,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "SNDK",
-    "source": "Yahoo",
-    "summary": "Investing in SK Hynix is now easier for U.S. investors, but that doesn't automatically mean it's worth owning a piece of the company.",
-    "url": "https://finnhub.io/api/news?id=8bf09f02584ec480a8ad56fa22eee3817365975fa33a674c841efcb33515a98c"
    }
   ],
   "TSLA": [
@@ -1930,6 +1831,28 @@
   "HOOD": [
    {
     "category": "company",
+    "datetime": 1783900279,
+    "headline": "Dow Jones Futures Fall, Oil Prices Rise Amid New U.S.-Iran Attacks; Nvidia, Micron, Sandisk Near Buy Points",
+    "id": 140881841,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "HOOD",
+    "source": "Yahoo",
+    "summary": "futures loom amid U.S.-Iran attacks. Taiwan Semi, Goldman and GE earnings are ahead. Nvidia, Sandisk, Micron are near buy points.",
+    "url": "https://finnhub.io/api/news?id=b06ddb0234e8d87d24a4614cd77f5ffc1c2a0c22e560e548f4f6d2aa4ba942d8"
+   },
+   {
+    "category": "company",
+    "datetime": 1783899960,
+    "headline": "Robinhood Brings AI Agent Trading to Crypto After 70,000 Accounts Join Beta",
+    "id": 140881896,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "HOOD",
+    "source": "Yahoo",
+    "summary": "Robinhood Markets (NASDAQ: $HOOD) is preparing to bring AI-powered trading agents into crypto, extending a beta pro...",
+    "url": "https://finnhub.io/api/news?id=9081cdc1dbf0e8b412cf5cdfe5239a3856a58a6ce0440c596ffab48673cc397c"
+   },
+   {
+    "category": "company",
     "datetime": 1783858997,
     "headline": "Dow Jones Futures Loom Amid New U.S.-Iran Attacks; Nvidia, Micron, Sandisk Near Buy Points",
     "id": 140877214,
@@ -2015,31 +1938,20 @@
     "source": "Yahoo",
     "summary": "Robinhood Markets (Nasdaq: HOOD) is a brokerage platform whose commission-free offering of equities, cryptocurrencies, and tokenized stocks has made it extremely popular among young retail traders. On July 1, Robinhood launched its blockchain, Robinhood Chain, to offer real-world assets ...",
     "url": "https://finnhub.io/api/news?id=27dd29f63af2e1cad479b123c361d579dfe211921a597cd6a76006230f389e56"
-   },
-   {
-    "category": "company",
-    "datetime": 1783777129,
-    "headline": "Cash Cat Token Surges 4,000% and Hits $200 Million Market Cap, But Why?",
-    "id": 140871882,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "HOOD",
-    "source": "Yahoo",
-    "summary": "Cash Cat topped $200 million at its record high as Hyperliquid perps and a Solana listing fueled the CASHCAT surge.",
-    "url": "https://finnhub.io/api/news?id=06059ee3f318257803c558360f0e686d01b86c6026b5ecf1ae08ea8b95b13a70"
-   },
-   {
-    "category": "company",
-    "datetime": 1783776666,
-    "headline": "HOOD Stock Forms Golden Cross as Key Robinhood Chain Metrics Jump",
-    "id": 140872571,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/07/11/Robinhood-Trading-Application-On-Mobile-.jpg?width=2048&height=1536",
-    "related": "HOOD",
-    "source": "Benzinga",
-    "summary": "HOOD stock price has formed a golden cross pattern, suggesting more upside to go as key Robinhood Chain metrics surge.",
-    "url": "https://finnhub.io/api/news?id=4e467b3ff7464d63b0ae908623b5950cc560ef55aa4d7b0f05c0ee032f09dcd2"
    }
   ],
   "MU": [
+   {
+    "category": "company",
+    "datetime": 1783900279,
+    "headline": "Dow Jones Futures Fall, Oil Prices Rise Amid New U.S.-Iran Attacks; Nvidia, Micron, Sandisk Near Buy Points",
+    "id": 140881841,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "MU",
+    "source": "Yahoo",
+    "summary": "futures loom amid U.S.-Iran attacks. Taiwan Semi, Goldman and GE earnings are ahead. Nvidia, Sandisk, Micron are near buy points.",
+    "url": "https://finnhub.io/api/news?id=b06ddb0234e8d87d24a4614cd77f5ffc1c2a0c22e560e548f4f6d2aa4ba942d8"
+   },
    {
     "category": "company",
     "datetime": 1783884665,
@@ -2138,17 +2050,6 @@
     "source": "Yahoo",
     "summary": "Micron has been one of the defining stocks of the first half of 2026.",
     "url": "https://finnhub.io/api/news?id=5db550c9ad59ea7f84f60f382bb349c44d5f9ae27ec3f368ef8370d70a23f400"
-   },
-   {
-    "category": "company",
-    "datetime": 1783861020,
-    "headline": "SK Hynix Joins the Nasdaq. But This Nasdaq-100 Semiconductor Stock Could Be an Even Better Buy for the Second Half of 2026.",
-    "id": 140877205,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "MU",
-    "source": "Yahoo",
-    "summary": "ASML's lithography machines are needed to manufacture advanced logic and memory chips for AI workflows.",
-    "url": "https://finnhub.io/api/news?id=ccf65ace0ec3b88ff17143d40a999bb94b43e488e3120cd151976d7a647774d3"
    }
   ],
   "RKLB": [
@@ -2408,17 +2309,6 @@
     "source": "Benzinga",
     "summary": "Figma shares are trading lower Friday morning as traders weigh a recent bullish analyst view against a softer tape for growth software.",
     "url": "https://finnhub.io/api/news?id=2db49caa81f5f32beb045df2be14c200ef7581f1dab23224a2dbb98023f4f258"
-   },
-   {
-    "category": "company",
-    "datetime": 1783613854,
-    "headline": "Figma Shares Edge Higher Thursday: What's Driving the Move?",
-    "id": 140863486,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/07/09/Figma.jpg?width=2048&height=1536",
-    "related": "FIG",
-    "source": "Benzinga",
-    "summary": "Figma shares are trading higher Thursday afternoon as investors lean into a more constructive AI narrative for design software during a risk-on session for the broader tech sector.",
-    "url": "https://finnhub.io/api/news?id=6783963f66fd41f388fd28de0874732a5c95e1c347b5416c65bcc3b1778c556e"
    }
   ],
   "RIVN": [
@@ -2465,54 +2355,32 @@
     "source": "SeekingAlpha",
     "summary": "Lucid Group, Inc. Q2 deliveries rose ~20% YoY but gross margin woes persist; see what to watch for: Gravity SUV ramp and more. Click for this LCID update.",
     "url": "https://finnhub.io/api/news?id=c4e97d80c19b42739adcf6a52c4ac38b5db80fa091d615d654288550188f3c90"
-   },
-   {
-    "category": "company",
-    "datetime": 1783610257,
-    "headline": "UBS Maintains Neutral on Rivian Automotive, Raises Price Target to $17",
-    "id": 140863516,
-    "image": "",
-    "related": "RIVN",
-    "source": "Benzinga",
-    "summary": "UBS  analyst Joseph Spak   maintains Rivian Automotive (NASDAQ:RIVN) with a Neutral and raises the price target from $16 to $17.",
-    "url": "https://finnhub.io/api/news?id=f876bb6c0e61cd00c3157a7a010f90f39c744371cdd76841f0f2cf70ab110c17"
-   },
-   {
-    "category": "company",
-    "datetime": 1783595370,
-    "headline": "Rivian Shares Jump Thursday as Stock Reclaims Major Moving Averages",
-    "id": 140851959,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/07/09/Rivian.jpg?width=2048&height=1536",
-    "related": "RIVN",
-    "source": "Benzinga",
-    "summary": "Rivian Automotive Inc (NASDAQ:RIVN) shares are trading higher on Thursday as traders look past dilution worries tied to the company’s underwritten public offering.",
-    "url": "https://finnhub.io/api/news?id=a4ffab8ec4523efd96b9ceb51957291ea52b7abd833d670fcfe5dd8dd377450a"
-   },
-   {
-    "category": "company",
-    "datetime": 1783589895,
-    "headline": "Jim Cramer Warns SK Hynix Bankers Are Playing a ‘Dangerous Game’ As Oversubscribed $28 Billion ADR Deal Nears Pricing",
-    "id": 140851960,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/07/09/Paris--France---February-20-2026-The-Sk-.jpg?width=2048&height=1536",
-    "related": "RIVN",
-    "source": "Benzinga",
-    "summary": "Jim Cramer warns bankers against overhyping demand for SK Hynix&#39;s $28 billion U.S. listing, fearing aggressive pricing and limited gains.",
-    "url": "https://finnhub.io/api/news?id=65e56d8d832ae103ed56d6286c33349ed55b6ae660f72c481aefd7c2de4cc043"
-   },
-   {
-    "category": "company",
-    "datetime": 1783578331,
-    "headline": "Gary Black Says Tesla's Valuation Is So 'Stretched' That Most Institutional Investors Won't Touch the Stock— and FSD Isn't Helping",
-    "id": 140851961,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/07/09/Lviv--Ukraine---October-17--2022-Tesla-M.jpg?width=2048&height=1536",
-    "related": "RIVN",
-    "source": "Benzinga",
-    "summary": "Tesla&#39;s stretched valuation and declining earnings estimates explain why institutional investors avoid the stock, says Gary Black.",
-    "url": "https://finnhub.io/api/news?id=4900cc966392826454a77dbefc6980e077c3439736c97436333ca32ccc7743cb"
    }
   ],
   "AAOI": [],
   "SPCX": [
+   {
+    "category": "company",
+    "datetime": 1783900279,
+    "headline": "Dow Jones Futures Fall, Oil Prices Rise Amid New U.S.-Iran Attacks; Nvidia, Micron, Sandisk Near Buy Points",
+    "id": 140881841,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SPCX",
+    "source": "Yahoo",
+    "summary": "futures loom amid U.S.-Iran attacks. Taiwan Semi, Goldman and GE earnings are ahead. Nvidia, Sandisk, Micron are near buy points.",
+    "url": "https://finnhub.io/api/news?id=b06ddb0234e8d87d24a4614cd77f5ffc1c2a0c22e560e548f4f6d2aa4ba942d8"
+   },
+   {
+    "category": "company",
+    "datetime": 1783895484,
+    "headline": "Could AI Pay Americans $1 Million Each? New Think Tank Forecast Sparks Jim Chanos' SpaceX Jab: 'Seems Reasonable'",
+    "id": 140881944,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "SPCX",
+    "source": "Yahoo",
+    "summary": "The AI Futures Project, a non-profit initiative that forecasts the future of artificial intelligence, recently outlined a proposal for a citizen’s dividend by the U.S. government following AI-induced unemployment. Citizen’s Dividend to Provide $1 Million Per Person By 2035 In...",
+    "url": "https://finnhub.io/api/news?id=57f9b4a0e138f1a3cfca2b0576545a97c62da0a0a90ccaa987502d7d75b30e9a"
+   },
    {
     "category": "company",
     "datetime": 1783889400,
@@ -2600,28 +2468,6 @@
     "source": "Yahoo",
     "summary": "These overlooked consumer stocks could offer investors more dependable paths to long-term returns than the newly public megacap.",
     "url": "https://finnhub.io/api/news?id=6427a45e9c19875b749dfde75516f289f1c29ab3db751bcd6083d6f1eb979e9e"
-   },
-   {
-    "category": "company",
-    "datetime": 1783875660,
-    "headline": "SpaceX’s Ambitions Are Bigger Than Most People Think",
-    "id": 140878574,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "SPCX",
-    "source": "Yahoo",
-    "summary": "“The amount of ambition around [SpaceX’s] industrialization is unlike anything I’ve ever witnessed,” says RBC analyst Ken Herbert.",
-    "url": "https://finnhub.io/api/news?id=a0839ade44bb1622665b5146439c1386a6a849988ba6d29eb6f577b950715c12"
-   },
-   {
-    "category": "company",
-    "datetime": 1783873980,
-    "headline": "Tesla merger with SpaceX won't save investors, top analyst says",
-    "id": 140878506,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "SPCX",
-    "source": "Yahoo",
-    "summary": "Tesla investors who have bet on Elon Musk and his electric vehicle company have been rewarded for their faith time and again. The stock seems immune to prolonged downturns, even when Tesla (TSLA) fails to deliver on one of Musk's grandiose promises. And when he does deliver, the stock also pushes ...",
-    "url": "https://finnhub.io/api/news?id=6c55c30a0dd63c1d197bddf107a310bb416f9f45db3f5d6f2d36533ae104bbd2"
    }
   ],
   "LITE": [
@@ -2701,39 +2547,6 @@
     "source": "Yahoo",
     "summary": "More than simply catching the AI updraft, the networking gear maker built a backlog that has investors asking if this time is truly different.",
     "url": "https://finnhub.io/api/news?id=26af665e54a95200275ac15b3e673b19c0c1921b313f31e7d1bfeb8d95b5f60e"
-   },
-   {
-    "category": "company",
-    "datetime": 1783627020,
-    "headline": "Why Meta’s In-House AI Chip Plans Sent Chip-Equipment Stocks Soaring",
-    "id": 140855741,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "LITE",
-    "source": "Yahoo",
-    "summary": "Meta’s decision to make its in-house chip could be a boon for Applied Materials, Lam Research, and KLA, which all make equipment that turns raw silicon wafers into microchips.",
-    "url": "https://finnhub.io/api/news?id=7c1d6b3daed57918ad08eaa19601778dbab6c5ddda303a355e20c54d639eaa2b"
-   },
-   {
-    "category": "company",
-    "datetime": 1783623901,
-    "headline": "Discover which S&P500 stocks are making waves on Thursday.",
-    "id": 140854392,
-    "image": "https://www.chartmill.com/images/uploads/CM_Top_Movers_Small_free_2b4ff2fc22.webp",
-    "related": "LITE",
-    "source": "ChartMill",
-    "summary": "Wondering what's happening in today's session for the S&P500 index? Stay informed with the top movers within the S&P500 index on Thursday.",
-    "url": "https://finnhub.io/api/news?id=fc9f5071a15d87b849bbe9d4e97a1be84db633c0625399fac183ef0b4d1e46e9"
-   },
-   {
-    "category": "company",
-    "datetime": 1783620420,
-    "headline": "Lumentum, Sandisk, Applied Materials, AstraZeneca, and More Stocks That Explain Today’s Market",
-    "id": 140854665,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "LITE",
-    "source": "Yahoo",
-    "summary": "The AI trade mounts a comeback as investors get over the worst of their fears about a flare-up in tensions between the U.S. and Iran.",
-    "url": "https://finnhub.io/api/news?id=027f08f28cf70dce7f74b17001fd8da99cf87bc24b51bb7a208d9c7d44597865"
    }
   ],
   "INTC": [
@@ -2848,41 +2661,7 @@
     "url": "https://finnhub.io/api/news?id=dd0fe8895564174dc33583433b9adaafc2aae29c689f77d09e8083f48db859d5"
    }
   ],
-  "KLAR": [
-   {
-    "category": "company",
-    "datetime": 1783606441,
-    "headline": "Goldman Sachs Maintains Buy on Klarna, Raises Price Target to $25",
-    "id": 140854467,
-    "image": "",
-    "related": "KLAR",
-    "source": "Benzinga",
-    "summary": "Goldman Sachs  analyst Will Nance   maintains Klarna (NYSE:KLAR) with a Buy and raises the price target from $21 to $25.",
-    "url": "https://finnhub.io/api/news?id=aef9ae4fe73ebeaf1afbf5444a708ea3aa654eccbc45453854727d79ab856757"
-   },
-   {
-    "category": "company",
-    "datetime": 1783598422,
-    "headline": "Barclays Initiates Coverage of Klarna Group (KLAR) with Equal-Weight Recommendation",
-    "id": 140850289,
-    "image": "",
-    "related": "KLAR",
-    "source": "Fintel",
-    "summary": "",
-    "url": "https://finnhub.io/api/news?id=f10b4b1708f2cc00e758f2600baf9ea8536609bdd461d4dc5be4d44c973878af"
-   },
-   {
-    "category": "company",
-    "datetime": 1783586288,
-    "headline": "Klarna Closes €900M Forward Flow And Warehouse Financing Agreement In Germany",
-    "id": 140854468,
-    "image": "",
-    "related": "KLAR",
-    "source": "Benzinga",
-    "summary": "The facility responds to robust demand for Klarna&#39;s Fair Financing products in one of Europe&#39;s largest consumer markets. Under the two-year agreement, Klarna has sold a portfolio of its German Fair Financing",
-    "url": "https://finnhub.io/api/news?id=031935daa9fd4b758ebc6cba46caa165ddbe279cdd668415a8e87727afe784ff"
-   }
-  ]
+  "KLAR": []
  },
  "errors": []
 }

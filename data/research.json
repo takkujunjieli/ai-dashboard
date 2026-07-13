@@ -1,54 +1,12 @@
 {
- "updated_at": "2026-07-13T00:10:31+00:00",
+ "updated_at": "2026-07-13T01:00:15+00:00",
  "snapshots": {
-  "LITE": {
-   "price": 804.21,
-   "chg": 18.440000000000055,
-   "chg_pct": 2.34674268551867,
-   "day_vol": 3674890.0,
-   "prev_close": 785.77
-  },
-  "KLAR": {
-   "price": 19.61,
-   "chg": -0.379999999999999,
-   "chg_pct": -1.900950475237614,
-   "day_vol": 3307581.0,
-   "prev_close": 19.99
-  },
-  "SNDK": {
-   "price": 1935,
-   "chg": 76.73000000000002,
-   "chg_pct": 4.129109332874126,
-   "day_vol": 11022651.0,
-   "prev_close": 1858.27
-  },
-  "SPCX": {
-   "price": 145.92,
-   "chg": -6.240000000000009,
-   "chg_pct": -4.100946372239753,
-   "day_vol": 46826329.0,
-   "prev_close": 152.16
-  },
-  "U": {
-   "price": 30.89,
-   "chg": 0.16000000000000014,
-   "chg_pct": 0.5206638464041657,
-   "day_vol": 13026697.0,
-   "prev_close": 30.73
-  },
   "INTC": {
    "price": 109.6001,
    "chg": -2.9399000000000086,
    "chg_pct": -2.6123156211125007,
    "day_vol": 70824190.0,
    "prev_close": 112.54
-  },
-  "MU": {
-   "price": 982.9821,
-   "chg": -8.65790000000004,
-   "chg_pct": -0.8730890242426728,
-   "day_vol": 31766740.0,
-   "prev_close": 991.64
   },
   "TSLA": {
    "price": 407.59,
@@ -57,12 +15,12 @@
    "day_vol": 33459572.0,
    "prev_close": 406.55
   },
-  "RIVN": {
-   "price": 17.4899,
-   "chg": -0.6301000000000023,
-   "chg_pct": -3.4773730684326836,
-   "day_vol": 40152524.0,
-   "prev_close": 18.12
+  "KLAR": {
+   "price": 19.61,
+   "chg": -0.379999999999999,
+   "chg_pct": -1.900950475237614,
+   "day_vol": 3307581.0,
+   "prev_close": 19.99
   },
   "HOOD": {
    "price": 111.5689,
@@ -71,12 +29,33 @@
    "day_vol": 25929867.0,
    "prev_close": 115.11
   },
+  "SPCX": {
+   "price": 145.92,
+   "chg": -6.240000000000009,
+   "chg_pct": -4.100946372239753,
+   "day_vol": 46826329.0,
+   "prev_close": 152.16
+  },
+  "SNDK": {
+   "price": 1935,
+   "chg": 76.73000000000002,
+   "chg_pct": 4.129109332874126,
+   "day_vol": 11022651.0,
+   "prev_close": 1858.27
+  },
   "RKLB": {
    "price": 81.5171,
    "chg": -1.032899999999998,
    "chg_pct": -1.2512416717141102,
    "day_vol": 14591976.0,
    "prev_close": 82.55
+  },
+  "MU": {
+   "price": 982.9821,
+   "chg": -8.65790000000004,
+   "chg_pct": -0.8730890242426728,
+   "day_vol": 31766740.0,
+   "prev_close": 991.64
   },
   "CCL": {
    "price": 26.8497,
@@ -85,6 +64,13 @@
    "day_vol": 12441421.0,
    "prev_close": 26.72
   },
+  "U": {
+   "price": 30.89,
+   "chg": 0.16000000000000014,
+   "chg_pct": 0.5206638464041657,
+   "day_vol": 13026697.0,
+   "prev_close": 30.73
+  },
   "COIN": {
    "price": 159.8,
    "chg": 1.3600000000000136,
@@ -92,12 +78,19 @@
    "day_vol": 6133590.0,
    "prev_close": 158.44
   },
-  "FIG": {
-   "price": 21.1201,
-   "chg": -1.1399000000000008,
-   "chg_pct": -5.120844564240794,
-   "day_vol": 18031072.0,
-   "prev_close": 22.26
+  "LITE": {
+   "price": 804.21,
+   "chg": 18.440000000000055,
+   "chg_pct": 2.34674268551867,
+   "day_vol": 3674890.0,
+   "prev_close": 785.77
+  },
+  "RIVN": {
+   "price": 17.4899,
+   "chg": -0.6301000000000023,
+   "chg_pct": -3.4773730684326836,
+   "day_vol": 40152524.0,
+   "prev_close": 18.12
   },
   "AMD": {
    "price": 559.9,
@@ -105,6 +98,13 @@
    "chg_pct": 2.4107404155692036,
    "day_vol": 20701126.0,
    "prev_close": 546.72
+  },
+  "FIG": {
+   "price": 21.1201,
+   "chg": -1.1399000000000008,
+   "chg_pct": -5.120844564240794,
+   "day_vol": 18031072.0,
+   "prev_close": 22.26
   },
   "AAOI": {
    "price": 119.96,
@@ -15578,7 +15578,7 @@
     "put_vol": 434927,
     "call_oi": 915137,
     "put_oi": 640952,
-    "atm_iv": 0.5341467647100284,
+    "atm_iv": 0.543707892914832,
     "pcr_vol": 0.68,
     "pcr_oi": 0.7,
     "by_expiry": [
@@ -15590,7 +15590,7 @@
       "put_vol": 179806,
       "call_oi": 46484,
       "put_oi": 33828,
-      "atm_iv": 0.5341467647100284
+      "atm_iv": 0.543707892914832
      },
      {
       "exp": "2026-07-15",
@@ -15600,7 +15600,7 @@
       "put_vol": 39728,
       "call_oi": 39824,
       "put_oi": 19247,
-      "atm_iv": 0.517786866598954
+      "atm_iv": 0.5208073336784739
      },
      {
       "exp": "2026-07-17",
@@ -15610,7 +15610,7 @@
       "put_vol": 168993,
       "call_oi": 456481,
       "put_oi": 321061,
-      "atm_iv": 0.4997661755619155
+      "atm_iv": 0.5015083128208759
      },
      {
       "exp": "2026-07-20",
@@ -15620,7 +15620,7 @@
       "put_vol": 5927,
       "call_oi": 27537,
       "put_oi": 6501,
-      "atm_iv": 0.4421911960220701
+      "atm_iv": 0.44315276322450514
      },
      {
       "exp": "2026-07-24",
@@ -15630,7 +15630,7 @@
       "put_vol": 11798,
       "call_oi": 61842,
       "put_oi": 45768,
-      "atm_iv": 0.555988142992927
+      "atm_iv": 0.5567928428310457
      },
      {
       "exp": "2026-07-31",
@@ -15640,7 +15640,7 @@
       "put_vol": 11219,
       "call_oi": 47378,
       "put_oi": 35578,
-      "atm_iv": 0.5107717310156406
+      "atm_iv": 0.5112383898126767
      }
     ],
     "by_strike": [
@@ -16280,68 +16280,7 @@
     ],
     "max_pain": 400,
     "max_pain_exp": "2026-07-13",
-    "oi_changes": [
-     {
-      "exp": "2026-07-20",
-      "strike": 397.5,
-      "side": "call",
-      "delta": 231
-     },
-     {
-      "exp": "2026-07-20",
-      "strike": 382.5,
-      "side": "call",
-      "delta": 226
-     },
-     {
-      "exp": "2026-07-20",
-      "strike": 392.5,
-      "side": "call",
-      "delta": 133
-     },
-     {
-      "exp": "2026-07-20",
-      "strike": 387.5,
-      "side": "call",
-      "delta": 16
-     },
-     {
-      "exp": "2026-07-20",
-      "strike": 377.5,
-      "side": "call",
-      "delta": 14
-     },
-     {
-      "exp": "2026-07-20",
-      "strike": 337.5,
-      "side": "call",
-      "delta": 13
-     },
-     {
-      "exp": "2026-07-20",
-      "strike": 462.5,
-      "side": "call",
-      "delta": 11
-     },
-     {
-      "exp": "2026-07-20",
-      "strike": 332.5,
-      "side": "call",
-      "delta": 8
-     },
-     {
-      "exp": "2026-07-20",
-      "strike": 457.5,
-      "side": "call",
-      "delta": 8
-     },
-     {
-      "exp": "2026-07-20",
-      "strike": 367.5,
-      "side": "call",
-      "delta": 1
-     }
-    ],
+    "oi_changes": [],
     "contracts": 2588
    }
   },
@@ -31835,7 +31774,7 @@
     "put_vol": 108924,
     "call_oi": 399314,
     "put_oi": 399031,
-    "atm_iv": 0.9097288116719005,
+    "atm_iv": 0.9260593842391731,
     "pcr_vol": 1.03,
     "pcr_oi": 1.0,
     "by_expiry": [
@@ -31847,7 +31786,7 @@
       "put_vol": 23847,
       "call_oi": 11343,
       "put_oi": 6796,
-      "atm_iv": 0.9097288116719005
+      "atm_iv": 0.9260593842391731
      },
      {
       "exp": "2026-07-15",
@@ -31857,7 +31796,7 @@
       "put_vol": 3920,
       "call_oi": 1361,
       "put_oi": 1865,
-      "atm_iv": 0.8590833409743541
+      "atm_iv": 0.8641074917247921
      },
      {
       "exp": "2026-07-17",
@@ -31867,7 +31806,7 @@
       "put_vol": 60387,
       "call_oi": 181159,
       "put_oi": 168693,
-      "atm_iv": 0.8535806710913815
+      "atm_iv": 0.8565632339860852
      },
      {
       "exp": "2026-07-20",
@@ -31877,7 +31816,7 @@
       "put_vol": 986,
       "call_oi": 2847,
       "put_oi": 2167,
-      "atm_iv": 0.7319845458365362
+      "atm_iv": 0.7335794432035698
      },
      {
       "exp": "2026-07-22",
@@ -31887,7 +31826,7 @@
       "put_vol": 1877,
       "call_oi": 820,
       "put_oi": 1596,
-      "atm_iv": 0.7553366564180923
+      "atm_iv": 0.7566521977945359
      },
      {
       "exp": "2026-07-24",
@@ -31897,7 +31836,7 @@
       "put_vol": 4742,
       "call_oi": 32129,
       "put_oi": 27047,
-      "atm_iv": 0.8230945516606016
+      "atm_iv": 0.8242884122847377
      }
     ],
     "by_strike": [
@@ -48151,6 +48090,15 @@
    ],
    "news": [
     {
+     "title": "401(k) Champions and Soaring Value Stocks",
+     "url": "https://www.fool.com/investing/2026/07/12/401k-champions-and-soaring-value-stocks/?source=iedfolrf0000001",
+     "published": "2026-07-13T00:12:48Z",
+     "source": "The Motley Fool",
+     "summary": "The article discusses the importance of grassroots 401(k) education and mentorship through the 401(k) Champion Award program, which recognizes employees who educate colleagues about retirement savings. It also highlights that value stocks, particularly those in the Vanguard Value ETF, are outperform",
+     "sentiment": "positive",
+     "reason": "Identified as the top holding in the Vanguard Value ETF with exceptional performance, up 854% over the past year."
+    },
+    {
      "title": "Morgan Stanley Warns of \"Chipflation\" as Hyperscalers Invest More in Compute Capacity: 2 No-Brainer Artificial Intelligence (AI) Chip Stocks to Buy Right Now",
      "url": "https://www.fool.com/investing/2026/07/12/chipflation/?source=iedfolrf0000001",
      "published": "2026-07-12T11:14:00Z",
@@ -48275,15 +48223,6 @@
      "summary": "Backpack, a crypto-traditional finance bridge platform, launched 24/7 trading for select U.S. equities including SpaceX, Micron, and SanDisk for international investors. Unlike synthetic derivatives, investors hold real securities with instant settlement and continuous price discovery, available via",
      "sentiment": "neutral",
      "reason": "Micron is mentioned as one of the initial equities available for 24/7 trading but receives no additional commentary or performance metrics in the article."
-    },
-    {
-     "title": "3 Hypergrowth Tech Stocks to Buy With $3,000 Right Now",
-     "url": "https://www.fool.com/investing/2026/07/10/3-hypergrowth-tech-stocks-to-buy-with-3000-right-n/?source=iedfolrf0000001",
-     "published": "2026-07-10T09:10:00Z",
-     "source": "The Motley Fool",
-     "summary": "The article highlights three hypergrowth technology stocks: Broadcom, which is expanding its custom AI chip business with projected $100 billion in AI semiconductor revenue by 2027; Micron, benefiting from a memory chip shortage expected to persist beyond 2027; and IonQ, a quantum computing leader e",
-     "sentiment": "positive",
-     "reason": "Experiencing hypergrowth driven by memory chip shortage with tight conditions expected to persist beyond 2027, allowing for sustained revenue and profit increases despite high valuation."
     }
    ],
    "options": {
@@ -48293,7 +48232,7 @@
     "put_vol": 283781,
     "call_oi": 505634,
     "put_oi": 852852,
-    "atm_iv": 1.2230290826716947,
+    "atm_iv": 1.2450457395985295,
     "pcr_vol": 1.58,
     "pcr_oi": 1.69,
     "by_expiry": [
@@ -48305,7 +48244,7 @@
       "put_vol": 55410,
       "call_oi": 19512,
       "put_oi": 14534,
-      "atm_iv": 1.2230290826716947
+      "atm_iv": 1.2450457395985295
      },
      {
       "exp": "2026-07-15",
@@ -48315,7 +48254,7 @@
       "put_vol": 10232,
       "call_oi": 3584,
       "put_oi": 4004,
-      "atm_iv": 1.1295091671072088
+      "atm_iv": 1.1361315470048634
      },
      {
       "exp": "2026-07-17",
@@ -48325,7 +48264,7 @@
       "put_vol": 149430,
       "call_oi": 257135,
       "put_oi": 478272,
-      "atm_iv": 1.1000908224792008
+      "atm_iv": 1.1039432832169607
      },
      {
       "exp": "2026-07-20",
@@ -48335,7 +48274,7 @@
       "put_vol": 3762,
       "call_oi": 2608,
       "put_oi": 2990,
-      "atm_iv": 0.9707364345025256
+      "atm_iv": 0.9728558909045301
      },
      {
       "exp": "2026-07-22",
@@ -48345,7 +48284,7 @@
       "put_vol": 1343,
       "call_oi": 1169,
       "put_oi": 1180,
-      "atm_iv": 0.9947851649781515
+      "atm_iv": 0.9965210257143876
      },
      {
       "exp": "2026-07-24",
@@ -48355,7 +48294,7 @@
       "put_vol": 13211,
       "call_oi": 40793,
       "put_oi": 73376,
-      "atm_iv": 1.021699864461722
+      "atm_iv": 1.0231843474304338
      }
     ],
     "by_strike": [
@@ -49205,20 +49144,7 @@
     ],
     "max_pain": 975,
     "max_pain_exp": "2026-07-13",
-    "oi_changes": [
-     {
-      "exp": "2026-07-17",
-      "strike": 652.5,
-      "side": "put",
-      "delta": 220
-     },
-     {
-      "exp": "2026-07-17",
-      "strike": 622.5,
-      "side": "put",
-      "delta": 3
-     }
-    ],
+    "oi_changes": [],
     "contracts": 5434
    }
   }
