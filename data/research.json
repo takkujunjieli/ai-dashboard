@@ -1,19 +1,19 @@
 {
- "updated_at": "2026-07-13T02:47:07+00:00",
+ "updated_at": "2026-07-13T02:48:30+00:00",
  "snapshots": {
-  "INTC": {
-   "price": 109.6001,
-   "chg": -2.9399000000000086,
-   "chg_pct": -2.6123156211125007,
-   "day_vol": 70824190.0,
-   "prev_close": 112.54
+  "KLAR": {
+   "price": 19.61,
+   "chg": -0.379999999999999,
+   "chg_pct": -1.900950475237614,
+   "day_vol": 3307581.0,
+   "prev_close": 19.99
   },
-  "AMD": {
-   "price": 559.9,
-   "chg": 13.17999999999995,
-   "chg_pct": 2.4107404155692036,
-   "day_vol": 20701126.0,
-   "prev_close": 546.72
+  "SNDK": {
+   "price": 1935,
+   "chg": 76.73000000000002,
+   "chg_pct": 4.129109332874126,
+   "day_vol": 11022651.0,
+   "prev_close": 1858.27
   },
   "CCL": {
    "price": 26.8497,
@@ -22,19 +22,12 @@
    "day_vol": 12441421.0,
    "prev_close": 26.72
   },
-  "FIG": {
-   "price": 21.1201,
-   "chg": -1.1399000000000008,
-   "chg_pct": -5.120844564240794,
-   "day_vol": 18031072.0,
-   "prev_close": 22.26
-  },
-  "LITE": {
-   "price": 804.21,
-   "chg": 18.440000000000055,
-   "chg_pct": 2.34674268551867,
-   "day_vol": 3674890.0,
-   "prev_close": 785.77
+  "SPCX": {
+   "price": 145.92,
+   "chg": -6.240000000000009,
+   "chg_pct": -4.100946372239753,
+   "day_vol": 46826329.0,
+   "prev_close": 152.16
   },
   "RIVN": {
    "price": 17.4899,
@@ -42,6 +35,55 @@
    "chg_pct": -3.4773730684326836,
    "day_vol": 40152524.0,
    "prev_close": 18.12
+  },
+  "COIN": {
+   "price": 159.8,
+   "chg": 1.3600000000000136,
+   "chg_pct": 0.858369098712455,
+   "day_vol": 6133590.0,
+   "prev_close": 158.44
+  },
+  "RKLB": {
+   "price": 81.5171,
+   "chg": -1.032899999999998,
+   "chg_pct": -1.2512416717141102,
+   "day_vol": 14591976.0,
+   "prev_close": 82.55
+  },
+  "TSLA": {
+   "price": 407.59,
+   "chg": 1.0399999999999636,
+   "chg_pct": 0.25581109334644286,
+   "day_vol": 33459572.0,
+   "prev_close": 406.55
+  },
+  "FIG": {
+   "price": 21.1201,
+   "chg": -1.1399000000000008,
+   "chg_pct": -5.120844564240794,
+   "day_vol": 18031072.0,
+   "prev_close": 22.26
+  },
+  "AAOI": {
+   "price": 119.96,
+   "chg": -2.25,
+   "chg_pct": -1.841093200229114,
+   "day_vol": 6737956.0,
+   "prev_close": 122.21
+  },
+  "AMD": {
+   "price": 559.9,
+   "chg": 13.17999999999995,
+   "chg_pct": 2.4107404155692036,
+   "day_vol": 20701126.0,
+   "prev_close": 546.72
+  },
+  "HOOD": {
+   "price": 111.5689,
+   "chg": -3.5411,
+   "chg_pct": -3.0762748675180265,
+   "day_vol": 25929867.0,
+   "prev_close": 115.11
   },
   "U": {
    "price": 30.89,
@@ -57,61 +99,19 @@
    "day_vol": 31766740.0,
    "prev_close": 991.64
   },
-  "AAOI": {
-   "price": 119.96,
-   "chg": -2.25,
-   "chg_pct": -1.841093200229114,
-   "day_vol": 6737956.0,
-   "prev_close": 122.21
+  "LITE": {
+   "price": 804.21,
+   "chg": 18.440000000000055,
+   "chg_pct": 2.34674268551867,
+   "day_vol": 3674890.0,
+   "prev_close": 785.77
   },
-  "SPCX": {
-   "price": 145.92,
-   "chg": -6.240000000000009,
-   "chg_pct": -4.100946372239753,
-   "day_vol": 46826329.0,
-   "prev_close": 152.16
-  },
-  "KLAR": {
-   "price": 19.61,
-   "chg": -0.379999999999999,
-   "chg_pct": -1.900950475237614,
-   "day_vol": 3307581.0,
-   "prev_close": 19.99
-  },
-  "COIN": {
-   "price": 159.8,
-   "chg": 1.3600000000000136,
-   "chg_pct": 0.858369098712455,
-   "day_vol": 6133590.0,
-   "prev_close": 158.44
-  },
-  "HOOD": {
-   "price": 111.5689,
-   "chg": -3.5411,
-   "chg_pct": -3.0762748675180265,
-   "day_vol": 25929867.0,
-   "prev_close": 115.11
-  },
-  "RKLB": {
-   "price": 81.5171,
-   "chg": -1.032899999999998,
-   "chg_pct": -1.2512416717141102,
-   "day_vol": 14591976.0,
-   "prev_close": 82.55
-  },
-  "SNDK": {
-   "price": 1935,
-   "chg": 76.73000000000002,
-   "chg_pct": 4.129109332874126,
-   "day_vol": 11022651.0,
-   "prev_close": 1858.27
-  },
-  "TSLA": {
-   "price": 407.59,
-   "chg": 1.0399999999999636,
-   "chg_pct": 0.25581109334644286,
-   "day_vol": 33459572.0,
-   "prev_close": 406.55
+  "INTC": {
+   "price": 109.6001,
+   "chg": -2.9399000000000086,
+   "chg_pct": -2.6123156211125007,
+   "day_vol": 70824190.0,
+   "prev_close": 112.54
   }
  },
  "tickers": {
@@ -94413,6 +94413,7 @@
    }
   },
   "MU": {
+   "asof": "2026-07-13T02:48:30+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -109805,6 +109806,15 @@
    ],
    "news": [
     {
+     "title": "Is a Deal With Ford and a $100 Billion Backlog Enough to Get Micron Stock Back Over $1,200?",
+     "url": "https://www.fool.com/investing/2026/07/12/is-a-deal-with-ford-and-a-100-billion-backlog-enou/?source=iedfolrf0000001",
+     "published": "2026-07-13T01:08:00Z",
+     "source": "The Motley Fool",
+     "summary": "Micron Technology announced a strategic customer agreement with Ford as part of 16 long-term deals expected to generate over $100 billion in revenue over the next five years. Despite this positive development and $22 billion in deposits and financial commitments, Micron's stock has retreated from it",
+     "sentiment": "positive",
+     "reason": "Micron secured 16 long-term strategic agreements worth over $100 billion in expected revenue with $22 billion in deposits and commitments. The Ford deal and multi-year contracts help reduce cyclical business risk and provide revenue visibility. However, positive sentiment is tempered by recent stock price decline from $1,255 to below $1,000 due to profit-taking and competitive pressures."
+    },
+    {
      "title": "401(k) Champions and Soaring Value Stocks",
      "url": "https://www.fool.com/investing/2026/07/12/401k-champions-and-soaring-value-stocks/?source=iedfolrf0000001",
      "published": "2026-07-13T00:12:48Z",
@@ -109929,17 +109939,9 @@
      "summary": "Micron is gaining importance as an AI stock due to high-bandwidth memory demand, which could drive tighter supply, stronger pricing, and increased demand. However, traditional memory cycles remain a risk factor that creates uncertainty for the stock's future trajectory.",
      "sentiment": "positive",
      "reason": "The article highlights Micron's growing importance in the AI sector, particularly in high-bandwidth memory which could become a critical bottleneck. The company is positioned to benefit from tighter supply, stronger pricing, and rising demand. Recent earnings performance and data center gross margins of 87% support positive momentum."
-    },
-    {
-     "title": "Backpack Launches First 24/7 Market for Real U.S. Equities",
-     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325394/0/en/Backpack-Launches-First-24-7-Market-for-Real-U-S-Equities.html",
-     "published": "2026-07-10T10:00:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "Backpack, a crypto-traditional finance bridge platform, launched 24/7 trading for select U.S. equities including SpaceX, Micron, and SanDisk for international investors. Unlike synthetic derivatives, investors hold real securities with instant settlement and continuous price discovery, available via",
-     "sentiment": "neutral",
-     "reason": "Micron is mentioned as one of the initial equities available for 24/7 trading but receives no additional commentary or performance metrics in the article."
     }
    ],
+   "extras_asof": "2026-07-13T02:48:30+00:00",
    "options": {
     "call_premium": 546637698.1420002,
     "put_premium": 476738596.0439998,
@@ -109947,7 +109949,7 @@
     "put_vol": 283781,
     "call_oi": 505634,
     "put_oi": 852852,
-    "atm_iv": 1.2685666605830093,
+    "atm_iv": 1.2965412295241632,
     "pcr_vol": 1.58,
     "pcr_oi": 1.69,
     "by_expiry": [
@@ -109959,7 +109961,7 @@
       "put_vol": 55410,
       "call_oi": 19512,
       "put_oi": 14534,
-      "atm_iv": 1.2685666605830093
+      "atm_iv": 1.2965412295241632
      },
      {
       "exp": "2026-07-15",
@@ -109969,7 +109971,7 @@
       "put_vol": 10232,
       "call_oi": 3584,
       "put_oi": 4004,
-      "atm_iv": 1.1429526426603815
+      "atm_iv": 1.15072941499493
      },
      {
       "exp": "2026-07-17",
@@ -109979,7 +109981,7 @@
       "put_vol": 149430,
       "call_oi": 257135,
       "put_oi": 478272,
-      "atm_iv": 1.1078866244005576
+      "atm_iv": 1.112342710814527
      },
      {
       "exp": "2026-07-20",
@@ -109989,7 +109991,7 @@
       "put_vol": 3762,
       "call_oi": 2608,
       "put_oi": 2990,
-      "atm_iv": 0.9750190391234138
+      "atm_iv": 0.9774498891178514
      },
      {
       "exp": "2026-07-22",
@@ -109999,7 +110001,7 @@
       "put_vol": 1343,
       "call_oi": 1169,
       "put_oi": 1180,
-      "atm_iv": 0.9982913467061048
+      "atm_iv": 1.0002767118125635
      },
      {
       "exp": "2026-07-24",
@@ -110009,7 +110011,7 @@
       "put_vol": 13211,
       "call_oi": 40793,
       "put_oi": 73376,
-      "atm_iv": 1.024698676107868
+      "atm_iv": 1.026393192737698
      }
     ],
     "by_strike": [
@@ -110864,6 +110866,7 @@
    }
   },
   "RKLB": {
+   "asof": "2026-07-13T02:48:30+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -126265,6 +126268,7 @@
      "reason": "While the Hungry Hippo technology is genuinely innovative and could provide competitive advantages in rocket reuse economics, the sentiment is neutral rather than positive because the design remains unproven, Neutron's first launch has slipped multiple times to late 2026, the company is unprofitable, and a first-stage tank ruptured during testing earlier in the year. The article emphasizes 'if it works' as the critical uncertainty."
     }
    ],
+   "extras_asof": "2026-07-13T02:48:30+00:00",
    "options": {
     "call_premium": 11159292.225000001,
     "put_premium": 13715030.196999995,
@@ -126272,7 +126276,7 @@
     "put_vol": 32168,
     "call_oi": 199077,
     "put_oi": 138474,
-    "atm_iv": 0.9335982491951755,
+    "atm_iv": 0.9373476028906473,
     "pcr_vol": 0.6,
     "pcr_oi": 0.7,
     "by_expiry": [
@@ -126284,7 +126288,7 @@
       "put_vol": 19754,
       "call_oi": 114093,
       "put_oi": 81419,
-      "atm_iv": 0.9335982491951755
+      "atm_iv": 0.9373476028906473
      },
      {
       "exp": "2026-07-24",
@@ -126294,7 +126298,7 @@
       "put_vol": 2482,
       "call_oi": 10107,
       "put_oi": 12212,
-      "atm_iv": 0.863645630600567
+      "atm_iv": 0.8650727808097419
      },
      {
       "exp": "2026-07-31",
@@ -126304,7 +126308,7 @@
       "put_vol": 5848,
       "call_oi": 13228,
       "put_oi": 11038,
-      "atm_iv": 0.8825524276952095
+      "atm_iv": 0.8834702114296272
      },
      {
       "exp": "2026-08-07",
@@ -126314,7 +126318,7 @@
       "put_vol": 934,
       "call_oi": 4476,
       "put_oi": 3291,
-      "atm_iv": 0.9539326647874555
+      "atm_iv": 0.9546562023218698
      },
      {
       "exp": "2026-08-14",
@@ -126324,7 +126328,7 @@
       "put_vol": 1050,
       "call_oi": 1144,
       "put_oi": 1351,
-      "atm_iv": 0.9834783031738078
+      "atm_iv": 0.9840652859836008
      },
      {
       "exp": "2026-08-21",
@@ -126334,7 +126338,7 @@
       "put_vol": 2100,
       "call_oi": 56029,
       "put_oi": 29163,
-      "atm_iv": 0.9438833905178934
+      "atm_iv": 0.9443482106159451
      }
     ],
     "by_strike": [
@@ -126734,6 +126738,7 @@
    }
   },
   "COIN": {
+   "asof": "2026-07-13T02:48:30+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -142135,6 +142140,7 @@
      "reason": "Ark Invest is actively buying shares ahead of potential Clarity Act passage, which would provide regulatory clarity and enable traditional finance participation. Clear jurisdictional boundaries would allow easier cryptocurrency offerings on the platform."
     }
    ],
+   "extras_asof": "2026-07-13T02:48:30+00:00",
    "options": {
     "call_premium": 33051275.253000002,
     "put_premium": 34891494.07099999,
@@ -142142,7 +142148,7 @@
     "put_vol": 39809,
     "call_oi": 215092,
     "put_oi": 230857,
-    "atm_iv": 0.7829053534429474,
+    "atm_iv": 0.7860500105721768,
     "pcr_vol": 0.78,
     "pcr_oi": 1.07,
     "by_expiry": [
@@ -142154,7 +142160,7 @@
       "put_vol": 28858,
       "call_oi": 131432,
       "put_oi": 140482,
-      "atm_iv": 0.7829053534429474
+      "atm_iv": 0.7860500105721768
      },
      {
       "exp": "2026-07-24",
@@ -142164,7 +142170,7 @@
       "put_vol": 2954,
       "call_oi": 10816,
       "put_oi": 15988,
-      "atm_iv": 0.7483299054514707
+      "atm_iv": 0.7495662206157432
      },
      {
       "exp": "2026-07-31",
@@ -142174,7 +142180,7 @@
       "put_vol": 1423,
       "call_oi": 7956,
       "put_oi": 11001,
-      "atm_iv": 0.8148531385589631
+      "atm_iv": 0.8157003499419008
      },
      {
       "exp": "2026-08-07",
@@ -142184,7 +142190,7 @@
       "put_vol": 975,
       "call_oi": 4868,
       "put_oi": 9491,
-      "atm_iv": 0.8239227373737276
+      "atm_iv": 0.8245475678211434
      },
      {
       "exp": "2026-08-14",
@@ -142194,7 +142200,7 @@
       "put_vol": 671,
       "call_oi": 2658,
       "put_oi": 3064,
-      "atm_iv": 0.7593405472396979
+      "atm_iv": 0.7597938424923437
      },
      {
       "exp": "2026-08-21",
@@ -142204,7 +142210,7 @@
       "put_vol": 4928,
       "call_oi": 57362,
       "put_oi": 50831,
-      "atm_iv": 0.7771237809293607
+      "atm_iv": 0.7775062595678504
      }
     ],
     "by_strike": [
