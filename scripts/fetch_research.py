@@ -20,6 +20,12 @@ from pathlib import Path
 import requests
 import yaml
 
+try:
+    from zoneinfo import ZoneInfo
+    ET_TZ = ZoneInfo("America/New_York")
+except Exception:  # noqa: BLE001
+    ET_TZ = timezone.utc
+
 ROOT = Path(__file__).resolve().parent.parent
 KEY = os.environ.get("MASSIVE_API_KEY", "").strip()
 BASE = os.environ.get("MASSIVE_BASE_URL", "https://api.massive.com").rstrip("/")
@@ -311,6 +317,9 @@ def summarize_options(sym: str, contracts: list, spot: float | None,
         s["atm_iv"] = sum(vals) / len(vals)
     s["pcr_vol"] = round(s["put_vol"] / s["call_vol"], 2) if s["call_vol"] else None
     s["pcr_oi"] = round(s["put_oi"] / s["call_oi"], 2) if s["call_oi"] else None
+    # 注意:premium 为成交总额(不分买卖方向),净额是"活跃度"指标而非方向指标
+    s["net_premium"] = s["call_premium"] - s["put_premium"]
+    s["pcr_prem"] = round(s["put_premium"] / s["call_premium"], 2) if s["call_premium"] else None
 
     s["by_expiry"] = [{"exp": e,
                        **{k: v for k, v in d.items() if k != "_ivs"},
@@ -371,6 +380,15 @@ def load_json(path: Path, default):
         except json.JSONDecodeError:
             pass
     return default
+
+
+def et_day(iso: str | None) -> str | None:
+    if not iso:
+        return None
+    try:
+        return datetime.fromisoformat(iso).astimezone(ET_TZ).date().isoformat()
+    except ValueError:
+        return None
 
 
 def extras_fresh(old: dict, now: datetime) -> bool:
@@ -492,6 +510,15 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                 or (entry.get("bars_1m") or entry.get("bars_5m") or [[0] * 5])[-1][4] or None
             entry["options"] = summarize_options(sym, contracts, spot, oi_all, oi_next)
             entry["options"]["contracts"] = len(contracts)
+            # 批间 premium 增量(仅同一交易日内比较,premium 是当日累计值)
+            old_opt = old.get("options") or {}
+            if (merge and old_opt.get("call_premium") is not None
+                    and et_day(old.get("asof")) == et_day(now_iso)):
+                entry["options"]["prem_delta"] = {
+                    "call": entry["options"]["call_premium"] - old_opt["call_premium"],
+                    "put": entry["options"]["put_premium"] - old_opt["put_premium"],
+                    "since": old.get("asof"),
+                }
             gex = compute_gex(contracts, spot)
             if gex:
                 gex_out["tickers"][sym] = gex

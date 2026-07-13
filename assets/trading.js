@@ -228,6 +228,7 @@ function renderStats() {
   add("MaxPain", o.max_pain);
   add("ATM IV", o.atm_iv != null ? (o.atm_iv * 100).toFixed(1) + "%" : null);
   add("PCR量", o.pcr_vol);
+  add("Net Prem", o.net_premium != null ? fmtMoney(o.net_premium) : null, (o.net_premium ?? 0) >= 0 ? "up" : "down");
   add("空头占比", sv?.ratio != null ? (sv.ratio * 100).toFixed(1) + "%" : null);
   $("wb-stats").innerHTML = chips.join("");
 }
@@ -257,6 +258,14 @@ function renderOptPanel() {
     <td class="${c.side === "call" ? "up" : "down"}">${c.side === "call" ? "Call" : "Put"}</td>
     <td class="${c.delta >= 0 ? "up" : "down"}">${c.delta >= 0 ? "+" : ""}${fmtNum(c.delta)}</td>
   </tr>`).join("");
+  const npCls = (o.net_premium ?? 0) >= 0 ? "up" : "down";
+  const pd = o.prem_delta;
+  const deltaHtml = pd ? (() => {
+    const dc = (pd.call >= 0 ? "+" : "") + fmtMoney(pd.call);
+    const dp = (pd.put >= 0 ? "+" : "") + fmtMoney(pd.put);
+    const t = pd.since ? new Date(pd.since).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }) : "";
+    return `<span title="自 ${esc(t)} 起本交易日累计成交额的增量">较上批 C <b class="${pd.call >= 0 ? "up" : "down"}">${dc}</b> / P <b class="${pd.put >= 0 ? "up" : "down"}">${dp}</b></span>`;
+  })() : "";
   $("opt-panel").innerHTML = `<div class="card">
     <div class="prem-bar"><div class="prem-call" style="width:${cw}%"></div></div>
     <div class="stat-row">
@@ -264,6 +273,12 @@ function renderOptPanel() {
       <span>量 C <b>${fmtNum(o.call_vol)}</b> / P <b>${fmtNum(o.put_vol)}</b>${o.pcr_vol != null ? ` <span class="muted">PCR ${o.pcr_vol}</span>` : ""}</span>
       <span>OI C <b>${fmtNum(o.call_oi)}</b> / P <b>${fmtNum(o.put_oi)}</b>${o.pcr_oi != null ? ` <span class="muted">PCR ${o.pcr_oi}</span>` : ""}</span>
     </div>
+    <div class="stat-row">
+      <span title="Call 成交额 − Put 成交额,活跃度指标(不区分买卖方向)">Net Prem <b class="${npCls}">${fmtMoney(o.net_premium)}</b></span>
+      ${o.pcr_prem != null ? `<span title="Put 成交额 / Call 成交额">PCR(额) <b>${o.pcr_prem}</b></span>` : ""}
+      ${deltaHtml}
+    </div>
+    <div class="muted small">Premium 为成交总额,不区分主动买/卖;以上为活跃度指标,方向判断请结合价格与 OI 变化</div>
     ${expRows ? `<details open><summary class="muted small">按到期日分解</summary>
       <table><tr><th>到期</th><th>Prem C/P</th><th>量 C/P</th><th>OI C/P</th><th>ATM IV</th></tr>${expRows}</table></details>` : ""}
     ${hotRows ? `<details><summary class="muted small">当日最活跃行权价</summary>
