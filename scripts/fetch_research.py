@@ -24,7 +24,8 @@ ROOT = Path(__file__).resolve().parent.parent
 KEY = os.environ.get("MASSIVE_API_KEY", "").strip()
 BASE = os.environ.get("MASSIVE_BASE_URL", "https://api.massive.com").rstrip("/")
 HEADERS = {"Authorization": f"Bearer {KEY}"}
-SLEEP = float(os.environ.get("MASSIVE_SLEEP", "0.2"))  # Advanced 无限速,留一点礼貌间隔
+SLEEP = float(os.environ.get("MASSIVE_SLEEP", "0.2"))  # 股票类 REST 限额 500/分钟
+OPT_SLEEP = float(os.environ.get("MASSIVE_SLEEP_OPTIONS", "1.3"))  # 期权限额 50/分钟,单独降速
 MAX_DTE = 45
 MAX_EXPIRATIONS = 6
 BAR_KEEP = 800  # 每个粒度最多保留的 bar 数
@@ -39,6 +40,7 @@ def mget(path: str, **params):
     url = path if path.startswith("http") else f"{BASE}{path}"
     if KEY:
         params.setdefault("apiKey", KEY)  # 兼容只认查询参数的网关;官方两种都支持
+    sleep = OPT_SLEEP if "/v3/snapshot/options/" in url else SLEEP
     resp = None
     for _ in range(3):
         resp = requests.get(url, params=params, headers=HEADERS, timeout=30)
@@ -46,7 +48,7 @@ def mget(path: str, **params):
             time.sleep(62)
             continue
         resp.raise_for_status()
-        time.sleep(SLEEP)
+        time.sleep(sleep)
         return resp.json()
     resp.raise_for_status()
 
