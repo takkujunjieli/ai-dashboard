@@ -1,124 +1,124 @@
 {
- "updated_at": "2026-07-13T16:55:35+00:00",
+ "updated_at": "2026-07-13T16:56:13+00:00",
  "snapshots": {
-  "TSLA": {
-   "price": 393.25,
-   "chg": -14.509999999999991,
-   "chg_pct": -3.558465764175003,
-   "day_vol": 18452986.0,
-   "prev_close": 407.76
-  },
-  "U": {
-   "price": 30.525,
-   "chg": -0.365000000000002,
-   "chg_pct": -1.1816121722240271,
-   "day_vol": 2827735.0,
-   "prev_close": 30.89
-  },
-  "HOOD": {
-   "price": 109.74,
-   "chg": -2.230000000000004,
-   "chg_pct": -1.9916048941680844,
-   "day_vol": 10203533.0,
-   "prev_close": 111.97
-  },
-  "LITE": {
-   "price": 773.8,
-   "chg": -28.210000000000036,
-   "chg_pct": -3.5174125010910133,
-   "day_vol": 2049642.0,
-   "prev_close": 802.01
-  },
   "INTC": {
-   "price": 102.965,
-   "chg": -6.875,
-   "chg_pct": -6.259104151493081,
-   "day_vol": 49740143.0,
+   "price": 103.27,
+   "chg": -6.570000000000007,
+   "chg_pct": -5.981427530954122,
+   "day_vol": 49921557.0,
    "prev_close": 109.84
   },
+  "SPCX": {
+   "price": 138.98,
+   "chg": -6.320000000000022,
+   "chg_pct": -4.3496214728148805,
+   "day_vol": 43312243.0,
+   "prev_close": 145.3
+  },
   "AAOI": {
-   "price": 109.82,
-   "chg": -10.100000000000009,
-   "chg_pct": -8.422281521014016,
-   "day_vol": 3457201.0,
+   "price": 110.05,
+   "chg": -9.870000000000005,
+   "chg_pct": -8.230486991327556,
+   "day_vol": 3468254.0,
    "prev_close": 119.92
   },
   "KLAR": {
-   "price": 19.415,
-   "chg": -0.20500000000000185,
-   "chg_pct": -1.044852191641192,
-   "day_vol": 1019927.0,
+   "price": 19.41,
+   "chg": -0.21000000000000085,
+   "chg_pct": -1.0703363914373132,
+   "day_vol": 1021297.0,
    "prev_close": 19.62
   },
-  "SPCX": {
-   "price": 138.9305,
-   "chg": -6.369500000000016,
-   "chg_pct": -4.383688919476955,
-   "day_vol": 43269111.0,
-   "prev_close": 145.3
-  },
-  "AMD": {
-   "price": 535.18,
-   "chg": -22.710000000000036,
-   "chg_pct": -4.070694939862704,
-   "day_vol": 12727396.0,
-   "prev_close": 557.89
-  },
-  "COIN": {
-   "price": 155.8069,
-   "chg": -3.26309999999998,
-   "chg_pct": -2.0513610360218646,
-   "day_vol": 2736459.0,
-   "prev_close": 159.07
-  },
-  "CCL": {
-   "price": 26.91,
-   "chg": 0.08000000000000185,
-   "chg_pct": 0.2981736861722022,
-   "day_vol": 8005710.0,
-   "prev_close": 26.83
-  },
   "RKLB": {
-   "price": 76.42,
-   "chg": -4.6200000000000045,
-   "chg_pct": -5.7008884501480805,
-   "day_vol": 10800372.0,
+   "price": 76.54,
+   "chg": -4.5,
+   "chg_pct": -5.552813425468904,
+   "day_vol": 10834332.0,
    "prev_close": 81.04
   },
-  "NFLX": {
-   "price": 74.6,
-   "chg": 1.2299999999999898,
-   "chg_pct": 1.6764345100177043,
-   "day_vol": 18678284.0,
-   "prev_close": 73.37
+  "SNDK": {
+   "price": 1691,
+   "chg": -224.92000000000007,
+   "chg_pct": -11.739529834231078,
+   "day_vol": 8103765.0,
+   "prev_close": 1915.92
+  },
+  "AMD": {
+   "price": 536.23,
+   "chg": -21.659999999999968,
+   "chg_pct": -3.8824857946907043,
+   "day_vol": 12757650.0,
+   "prev_close": 557.89
+  },
+  "TSLA": {
+   "price": 393.34,
+   "chg": -14.420000000000016,
+   "chg_pct": -3.536393957229747,
+   "day_vol": 18526933.0,
+   "prev_close": 407.76
+  },
+  "LITE": {
+   "price": 774.685,
+   "chg": -27.325000000000045,
+   "chg_pct": -3.4070647498160924,
+   "day_vol": 2051538.0,
+   "prev_close": 802.01
   },
   "FIG": {
-   "price": 23.39,
-   "chg": 2.280000000000001,
-   "chg_pct": 10.80056845097111,
-   "day_vol": 14497322.0,
+   "price": 23.4364,
+   "chg": 2.3263999999999996,
+   "chg_pct": 11.020369493131216,
+   "day_vol": 14594951.0,
    "prev_close": 21.11
   },
-  "RIVN": {
-   "price": 17.195,
-   "chg": -0.28500000000000014,
-   "chg_pct": -1.6304347826086962,
-   "day_vol": 14573345.0,
-   "prev_close": 17.48
-  },
   "MU": {
-   "price": 928.955,
-   "chg": -50.344999999999914,
-   "chg_pct": -5.140916981517401,
-   "day_vol": 21289528.0,
+   "price": 930.27,
+   "chg": -49.02999999999997,
+   "chg_pct": -5.006637394056977,
+   "day_vol": 21330473.0,
    "prev_close": 979.3
   },
-  "SNDK": {
-   "price": 1686.91,
-   "chg": -229.01,
-   "chg_pct": -11.953004300805878,
-   "day_vol": 8086293.0,
-   "prev_close": 1915.92
+  "HOOD": {
+   "price": 109.88,
+   "chg": -2.0900000000000034,
+   "chg_pct": -1.8665714030543925,
+   "day_vol": 10213630.0,
+   "prev_close": 111.97
+  },
+  "COIN": {
+   "price": 156.0151,
+   "chg": -3.0549000000000035,
+   "chg_pct": -1.920475262463069,
+   "day_vol": 2740170.0,
+   "prev_close": 159.07
+  },
+  "NFLX": {
+   "price": 74.59,
+   "chg": 1.2199999999999989,
+   "chg_pct": 1.6628049611557842,
+   "day_vol": 18720749.0,
+   "prev_close": 73.37
+  },
+  "RIVN": {
+   "price": 17.225,
+   "chg": -0.254999999999999,
+   "chg_pct": -1.45881006864988,
+   "day_vol": 14612180.0,
+   "prev_close": 17.48
+  },
+  "CCL": {
+   "price": 26.92,
+   "chg": 0.09000000000000341,
+   "chg_pct": 0.33544539694373243,
+   "day_vol": 8036363.0,
+   "prev_close": 26.83
+  },
+  "U": {
+   "price": 30.5413,
+   "chg": -0.3487000000000009,
+   "chg_pct": -1.1288442861767591,
+   "day_vol": 2830588.0,
+   "prev_close": 30.89
   }
  },
  "tickers": {
@@ -149781,7 +149781,7 @@
    }
   },
   "SPCX": {
-   "asof": "2026-07-13T16:44:17+00:00",
+   "asof": "2026-07-13T16:56:13+00:00",
    "src_1m": "massive",
    "bars_1m": [
     [
@@ -154427,37 +154427,118 @@
      138.9699,
      67220.125035,
      138.9014
+    ],
+    [
+     1783961040000,
+     138.955,
+     139.0699,
+     138.8,
+     138.945,
+     108975.112072,
+     138.9263
+    ],
+    [
+     1783961100000,
+     138.945,
+     139,
+     138.82,
+     138.835,
+     58785.60362,
+     138.9467
+    ],
+    [
+     1783961160000,
+     138.865,
+     139.1,
+     138.855,
+     139.08,
+     81535.472916,
+     139.0117
+    ],
+    [
+     1783961220000,
+     139.084,
+     139.18,
+     139.01,
+     139.01,
+     96872.079751,
+     139.1169
+    ],
+    [
+     1783961280000,
+     139.01,
+     139.2099,
+     138.99,
+     139.16,
+     79787.313004,
+     139.0949
+    ],
+    [
+     1783961340000,
+     139.13,
+     139.2898,
+     139.11,
+     139.135,
+     56211.417803,
+     139.2006
+    ],
+    [
+     1783961400000,
+     139.13,
+     139.13,
+     138.56,
+     138.64,
+     199490.369848,
+     138.7978
+    ],
+    [
+     1783961460000,
+     138.66,
+     138.82,
+     138.64,
+     138.82,
+     47826.144001,
+     138.7259
+    ],
+    [
+     1783961520000,
+     138.85,
+     138.94,
+     138.76,
+     138.81,
+     46458.967092,
+     138.8322
+    ],
+    [
+     1783961580000,
+     138.81,
+     139,
+     138.7978,
+     138.94,
+     62888.850229,
+     138.9397
+    ],
+    [
+     1783961640000,
+     138.925,
+     139.07,
+     138.8401,
+     138.945,
+     47826.52248,
+     138.9639
+    ],
+    [
+     1783961700000,
+     138.94,
+     139.03,
+     138.88,
+     138.98,
+     42298.189354,
+     138.9565
     ]
    ],
    "src_5m": "massive",
    "bars_5m": [
-    [
-     1783433100000,
-     153.02,
-     153.09,
-     152.18,
-     152.57,
-     1161132.4400129998,
-     152.6498
-    ],
-    [
-     1783433400000,
-     152.55,
-     152.61,
-     150.8,
-     151.125,
-     2377439.612691,
-     151.597
-    ],
-    [
-     1783433700000,
-     151.125,
-     152.08,
-     150.85,
-     151.52,
-     1375482.7405100001,
-     151.2899
-    ],
     [
      1783434000000,
      151.55,
@@ -161627,12 +161708,220 @@
      138.92,
      139.088,
      138.64,
-     138.9699,
-     401912.867508,
-     138.83
+     138.945,
+     510887.97958,
+     138.8505
+    ],
+    [
+     1783961100000,
+     138.945,
+     139.2898,
+     138.82,
+     139.135,
+     373191.887094,
+     139.075
+    ],
+    [
+     1783961400000,
+     139.13,
+     139.13,
+     138.56,
+     138.945,
+     404490.85365,
+     138.835
+    ],
+    [
+     1783961700000,
+     138.94,
+     139.03,
+     138.88,
+     138.98,
+     42298.189354,
+     138.9565
     ]
    ],
-   "src_d": "massive",
+   "vwap": 140.0,
+   "ind": {
+    "rsi_d": 55.93,
+    "rsi_m": 53.58,
+    "ema9_m": 138.76,
+    "ema21_m": 138.8
+   },
+   "short": {
+    "short_interest": 111298613,
+    "days_to_cover": 1.0,
+    "avg_daily_volume": 151628172,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 12178705.407431,
+     "total_volume": 17264992.151518,
+     "ratio": 0.705
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 12114493.006482,
+     "total_volume": 18535767.368377,
+     "ratio": 0.654
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 18683362.038105,
+     "total_volume": 25329281.687466,
+     "ratio": 0.738
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 19898174.125961,
+     "total_volume": 29686090.517253,
+     "ratio": 0.67
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 23670381.384846,
+     "total_volume": 35457491.636116,
+     "ratio": 0.668
+    }
+   ],
+   "news": [
+    {
+     "title": "Analyst Price Targets Are Out for SpaceX, and You Won't Believe How High Some of Them Are",
+     "url": "https://www.fool.com/investing/2026/07/13/analyst-price-targets-are-out-for-spacex-and-you-w/?source=iedfolrf0000001",
+     "published": "2026-07-13T13:30:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX received overwhelmingly bullish analyst ratings following its recent IPO, with 27 out of 35 analysts issuing buy ratings. The consensus price target is $239 (65% upside), though some targets are much higher, including a $800 target from Raymond James implying a $10.5 trillion valuation. Howev",
+     "sentiment": "neutral",
+     "reason": "While analyst sentiment is overwhelmingly positive (77% buy ratings, consensus target of $239), the article presents a cautionary perspective. The author highlights significant risks including inflated valuation, CEO track record of overpromising, and the gap between ambitious goals and execution certainty. The neutral rating reflects the tension between bullish analyst views and legitimate fundamental concerns about whether the company can justify its current $1.9T market cap."
+    },
+    {
+     "title": "The Biggest Risk Facing SpaceX Stock Right Now",
+     "url": "https://www.fool.com/investing/2026/07/13/the-biggest-risk-facing-spacex-stock-right-now/?source=iedfolrf0000001",
+     "published": "2026-07-13T12:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX is expanding into AI infrastructure through its Reflection AI deal, creating a new recurring revenue stream alongside its rockets and Starlink business. However, the stock's premium valuation makes execution risk a significant concern for investors.",
+     "sentiment": "neutral",
+     "reason": "The article presents a mixed outlook with both bullish elements (AI infrastructure expansion, multiple revenue streams from rockets/Starlink/AI compute) and bearish concerns (premium valuation, execution risk). The headline emphasizes risk, and the stock is down 4.51%, suggesting caution despite growth opportunities."
+    },
+    {
+     "title": "Prediction: After Losing $1 Trillion in Market Cap Since its IPO, SpaceX Stock Will Rebound in Epic Fashion. Here's Why.",
+     "url": "https://www.fool.com/investing/2026/07/13/prediction-after-losing-over-1-trillion-in-market/?source=iedfolrf0000001",
+     "published": "2026-07-13T10:30:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX completed the largest IPO in history at $150/share in June 2026 but has since declined, losing approximately $1 trillion in market cap from its $2.9 trillion peak. The selloff was driven by profit-taking from momentum investors and concerns about heavy capital expenditures and AI revenue scal",
+     "sentiment": "positive",
+     "reason": "Despite recent stock decline from IPO highs, the article presents a bullish long-term case based on SpaceX's competitive advantages (vertical integration, cost discipline), expanding AI partnerships (Anthropic, Google Cloud), and Starlink's potential as an AI infrastructure backbone. The author recommends patient, multi-year investment approach rather than short-term trading."
+    },
+    {
+     "title": "SpaceX's Recent Move Should Have Investors Worried",
+     "url": "https://www.fool.com/investing/2026/07/13/spacexs-recent-move-should-have-investors-worried/?source=iedfolrf0000001",
+     "published": "2026-07-13T09:29:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX raised concerns among investors by issuing $25 billion in bonds shortly after its June IPO and announcing a $60 billion acquisition of Anysphere without prior disclosure. The article criticizes the lack of transparency in these major financial decisions, particularly given that CEO Elon Musk ",
+     "sentiment": "negative",
+     "reason": "The article raises concerns about SpaceX's lack of transparency regarding major financial decisions (bond issuance and acquisition) made immediately after its IPO. The company's unprofitability, increasing debt burden, and concentrated voting control by Elon Musk create governance risks for public shareholders."
+    },
+    {
+     "title": "How to Invest in SpaceX Stock Before the Next Big Move",
+     "url": "https://www.fool.com/investing/2026/07/13/how-to-invest-in-spacex-before-the-next-big-move/?source=iedfolrf0000001",
+     "published": "2026-07-13T09:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX stock has returned to its IPO opening price of $150 one month after going public, but analyst Rich Smith argues it remains significantly overvalued. With a forward P/E ratio of 217 based on projected 2027 earnings of $0.67 per share, the stock is trading at a premium that doesn't justify curr",
+     "sentiment": "negative",
+     "reason": "The article argues SpaceX stock is overvalued with a forward P/E ratio of 217, lacks positive momentum, and has declined more days than it rose. Despite analyst projections of strong future earnings growth, the current price of ~$150 is deemed unjustifiably expensive, with the author suggesting further downside potential."
+    },
+    {
+     "title": "How Low Can SpaceX Stock Go?",
+     "url": "https://www.fool.com/investing/2026/07/13/how-low-can-spacex-stock-go/?source=iedfolrf0000001",
+     "published": "2026-07-13T07:28:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX stock has plummeted 35% from its $225 peak to $145 since its June IPO, losing $1 trillion in market value. While the company has strong growth potential across space transportation, satellite internet, and AI infrastructure segments with forecasted revenue doubling to $38.8B in 2026, its valu",
+     "sentiment": "negative",
+     "reason": "Stock has declined 35% from peak and analyst warns of potential 50%+ further decline due to extreme overvaluation (P/S ratio of 98.9 vs Nasdaq-100's 6.4), despite strong business fundamentals and growth prospects."
+    },
+    {
+     "title": "J.P. Morgan Called a Potential Elon Musk SpaceX-Tesla Merger \"Strategically Coherent\"",
+     "url": "https://www.fool.com/investing/2026/07/12/jpmorgan-called-a-potential-elon-musk-spacex-tesla/?source=iedfolrf0000001",
+     "published": "2026-07-12T20:30:00Z",
+     "source": "The Motley Fool",
+     "summary": "J.P. Morgan analysts described a potential SpaceX-Tesla merger as 'strategically coherent on paper,' citing shared engineering talent, AI ambitions, and Musk's leadership. However, the bank flagged significant obstacles including regulatory hurdles, control disparities, and the appearance of SpaceX ",
+     "sentiment": "neutral",
+     "reason": "Recently went public with strong market debut, but article emphasizes caution about speculative merger scenarios rather than company fundamentals. Stock is down 4.51% on the day."
+    },
+    {
+     "title": "Prediction: SpaceX Shares Can Reach $220 by End of 2026",
+     "url": "https://www.fool.com/investing/2026/07/12/predict-spacex-shares-can-reach-220-2026/?source=iedfolrf0000001",
+     "published": "2026-07-12T20:20:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX shares, trading near $149 after its July IPO, could reach $220 by end of 2026 based on revenue growth from Starlink, AI compute contracts, and Starship progress. The company's $2 trillion market cap reflects a 51.4x forward sales multiple on 2026 estimates, which analysts expect to compress b",
+     "sentiment": "positive",
+     "reason": "Strong revenue growth (33% YoY to $18.7B in 2025), major AI compute deals with Alphabet ($920M/month) and Anthropic, expanding Starlink user base (10.3M users), and credible path to $220 share price by end of 2026 support positive outlook despite current valuation richness."
+    },
+    {
+     "title": "If I Could Tell Every QQQ Investor 1 Thing About SpaceX's Nasdaq-100 Entry, It's This",
+     "url": "https://www.fool.com/investing/2026/07/12/tell-every-qqq-investor-nasdaq-100-spacex-its-this/?source=iedfolrf0000001",
+     "published": "2026-07-12T19:29:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX joined the Nasdaq-100 index on July 7, 2026, but despite its $2 trillion market cap, its influence on the index is minimal. Due to free-float market capitalization weighting (only ~5% of SpaceX shares are publicly available), SpaceX ranks only 21st in the index with a 1.25% weight, not in the",
+     "sentiment": "neutral",
+     "reason": "While SpaceX is a major company by market cap, the article tempers expectations about its index impact due to low free-float availability. The stock shows high volatility but no fundamental criticism is presented."
+    },
+    {
+     "title": "Sam Altman Is Waiting for a $1 Trillion OpenAI Valuation. SoftBank Has a $40 Billion Loan Due March 2027.",
+     "url": "https://www.fool.com/investing/2026/07/12/sam-altman-is-waiting-for-a-1-trillion-openai-valu/?source=iedfolrf0000001",
+     "published": "2026-07-12T17:27:00Z",
+     "source": "The Motley Fool",
+     "summary": "OpenAI CEO Sam Altman is holding out for a $1 trillion valuation and plans to delay the company's IPO until 2027, but this creates a conflict with major investor SoftBank, which took a $40 billion bridge loan due in March 2027 and expected to cash out through an earlier IPO. Meanwhile, OpenAI's oper",
+     "sentiment": "neutral",
+     "reason": "Mentioned as context for recent IPO activity with $1.77 trillion valuation, but not directly impacted by OpenAI situation. Serves as benchmark for large tech IPOs."
+    },
+    {
+     "title": "SpaceX Has Officially Joined the Nasdaq-100. Here Are 3 Better Nasdaq-100 Stocks to Buy in July.",
+     "url": "https://www.fool.com/investing/2026/07/12/spacex-has-officially-joined-the-nasdaq-100-here-a/?source=iedfolrf0000001",
+     "published": "2026-07-12T17:12:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX's recent addition to the Nasdaq-100 has generated significant hype due to mechanical buying from index funds, but the article argues that three other Nasdaq-100 consumer stocks offer better investment opportunities. Keurig Dr Pepper is undergoing a major transformation with its JDE Peet's acq",
+     "sentiment": "negative",
+     "reason": "Recently added to Nasdaq-100 with inflated valuation driven by mechanical index fund buying. Author recommends waiting for hype to fade and for the company to prove its numbers as a public business before investing."
+    },
+    {
+     "title": "Why This Could Be the Worst Time to Buy SpaceX Stock",
+     "url": "https://www.fool.com/investing/2026/07/12/why-this-could-be-worst-time-buy-spacex-stock/?source=iedfolrf0000001",
+     "published": "2026-07-12T15:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX stock has fallen below its IPO opening price of $150 despite raising a record $86.7 billion. The article warns this may be the worst time to buy due to three factors: general tech sector weakness, early investor profit-taking, and an upcoming lockup period expiration in early August that coul",
+     "sentiment": "negative",
+     "reason": "Stock is trading below IPO opening price; upcoming lockup period expiration will release 6.8% of shares to insiders, likely causing further downward pressure. General tech sector weakness and lack of new operational information since IPO also contribute to negative outlook."
+    },
+    {
+     "title": "Could SpaceX Become the Next $3 Trillion Company?",
+     "url": "https://www.fool.com/investing/2026/07/12/could-spacex-become-the-next-3-trillion-company/?source=iedfolrf0000001",
+     "published": "2026-07-12T13:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX briefly reached a $3 trillion market valuation after its IPO but has since lost nearly $1 trillion in value. For the company to justify a $3 trillion valuation, it would need to generate $100 billion in annual revenue while maintaining a 30x price-to-sales multiple. This would require success",
+     "sentiment": "neutral",
+     "reason": "SpaceX has significant growth potential through AI infrastructure deals, Starlink, and Starship, but faces execution risks and macroeconomic headwinds. The article acknowledges both compelling opportunities and the difficulty of achieving $3 trillion valuation, presenting a balanced view of near-term challenges despite long-term potential."
+    },
+    {
+     "title": "SpaceX Just Joined the Nasdaq-100. Is It Time to Buy?",
+     "url": "https://www.fool.com/investing/2026/07/12/spacex-just-joined-the-nasdaq-100-is-it-time-to-bu/?source=iedfolrf0000001",
+     "published": "2026-07-12T10:12:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX joined the Nasdaq-100 index, which typically triggers buying pressure, but the stock declined instead and now trades below its $150 debut price. The analyst argues the stock is overvalued at 104 times sales with a $1.9 trillion market cap, and warns of potential selling pressure once the lock",
+     "sentiment": "negative",
+     "reason": "The analyst rates SpaceX negatively due to excessive valuation (104x sales), lack of profitability, high expectations already priced in, and upcoming lockup period expiration that could trigger significant selling pressure. The stock's failure to rally on Nasdaq-100 inclusion and decline below debut price are viewed as cautionary signs."
+    },
+    {
+     "title": "What a $5,000 Investment in SpaceX at Launch Would Be Worth Now",
+     "url": "https://www.fool.com/investing/2026/07/12/what-a-5000-investment-in-spacex-at-launch-would-b/?source=iedfolrf0000001",
+     "published": "2026-07-12T06:35:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX's post-IPO performance has been lackluster, with returns varying dramatically based on entry timing. Early IPO participants at $135/share are up 12%, while those buying at market open are roughly breaking even, and those who bought at the June 16 peak of $225.64 are down 33%. The article sugg",
+     "sentiment": "neutral",
+     "reason": "While the stock has shown significant volatility and mixed returns depending on entry point, the author takes a balanced view, noting that post-IPO erratic performance is normal and it's too early to judge the investment. The article suggests patience is warranted as the market awaits quarterly results to validate the premium valuation, neither endorsing nor condemning the investment at this stage."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -162337,261 +162626,80 @@
      140.0478
     ]
    ],
-   "vwap": 140.03,
-   "ind": {
-    "rsi_d": 55.93,
-    "rsi_m": 53.58,
-    "ema9_m": 138.76,
-    "ema21_m": 138.8
-   },
-   "short": {
-    "short_interest": 111298613,
-    "days_to_cover": 1.0,
-    "avg_daily_volume": 151628172,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 12178705.407431,
-     "total_volume": 17264992.151518,
-     "ratio": 0.705
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 12114493.006482,
-     "total_volume": 18535767.368377,
-     "ratio": 0.654
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 18683362.038105,
-     "total_volume": 25329281.687466,
-     "ratio": 0.738
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 19898174.125961,
-     "total_volume": 29686090.517253,
-     "ratio": 0.67
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 23670381.384846,
-     "total_volume": 35457491.636116,
-     "ratio": 0.668
-    }
-   ],
-   "news": [
-    {
-     "title": "Analyst Price Targets Are Out for SpaceX, and You Won't Believe How High Some of Them Are",
-     "url": "https://www.fool.com/investing/2026/07/13/analyst-price-targets-are-out-for-spacex-and-you-w/?source=iedfolrf0000001",
-     "published": "2026-07-13T13:30:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX received overwhelmingly bullish analyst ratings following its recent IPO, with 27 out of 35 analysts issuing buy ratings. The consensus price target is $239 (65% upside), though some targets are much higher, including a $800 target from Raymond James implying a $10.5 trillion valuation. Howev",
-     "sentiment": "neutral",
-     "reason": "While analyst sentiment is overwhelmingly positive (77% buy ratings, consensus target of $239), the article presents a cautionary perspective. The author highlights significant risks including inflated valuation, CEO track record of overpromising, and the gap between ambitious goals and execution certainty. The neutral rating reflects the tension between bullish analyst views and legitimate fundamental concerns about whether the company can justify its current $1.9T market cap."
-    },
-    {
-     "title": "The Biggest Risk Facing SpaceX Stock Right Now",
-     "url": "https://www.fool.com/investing/2026/07/13/the-biggest-risk-facing-spacex-stock-right-now/?source=iedfolrf0000001",
-     "published": "2026-07-13T12:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX is expanding into AI infrastructure through its Reflection AI deal, creating a new recurring revenue stream alongside its rockets and Starlink business. However, the stock's premium valuation makes execution risk a significant concern for investors.",
-     "sentiment": "neutral",
-     "reason": "The article presents a mixed outlook with both bullish elements (AI infrastructure expansion, multiple revenue streams from rockets/Starlink/AI compute) and bearish concerns (premium valuation, execution risk). The headline emphasizes risk, and the stock is down 4.51%, suggesting caution despite growth opportunities."
-    },
-    {
-     "title": "Prediction: After Losing $1 Trillion in Market Cap Since its IPO, SpaceX Stock Will Rebound in Epic Fashion. Here's Why.",
-     "url": "https://www.fool.com/investing/2026/07/13/prediction-after-losing-over-1-trillion-in-market/?source=iedfolrf0000001",
-     "published": "2026-07-13T10:30:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX completed the largest IPO in history at $150/share in June 2026 but has since declined, losing approximately $1 trillion in market cap from its $2.9 trillion peak. The selloff was driven by profit-taking from momentum investors and concerns about heavy capital expenditures and AI revenue scal",
-     "sentiment": "positive",
-     "reason": "Despite recent stock decline from IPO highs, the article presents a bullish long-term case based on SpaceX's competitive advantages (vertical integration, cost discipline), expanding AI partnerships (Anthropic, Google Cloud), and Starlink's potential as an AI infrastructure backbone. The author recommends patient, multi-year investment approach rather than short-term trading."
-    },
-    {
-     "title": "SpaceX's Recent Move Should Have Investors Worried",
-     "url": "https://www.fool.com/investing/2026/07/13/spacexs-recent-move-should-have-investors-worried/?source=iedfolrf0000001",
-     "published": "2026-07-13T09:29:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX raised concerns among investors by issuing $25 billion in bonds shortly after its June IPO and announcing a $60 billion acquisition of Anysphere without prior disclosure. The article criticizes the lack of transparency in these major financial decisions, particularly given that CEO Elon Musk ",
-     "sentiment": "negative",
-     "reason": "The article raises concerns about SpaceX's lack of transparency regarding major financial decisions (bond issuance and acquisition) made immediately after its IPO. The company's unprofitability, increasing debt burden, and concentrated voting control by Elon Musk create governance risks for public shareholders."
-    },
-    {
-     "title": "How to Invest in SpaceX Stock Before the Next Big Move",
-     "url": "https://www.fool.com/investing/2026/07/13/how-to-invest-in-spacex-before-the-next-big-move/?source=iedfolrf0000001",
-     "published": "2026-07-13T09:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX stock has returned to its IPO opening price of $150 one month after going public, but analyst Rich Smith argues it remains significantly overvalued. With a forward P/E ratio of 217 based on projected 2027 earnings of $0.67 per share, the stock is trading at a premium that doesn't justify curr",
-     "sentiment": "negative",
-     "reason": "The article argues SpaceX stock is overvalued with a forward P/E ratio of 217, lacks positive momentum, and has declined more days than it rose. Despite analyst projections of strong future earnings growth, the current price of ~$150 is deemed unjustifiably expensive, with the author suggesting further downside potential."
-    },
-    {
-     "title": "How Low Can SpaceX Stock Go?",
-     "url": "https://www.fool.com/investing/2026/07/13/how-low-can-spacex-stock-go/?source=iedfolrf0000001",
-     "published": "2026-07-13T07:28:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX stock has plummeted 35% from its $225 peak to $145 since its June IPO, losing $1 trillion in market value. While the company has strong growth potential across space transportation, satellite internet, and AI infrastructure segments with forecasted revenue doubling to $38.8B in 2026, its valu",
-     "sentiment": "negative",
-     "reason": "Stock has declined 35% from peak and analyst warns of potential 50%+ further decline due to extreme overvaluation (P/S ratio of 98.9 vs Nasdaq-100's 6.4), despite strong business fundamentals and growth prospects."
-    },
-    {
-     "title": "J.P. Morgan Called a Potential Elon Musk SpaceX-Tesla Merger \"Strategically Coherent\"",
-     "url": "https://www.fool.com/investing/2026/07/12/jpmorgan-called-a-potential-elon-musk-spacex-tesla/?source=iedfolrf0000001",
-     "published": "2026-07-12T20:30:00Z",
-     "source": "The Motley Fool",
-     "summary": "J.P. Morgan analysts described a potential SpaceX-Tesla merger as 'strategically coherent on paper,' citing shared engineering talent, AI ambitions, and Musk's leadership. However, the bank flagged significant obstacles including regulatory hurdles, control disparities, and the appearance of SpaceX ",
-     "sentiment": "neutral",
-     "reason": "Recently went public with strong market debut, but article emphasizes caution about speculative merger scenarios rather than company fundamentals. Stock is down 4.51% on the day."
-    },
-    {
-     "title": "Prediction: SpaceX Shares Can Reach $220 by End of 2026",
-     "url": "https://www.fool.com/investing/2026/07/12/predict-spacex-shares-can-reach-220-2026/?source=iedfolrf0000001",
-     "published": "2026-07-12T20:20:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX shares, trading near $149 after its July IPO, could reach $220 by end of 2026 based on revenue growth from Starlink, AI compute contracts, and Starship progress. The company's $2 trillion market cap reflects a 51.4x forward sales multiple on 2026 estimates, which analysts expect to compress b",
-     "sentiment": "positive",
-     "reason": "Strong revenue growth (33% YoY to $18.7B in 2025), major AI compute deals with Alphabet ($920M/month) and Anthropic, expanding Starlink user base (10.3M users), and credible path to $220 share price by end of 2026 support positive outlook despite current valuation richness."
-    },
-    {
-     "title": "If I Could Tell Every QQQ Investor 1 Thing About SpaceX's Nasdaq-100 Entry, It's This",
-     "url": "https://www.fool.com/investing/2026/07/12/tell-every-qqq-investor-nasdaq-100-spacex-its-this/?source=iedfolrf0000001",
-     "published": "2026-07-12T19:29:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX joined the Nasdaq-100 index on July 7, 2026, but despite its $2 trillion market cap, its influence on the index is minimal. Due to free-float market capitalization weighting (only ~5% of SpaceX shares are publicly available), SpaceX ranks only 21st in the index with a 1.25% weight, not in the",
-     "sentiment": "neutral",
-     "reason": "While SpaceX is a major company by market cap, the article tempers expectations about its index impact due to low free-float availability. The stock shows high volatility but no fundamental criticism is presented."
-    },
-    {
-     "title": "Sam Altman Is Waiting for a $1 Trillion OpenAI Valuation. SoftBank Has a $40 Billion Loan Due March 2027.",
-     "url": "https://www.fool.com/investing/2026/07/12/sam-altman-is-waiting-for-a-1-trillion-openai-valu/?source=iedfolrf0000001",
-     "published": "2026-07-12T17:27:00Z",
-     "source": "The Motley Fool",
-     "summary": "OpenAI CEO Sam Altman is holding out for a $1 trillion valuation and plans to delay the company's IPO until 2027, but this creates a conflict with major investor SoftBank, which took a $40 billion bridge loan due in March 2027 and expected to cash out through an earlier IPO. Meanwhile, OpenAI's oper",
-     "sentiment": "neutral",
-     "reason": "Mentioned as context for recent IPO activity with $1.77 trillion valuation, but not directly impacted by OpenAI situation. Serves as benchmark for large tech IPOs."
-    },
-    {
-     "title": "SpaceX Has Officially Joined the Nasdaq-100. Here Are 3 Better Nasdaq-100 Stocks to Buy in July.",
-     "url": "https://www.fool.com/investing/2026/07/12/spacex-has-officially-joined-the-nasdaq-100-here-a/?source=iedfolrf0000001",
-     "published": "2026-07-12T17:12:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX's recent addition to the Nasdaq-100 has generated significant hype due to mechanical buying from index funds, but the article argues that three other Nasdaq-100 consumer stocks offer better investment opportunities. Keurig Dr Pepper is undergoing a major transformation with its JDE Peet's acq",
-     "sentiment": "negative",
-     "reason": "Recently added to Nasdaq-100 with inflated valuation driven by mechanical index fund buying. Author recommends waiting for hype to fade and for the company to prove its numbers as a public business before investing."
-    },
-    {
-     "title": "Why This Could Be the Worst Time to Buy SpaceX Stock",
-     "url": "https://www.fool.com/investing/2026/07/12/why-this-could-be-worst-time-buy-spacex-stock/?source=iedfolrf0000001",
-     "published": "2026-07-12T15:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX stock has fallen below its IPO opening price of $150 despite raising a record $86.7 billion. The article warns this may be the worst time to buy due to three factors: general tech sector weakness, early investor profit-taking, and an upcoming lockup period expiration in early August that coul",
-     "sentiment": "negative",
-     "reason": "Stock is trading below IPO opening price; upcoming lockup period expiration will release 6.8% of shares to insiders, likely causing further downward pressure. General tech sector weakness and lack of new operational information since IPO also contribute to negative outlook."
-    },
-    {
-     "title": "Could SpaceX Become the Next $3 Trillion Company?",
-     "url": "https://www.fool.com/investing/2026/07/12/could-spacex-become-the-next-3-trillion-company/?source=iedfolrf0000001",
-     "published": "2026-07-12T13:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX briefly reached a $3 trillion market valuation after its IPO but has since lost nearly $1 trillion in value. For the company to justify a $3 trillion valuation, it would need to generate $100 billion in annual revenue while maintaining a 30x price-to-sales multiple. This would require success",
-     "sentiment": "neutral",
-     "reason": "SpaceX has significant growth potential through AI infrastructure deals, Starlink, and Starship, but faces execution risks and macroeconomic headwinds. The article acknowledges both compelling opportunities and the difficulty of achieving $3 trillion valuation, presenting a balanced view of near-term challenges despite long-term potential."
-    },
-    {
-     "title": "SpaceX Just Joined the Nasdaq-100. Is It Time to Buy?",
-     "url": "https://www.fool.com/investing/2026/07/12/spacex-just-joined-the-nasdaq-100-is-it-time-to-bu/?source=iedfolrf0000001",
-     "published": "2026-07-12T10:12:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX joined the Nasdaq-100 index, which typically triggers buying pressure, but the stock declined instead and now trades below its $150 debut price. The analyst argues the stock is overvalued at 104 times sales with a $1.9 trillion market cap, and warns of potential selling pressure once the lock",
-     "sentiment": "negative",
-     "reason": "The analyst rates SpaceX negatively due to excessive valuation (104x sales), lack of profitability, high expectations already priced in, and upcoming lockup period expiration that could trigger significant selling pressure. The stock's failure to rally on Nasdaq-100 inclusion and decline below debut price are viewed as cautionary signs."
-    },
-    {
-     "title": "What a $5,000 Investment in SpaceX at Launch Would Be Worth Now",
-     "url": "https://www.fool.com/investing/2026/07/12/what-a-5000-investment-in-spacex-at-launch-would-b/?source=iedfolrf0000001",
-     "published": "2026-07-12T06:35:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX's post-IPO performance has been lackluster, with returns varying dramatically based on entry timing. Early IPO participants at $135/share are up 12%, while those buying at market open are roughly breaking even, and those who bought at the June 16 peak of $225.64 are down 33%. The article sugg",
-     "sentiment": "neutral",
-     "reason": "While the stock has shown significant volatility and mixed returns depending on entry point, the author takes a balanced view, noting that post-IPO erratic performance is normal and it's too early to judge the investment. The article suggests patience is warranted as the market awaits quarterly results to validate the premium valuation, neither endorsing nor condemning the investment at this stage."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T16:44:17+00:00",
    "options": {
-    "call_premium": 42250509.05999997,
-    "put_premium": 133301101.22399998,
-    "call_vol": 131794,
-    "put_vol": 169235,
+    "call_premium": 43033783.932999976,
+    "put_premium": 135392559.67199996,
+    "call_vol": 134774,
+    "put_vol": 172485,
     "call_oi": 791216,
     "put_oi": 568976,
-    "atm_iv": 0.7467694263503737,
+    "atm_iv": 0.7450515013088136,
     "pcr_vol": 1.28,
     "pcr_oi": 0.72,
-    "net_premium": -91050592.164,
-    "pcr_prem": 3.16,
+    "net_premium": -92358775.739,
+    "pcr_prem": 3.15,
     "by_expiry": [
      {
       "exp": "2026-07-17",
-      "call_premium": 20645563.983,
-      "put_premium": 45460916.14899999,
-      "call_vol": 85352,
-      "put_vol": 95354,
+      "call_premium": 21045525.062999986,
+      "put_premium": 47125484.71800001,
+      "call_vol": 86864,
+      "put_vol": 98003,
       "call_oi": 534525,
       "put_oi": 237047,
-      "atm_iv": 0.7467694263503737
+      "atm_iv": 0.7450515013088136
      },
      {
       "exp": "2026-07-24",
-      "call_premium": 5295343.557000002,
-      "put_premium": 13024096.565,
-      "call_vol": 14955,
-      "put_vol": 17775,
+      "call_premium": 5346523.28,
+      "put_premium": 13119126.235,
+      "call_vol": 15563,
+      "put_vol": 17958,
       "call_oi": 48349,
       "put_oi": 35099,
-      "atm_iv": 0.7018268680515585
+      "atm_iv": 0.7001746928519481
      },
      {
       "exp": "2026-07-31",
-      "call_premium": 3757478.1300000004,
-      "put_premium": 6119249.335000001,
-      "call_vol": 9394,
-      "put_vol": 12170,
+      "call_premium": 3828100.460000002,
+      "put_premium": 6194730.6959999995,
+      "call_vol": 9841,
+      "put_vol": 12331,
       "call_oi": 28104,
       "put_oi": 28799,
-      "atm_iv": 0.7166468039351298
+      "atm_iv": 0.7143317624855425
      },
      {
       "exp": "2026-08-07",
-      "call_premium": 2203420.219999999,
-      "put_premium": 7219010.431000001,
-      "call_vol": 5040,
-      "put_vol": 7754,
+      "call_premium": 2353222.229999999,
+      "put_premium": 7308880.671,
+      "call_vol": 5260,
+      "put_vol": 7872,
       "call_oi": 12699,
       "put_oi": 28985,
-      "atm_iv": 0.8424728744053762
+      "atm_iv": 0.8415921707257179
      },
      {
       "exp": "2026-08-14",
-      "call_premium": 1844783.8300000003,
-      "put_premium": 6152963.66,
-      "call_vol": 2483,
-      "put_vol": 5492,
+      "call_premium": 1870635.46,
+      "put_premium": 6188101.458,
+      "call_vol": 2516,
+      "put_vol": 5493,
       "call_oi": 14230,
       "put_oi": 13831,
-      "atm_iv": 0.8572851402745911
+      "atm_iv": 0.8584511823316766
      },
      {
       "exp": "2026-08-21",
-      "call_premium": 8503919.34,
-      "put_premium": 55324865.084,
-      "call_vol": 14570,
-      "put_vol": 30690,
+      "call_premium": 8589777.440000001,
+      "put_premium": 55456235.894,
+      "call_vol": 14730,
+      "put_vol": 30828,
       "call_oi": 153309,
       "put_oi": 225215,
-      "atm_iv": 0.8441893682405777
+      "atm_iv": 0.8445596092669124
      }
     ],
     "by_strike": [
@@ -162600,14 +162708,14 @@
       "call_oi": 31,
       "put_oi": 7759,
       "call_vol": 10,
-      "put_vol": 1462
+      "put_vol": 1570
      },
      {
       "strike": 110,
       "call_oi": 471,
       "put_oi": 20911,
       "call_vol": 25,
-      "put_vol": 3855
+      "put_vol": 3954
      },
      {
       "strike": 111,
@@ -162627,22 +162735,22 @@
       "strike": 113,
       "call_oi": 0,
       "put_oi": 6,
-      "call_vol": 4,
+      "call_vol": 5,
       "put_vol": 12
      },
      {
       "strike": 114,
       "call_oi": 0,
       "put_oi": 5,
-      "call_vol": 4,
-      "put_vol": 22
+      "call_vol": 5,
+      "put_vol": 23
      },
      {
       "strike": 115,
       "call_oi": 71,
       "put_oi": 11326,
       "call_vol": 30,
-      "put_vol": 5145
+      "put_vol": 5225
      },
      {
       "strike": 116,
@@ -162656,14 +162764,14 @@
       "call_oi": 0,
       "put_oi": 7,
       "call_vol": 1,
-      "put_vol": 18
+      "put_vol": 20
      },
      {
       "strike": 118,
       "call_oi": 0,
       "put_oi": 17,
       "call_vol": 0,
-      "put_vol": 56
+      "put_vol": 57
      },
      {
       "strike": 119,
@@ -162676,8 +162784,8 @@
       "strike": 120,
       "call_oi": 810,
       "put_oi": 23928,
-      "call_vol": 656,
-      "put_vol": 12339
+      "call_vol": 658,
+      "put_vol": 12544
      },
      {
       "strike": 121,
@@ -162705,14 +162813,14 @@
       "call_oi": 0,
       "put_oi": 13,
       "call_vol": 1,
-      "put_vol": 22
+      "put_vol": 25
      },
      {
       "strike": 125,
       "call_oi": 835,
       "put_oi": 45294,
-      "call_vol": 399,
-      "put_vol": 8857
+      "call_vol": 450,
+      "put_vol": 8954
      },
      {
       "strike": 126,
@@ -162733,21 +162841,21 @@
       "call_oi": 1,
       "put_oi": 37,
       "call_vol": 1,
-      "put_vol": 46
+      "put_vol": 49
      },
      {
       "strike": 129,
       "call_oi": 0,
       "put_oi": 54,
       "call_vol": 0,
-      "put_vol": 93
+      "put_vol": 95
      },
      {
       "strike": 130,
       "call_oi": 1468,
       "put_oi": 28008,
-      "call_vol": 1222,
-      "put_vol": 21482
+      "call_vol": 1280,
+      "put_vol": 21819
      },
      {
       "strike": 131,
@@ -162761,7 +162869,7 @@
       "call_oi": 0,
       "put_oi": 37,
       "call_vol": 0,
-      "put_vol": 36
+      "put_vol": 42
      },
      {
       "strike": 133,
@@ -162774,64 +162882,64 @@
       "strike": 134,
       "call_oi": 16,
       "put_oi": 1811,
-      "call_vol": 1266,
-      "put_vol": 2369
+      "call_vol": 1269,
+      "put_vol": 2485
      },
      {
       "strike": 135,
       "call_oi": 1348,
       "put_oi": 53694,
-      "call_vol": 2272,
-      "put_vol": 23638
+      "call_vol": 2289,
+      "put_vol": 24075
      },
      {
       "strike": 136,
       "call_oi": 9,
       "put_oi": 678,
-      "call_vol": 524,
-      "put_vol": 1589
+      "call_vol": 525,
+      "put_vol": 1627
      },
      {
       "strike": 137,
       "call_oi": 14,
       "put_oi": 985,
-      "call_vol": 640,
-      "put_vol": 1919
+      "call_vol": 700,
+      "put_vol": 2001
      },
      {
       "strike": 138,
       "call_oi": 13,
       "put_oi": 1007,
-      "call_vol": 2945,
-      "put_vol": 5048
+      "call_vol": 2999,
+      "put_vol": 5330
      },
      {
       "strike": 139,
       "call_oi": 46,
       "put_oi": 1135,
-      "call_vol": 2539,
-      "put_vol": 5069
+      "call_vol": 2653,
+      "put_vol": 5101
      },
      {
       "strike": 140,
       "call_oi": 3641,
       "put_oi": 39507,
-      "call_vol": 10729,
-      "put_vol": 20326
+      "call_vol": 10836,
+      "put_vol": 20444
      },
      {
       "strike": 141,
       "call_oi": 54,
       "put_oi": 1009,
-      "call_vol": 2964,
-      "put_vol": 2514
+      "call_vol": 3108,
+      "put_vol": 2521
      },
      {
       "strike": 142,
       "call_oi": 85,
       "put_oi": 1651,
-      "call_vol": 3528,
-      "put_vol": 3850
+      "call_vol": 3546,
+      "put_vol": 3863
      },
      {
       "strike": 143,
@@ -162851,105 +162959,105 @@
       "strike": 145,
       "call_oi": 8164,
       "put_oi": 27870,
-      "call_vol": 11812,
-      "put_vol": 7689
+      "call_vol": 12084,
+      "put_vol": 8231
      },
      {
       "strike": 146,
       "call_oi": 347,
       "put_oi": 716,
       "call_vol": 256,
-      "put_vol": 365
+      "put_vol": 366
      },
      {
       "strike": 147,
       "call_oi": 452,
       "put_oi": 1455,
-      "call_vol": 276,
+      "call_vol": 277,
       "put_vol": 530
      },
      {
       "strike": 148,
       "call_oi": 455,
       "put_oi": 2299,
-      "call_vol": 274,
-      "put_vol": 451
+      "call_vol": 278,
+      "put_vol": 455
      },
      {
       "strike": 149,
       "call_oi": 827,
       "put_oi": 2096,
-      "call_vol": 647,
-      "put_vol": 125
+      "call_vol": 649,
+      "put_vol": 129
      },
      {
       "strike": 150,
       "call_oi": 30123,
       "put_oi": 66675,
-      "call_vol": 16986,
-      "put_vol": 11767
+      "call_vol": 17183,
+      "put_vol": 12028
      },
      {
       "strike": 152.5,
       "call_oi": 6099,
       "put_oi": 3345,
-      "call_vol": 3678,
-      "put_vol": 919
+      "call_vol": 3742,
+      "put_vol": 921
      },
      {
       "strike": 155,
       "call_oi": 21258,
       "put_oi": 33569,
-      "call_vol": 7986,
-      "put_vol": 14778
+      "call_vol": 8139,
+      "put_vol": 15044
      },
      {
       "strike": 157.5,
       "call_oi": 3978,
       "put_oi": 2615,
-      "call_vol": 2704,
+      "call_vol": 2721,
       "put_vol": 256
      },
      {
       "strike": 160,
       "call_oi": 32766,
       "put_oi": 32614,
-      "call_vol": 7985,
-      "put_vol": 761
+      "call_vol": 8100,
+      "put_vol": 774
      },
      {
       "strike": 162.5,
       "call_oi": 2896,
       "put_oi": 2352,
-      "call_vol": 1245,
+      "call_vol": 1249,
       "put_vol": 58
      },
      {
       "strike": 165,
       "call_oi": 31472,
       "put_oi": 11955,
-      "call_vol": 6398,
-      "put_vol": 437
+      "call_vol": 6557,
+      "put_vol": 445
      },
      {
       "strike": 167.5,
       "call_oi": 5590,
       "put_oi": 1618,
-      "call_vol": 701,
+      "call_vol": 709,
       "put_vol": 56
      },
      {
       "strike": 170,
       "call_oi": 20463,
       "put_oi": 12554,
-      "call_vol": 5534,
-      "put_vol": 464
+      "call_vol": 5790,
+      "put_vol": 483
      },
      {
       "strike": 172.5,
       "call_oi": 3330,
       "put_oi": 841,
-      "call_vol": 1045,
+      "call_vol": 1065,
       "put_vol": 151
      }
     ],
@@ -162958,65 +163066,65 @@
       "exp": "2026-07-17",
       "strike": 135,
       "side": "put",
-      "vol": 17444,
+      "vol": 17812,
       "oi": 24709,
-      "premium": 4569630.24
+      "premium": 4668525.2
      },
      {
       "exp": "2026-07-17",
       "strike": 130,
       "side": "put",
-      "vol": 14058,
+      "vol": 14328,
       "oi": 9909,
-      "premium": 1755563.0399999998
+      "premium": 1791000.0
      },
      {
       "exp": "2026-07-17",
       "strike": 140,
       "side": "put",
-      "vol": 13435,
+      "vol": 13503,
       "oi": 14640,
-      "premium": 5810234.45
+      "premium": 5843963.37
      },
      {
       "exp": "2026-08-21",
       "strike": 155,
       "side": "put",
-      "vol": 13297,
+      "vol": 13301,
       "oi": 20873,
-      "premium": 33890595.78
+      "premium": 33900657.730000004
      },
      {
       "exp": "2026-07-17",
       "strike": 150,
       "side": "call",
-      "vol": 13117,
+      "vol": 13215,
       "oi": 13003,
-      "premium": 1904850.7399999998
+      "premium": 1916967.9
      },
      {
       "exp": "2026-07-17",
       "strike": 145,
       "side": "call",
-      "vol": 10188,
+      "vol": 10418,
       "oi": 4338,
-      "premium": 2736191.16
+      "premium": 2787231.7199999997
      },
      {
       "exp": "2026-07-17",
       "strike": 140,
       "side": "call",
-      "vol": 8816,
+      "vol": 8869,
       "oi": 2115,
-      "premium": 3836282.4
+      "premium": 3857482.86
      },
      {
       "exp": "2026-07-17",
       "strike": 150,
       "side": "put",
-      "vol": 7454,
+      "vol": 7694,
       "oi": 40507,
-      "premium": 8725801.48
+      "premium": 9024523.42
      }
     ],
     "max_pain": 160,
@@ -163024,14 +163132,14 @@
     "oi_changes": [],
     "contracts": 1216,
     "prem_delta": {
-     "call": 2343994.3959999755,
-     "put": 2640007.6459998637,
-     "since": "2026-07-13T16:32:33+00:00"
+     "call": 783274.8730000034,
+     "put": 2091458.447999984,
+     "since": "2026-07-13T16:44:17+00:00"
     }
    }
   },
   "LITE": {
-   "asof": "2026-07-13T16:44:17+00:00",
+   "asof": "2026-07-13T16:56:13+00:00",
    "src_1m": "massive",
    "bars_1m": [
     [
@@ -165778,37 +165886,118 @@
      778.58,
      5141.400549,
      778.4262
+    ],
+    [
+     1783961040000,
+     778.275,
+     779.99,
+     776.35,
+     777,
+     6934.293787,
+     778.1144
+    ],
+    [
+     1783961100000,
+     777.445,
+     777.7952,
+     776.21,
+     776.77,
+     1428.974776,
+     777.3815
+    ],
+    [
+     1783961160000,
+     777.45,
+     778.32,
+     776.9836,
+     777.3403,
+     2572.963232,
+     777.518
+    ],
+    [
+     1783961220000,
+     778.185,
+     778.195,
+     776.82,
+     777.88,
+     1910.683646,
+     777.8493
+    ],
+    [
+     1783961280000,
+     777.01,
+     777.01,
+     775.36,
+     775.85,
+     4510.496045,
+     776.0618
+    ],
+    [
+     1783961340000,
+     775.36,
+     776.26,
+     772.3,
+     773.64,
+     5308.439086,
+     774.331
+    ],
+    [
+     1783961400000,
+     773.01,
+     773.64,
+     771.01,
+     772.155,
+     4565.577059,
+     772.3434
+    ],
+    [
+     1783961460000,
+     773.3,
+     776.29,
+     773.05,
+     775.54,
+     8952.666879,
+     774.1176
+    ],
+    [
+     1783961520000,
+     775.5,
+     777.36,
+     774.93,
+     776.655,
+     2603.663578,
+     776.2711
+    ],
+    [
+     1783961580000,
+     776.96,
+     776.96,
+     774.56,
+     774.69,
+     3254.375259,
+     775.4775
+    ],
+    [
+     1783961640000,
+     775.05,
+     776.035,
+     775,
+     775.9401,
+     1644.992461,
+     775.5442
+    ],
+    [
+     1783961700000,
+     775,
+     775,
+     773.04,
+     773.715,
+     1995.024411,
+     774.012
     ]
    ],
    "src_5m": "massive",
    "bars_5m": [
-    [
-     1783364100000,
-     730.27,
-     732.77,
-     729.89,
-     731.37,
-     18555.735338,
-     731.2595
-    ],
-    [
-     1783364400000,
-     731.4,
-     734.98,
-     731.045,
-     733.24,
-     32939.569119,
-     732.8685
-    ],
-    [
-     1783364700000,
-     733.565,
-     734.33,
-     732.8701,
-     733.81,
-     20494.621517,
-     733.6387
-    ],
     [
      1783365000000,
      733.81,
@@ -172978,12 +173167,84 @@
      775.01,
      780.9099,
      774.49,
-     778.58,
-     25225.258962,
-     777.3548
+     777,
+     32159.552749,
+     777.5186
+    ],
+    [
+     1783961100000,
+     777.445,
+     778.32,
+     772.3,
+     773.64,
+     15731.556785,
+     776.0529
+    ],
+    [
+     1783961400000,
+     773.01,
+     777.36,
+     771.01,
+     775.9401,
+     21021.275236,
+     774.3212
+    ],
+    [
+     1783961700000,
+     775,
+     775,
+     773.04,
+     773.715,
+     1995.024411,
+     774.012
     ]
    ],
-   "src_d": "massive",
+   "vwap": 786.72,
+   "ind": {
+    "rsi_d": 45.34,
+    "rsi_m": 42.94,
+    "ema9_m": 777.31,
+    "ema21_m": 778.75
+   },
+   "short": {
+    "short_interest": 9655854,
+    "days_to_cover": 1.65,
+    "avg_daily_volume": 5863865,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 983757.104282,
+     "total_volume": 1902509.002169,
+     "ratio": 0.517
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 1569199.951061,
+     "total_volume": 2761811.305492,
+     "ratio": 0.568
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 426274.288878,
+     "total_volume": 1184348.682143,
+     "ratio": 0.36
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 703709.387637,
+     "total_volume": 1656465.270108,
+     "ratio": 0.425
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 607335.163244,
+     "total_volume": 1532534.719458,
+     "ratio": 0.396
+    }
+   ],
+   "news": [],
    "bars_d": [
     [
      1768194000000,
@@ -174111,128 +174372,90 @@
      786.7332
     ]
    ],
-   "vwap": 786.98,
-   "ind": {
-    "rsi_d": 45.34,
-    "rsi_m": 42.94,
-    "ema9_m": 777.31,
-    "ema21_m": 778.75
-   },
-   "short": {
-    "short_interest": 9655854,
-    "days_to_cover": 1.65,
-    "avg_daily_volume": 5863865,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 983757.104282,
-     "total_volume": 1902509.002169,
-     "ratio": 0.517
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 1569199.951061,
-     "total_volume": 2761811.305492,
-     "ratio": 0.568
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 426274.288878,
-     "total_volume": 1184348.682143,
-     "ratio": 0.36
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 703709.387637,
-     "total_volume": 1656465.270108,
-     "ratio": 0.425
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 607335.163244,
-     "total_volume": 1532534.719458,
-     "ratio": 0.396
-    }
-   ],
-   "news": [],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T16:44:17+00:00",
    "options": {
-    "call_premium": 32335369.438999984,
-    "put_premium": 43529595.401999995,
-    "call_vol": 8066,
-    "put_vol": 9932,
+    "call_premium": 32394350.83699999,
+    "put_premium": 43521587.103999995,
+    "call_vol": 8111,
+    "put_vol": 10029,
     "call_oi": 40053,
     "put_oi": 47492,
-    "atm_iv": 1.128926614383727,
-    "pcr_vol": 1.23,
+    "atm_iv": 1.1296238948337547,
+    "pcr_vol": 1.24,
     "pcr_oi": 1.19,
-    "net_premium": -11194225.96300001,
-    "pcr_prem": 1.35,
+    "net_premium": -11127236.267000005,
+    "pcr_prem": 1.34,
     "by_expiry": [
      {
       "exp": "2026-07-17",
-      "call_premium": 7654475.369,
-      "put_premium": 10990709.182,
-      "call_vol": 4093,
-      "put_vol": 4343,
+      "call_premium": 7694667.839000001,
+      "put_premium": 11032776.194000002,
+      "call_vol": 4117,
+      "put_vol": 4383,
       "call_oi": 22760,
       "put_oi": 25730,
-      "atm_iv": 1.128926614383727
+      "atm_iv": 1.1296238948337547
      },
      {
       "exp": "2026-07-24",
-      "call_premium": 7628254.210000001,
-      "put_premium": 7409931.01,
-      "call_vol": 1564,
-      "put_vol": 2314,
+      "call_premium": 7628313.208000001,
+      "put_premium": 7452563.859999999,
+      "call_vol": 1581,
+      "put_vol": 2348,
       "call_oi": 3166,
       "put_oi": 3679,
-      "atm_iv": 1.028603753868732
+      "atm_iv": 1.0304250882613395
      },
      {
       "exp": "2026-07-31",
-      "call_premium": 5180525.27,
-      "put_premium": 4674018.75,
-      "call_vol": 805,
-      "put_vol": 854,
+      "call_premium": 5185425.27,
+      "put_premium": 4699643.75,
+      "call_vol": 806,
+      "put_vol": 870,
       "call_oi": 3943,
       "put_oi": 3334,
-      "atm_iv": 1.0059206738007653
+      "atm_iv": 1.019451209241847
      },
      {
       "exp": "2026-08-07",
-      "call_premium": 2770855.0000000005,
+      "call_premium": 2774874.9200000004,
       "put_premium": 4788782.77,
-      "call_vol": 522,
+      "call_vol": 523,
       "put_vol": 792,
       "call_oi": 1636,
       "put_oi": 1766,
-      "atm_iv": 0.9735896680956677
+      "atm_iv": 0.9747981677111373
      },
      {
       "exp": "2026-08-14",
-      "call_premium": 2707427.7600000002,
-      "put_premium": 3026671.2199999997,
-      "call_vol": 433,
-      "put_vol": 476,
+      "call_premium": 2712857.7600000002,
+      "put_premium": 3029540.22,
+      "call_vol": 434,
+      "put_vol": 481,
       "call_oi": 466,
       "put_oi": 483,
-      "atm_iv": 1.0518631257325821
+      "atm_iv": 1.0544512278777463
      },
      {
       "exp": "2026-08-21",
-      "call_premium": 6393831.83,
-      "put_premium": 12639482.47,
-      "call_vol": 649,
-      "put_vol": 1153,
+      "call_premium": 6398211.84,
+      "put_premium": 12518280.31,
+      "call_vol": 650,
+      "put_vol": 1155,
       "call_oi": 8082,
       "put_oi": 12500,
-      "atm_iv": 1.02948962303855
+      "atm_iv": 1.031481103848154
      }
     ],
     "by_strike": [
+     {
+      "strike": 582.5,
+      "call_oi": 0,
+      "put_oi": 22,
+      "call_vol": 0,
+      "put_vol": 50
+     },
      {
       "strike": 585,
       "call_oi": 2,
@@ -174252,7 +174475,7 @@
       "call_oi": 36,
       "put_oi": 379,
       "call_vol": 17,
-      "put_vol": 54
+      "put_vol": 62
      },
      {
       "strike": 592.5,
@@ -174280,7 +174503,7 @@
       "call_oi": 231,
       "put_oi": 2359,
       "call_vol": 74,
-      "put_vol": 211
+      "put_vol": 222
      },
      {
       "strike": 602.5,
@@ -174294,7 +174517,7 @@
       "call_oi": 6,
       "put_oi": 66,
       "call_vol": 6,
-      "put_vol": 9
+      "put_vol": 11
      },
      {
       "strike": 607.5,
@@ -174336,21 +174559,21 @@
       "call_oi": 39,
       "put_oi": 985,
       "call_vol": 12,
-      "put_vol": 61
+      "put_vol": 67
      },
      {
       "strike": 622.5,
       "call_oi": 0,
       "put_oi": 1,
       "call_vol": 0,
-      "put_vol": 1
+      "put_vol": 4
      },
      {
       "strike": 625,
       "call_oi": 31,
       "put_oi": 123,
       "call_vol": 14,
-      "put_vol": 49
+      "put_vol": 50
      },
      {
       "strike": 627.5,
@@ -174364,7 +174587,7 @@
       "call_oi": 37,
       "put_oi": 511,
       "call_vol": 7,
-      "put_vol": 92
+      "put_vol": 93
      },
      {
       "strike": 632.5,
@@ -174392,7 +174615,7 @@
       "call_oi": 82,
       "put_oi": 1010,
       "call_vol": 33,
-      "put_vol": 151
+      "put_vol": 161
      },
      {
       "strike": 642.5,
@@ -174406,7 +174629,7 @@
       "call_oi": 3,
       "put_oi": 178,
       "call_vol": 4,
-      "put_vol": 14
+      "put_vol": 15
      },
      {
       "strike": 647.5,
@@ -174420,7 +174643,7 @@
       "call_oi": 133,
       "put_oi": 1166,
       "call_vol": 66,
-      "put_vol": 173
+      "put_vol": 175
      },
      {
       "strike": 652.5,
@@ -174448,7 +174671,7 @@
       "call_oi": 64,
       "put_oi": 1286,
       "call_vol": 5,
-      "put_vol": 91
+      "put_vol": 92
      },
      {
       "strike": 662.5,
@@ -174476,7 +174699,7 @@
       "call_oi": 140,
       "put_oi": 328,
       "call_vol": 22,
-      "put_vol": 72
+      "put_vol": 78
      },
      {
       "strike": 672.5,
@@ -174490,7 +174713,7 @@
       "call_oi": 5,
       "put_oi": 179,
       "call_vol": 4,
-      "put_vol": 70
+      "put_vol": 72
      },
      {
       "strike": 677.5,
@@ -174504,7 +174727,7 @@
       "call_oi": 28,
       "put_oi": 1266,
       "call_vol": 9,
-      "put_vol": 88
+      "put_vol": 90
      },
      {
       "strike": 682.5,
@@ -174532,7 +174755,7 @@
       "call_oi": 42,
       "put_oi": 625,
       "call_vol": 7,
-      "put_vol": 95
+      "put_vol": 89
      },
      {
       "strike": 692.5,
@@ -174559,8 +174782,8 @@
       "strike": 700,
       "call_oi": 413,
       "put_oi": 2796,
-      "call_vol": 31,
-      "put_vol": 290
+      "call_vol": 32,
+      "put_vol": 312
      },
      {
       "strike": 702.5,
@@ -174574,7 +174797,7 @@
       "call_oi": 271,
       "put_oi": 51,
       "call_vol": 17,
-      "put_vol": 581
+      "put_vol": 582
      },
      {
       "strike": 707.5,
@@ -174602,7 +174825,7 @@
       "call_oi": 21,
       "put_oi": 65,
       "call_vol": 28,
-      "put_vol": 24
+      "put_vol": 25
      },
      {
       "strike": 717.5,
@@ -174616,7 +174839,7 @@
       "call_oi": 142,
       "put_oi": 1202,
       "call_vol": 15,
-      "put_vol": 167
+      "put_vol": 170
      },
      {
       "strike": 722.5,
@@ -174644,7 +174867,7 @@
       "call_oi": 307,
       "put_oi": 893,
       "call_vol": 36,
-      "put_vol": 337
+      "put_vol": 338
      },
      {
       "strike": 732.5,
@@ -174658,7 +174881,7 @@
       "call_oi": 38,
       "put_oi": 76,
       "call_vol": 19,
-      "put_vol": 45
+      "put_vol": 46
      },
      {
       "strike": 737.5,
@@ -174672,7 +174895,7 @@
       "call_oi": 160,
       "put_oi": 616,
       "call_vol": 20,
-      "put_vol": 101
+      "put_vol": 102
      },
      {
       "strike": 742.5,
@@ -174686,7 +174909,7 @@
       "call_oi": 10,
       "put_oi": 60,
       "call_vol": 11,
-      "put_vol": 24
+      "put_vol": 25
      },
      {
       "strike": 747.5,
@@ -174700,7 +174923,7 @@
       "call_oi": 198,
       "put_oi": 745,
       "call_vol": 15,
-      "put_vol": 790
+      "put_vol": 793
      },
      {
       "strike": 755,
@@ -174713,8 +174936,8 @@
       "strike": 760,
       "call_oi": 92,
       "put_oi": 801,
-      "call_vol": 26,
-      "put_vol": 664
+      "call_vol": 27,
+      "put_vol": 665
      },
      {
       "strike": 765,
@@ -174727,22 +174950,22 @@
       "strike": 770,
       "call_oi": 1014,
       "put_oi": 511,
-      "call_vol": 61,
+      "call_vol": 62,
       "put_vol": 99
      },
      {
       "strike": 775,
       "call_oi": 183,
       "put_oi": 111,
-      "call_vol": 34,
-      "put_vol": 135
+      "call_vol": 35,
+      "put_vol": 136
      },
      {
       "strike": 780,
       "call_oi": 360,
       "put_oi": 735,
-      "call_vol": 188,
-      "put_vol": 91
+      "call_vol": 190,
+      "put_vol": 76
      },
      {
       "strike": 785,
@@ -174797,7 +175020,7 @@
       "strike": 820,
       "call_oi": 908,
       "put_oi": 555,
-      "call_vol": 100,
+      "call_vol": 101,
       "put_vol": 13
      },
      {
@@ -174811,7 +175034,7 @@
       "strike": 830,
       "call_oi": 457,
       "put_oi": 281,
-      "call_vol": 46,
+      "call_vol": 47,
       "put_vol": 14
      },
      {
@@ -174839,7 +175062,7 @@
       "strike": 850,
       "call_oi": 991,
       "put_oi": 3797,
-      "call_vol": 222,
+      "call_vol": 225,
       "put_vol": 109
      },
      {
@@ -174888,14 +175111,14 @@
       "strike": 885,
       "call_oi": 101,
       "put_oi": 529,
-      "call_vol": 20,
+      "call_vol": 21,
       "put_vol": 65
      },
      {
       "strike": 890,
       "call_oi": 312,
       "put_oi": 137,
-      "call_vol": 123,
+      "call_vol": 129,
       "put_vol": 4
      },
      {
@@ -174909,7 +175132,7 @@
       "strike": 900,
       "call_oi": 3798,
       "put_oi": 668,
-      "call_vol": 900,
+      "call_vol": 903,
       "put_vol": 67
      },
      {
@@ -174923,7 +175146,7 @@
       "strike": 910,
       "call_oi": 245,
       "put_oi": 139,
-      "call_vol": 59,
+      "call_vol": 61,
       "put_vol": 30
      },
      {
@@ -174979,7 +175202,7 @@
       "strike": 950,
       "call_oi": 2104,
       "put_oi": 256,
-      "call_vol": 214,
+      "call_vol": 216,
       "put_vol": 46
      },
      {
@@ -175002,13 +175225,6 @@
       "put_oi": 0,
       "call_vol": 23,
       "put_vol": 0
-     },
-     {
-      "strike": 970,
-      "call_oi": 362,
-      "put_oi": 45,
-      "call_vol": 112,
-      "put_vol": 6
      }
     ],
     "top_strikes": [
@@ -175016,9 +175232,9 @@
       "exp": "2026-07-17",
       "strike": 900,
       "side": "call",
-      "vol": 840,
+      "vol": 842,
       "oi": 3135,
-      "premium": 559582.7999999999
+      "premium": 560569.92
      },
      {
       "exp": "2026-07-17",
@@ -175032,17 +175248,17 @@
       "exp": "2026-07-17",
       "strike": 760,
       "side": "put",
-      "vol": 645,
+      "vol": 646,
       "oi": 193,
-      "premium": 1325191.2
+      "premium": 1328092.02
      },
      {
       "exp": "2026-07-24",
       "strike": 705,
       "side": "put",
-      "vol": 553,
+      "vol": 554,
       "oi": 10,
-      "premium": 1417820.11
+      "premium": 1420588.96
      },
      {
       "exp": "2026-08-21",
@@ -175064,9 +175280,9 @@
       "exp": "2026-07-17",
       "strike": 700,
       "side": "put",
-      "vol": 215,
+      "vol": 231,
       "oi": 1049,
-      "premium": 204875.65
+      "premium": 222972.75
      },
      {
       "exp": "2026-07-24",
@@ -175082,14 +175298,14 @@
     "oi_changes": [],
     "contracts": 2136,
     "prem_delta": {
-     "call": 127155.83999999985,
-     "put": 1056042.600000009,
-     "since": "2026-07-13T16:32:33+00:00"
+     "call": 58981.39800000563,
+     "put": -8008.298000000417,
+     "since": "2026-07-13T16:44:17+00:00"
     }
    }
   },
   "INTC": {
-   "asof": "2026-07-13T16:44:17+00:00",
+   "asof": "2026-07-13T16:56:13+00:00",
    "src_1m": "massive",
    "bars_1m": [
     [
@@ -179735,37 +179951,118 @@
      103.21,
      157737.639599,
      103.123
+    ],
+    [
+     1783961100000,
+     103.21,
+     103.27,
+     103.07,
+     103.075,
+     127500.486768,
+     103.1968
+    ],
+    [
+     1783961160000,
+     103.05,
+     103.3495,
+     103.05,
+     103.34,
+     106431.630019,
+     103.2056
+    ],
+    [
+     1783961220000,
+     103.35,
+     103.4599,
+     103.3201,
+     103.37,
+     133817.652696,
+     103.3944
+    ],
+    [
+     1783961280000,
+     103.35,
+     103.4,
+     103.21,
+     103.34,
+     100396.629575,
+     103.302
+    ],
+    [
+     1783961340000,
+     103.337,
+     103.36,
+     103.1,
+     103.11,
+     118497.750028,
+     103.2219
+    ],
+    [
+     1783961400000,
+     103.105,
+     103.16,
+     102.72,
+     102.95,
+     224869.867115,
+     102.9344
+    ],
+    [
+     1783961460000,
+     102.925,
+     103.18,
+     102.88,
+     103.15,
+     145966.330108,
+     103.0368
+    ],
+    [
+     1783961520000,
+     103.15,
+     103.3799,
+     103.09,
+     103.23,
+     146647.084328,
+     103.2378
+    ],
+    [
+     1783961580000,
+     103.22,
+     103.32,
+     103.15,
+     103.27,
+     122966.52827,
+     103.2495
+    ],
+    [
+     1783961640000,
+     103.265,
+     103.37,
+     103.22,
+     103.29,
+     104861.065108,
+     103.2994
+    ],
+    [
+     1783961700000,
+     103.275,
+     103.275,
+     102.965,
+     103.13,
+     181651.96841,
+     103.061
+    ],
+    [
+     1783961760000,
+     103.15,
+     103.36,
+     103.146,
+     103.345,
+     125070.307324,
+     103.2798
     ]
    ],
    "src_5m": "massive",
    "bars_5m": [
-    [
-     1783433100000,
-     111.31,
-     112.07,
-     111.1701,
-     111.62,
-     2337282.466642,
-     111.6526
-    ],
-    [
-     1783433400000,
-     111.61,
-     111.61,
-     110.51,
-     110.65,
-     2748309.271259,
-     111.0341
-    ],
-    [
-     1783433700000,
-     110.665,
-     110.7499,
-     110.04,
-     110.54,
-     2445576.132916,
-     110.4052
-    ],
     [
      1783434000000,
      110.555,
@@ -186938,9 +187235,136 @@
      103.21,
      726976.026599,
      103.1147
+    ],
+    [
+     1783961100000,
+     103.21,
+     103.4599,
+     103.05,
+     103.11,
+     586644.149086,
+     103.2665
+    ],
+    [
+     1783961400000,
+     103.105,
+     103.3799,
+     102.72,
+     103.29,
+     745310.8749289999,
+     103.1175
+    ],
+    [
+     1783961700000,
+     103.275,
+     103.36,
+     102.965,
+     103.345,
+     306722.275734,
+     103.1502
     ]
    ],
-   "src_d": "massive",
+   "vwap": 104.68,
+   "ind": {
+    "rsi_d": 39.42,
+    "rsi_m": 43.82,
+    "ema9_m": 103.11,
+    "ema21_m": 103.17
+   },
+   "short": {
+    "short_interest": 127787110,
+    "days_to_cover": 1.0,
+    "avg_daily_volume": 127904196,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 12686132.192486,
+     "total_volume": 32082229.178194,
+     "ratio": 0.395
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 16581449.928973,
+     "total_volume": 40704140.325283,
+     "ratio": 0.407
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 16940291.323449,
+     "total_volume": 46421755.92,
+     "ratio": 0.365
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 23132770.376407,
+     "total_volume": 65410355.858547,
+     "ratio": 0.354
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 13038520.210501,
+     "total_volume": 36836610.073253,
+     "ratio": 0.354
+    }
+   ],
+   "news": [
+    {
+     "title": "Why SK Hynix’s Crash Should Worry Every AI Investor",
+     "url": "https://www.investing.com/analysis/why-sk-hynixs-crash-should-worry-every-ai-investor-200683822",
+     "published": "2026-07-13T14:20:00Z",
+     "source": "Investing.com",
+     "summary": "SK Hynix surged 13% on its Nasdaq debut Friday but crashed 8.4% by Monday, highlighting how AI-linked stocks are driven by hype rather than fundamentals. The selloff dragged down the broader semiconductor sector, while TSMC bucked the trend with gains based on strong earnings. The article warns inve",
+     "sentiment": "negative",
+     "reason": "Declined 2% in sympathy with sector selloff, caught in the broader hype-driven correction affecting semiconductor names."
+    },
+    {
+     "title": "401(k) Champions and Soaring Value Stocks",
+     "url": "https://www.fool.com/investing/2026/07/12/401k-champions-and-soaring-value-stocks/?source=iedfolrf0000001",
+     "published": "2026-07-13T00:12:48Z",
+     "source": "The Motley Fool",
+     "summary": "The article discusses the importance of grassroots 401(k) education and mentorship through the 401(k) Champion Award program, which recognizes employees who educate colleagues about retirement savings. It also highlights that value stocks, particularly those in the Vanguard Value ETF, are outperform",
+     "sentiment": "positive",
+     "reason": "Included in top 10 holdings of value ETFs with significant gains, up 499% over the trailing 12 months."
+    },
+    {
+     "title": "Shares of Intel and AMD Have Plummeted in the Last Few Days. Is It Time to Panic?",
+     "url": "https://www.fool.com/investing/2026/07/11/intel-and-amds-stock-have-plummeted-in-the-last-fe/?source=iedfolrf0000001",
+     "published": "2026-07-11T07:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Intel and AMD stocks have declined sharply in early July after strong gains in 2026, but analyst Keithen Drury argues this is not a buying opportunity. Both companies are expensive turnaround plays that are significantly underperforming their dominant rivals—AMD versus Nvidia in GPUs and Intel versu",
+     "sentiment": "negative",
+     "reason": "Intel's foundry division grew only 16% YoY to $5.4B, significantly underperforming TSMC's 41% growth and $35.9B revenue. Trading at 100x forward earnings versus TSMC's 27.5x, Intel would need to quadruple earnings to justify current valuation while competitors continue pulling ahead."
+    },
+    {
+     "title": "Advanced Micro Devices vs. Texas Instruments: Which Technology Stock Is a Better Buy in 2026?",
+     "url": "https://www.fool.com/coverage/better-buy/2026/07/10/advanced-micro-devices-vs-texas-instruments-which-technology-stock-is-a-better-buy-in-2026/?source=iedfolrf0000001",
+     "published": "2026-07-11T03:16:12Z",
+     "source": "The Motley Fool",
+     "summary": "AMD and Texas Instruments represent two different semiconductor investment approaches. AMD offers higher growth potential through AI and data center expansion but trades at a rich valuation with concentrated customer risk. Texas Instruments provides steadier returns with diversified customers, lower",
+     "sentiment": "neutral",
+     "reason": "Mentioned as a competitor to AMD in processor markets, but no detailed analysis provided."
+    },
+    {
+     "title": "Why The iShares Semiconductor ETF Soared 112.8% In The First Half of 2026",
+     "url": "https://www.fool.com/investing/2026/07/10/why-the-ishares-semiconductor-etf-soared-1128-in-t/?source=iedfolrf0000001",
+     "published": "2026-07-10T19:27:00Z",
+     "source": "The Motley Fool",
+     "summary": "The iShares Semiconductor ETF (SOXX) surged 112.8% in the first half of 2026, driven by strong AI infrastructure demand and memory chip shortages. Key gainers include Micron Technology (up 314% YTD) and Intel, alongside Nvidia. However, the article cautions that semiconductors are cyclical and inves",
+     "sentiment": "positive",
+     "reason": "Benefits from increased CPU demand for AI software and its role as a U.S. national champion in semiconductors."
+    },
+    {
+     "title": "SBA, Intel to Host Arizona Supplier Matchmaking Expo for Aerospace and Semiconductor Industries",
+     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325732/0/en/SBA-Intel-to-Host-Arizona-Supplier-Matchmaking-Expo-for-Aerospace-and-Semiconductor-Industries.html",
+     "published": "2026-07-10T19:26:00Z",
+     "source": "GlobeNewswire Inc.",
+     "summary": "The SBA announced its third Supplier Matchmaking Expo scheduled for July 29, 2026, in Scottsdale, Arizona, co-hosted by Intel. The event focuses on connecting major buyers in the space and semiconductor industries with small domestic suppliers to strengthen supply chains and boost U.S. manufacturing",
+     "sentiment": "positive",
+     "reason": "Intel is co-hosting the expo and actively participating as a buyer, demonstrating commitment to strengthening domestic semiconductor supply chains and sourcing from U.S. small businesses."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -188068,180 +188492,80 @@
      104.7467
     ]
    ],
-   "vwap": 104.73,
-   "ind": {
-    "rsi_d": 39.42,
-    "rsi_m": 43.82,
-    "ema9_m": 103.11,
-    "ema21_m": 103.17
-   },
-   "short": {
-    "short_interest": 127787110,
-    "days_to_cover": 1.0,
-    "avg_daily_volume": 127904196,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 12686132.192486,
-     "total_volume": 32082229.178194,
-     "ratio": 0.395
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 16581449.928973,
-     "total_volume": 40704140.325283,
-     "ratio": 0.407
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 16940291.323449,
-     "total_volume": 46421755.92,
-     "ratio": 0.365
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 23132770.376407,
-     "total_volume": 65410355.858547,
-     "ratio": 0.354
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 13038520.210501,
-     "total_volume": 36836610.073253,
-     "ratio": 0.354
-    }
-   ],
-   "news": [
-    {
-     "title": "Why SK Hynix’s Crash Should Worry Every AI Investor",
-     "url": "https://www.investing.com/analysis/why-sk-hynixs-crash-should-worry-every-ai-investor-200683822",
-     "published": "2026-07-13T14:20:00Z",
-     "source": "Investing.com",
-     "summary": "SK Hynix surged 13% on its Nasdaq debut Friday but crashed 8.4% by Monday, highlighting how AI-linked stocks are driven by hype rather than fundamentals. The selloff dragged down the broader semiconductor sector, while TSMC bucked the trend with gains based on strong earnings. The article warns inve",
-     "sentiment": "negative",
-     "reason": "Declined 2% in sympathy with sector selloff, caught in the broader hype-driven correction affecting semiconductor names."
-    },
-    {
-     "title": "401(k) Champions and Soaring Value Stocks",
-     "url": "https://www.fool.com/investing/2026/07/12/401k-champions-and-soaring-value-stocks/?source=iedfolrf0000001",
-     "published": "2026-07-13T00:12:48Z",
-     "source": "The Motley Fool",
-     "summary": "The article discusses the importance of grassroots 401(k) education and mentorship through the 401(k) Champion Award program, which recognizes employees who educate colleagues about retirement savings. It also highlights that value stocks, particularly those in the Vanguard Value ETF, are outperform",
-     "sentiment": "positive",
-     "reason": "Included in top 10 holdings of value ETFs with significant gains, up 499% over the trailing 12 months."
-    },
-    {
-     "title": "Shares of Intel and AMD Have Plummeted in the Last Few Days. Is It Time to Panic?",
-     "url": "https://www.fool.com/investing/2026/07/11/intel-and-amds-stock-have-plummeted-in-the-last-fe/?source=iedfolrf0000001",
-     "published": "2026-07-11T07:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Intel and AMD stocks have declined sharply in early July after strong gains in 2026, but analyst Keithen Drury argues this is not a buying opportunity. Both companies are expensive turnaround plays that are significantly underperforming their dominant rivals—AMD versus Nvidia in GPUs and Intel versu",
-     "sentiment": "negative",
-     "reason": "Intel's foundry division grew only 16% YoY to $5.4B, significantly underperforming TSMC's 41% growth and $35.9B revenue. Trading at 100x forward earnings versus TSMC's 27.5x, Intel would need to quadruple earnings to justify current valuation while competitors continue pulling ahead."
-    },
-    {
-     "title": "Advanced Micro Devices vs. Texas Instruments: Which Technology Stock Is a Better Buy in 2026?",
-     "url": "https://www.fool.com/coverage/better-buy/2026/07/10/advanced-micro-devices-vs-texas-instruments-which-technology-stock-is-a-better-buy-in-2026/?source=iedfolrf0000001",
-     "published": "2026-07-11T03:16:12Z",
-     "source": "The Motley Fool",
-     "summary": "AMD and Texas Instruments represent two different semiconductor investment approaches. AMD offers higher growth potential through AI and data center expansion but trades at a rich valuation with concentrated customer risk. Texas Instruments provides steadier returns with diversified customers, lower",
-     "sentiment": "neutral",
-     "reason": "Mentioned as a competitor to AMD in processor markets, but no detailed analysis provided."
-    },
-    {
-     "title": "Why The iShares Semiconductor ETF Soared 112.8% In The First Half of 2026",
-     "url": "https://www.fool.com/investing/2026/07/10/why-the-ishares-semiconductor-etf-soared-1128-in-t/?source=iedfolrf0000001",
-     "published": "2026-07-10T19:27:00Z",
-     "source": "The Motley Fool",
-     "summary": "The iShares Semiconductor ETF (SOXX) surged 112.8% in the first half of 2026, driven by strong AI infrastructure demand and memory chip shortages. Key gainers include Micron Technology (up 314% YTD) and Intel, alongside Nvidia. However, the article cautions that semiconductors are cyclical and inves",
-     "sentiment": "positive",
-     "reason": "Benefits from increased CPU demand for AI software and its role as a U.S. national champion in semiconductors."
-    },
-    {
-     "title": "SBA, Intel to Host Arizona Supplier Matchmaking Expo for Aerospace and Semiconductor Industries",
-     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325732/0/en/SBA-Intel-to-Host-Arizona-Supplier-Matchmaking-Expo-for-Aerospace-and-Semiconductor-Industries.html",
-     "published": "2026-07-10T19:26:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "The SBA announced its third Supplier Matchmaking Expo scheduled for July 29, 2026, in Scottsdale, Arizona, co-hosted by Intel. The event focuses on connecting major buyers in the space and semiconductor industries with small domestic suppliers to strengthen supply chains and boost U.S. manufacturing",
-     "sentiment": "positive",
-     "reason": "Intel is co-hosting the expo and actively participating as a buyer, demonstrating commitment to strengthening domestic semiconductor supply chains and sourcing from U.S. small businesses."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T16:44:17+00:00",
    "options": {
-    "call_premium": 64865047.79600001,
-    "put_premium": 36331354.13000001,
-    "call_vol": 180726,
-    "put_vol": 151195,
+    "call_premium": 66136557.45700005,
+    "put_premium": 37522665.80499998,
+    "call_vol": 186914,
+    "put_vol": 168992,
     "call_oi": 815765,
     "put_oi": 706070,
-    "atm_iv": 0.614565630272796,
-    "pcr_vol": 0.84,
+    "atm_iv": 0.6102040470524305,
+    "pcr_vol": 0.9,
     "pcr_oi": 0.87,
-    "net_premium": 28533693.666,
-    "pcr_prem": 0.56,
+    "net_premium": 28613891.65200007,
+    "pcr_prem": 0.57,
     "by_expiry": [
      {
       "exp": "2026-07-13",
-      "call_premium": 2800394.775999999,
-      "put_premium": 4517450.774000001,
-      "call_vol": 53290,
-      "put_vol": 50034,
+      "call_premium": 2882173.244999999,
+      "put_premium": 5178156.327000002,
+      "call_vol": 55102,
+      "put_vol": 66776,
       "call_oi": 24536,
       "put_oi": 19329,
-      "atm_iv": 0.614565630272796
+      "atm_iv": 0.6102040470524305
      },
      {
       "exp": "2026-07-15",
-      "call_premium": 2962826.3630000004,
-      "put_premium": 1945519.312,
-      "call_vol": 14151,
-      "put_vol": 9401,
+      "call_premium": 3075606.948999999,
+      "put_premium": 1978150.1849999998,
+      "call_vol": 14867,
+      "put_vol": 9573,
       "call_oi": 8619,
       "put_oi": 3000,
-      "atm_iv": 0.8757068397129348
+      "atm_iv": 0.8666280966235562
      },
      {
       "exp": "2026-07-17",
-      "call_premium": 27802542.885999996,
-      "put_premium": 9755102.902000003,
-      "call_vol": 56670,
-      "put_vol": 61040,
+      "call_premium": 28010095.827,
+      "put_premium": 9898518.501,
+      "call_vol": 58865,
+      "put_vol": 61364,
       "call_oi": 386260,
       "put_oi": 387066,
-      "atm_iv": 0.8971581685512139
+      "atm_iv": 0.8935888470475426
      },
      {
       "exp": "2026-07-20",
-      "call_premium": 1449367.96,
-      "put_premium": 1135976.4419999998,
-      "call_vol": 3520,
-      "put_vol": 2515,
+      "call_premium": 1485697.8000000003,
+      "put_premium": 1143643.11,
+      "call_vol": 3580,
+      "put_vol": 2541,
       "call_oi": 4158,
       "put_oi": 2863,
-      "atm_iv": 0.7739833467261393
+      "atm_iv": 0.7641354743400979
      },
      {
       "exp": "2026-07-22",
-      "call_premium": 1516887.2799999993,
-      "put_premium": 530784.656,
-      "call_vol": 3732,
-      "put_vol": 1784,
+      "call_premium": 1541814.68,
+      "put_premium": 535158.6059999999,
+      "call_vol": 3832,
+      "put_vol": 1796,
       "call_oi": 4274,
       "put_oi": 1799,
-      "atm_iv": 0.7957440711334208
+      "atm_iv": 0.7944207000108573
      },
      {
       "exp": "2026-07-24",
-      "call_premium": 6268534.536000001,
-      "put_premium": 4195303.120000001,
-      "call_vol": 14919,
-      "put_vol": 7443,
+      "call_premium": 6722192.076000003,
+      "put_premium": 4264566.530000001,
+      "call_vol": 15696,
+      "put_vol": 7648,
       "call_oi": 68347,
       "put_oi": 40206,
-      "atm_iv": 1.0859236497454947
+      "atm_iv": 1.0833290085524763
      }
     ],
     "by_strike": [
@@ -188250,7 +188574,7 @@
       "call_oi": 135,
       "put_oi": 8965,
       "call_vol": 4,
-      "put_vol": 114
+      "put_vol": 115
      },
      {
       "strike": 78,
@@ -188264,63 +188588,63 @@
       "call_oi": 0,
       "put_oi": 1,
       "call_vol": 1,
-      "put_vol": 8
+      "put_vol": 10
      },
      {
       "strike": 80,
       "call_oi": 8658,
       "put_oi": 29002,
-      "call_vol": 3808,
-      "put_vol": 4996
+      "call_vol": 3857,
+      "put_vol": 5042
      },
      {
       "strike": 81,
       "call_oi": 1105,
       "put_oi": 194,
       "call_vol": 3311,
-      "put_vol": 167
+      "put_vol": 171
      },
      {
       "strike": 82,
       "call_oi": 0,
       "put_oi": 8,
       "call_vol": 4,
-      "put_vol": 37
+      "put_vol": 39
      },
      {
       "strike": 82.5,
       "call_oi": 355,
       "put_oi": 3311,
       "call_vol": 7,
-      "put_vol": 337
+      "put_vol": 339
      },
      {
       "strike": 83,
       "call_oi": 0,
       "put_oi": 8,
-      "call_vol": 35,
-      "put_vol": 49
+      "call_vol": 36,
+      "put_vol": 53
      },
      {
       "strike": 84,
       "call_oi": 8,
       "put_oi": 167,
-      "call_vol": 72,
-      "put_vol": 218
+      "call_vol": 73,
+      "put_vol": 224
      },
      {
       "strike": 85,
       "call_oi": 5188,
       "put_oi": 21946,
       "call_vol": 317,
-      "put_vol": 2122
+      "put_vol": 2170
      },
      {
       "strike": 86,
       "call_oi": 12,
       "put_oi": 86,
       "call_vol": 151,
-      "put_vol": 297
+      "put_vol": 304
      },
      {
       "strike": 87,
@@ -188341,301 +188665,308 @@
       "call_oi": 4,
       "put_oi": 1164,
       "call_vol": 58,
-      "put_vol": 1144
+      "put_vol": 1148
      },
      {
       "strike": 89,
       "call_oi": 7,
       "put_oi": 881,
-      "call_vol": 206,
-      "put_vol": 698
+      "call_vol": 209,
+      "put_vol": 701
      },
      {
       "strike": 90,
       "call_oi": 9347,
       "put_oi": 30520,
-      "call_vol": 480,
-      "put_vol": 6114
+      "call_vol": 525,
+      "put_vol": 6239
      },
      {
       "strike": 91,
       "call_oi": 64,
       "put_oi": 601,
-      "call_vol": 110,
-      "put_vol": 303
+      "call_vol": 116,
+      "put_vol": 307
      },
      {
       "strike": 92,
       "call_oi": 1,
       "put_oi": 17,
-      "call_vol": 91,
-      "put_vol": 275
+      "call_vol": 110,
+      "put_vol": 276
      },
      {
       "strike": 92.5,
       "call_oi": 631,
       "put_oi": 4757,
       "call_vol": 17,
-      "put_vol": 698
+      "put_vol": 703
      },
      {
       "strike": 93,
       "call_oi": 259,
       "put_oi": 687,
-      "call_vol": 107,
-      "put_vol": 661
+      "call_vol": 111,
+      "put_vol": 673
      },
      {
       "strike": 94,
       "call_oi": 307,
       "put_oi": 1786,
-      "call_vol": 150,
-      "put_vol": 1604
+      "call_vol": 157,
+      "put_vol": 1638
      },
      {
       "strike": 95,
       "call_oi": 10686,
       "put_oi": 29782,
-      "call_vol": 459,
-      "put_vol": 5406
+      "call_vol": 476,
+      "put_vol": 5522
      },
      {
       "strike": 96,
       "call_oi": 154,
       "put_oi": 1225,
-      "call_vol": 65,
-      "put_vol": 2116
+      "call_vol": 69,
+      "put_vol": 2125
      },
      {
       "strike": 97,
       "call_oi": 55,
       "put_oi": 1606,
       "call_vol": 56,
-      "put_vol": 1323
+      "put_vol": 1336
      },
      {
       "strike": 97.5,
       "call_oi": 563,
       "put_oi": 8848,
       "call_vol": 6,
-      "put_vol": 805
+      "put_vol": 822
      },
      {
       "strike": 98,
       "call_oi": 28,
       "put_oi": 2593,
-      "call_vol": 45,
-      "put_vol": 1546
+      "call_vol": 46,
+      "put_vol": 1551
      },
      {
       "strike": 99,
       "call_oi": 204,
       "put_oi": 5548,
-      "call_vol": 113,
-      "put_vol": 2941
+      "call_vol": 122,
+      "put_vol": 2977
      },
      {
       "strike": 100,
       "call_oi": 16064,
       "put_oi": 62608,
-      "call_vol": 2176,
-      "put_vol": 13939
+      "call_vol": 2304,
+      "put_vol": 14382
      },
      {
       "strike": 101,
       "call_oi": 317,
       "put_oi": 1678,
-      "call_vol": 229,
-      "put_vol": 2563
+      "call_vol": 262,
+      "put_vol": 2886
      },
      {
       "strike": 102,
       "call_oi": 141,
       "put_oi": 2065,
-      "call_vol": 310,
-      "put_vol": 3964
+      "call_vol": 339,
+      "put_vol": 19750
      },
      {
       "strike": 103,
       "call_oi": 170,
       "put_oi": 1162,
-      "call_vol": 2477,
-      "put_vol": 13696
+      "call_vol": 2692,
+      "put_vol": 14062
      },
      {
       "strike": 104,
       "call_oi": 188,
       "put_oi": 2350,
-      "call_vol": 11262,
-      "put_vol": 8492
+      "call_vol": 12721,
+      "put_vol": 8573
      },
      {
       "strike": 105,
       "call_oi": 12481,
       "put_oi": 24899,
-      "call_vol": 19635,
-      "put_vol": 15285
+      "call_vol": 19926,
+      "put_vol": 15360
      },
      {
       "strike": 106,
       "call_oi": 3147,
       "put_oi": 1804,
-      "call_vol": 9570,
-      "put_vol": 4639
+      "call_vol": 9712,
+      "put_vol": 4646
      },
      {
       "strike": 107,
       "call_oi": 1306,
       "put_oi": 2462,
-      "call_vol": 9797,
-      "put_vol": 3722
+      "call_vol": 9857,
+      "put_vol": 3729
      },
      {
       "strike": 108,
       "call_oi": 2750,
       "put_oi": 1722,
-      "call_vol": 4393,
-      "put_vol": 539
+      "call_vol": 4409,
+      "put_vol": 564
      },
      {
       "strike": 109,
       "call_oi": 3115,
       "put_oi": 3791,
-      "call_vol": 8897,
-      "put_vol": 499
+      "call_vol": 9009,
+      "put_vol": 506
      },
      {
       "strike": 110,
       "call_oi": 36310,
       "put_oi": 34201,
-      "call_vol": 16875,
-      "put_vol": 2307
+      "call_vol": 17619,
+      "put_vol": 2352
      },
      {
       "strike": 111,
       "call_oi": 1746,
       "put_oi": 908,
-      "call_vol": 1620,
+      "call_vol": 1642,
       "put_vol": 141
      },
      {
       "strike": 112,
       "call_oi": 2264,
       "put_oi": 1831,
-      "call_vol": 2068,
-      "put_vol": 371
+      "call_vol": 2097,
+      "put_vol": 372
      },
      {
       "strike": 113,
       "call_oi": 8866,
       "put_oi": 1465,
-      "call_vol": 4146,
-      "put_vol": 116
+      "call_vol": 4479,
+      "put_vol": 119
      },
      {
       "strike": 114,
       "call_oi": 2134,
       "put_oi": 966,
-      "call_vol": 1390,
-      "put_vol": 221
+      "call_vol": 1405,
+      "put_vol": 222
      },
      {
       "strike": 115,
       "call_oi": 21629,
       "put_oi": 13069,
-      "call_vol": 7982,
-      "put_vol": 2197
+      "call_vol": 8047,
+      "put_vol": 2206
      },
      {
       "strike": 116,
       "call_oi": 2319,
       "put_oi": 1382,
-      "call_vol": 1255,
+      "call_vol": 1385,
       "put_vol": 104
      },
      {
       "strike": 117,
       "call_oi": 2187,
       "put_oi": 2109,
-      "call_vol": 921,
-      "put_vol": 106
+      "call_vol": 937,
+      "put_vol": 108
      },
      {
       "strike": 118,
       "call_oi": 2422,
       "put_oi": 1583,
-      "call_vol": 871,
-      "put_vol": 281
+      "call_vol": 887,
+      "put_vol": 293
      },
      {
       "strike": 119,
       "call_oi": 2178,
       "put_oi": 1253,
-      "call_vol": 1924,
-      "put_vol": 221
+      "call_vol": 1925,
+      "put_vol": 224
      },
      {
       "strike": 120,
       "call_oi": 55451,
       "put_oi": 25099,
-      "call_vol": 16544,
-      "put_vol": 549
+      "call_vol": 16925,
+      "put_vol": 576
      },
      {
       "strike": 121,
       "call_oi": 931,
       "put_oi": 1198,
-      "call_vol": 1943,
-      "put_vol": 73
+      "call_vol": 1949,
+      "put_vol": 75
      },
      {
       "strike": 122,
       "call_oi": 2783,
       "put_oi": 1591,
-      "call_vol": 570,
+      "call_vol": 576,
       "put_vol": 162
      },
      {
       "strike": 123,
       "call_oi": 8984,
       "put_oi": 1081,
-      "call_vol": 890,
-      "put_vol": 403
+      "call_vol": 892,
+      "put_vol": 404
      },
      {
       "strike": 124,
       "call_oi": 1183,
       "put_oi": 944,
-      "call_vol": 253,
+      "call_vol": 259,
       "put_vol": 37
      },
      {
       "strike": 125,
       "call_oi": 27246,
       "put_oi": 11634,
-      "call_vol": 5069,
-      "put_vol": 541
+      "call_vol": 5318,
+      "put_vol": 544
      },
      {
       "strike": 126,
       "call_oi": 2256,
       "put_oi": 1126,
-      "call_vol": 420,
+      "call_vol": 431,
       "put_vol": 46
      },
      {
       "strike": 127,
       "call_oi": 7377,
       "put_oi": 1344,
-      "call_vol": 397,
+      "call_vol": 398,
       "put_vol": 49
      },
      {
       "strike": 128,
       "call_oi": 2807,
       "put_oi": 1107,
-      "call_vol": 250,
-      "put_vol": 38
+      "call_vol": 256,
+      "put_vol": 39
+     },
+     {
+      "strike": 129,
+      "call_oi": 1561,
+      "put_oi": 759,
+      "call_vol": 334,
+      "put_vol": 27
      }
     ],
     "top_strikes": [
@@ -188649,59 +188980,59 @@
      },
      {
       "exp": "2026-07-13",
-      "strike": 103,
+      "strike": 102,
       "side": "put",
-      "vol": 12172,
-      "oi": 270,
-      "premium": 632578.8400000001
+      "vol": 18689,
+      "oi": 258,
+      "premium": 689810.99
      },
      {
       "exp": "2026-07-13",
-      "strike": 105,
-      "side": "call",
-      "vol": 9968,
-      "oi": 103,
-      "premium": 835916.4800000001
+      "strike": 103,
+      "side": "put",
+      "vol": 12491,
+      "oi": 270,
+      "premium": 650656.1900000001
      },
      {
       "exp": "2026-07-13",
       "strike": 104,
       "side": "call",
-      "vol": 9635,
+      "vol": 11011,
       "oi": 46,
-      "premium": 561913.2000000001
+      "premium": 607146.54
+     },
+     {
+      "exp": "2026-07-13",
+      "strike": 105,
+      "side": "call",
+      "vol": 10064,
+      "oi": 103,
+      "premium": 837022.8800000001
      },
      {
       "exp": "2026-07-13",
       "strike": 105,
       "side": "put",
-      "vol": 9523,
+      "vol": 9535,
       "oi": 1093,
-      "premium": 1148949.95
-     },
-     {
-      "exp": "2026-07-13",
-      "strike": 107,
-      "side": "call",
-      "vol": 8629,
-      "oi": 129,
-      "premium": 188716.22999999998
+      "premium": 1151160.55
      },
      {
       "exp": "2026-07-17",
       "strike": 120,
       "side": "call",
-      "vol": 8622,
+      "vol": 8705,
       "oi": 19370,
-      "premium": 406958.39999999997
+      "premium": 409831.4
      },
      {
       "exp": "2026-07-13",
-      "strike": 109,
+      "strike": 107,
       "side": "call",
-      "vol": 7513,
-      "oi": 573,
-      "premium": 93161.2
+      "vol": 8642,
+      "oi": 129,
+      "premium": 188741.28
      }
     ],
     "max_pain": 110,
@@ -188709,9 +189040,9 @@
     "oi_changes": [],
     "contracts": 1698,
     "prem_delta": {
-     "call": 1867724.6300000101,
-     "put": 1414478.291000031,
-     "since": "2026-07-13T16:32:33+00:00"
+     "call": 1271509.6610000357,
+     "put": 1191311.6749999672,
+     "since": "2026-07-13T16:44:17+00:00"
     }
    }
   },
