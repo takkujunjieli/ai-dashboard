@@ -1,12 +1,19 @@
 {
- "updated_at": "2026-07-13T05:22:34+00:00",
+ "updated_at": "2026-07-13T05:23:43+00:00",
  "snapshots": {
-  "TSLA": {
-   "price": 407.59,
-   "chg": 1.0399999999999636,
-   "chg_pct": 0.25581109334644286,
-   "day_vol": 33459572.0,
-   "prev_close": 406.55
+  "CCL": {
+   "price": 26.8497,
+   "chg": 0.1296999999999997,
+   "chg_pct": 0.4854041916167654,
+   "day_vol": 12441421.0,
+   "prev_close": 26.72
+  },
+  "COIN": {
+   "price": 159.8,
+   "chg": 1.3600000000000136,
+   "chg_pct": 0.858369098712455,
+   "day_vol": 6133590.0,
+   "prev_close": 158.44
   },
   "FIG": {
    "price": 21.1201,
@@ -14,13 +21,6 @@
    "chg_pct": -5.120844564240794,
    "day_vol": 18031072.0,
    "prev_close": 22.26
-  },
-  "AAOI": {
-   "price": 119.96,
-   "chg": -2.25,
-   "chg_pct": -1.841093200229114,
-   "day_vol": 6737956.0,
-   "prev_close": 122.21
   },
   "NFLX": {
    "price": 73.4,
@@ -36,26 +36,12 @@
    "day_vol": 20701126.0,
    "prev_close": 546.72
   },
-  "HOOD": {
-   "price": 111.5689,
-   "chg": -3.5411,
-   "chg_pct": -3.0762748675180265,
-   "day_vol": 25929867.0,
-   "prev_close": 115.11
-  },
-  "U": {
-   "price": 30.89,
-   "chg": 0.16000000000000014,
-   "chg_pct": 0.5206638464041657,
-   "day_vol": 13026697.0,
-   "prev_close": 30.73
-  },
-  "MU": {
-   "price": 982.9821,
-   "chg": -8.65790000000004,
-   "chg_pct": -0.8730890242426728,
-   "day_vol": 31766740.0,
-   "prev_close": 991.64
+  "AAOI": {
+   "price": 119.96,
+   "chg": -2.25,
+   "chg_pct": -1.841093200229114,
+   "day_vol": 6737956.0,
+   "prev_close": 122.21
   },
   "LITE": {
    "price": 804.21,
@@ -63,13 +49,6 @@
    "chg_pct": 2.34674268551867,
    "day_vol": 3674890.0,
    "prev_close": 785.77
-  },
-  "INTC": {
-   "price": 109.6001,
-   "chg": -2.9399000000000086,
-   "chg_pct": -2.6123156211125007,
-   "day_vol": 70824190.0,
-   "prev_close": 112.54
   },
   "KLAR": {
    "price": 19.61,
@@ -85,19 +64,40 @@
    "day_vol": 11022651.0,
    "prev_close": 1858.27
   },
-  "CCL": {
-   "price": 26.8497,
-   "chg": 0.1296999999999997,
-   "chg_pct": 0.4854041916167654,
-   "day_vol": 12441421.0,
-   "prev_close": 26.72
-  },
   "SPCX": {
    "price": 145.92,
    "chg": -6.240000000000009,
    "chg_pct": -4.100946372239753,
    "day_vol": 46826329.0,
    "prev_close": 152.16
+  },
+  "U": {
+   "price": 30.89,
+   "chg": 0.16000000000000014,
+   "chg_pct": 0.5206638464041657,
+   "day_vol": 13026697.0,
+   "prev_close": 30.73
+  },
+  "INTC": {
+   "price": 109.6001,
+   "chg": -2.9399000000000086,
+   "chg_pct": -2.6123156211125007,
+   "day_vol": 70824190.0,
+   "prev_close": 112.54
+  },
+  "MU": {
+   "price": 982.9821,
+   "chg": -8.65790000000004,
+   "chg_pct": -0.8730890242426728,
+   "day_vol": 31766740.0,
+   "prev_close": 991.64
+  },
+  "TSLA": {
+   "price": 407.59,
+   "chg": 1.0399999999999636,
+   "chg_pct": 0.25581109334644286,
+   "day_vol": 33459572.0,
+   "prev_close": 406.55
   },
   "RIVN": {
    "price": 17.4899,
@@ -106,12 +106,12 @@
    "day_vol": 40152524.0,
    "prev_close": 18.12
   },
-  "COIN": {
-   "price": 159.8,
-   "chg": 1.3600000000000136,
-   "chg_pct": 0.858369098712455,
-   "day_vol": 6133590.0,
-   "prev_close": 158.44
+  "HOOD": {
+   "price": 111.5689,
+   "chg": -3.5411,
+   "chg_pct": -3.0762748675180265,
+   "day_vol": 25929867.0,
+   "prev_close": 115.11
   },
   "RKLB": {
    "price": 81.5171,
@@ -94471,7 +94471,7 @@
    }
   },
   "MU": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:23:43+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -108698,7 +108698,188 @@
      982.3648
     ]
    ],
-   "src_d": "massive",
+   "vwap": 977.04,
+   "ind": {
+    "rsi_d": 49.2,
+    "rsi_m": 66.73,
+    "ema9_m": 982.13,
+    "ema21_m": 981.34
+   },
+   "short": {
+    "short_interest": 31669690,
+    "days_to_cover": 1.0,
+    "avg_daily_volume": 60260831,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 5159037.715717,
+     "total_volume": 15765397.796102,
+     "ratio": 0.327
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 7672124.143253,
+     "total_volume": 18932644.101771,
+     "ratio": 0.405
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 7313933.813953,
+     "total_volume": 19022422.148712,
+     "ratio": 0.384
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 9198618.22186,
+     "total_volume": 25029786.947741,
+     "ratio": 0.368
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 7091798.492453,
+     "total_volume": 17913216.772929,
+     "ratio": 0.396
+    }
+   ],
+   "news": [
+    {
+     "title": "Is a Deal With Ford and a $100 Billion Backlog Enough to Get Micron Stock Back Over $1,200?",
+     "url": "https://www.fool.com/investing/2026/07/12/is-a-deal-with-ford-and-a-100-billion-backlog-enou/?source=iedfolrf0000001",
+     "published": "2026-07-13T01:08:00Z",
+     "source": "The Motley Fool",
+     "summary": "Micron Technology announced a strategic customer agreement with Ford as part of 16 long-term deals expected to generate over $100 billion in revenue over the next five years. Despite this positive development and $22 billion in deposits and financial commitments, Micron's stock has retreated from it",
+     "sentiment": "positive",
+     "reason": "Micron secured 16 long-term strategic agreements worth over $100 billion in expected revenue with $22 billion in deposits and commitments. The Ford deal and multi-year contracts help reduce cyclical business risk and provide revenue visibility. However, positive sentiment is tempered by recent stock price decline from $1,255 to below $1,000 due to profit-taking and competitive pressures."
+    },
+    {
+     "title": "401(k) Champions and Soaring Value Stocks",
+     "url": "https://www.fool.com/investing/2026/07/12/401k-champions-and-soaring-value-stocks/?source=iedfolrf0000001",
+     "published": "2026-07-13T00:12:48Z",
+     "source": "The Motley Fool",
+     "summary": "The article discusses the importance of grassroots 401(k) education and mentorship through the 401(k) Champion Award program, which recognizes employees who educate colleagues about retirement savings. It also highlights that value stocks, particularly those in the Vanguard Value ETF, are outperform",
+     "sentiment": "positive",
+     "reason": "Identified as the top holding in the Vanguard Value ETF with exceptional performance, up 854% over the past year."
+    },
+    {
+     "title": "Morgan Stanley Warns of \"Chipflation\" as Hyperscalers Invest More in Compute Capacity: 2 No-Brainer Artificial Intelligence (AI) Chip Stocks to Buy Right Now",
+     "url": "https://www.fool.com/investing/2026/07/12/chipflation/?source=iedfolrf0000001",
+     "published": "2026-07-12T11:14:00Z",
+     "source": "The Motley Fool",
+     "summary": "Morgan Stanley warns of \"chipflation\" where memory chip prices rise sharply as AI demand outpaces supply. The firm suggests this creates a \"durable supply-demand reset\" requiring years for new foundries to reach full capacity. Rather than signaling a slowdown, this environment indicates a transition",
+     "sentiment": "positive",
+     "reason": "Leading producer of HBM and DRAM positioned at the center of AI chip supply chains. Structural shortage in HBM will persist due to growing model sizes and inference deployment. Long-term supply agreements and competitive position provide a buffer against earnings disappointments, enabling durable earnings growth."
+    },
+    {
+     "title": "This Unstoppable Tech ETF Is Down More Than 20%. Is It Time to Buy the Dip?",
+     "url": "https://www.fool.com/investing/2026/07/11/this-unstoppable-tech-etf-is-down-more-than-20-is/?source=iedfolrf0000001",
+     "published": "2026-07-11T21:34:00Z",
+     "source": "The Motley Fool",
+     "summary": "The DRAM - Roundhill Memory ETF (DRAM) has pulled back over 20% from its highs despite strong fundamentals. The ETF provides concentrated exposure to the big three DRAM makers (Micron, Samsung, SK Hynix) benefiting from surging demand for high-bandwidth memory driven by AI. With supply constraints e",
+     "sentiment": "positive",
+     "reason": "Micron is highlighted as the largest holding (25.8%) in the DRAM ETF and benefits from the same positive tailwinds as other big three DRAM makers, including surging revenues, ballooning gross margins, and strong HBM demand from AI."
+    },
+    {
+     "title": "5 Unstoppable Semiconductor Stocks You Can Buy Now in July (2026)",
+     "url": "https://www.fool.com/investing/2026/07/11/5-unstoppable-semiconductor-stocks-you-can-buy-now/?source=iedfolrf0000001",
+     "published": "2026-07-11T18:31:29Z",
+     "source": "The Motley Fool",
+     "summary": "Semiconductor stocks are experiencing strong growth driven by agentic AI proliferation. The article highlights five semiconductor companies as investment opportunities, with undervalued opportunities still available in the sector despite recent gains.",
+     "sentiment": "positive",
+     "reason": "Featured prominently with multiple related articles discussing CEO's $250B AI memory chip investment, earnings performance, and stock split potential. Positioned as a key growth play in AI memory chips."
+    },
+    {
+     "title": "The S&P 500 Could Jump 18% Over the Next 1 Year. Here Are My Top Growth Stocks to Buy Before That Happens",
+     "url": "https://www.fool.com/investing/2026/07/11/the-sp-500-could-jump-18-over-the-next-1-year-here/?source=iedfolrf0000001",
+     "published": "2026-07-11T13:23:00Z",
+     "source": "The Motley Fool",
+     "summary": "FactSet predicts the S&P 500 could reach 8,920 within a year, representing an 18% increase from current levels. Tech stocks are expected to lead the rally, with semiconductor companies Micron Technology and Advanced Micro Devices benefiting from AI infrastructure investments, while software company ",
+     "sentiment": "positive",
+     "reason": "Stock has jumped 210% in 2026 with forecasted earnings growth of 784% in current fiscal year and 104% next year. Strong demand for memory chips with 16 five-year customer agreements worth $100+ billion in cumulative revenue. Well-positioned to benefit from AI infrastructure boom."
+    },
+    {
+     "title": "Trump's Financial Disclosure Revealed a $1.67 Million Micron Stock Stake",
+     "url": "https://www.fool.com/investing/2026/07/11/trumps-financial-disclosure-revealed-a-167-million/?source=iedfolrf0000001",
+     "published": "2026-07-11T11:16:00Z",
+     "source": "The Motley Fool",
+     "summary": "President Trump's 2025 financial disclosure shows he owns between $1.67 million and $6.65 million in Micron stock. The memory chip maker has surged 660% in the past 12 months, benefiting from AI infrastructure demand. While Trump's stake is noteworthy given Micron's $250 million commitment to his in",
+     "sentiment": "positive",
+     "reason": "Strong financial performance with 266% revenue increase and 782% net income surge in the past year. Stock up 660% in 12 months. Well-positioned in AI infrastructure boom with high demand for memory chips and ability to command premium pricing. Long-term growth potential despite cyclical industry nature."
+    },
+    {
+     "title": "Micron's Biggest Long-Term Growth Catalyst Has Nothing to Do With AI Data Centers",
+     "url": "https://www.fool.com/investing/2026/07/11/microns-biggest-long-term-growth-catalyst-has-noth/?source=iedfolrf0000001",
+     "published": "2026-07-11T08:29:00Z",
+     "source": "The Motley Fool",
+     "summary": "Micron CEO Sanjay Mehrotra believes humanoid robots represent a larger long-term growth opportunity than AI data centers. Humanoid robots will require 10 times more memory than advanced vehicles, and Barclays projects the humanoid robot market could exceed $200 billion within 10 years. This anticipa",
+     "sentiment": "positive",
+     "reason": "CEO's bullish outlook on humanoid robots as a multidecade growth catalyst; company positioned as critical memory supplier with potential for sustained high margins; recent strong earnings performance and record guidance"
+    },
+    {
+     "title": "History Says Doing This 1 Thing Will Score You an Investing Win -- Even After a Market Crash.",
+     "url": "https://www.fool.com/investing/2026/07/11/history-says-doing-this-1-thing-will-score-you-an/?source=iedfolrf0000001",
+     "published": "2026-07-11T08:02:00Z",
+     "source": "The Motley Fool",
+     "summary": "Despite recent market gains driven by AI stocks, valuations are at historically expensive levels similar to the dot-com bubble. The article recommends a simple strategy: invest in quality stocks and hold them long-term. History shows the S&P 500 has always recovered after crashes, making buy-and-hol",
+     "sentiment": "positive",
+     "reason": "Identified as the second-best performer in the S&P 500 in the first six months with over 200% gains; benefits from sustained AI demand."
+    },
+    {
+     "title": "Micron CEO Sanjay Mehrotra Announces $250 Billion Investment for Expanded Artificial Intelligence (AI) Memory Chip Development",
+     "url": "https://www.fool.com/investing/2026/07/11/micron-sanjay-mehrotra-announces-250-billion-expan/?source=iedfolrf0000001",
+     "published": "2026-07-11T06:35:00Z",
+     "source": "The Motley Fool",
+     "summary": "Micron Technology announced a $250 billion investment plan through 2035 to expand domestic U.S. manufacturing capacity for DRAM and high-bandwidth memory (HBM) chips. The company aims to capture a larger share of the AI memory market by building new fabrication facilities in New York, Idaho, and Vir",
+     "sentiment": "positive",
+     "reason": "Micron's aggressive $250 billion investment demonstrates confidence in long-term AI demand and positions the company to gain market share against competitors. The domestic manufacturing expansion creates a competitive advantage and supports sustained growth in the AI infrastructure era."
+    },
+    {
+     "title": "Why The iShares Semiconductor ETF Soared 112.8% In The First Half of 2026",
+     "url": "https://www.fool.com/investing/2026/07/10/why-the-ishares-semiconductor-etf-soared-1128-in-t/?source=iedfolrf0000001",
+     "published": "2026-07-10T19:27:00Z",
+     "source": "The Motley Fool",
+     "summary": "The iShares Semiconductor ETF (SOXX) surged 112.8% in the first half of 2026, driven by strong AI infrastructure demand and memory chip shortages. Key gainers include Micron Technology (up 314% YTD) and Intel, alongside Nvidia. However, the article cautions that semiconductors are cyclical and inves",
+     "sentiment": "positive",
+     "reason": "Stock surged 314% YTD due to memory chip shortages driving up prices and profits. Positioned as a major beneficiary of current market conditions."
+    },
+    {
+     "title": "Why Sandisk Stock Popped Again Today",
+     "url": "https://www.fool.com/investing/2026/07/10/why-sandisk-stock-popped-again-today/?source=iedfolrf0000001",
+     "published": "2026-07-10T19:17:20Z",
+     "source": "The Motley Fool",
+     "summary": "Sandisk stock gained 3.4% as investors bought memory stocks following SK Hynix's Nasdaq listing of its ADRs. SK Hynix forecasted that the computer memory deficit will persist until 2030 and beyond, with 2027 seeing the worst-ever supply shortage, which could drive memory prices and profits higher fo",
+     "sentiment": "neutral",
+     "reason": "Mentioned as a competitor in the DRAM market but no specific news or sentiment drivers discussed in the article. Slight decline of 1.15% noted but not attributed to any particular event."
+    },
+    {
+     "title": "Micron’s $250 Billion Bet Could Reshape the AI Memory Race",
+     "url": "https://www.investing.com/analysis/microns-250-billion-bet-could-reshape-the-ai-memory-race-200683732",
+     "published": "2026-07-10T16:22:00Z",
+     "source": "Investing.com",
+     "summary": "Micron Technology is accelerating a $250 billion domestic fabrication commitment, pouring concrete ahead of schedule at its new Clay, New York mega-fab. The company is securing raw silicon supply through a $500 million strategic agreement with GlobalWafers and aims to capture market share from SK Hy",
+     "sentiment": "positive",
+     "reason": "Strong fundamentals with 345.8% YoY revenue growth, 55.91% net margins, low debt-to-equity ratio (0.05), and aggressive HBM4 yield improvements. $250 billion capital deployment secures domestic supply chain and positions company to capture market share from competitors. Forward P/E of 14 signals anticipated earnings growth."
+    },
+    {
+     "title": "Tech Supply Chain: SK Hynix Reopens US Capital Door as AI Boom Pulls Asia West",
+     "url": "https://www.investing.com/analysis/tech-supply-chain-sk-hynix-reopens-us-capital-door-as-ai-boom-pulls-asia-west-200683676",
+     "published": "2026-07-10T13:16:00Z",
+     "source": "Investing.com",
+     "summary": "SK Hynix's $26.5 billion ADR listing in the US signals a reopening of the capital corridor for Asia's AI supply chain. The offering received 7x oversubscription, reflecting strong investor demand for AI infrastructure and memory chip exposure. This move could prompt other Asian semiconductor compani",
+     "sentiment": "neutral",
+     "reason": "Mentioned as a comparable benchmark for SK Hynix's stock performance surge (~700% over past year), but no direct news or developments affecting the company are discussed in the article."
+    },
+    {
+     "title": "Where Will Micron Stock Be in 5 Years?",
+     "url": "https://www.fool.com/investing/2026/07/10/where-will-micron-stock-be-in-5-years/?source=iedfolrf0000001",
+     "published": "2026-07-10T12:30:00Z",
+     "source": "The Motley Fool",
+     "summary": "Micron is gaining importance as an AI stock due to high-bandwidth memory demand, which could drive tighter supply, stronger pricing, and increased demand. However, traditional memory cycles remain a risk factor that creates uncertainty for the stock's future trajectory.",
+     "sentiment": "positive",
+     "reason": "The article highlights Micron's growing importance in the AI sector, particularly in high-bandwidth memory which could become a critical bottleneck. The company is positioned to benefit from tighter supply, stronger pricing, and rising demand. Recent earnings performance and data center gross margins of 87% support positive momentum."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -109817,188 +109998,7 @@
      977.9954
     ]
    ],
-   "vwap": 977.04,
-   "ind": {
-    "rsi_d": 49.2,
-    "rsi_m": 66.73,
-    "ema9_m": 982.13,
-    "ema21_m": 981.34
-   },
-   "short": {
-    "short_interest": 31669690,
-    "days_to_cover": 1.0,
-    "avg_daily_volume": 60260831,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 5159037.715717,
-     "total_volume": 15765397.796102,
-     "ratio": 0.327
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 7672124.143253,
-     "total_volume": 18932644.101771,
-     "ratio": 0.405
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 7313933.813953,
-     "total_volume": 19022422.148712,
-     "ratio": 0.384
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 9198618.22186,
-     "total_volume": 25029786.947741,
-     "ratio": 0.368
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 7091798.492453,
-     "total_volume": 17913216.772929,
-     "ratio": 0.396
-    }
-   ],
-   "news": [
-    {
-     "title": "Is a Deal With Ford and a $100 Billion Backlog Enough to Get Micron Stock Back Over $1,200?",
-     "url": "https://www.fool.com/investing/2026/07/12/is-a-deal-with-ford-and-a-100-billion-backlog-enou/?source=iedfolrf0000001",
-     "published": "2026-07-13T01:08:00Z",
-     "source": "The Motley Fool",
-     "summary": "Micron Technology announced a strategic customer agreement with Ford as part of 16 long-term deals expected to generate over $100 billion in revenue over the next five years. Despite this positive development and $22 billion in deposits and financial commitments, Micron's stock has retreated from it",
-     "sentiment": "positive",
-     "reason": "Micron secured 16 long-term strategic agreements worth over $100 billion in expected revenue with $22 billion in deposits and commitments. The Ford deal and multi-year contracts help reduce cyclical business risk and provide revenue visibility. However, positive sentiment is tempered by recent stock price decline from $1,255 to below $1,000 due to profit-taking and competitive pressures."
-    },
-    {
-     "title": "401(k) Champions and Soaring Value Stocks",
-     "url": "https://www.fool.com/investing/2026/07/12/401k-champions-and-soaring-value-stocks/?source=iedfolrf0000001",
-     "published": "2026-07-13T00:12:48Z",
-     "source": "The Motley Fool",
-     "summary": "The article discusses the importance of grassroots 401(k) education and mentorship through the 401(k) Champion Award program, which recognizes employees who educate colleagues about retirement savings. It also highlights that value stocks, particularly those in the Vanguard Value ETF, are outperform",
-     "sentiment": "positive",
-     "reason": "Identified as the top holding in the Vanguard Value ETF with exceptional performance, up 854% over the past year."
-    },
-    {
-     "title": "Morgan Stanley Warns of \"Chipflation\" as Hyperscalers Invest More in Compute Capacity: 2 No-Brainer Artificial Intelligence (AI) Chip Stocks to Buy Right Now",
-     "url": "https://www.fool.com/investing/2026/07/12/chipflation/?source=iedfolrf0000001",
-     "published": "2026-07-12T11:14:00Z",
-     "source": "The Motley Fool",
-     "summary": "Morgan Stanley warns of \"chipflation\" where memory chip prices rise sharply as AI demand outpaces supply. The firm suggests this creates a \"durable supply-demand reset\" requiring years for new foundries to reach full capacity. Rather than signaling a slowdown, this environment indicates a transition",
-     "sentiment": "positive",
-     "reason": "Leading producer of HBM and DRAM positioned at the center of AI chip supply chains. Structural shortage in HBM will persist due to growing model sizes and inference deployment. Long-term supply agreements and competitive position provide a buffer against earnings disappointments, enabling durable earnings growth."
-    },
-    {
-     "title": "This Unstoppable Tech ETF Is Down More Than 20%. Is It Time to Buy the Dip?",
-     "url": "https://www.fool.com/investing/2026/07/11/this-unstoppable-tech-etf-is-down-more-than-20-is/?source=iedfolrf0000001",
-     "published": "2026-07-11T21:34:00Z",
-     "source": "The Motley Fool",
-     "summary": "The DRAM - Roundhill Memory ETF (DRAM) has pulled back over 20% from its highs despite strong fundamentals. The ETF provides concentrated exposure to the big three DRAM makers (Micron, Samsung, SK Hynix) benefiting from surging demand for high-bandwidth memory driven by AI. With supply constraints e",
-     "sentiment": "positive",
-     "reason": "Micron is highlighted as the largest holding (25.8%) in the DRAM ETF and benefits from the same positive tailwinds as other big three DRAM makers, including surging revenues, ballooning gross margins, and strong HBM demand from AI."
-    },
-    {
-     "title": "5 Unstoppable Semiconductor Stocks You Can Buy Now in July (2026)",
-     "url": "https://www.fool.com/investing/2026/07/11/5-unstoppable-semiconductor-stocks-you-can-buy-now/?source=iedfolrf0000001",
-     "published": "2026-07-11T18:31:29Z",
-     "source": "The Motley Fool",
-     "summary": "Semiconductor stocks are experiencing strong growth driven by agentic AI proliferation. The article highlights five semiconductor companies as investment opportunities, with undervalued opportunities still available in the sector despite recent gains.",
-     "sentiment": "positive",
-     "reason": "Featured prominently with multiple related articles discussing CEO's $250B AI memory chip investment, earnings performance, and stock split potential. Positioned as a key growth play in AI memory chips."
-    },
-    {
-     "title": "The S&P 500 Could Jump 18% Over the Next 1 Year. Here Are My Top Growth Stocks to Buy Before That Happens",
-     "url": "https://www.fool.com/investing/2026/07/11/the-sp-500-could-jump-18-over-the-next-1-year-here/?source=iedfolrf0000001",
-     "published": "2026-07-11T13:23:00Z",
-     "source": "The Motley Fool",
-     "summary": "FactSet predicts the S&P 500 could reach 8,920 within a year, representing an 18% increase from current levels. Tech stocks are expected to lead the rally, with semiconductor companies Micron Technology and Advanced Micro Devices benefiting from AI infrastructure investments, while software company ",
-     "sentiment": "positive",
-     "reason": "Stock has jumped 210% in 2026 with forecasted earnings growth of 784% in current fiscal year and 104% next year. Strong demand for memory chips with 16 five-year customer agreements worth $100+ billion in cumulative revenue. Well-positioned to benefit from AI infrastructure boom."
-    },
-    {
-     "title": "Trump's Financial Disclosure Revealed a $1.67 Million Micron Stock Stake",
-     "url": "https://www.fool.com/investing/2026/07/11/trumps-financial-disclosure-revealed-a-167-million/?source=iedfolrf0000001",
-     "published": "2026-07-11T11:16:00Z",
-     "source": "The Motley Fool",
-     "summary": "President Trump's 2025 financial disclosure shows he owns between $1.67 million and $6.65 million in Micron stock. The memory chip maker has surged 660% in the past 12 months, benefiting from AI infrastructure demand. While Trump's stake is noteworthy given Micron's $250 million commitment to his in",
-     "sentiment": "positive",
-     "reason": "Strong financial performance with 266% revenue increase and 782% net income surge in the past year. Stock up 660% in 12 months. Well-positioned in AI infrastructure boom with high demand for memory chips and ability to command premium pricing. Long-term growth potential despite cyclical industry nature."
-    },
-    {
-     "title": "Micron's Biggest Long-Term Growth Catalyst Has Nothing to Do With AI Data Centers",
-     "url": "https://www.fool.com/investing/2026/07/11/microns-biggest-long-term-growth-catalyst-has-noth/?source=iedfolrf0000001",
-     "published": "2026-07-11T08:29:00Z",
-     "source": "The Motley Fool",
-     "summary": "Micron CEO Sanjay Mehrotra believes humanoid robots represent a larger long-term growth opportunity than AI data centers. Humanoid robots will require 10 times more memory than advanced vehicles, and Barclays projects the humanoid robot market could exceed $200 billion within 10 years. This anticipa",
-     "sentiment": "positive",
-     "reason": "CEO's bullish outlook on humanoid robots as a multidecade growth catalyst; company positioned as critical memory supplier with potential for sustained high margins; recent strong earnings performance and record guidance"
-    },
-    {
-     "title": "History Says Doing This 1 Thing Will Score You an Investing Win -- Even After a Market Crash.",
-     "url": "https://www.fool.com/investing/2026/07/11/history-says-doing-this-1-thing-will-score-you-an/?source=iedfolrf0000001",
-     "published": "2026-07-11T08:02:00Z",
-     "source": "The Motley Fool",
-     "summary": "Despite recent market gains driven by AI stocks, valuations are at historically expensive levels similar to the dot-com bubble. The article recommends a simple strategy: invest in quality stocks and hold them long-term. History shows the S&P 500 has always recovered after crashes, making buy-and-hol",
-     "sentiment": "positive",
-     "reason": "Identified as the second-best performer in the S&P 500 in the first six months with over 200% gains; benefits from sustained AI demand."
-    },
-    {
-     "title": "Micron CEO Sanjay Mehrotra Announces $250 Billion Investment for Expanded Artificial Intelligence (AI) Memory Chip Development",
-     "url": "https://www.fool.com/investing/2026/07/11/micron-sanjay-mehrotra-announces-250-billion-expan/?source=iedfolrf0000001",
-     "published": "2026-07-11T06:35:00Z",
-     "source": "The Motley Fool",
-     "summary": "Micron Technology announced a $250 billion investment plan through 2035 to expand domestic U.S. manufacturing capacity for DRAM and high-bandwidth memory (HBM) chips. The company aims to capture a larger share of the AI memory market by building new fabrication facilities in New York, Idaho, and Vir",
-     "sentiment": "positive",
-     "reason": "Micron's aggressive $250 billion investment demonstrates confidence in long-term AI demand and positions the company to gain market share against competitors. The domestic manufacturing expansion creates a competitive advantage and supports sustained growth in the AI infrastructure era."
-    },
-    {
-     "title": "Why The iShares Semiconductor ETF Soared 112.8% In The First Half of 2026",
-     "url": "https://www.fool.com/investing/2026/07/10/why-the-ishares-semiconductor-etf-soared-1128-in-t/?source=iedfolrf0000001",
-     "published": "2026-07-10T19:27:00Z",
-     "source": "The Motley Fool",
-     "summary": "The iShares Semiconductor ETF (SOXX) surged 112.8% in the first half of 2026, driven by strong AI infrastructure demand and memory chip shortages. Key gainers include Micron Technology (up 314% YTD) and Intel, alongside Nvidia. However, the article cautions that semiconductors are cyclical and inves",
-     "sentiment": "positive",
-     "reason": "Stock surged 314% YTD due to memory chip shortages driving up prices and profits. Positioned as a major beneficiary of current market conditions."
-    },
-    {
-     "title": "Why Sandisk Stock Popped Again Today",
-     "url": "https://www.fool.com/investing/2026/07/10/why-sandisk-stock-popped-again-today/?source=iedfolrf0000001",
-     "published": "2026-07-10T19:17:20Z",
-     "source": "The Motley Fool",
-     "summary": "Sandisk stock gained 3.4% as investors bought memory stocks following SK Hynix's Nasdaq listing of its ADRs. SK Hynix forecasted that the computer memory deficit will persist until 2030 and beyond, with 2027 seeing the worst-ever supply shortage, which could drive memory prices and profits higher fo",
-     "sentiment": "neutral",
-     "reason": "Mentioned as a competitor in the DRAM market but no specific news or sentiment drivers discussed in the article. Slight decline of 1.15% noted but not attributed to any particular event."
-    },
-    {
-     "title": "Micron’s $250 Billion Bet Could Reshape the AI Memory Race",
-     "url": "https://www.investing.com/analysis/microns-250-billion-bet-could-reshape-the-ai-memory-race-200683732",
-     "published": "2026-07-10T16:22:00Z",
-     "source": "Investing.com",
-     "summary": "Micron Technology is accelerating a $250 billion domestic fabrication commitment, pouring concrete ahead of schedule at its new Clay, New York mega-fab. The company is securing raw silicon supply through a $500 million strategic agreement with GlobalWafers and aims to capture market share from SK Hy",
-     "sentiment": "positive",
-     "reason": "Strong fundamentals with 345.8% YoY revenue growth, 55.91% net margins, low debt-to-equity ratio (0.05), and aggressive HBM4 yield improvements. $250 billion capital deployment secures domestic supply chain and positions company to capture market share from competitors. Forward P/E of 14 signals anticipated earnings growth."
-    },
-    {
-     "title": "Tech Supply Chain: SK Hynix Reopens US Capital Door as AI Boom Pulls Asia West",
-     "url": "https://www.investing.com/analysis/tech-supply-chain-sk-hynix-reopens-us-capital-door-as-ai-boom-pulls-asia-west-200683676",
-     "published": "2026-07-10T13:16:00Z",
-     "source": "Investing.com",
-     "summary": "SK Hynix's $26.5 billion ADR listing in the US signals a reopening of the capital corridor for Asia's AI supply chain. The offering received 7x oversubscription, reflecting strong investor demand for AI infrastructure and memory chip exposure. This move could prompt other Asian semiconductor compani",
-     "sentiment": "neutral",
-     "reason": "Mentioned as a comparable benchmark for SK Hynix's stock performance surge (~700% over past year), but no direct news or developments affecting the company are discussed in the article."
-    },
-    {
-     "title": "Where Will Micron Stock Be in 5 Years?",
-     "url": "https://www.fool.com/investing/2026/07/10/where-will-micron-stock-be-in-5-years/?source=iedfolrf0000001",
-     "published": "2026-07-10T12:30:00Z",
-     "source": "The Motley Fool",
-     "summary": "Micron is gaining importance as an AI stock due to high-bandwidth memory demand, which could drive tighter supply, stronger pricing, and increased demand. However, traditional memory cycles remain a risk factor that creates uncertainty for the stock's future trajectory.",
-     "sentiment": "positive",
-     "reason": "The article highlights Micron's growing importance in the AI sector, particularly in high-bandwidth memory which could become a critical bottleneck. The company is positioned to benefit from tighter supply, stronger pricing, and rising demand. Recent earnings performance and data center gross margins of 87% support positive momentum."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 546637698.1420002,
@@ -110007,7 +110007,7 @@
     "put_vol": 283781,
     "call_oi": 505634,
     "put_oi": 852852,
-    "atm_iv": 1.35826600953483,
+    "atm_iv": 1.3837305949629215,
     "pcr_vol": 1.58,
     "pcr_oi": 1.69,
     "net_premium": 69899102.0980004,
@@ -110021,7 +110021,7 @@
       "put_vol": 55410,
       "call_oi": 19512,
       "put_oi": 14534,
-      "atm_iv": 1.35826600953483
+      "atm_iv": 1.3837305949629215
      },
      {
       "exp": "2026-07-15",
@@ -110031,7 +110031,7 @@
       "put_vol": 10232,
       "call_oi": 3584,
       "put_oi": 4004,
-      "atm_iv": 1.1667089405963689
+      "atm_iv": 1.172858237799655
      },
      {
       "exp": "2026-07-17",
@@ -110041,7 +110041,7 @@
       "put_vol": 149430,
       "call_oi": 257135,
       "put_oi": 478272,
-      "atm_iv": 1.1213856164439975
+      "atm_iv": 1.1248234479981662
      },
      {
       "exp": "2026-07-20",
@@ -110051,7 +110051,7 @@
       "put_vol": 3762,
       "call_oi": 2608,
       "put_oi": 2990,
-      "atm_iv": 0.9823497650964169
+      "atm_iv": 0.9842001643313231
      },
      {
       "exp": "2026-07-22",
@@ -110061,7 +110061,7 @@
       "put_vol": 1343,
       "call_oi": 1169,
       "put_oi": 1180,
-      "atm_iv": 1.0042699791572804
+      "atm_iv": 1.005774812185218
      },
      {
       "exp": "2026-07-24",
@@ -110071,7 +110071,7 @@
       "put_vol": 13211,
       "call_oi": 40793,
       "put_oi": 73376,
-      "atm_iv": 1.0297969008721448
+      "atm_iv": 1.0310775302607815
      }
     ],
     "by_strike": [
@@ -110922,11 +110922,16 @@
     "max_pain": 975,
     "max_pain_exp": "2026-07-13",
     "oi_changes": [],
-    "contracts": 5434
+    "contracts": 5434,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "RKLB": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:23:43+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -125153,7 +125158,62 @@
      81.5741
     ]
    ],
-   "src_d": "massive",
+   "vwap": 80.8,
+   "ind": {
+    "rsi_d": 37.38,
+    "rsi_m": 58.94,
+    "ema9_m": 81.56,
+    "ema21_m": 81.48
+   },
+   "short": {
+    "short_interest": 42599639,
+    "days_to_cover": 1.27,
+    "avg_daily_volume": 33547558,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 3422037.736559,
+     "total_volume": 5873359.602508,
+     "ratio": 0.583
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 4213519.777235,
+     "total_volume": 6744024.948309,
+     "ratio": 0.625
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 4219388.472344,
+     "total_volume": 7768915.660668,
+     "ratio": 0.543
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 4812502.703629,
+     "total_volume": 10864631.770406,
+     "ratio": 0.443
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 5089898.130315,
+     "total_volume": 9127005.274464,
+     "ratio": 0.558
+    }
+   ],
+   "news": [
+    {
+     "title": "Rocket Lab Just Unveiled a Game-Changing New Technology Worth Watching",
+     "url": "https://www.fool.com/investing/2026/07/11/rocket-lab-just-unveiled-a-game-changing-new-techn/?source=iedfolrf0000001",
+     "published": "2026-07-11T05:30:00Z",
+     "source": "The Motley Fool",
+     "summary": "Rocket Lab has developed the 'Hungry Hippo,' an innovative hinged fairing design for its upcoming Neutron rocket that remains attached to the first stage during launch and recovery, potentially reducing costs and improving payload capacity. However, the technology remains unproven as Neutron's first",
+     "sentiment": "neutral",
+     "reason": "While the Hungry Hippo technology is genuinely innovative and could provide competitive advantages in rocket reuse economics, the sentiment is neutral rather than positive because the design remains unproven, Neutron's first launch has slipped multiple times to late 2026, the company is unprofitable, and a first-stage tank ruptured during testing earlier in the year. The article emphasizes 'if it works' as the critical uncertainty."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -126272,62 +126332,7 @@
      80.8666
     ]
    ],
-   "vwap": 80.8,
-   "ind": {
-    "rsi_d": 37.38,
-    "rsi_m": 58.94,
-    "ema9_m": 81.56,
-    "ema21_m": 81.48
-   },
-   "short": {
-    "short_interest": 42599639,
-    "days_to_cover": 1.27,
-    "avg_daily_volume": 33547558,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 3422037.736559,
-     "total_volume": 5873359.602508,
-     "ratio": 0.583
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 4213519.777235,
-     "total_volume": 6744024.948309,
-     "ratio": 0.625
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 4219388.472344,
-     "total_volume": 7768915.660668,
-     "ratio": 0.543
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 4812502.703629,
-     "total_volume": 10864631.770406,
-     "ratio": 0.443
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 5089898.130315,
-     "total_volume": 9127005.274464,
-     "ratio": 0.558
-    }
-   ],
-   "news": [
-    {
-     "title": "Rocket Lab Just Unveiled a Game-Changing New Technology Worth Watching",
-     "url": "https://www.fool.com/investing/2026/07/11/rocket-lab-just-unveiled-a-game-changing-new-techn/?source=iedfolrf0000001",
-     "published": "2026-07-11T05:30:00Z",
-     "source": "The Motley Fool",
-     "summary": "Rocket Lab has developed the 'Hungry Hippo,' an innovative hinged fairing design for its upcoming Neutron rocket that remains attached to the first stage during launch and recovery, potentially reducing costs and improving payload capacity. However, the technology remains unproven as Neutron's first",
-     "sentiment": "neutral",
-     "reason": "While the Hungry Hippo technology is genuinely innovative and could provide competitive advantages in rocket reuse economics, the sentiment is neutral rather than positive because the design remains unproven, Neutron's first launch has slipped multiple times to late 2026, the company is unprofitable, and a first-stage tank ruptured during testing earlier in the year. The article emphasizes 'if it works' as the critical uncertainty."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 11159292.225000001,
@@ -126336,7 +126341,7 @@
     "put_vol": 32168,
     "call_oi": 199077,
     "put_oi": 138474,
-    "atm_iv": 0.9449786405820484,
+    "atm_iv": 0.9478617356968649,
     "pcr_vol": 0.6,
     "pcr_oi": 0.7,
     "net_premium": -2555737.9719999935,
@@ -126350,7 +126355,7 @@
       "put_vol": 19754,
       "call_oi": 114093,
       "put_oi": 81419,
-      "atm_iv": 0.9449786405820484
+      "atm_iv": 0.9478617356968649
      },
      {
       "exp": "2026-07-24",
@@ -126360,7 +126365,7 @@
       "put_vol": 2482,
       "call_oi": 10107,
       "put_oi": 12212,
-      "atm_iv": 0.8679466391013038
+      "atm_iv": 0.8690215674202764
      },
      {
       "exp": "2026-07-31",
@@ -126370,7 +126375,7 @@
       "put_vol": 5848,
       "call_oi": 13228,
       "put_oi": 11038,
-      "atm_iv": 0.8853133515571967
+      "atm_iv": 0.8860009196160222
      },
      {
       "exp": "2026-08-07",
@@ -126380,7 +126385,7 @@
       "put_vol": 934,
       "call_oi": 4476,
       "put_oi": 3291,
-      "atm_iv": 0.956107375154038
+      "atm_iv": 0.956648057937326
      },
      {
       "exp": "2026-08-14",
@@ -126390,7 +126395,7 @@
       "put_vol": 1050,
       "call_oi": 1144,
       "put_oi": 1351,
-      "atm_iv": 0.9852417147788126
+      "atm_iv": 0.9856797410217406
      },
      {
       "exp": "2026-08-21",
@@ -126400,7 +126405,7 @@
       "put_vol": 2100,
       "call_oi": 56029,
       "put_oi": 29163,
-      "atm_iv": 0.9452793529129256
+      "atm_iv": 0.9456258949405567
      }
     ],
     "by_strike": [
@@ -126796,11 +126801,16 @@
     "max_pain": 90,
     "max_pain_exp": "2026-07-17",
     "oi_changes": [],
-    "contracts": 802
+    "contracts": 802,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "COIN": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:23:43+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -130450,7 +130460,7 @@
     ],
     [
      1783691100000,
-     163.0,
+     163.78,
      164.02,
      163.0,
      163.0,
@@ -141018,7 +141028,71 @@
      159.8309
     ]
    ],
-   "src_d": "massive",
+   "vwap": 161.64,
+   "ind": {
+    "rsi_d": 47.01,
+    "rsi_m": 62.08,
+    "ema9_m": 159.69,
+    "ema21_m": 159.61
+   },
+   "short": {
+    "short_interest": 24859937,
+    "days_to_cover": 2.97,
+    "avg_daily_volume": 8367215,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 1645630.195539,
+     "total_volume": 2926139.345065,
+     "ratio": 0.562
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 1059202.965976,
+     "total_volume": 1932599.841247,
+     "ratio": 0.548
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 1050535.171474,
+     "total_volume": 1832544.604577,
+     "ratio": 0.573
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 1415835.715586,
+     "total_volume": 2139915.71601,
+     "ratio": 0.662
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 1201103.267954,
+     "total_volume": 2754018.863886,
+     "ratio": 0.436
+    }
+   ],
+   "news": [
+    {
+     "title": "Coinbase CEO Brian Armstrong Has a New Solution to America's $39 Trillion Debt Problem. (Hint: It Involves Bitcoin.)",
+     "url": "https://www.fool.com/investing/2026/07/12/coinbase-solution-trillion-debt-problem-bitcoin/?source=iedfolrf0000001",
+     "published": "2026-07-12T08:32:00Z",
+     "source": "The Motley Fool",
+     "summary": "Coinbase CEO Brian Armstrong proposes backing the U.S. dollar with Bitcoin to address America's $39 trillion federal debt. His plan includes amending the Constitution to require fiat currency be backed by a hard asset with fixed supply, limiting government spending growth, and leveraging AI and robo",
+     "sentiment": "positive",
+     "reason": "As the parent company of Bitcoin and a major cryptocurrency exchange, Coinbase would benefit from increased institutional adoption and legitimacy if Bitcoin becomes a government-backed reserve asset."
+    },
+    {
+     "title": "Cathie Wood Is Buying Coinbase and Circle Stock as the Sell-Off Ramps Up Ahead of the Clarity Act Vote. Here's the Bet.",
+     "url": "https://www.fool.com/investing/2026/07/11/cathie-wood-buy-coinbase-circle-clarity-act-vote/?source=iedfolrf0000001",
+     "published": "2026-07-11T15:03:00Z",
+     "source": "The Motley Fool",
+     "summary": "Cathie Wood's Ark Invest is purchasing shares of Coinbase and Circle ahead of a potential Senate vote on the Clarity Act, a cryptocurrency regulation bill. The act would establish regulatory frameworks between the SEC and CFTC, define mature blockchains, and set rules for stablecoins. While the Hous",
+     "sentiment": "positive",
+     "reason": "Ark Invest is actively buying shares ahead of potential Clarity Act passage, which would provide regulatory clarity and enable traditional finance participation. Clear jurisdictional boundaries would allow easier cryptocurrency offerings on the platform."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -142137,71 +142211,7 @@
      161.327
     ]
    ],
-   "vwap": 161.64,
-   "ind": {
-    "rsi_d": 47.01,
-    "rsi_m": 62.08,
-    "ema9_m": 159.69,
-    "ema21_m": 159.61
-   },
-   "short": {
-    "short_interest": 24859937,
-    "days_to_cover": 2.97,
-    "avg_daily_volume": 8367215,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 1645630.195539,
-     "total_volume": 2926139.345065,
-     "ratio": 0.562
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 1059202.965976,
-     "total_volume": 1932599.841247,
-     "ratio": 0.548
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 1050535.171474,
-     "total_volume": 1832544.604577,
-     "ratio": 0.573
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 1415835.715586,
-     "total_volume": 2139915.71601,
-     "ratio": 0.662
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 1201103.267954,
-     "total_volume": 2754018.863886,
-     "ratio": 0.436
-    }
-   ],
-   "news": [
-    {
-     "title": "Coinbase CEO Brian Armstrong Has a New Solution to America's $39 Trillion Debt Problem. (Hint: It Involves Bitcoin.)",
-     "url": "https://www.fool.com/investing/2026/07/12/coinbase-solution-trillion-debt-problem-bitcoin/?source=iedfolrf0000001",
-     "published": "2026-07-12T08:32:00Z",
-     "source": "The Motley Fool",
-     "summary": "Coinbase CEO Brian Armstrong proposes backing the U.S. dollar with Bitcoin to address America's $39 trillion federal debt. His plan includes amending the Constitution to require fiat currency be backed by a hard asset with fixed supply, limiting government spending growth, and leveraging AI and robo",
-     "sentiment": "positive",
-     "reason": "As the parent company of Bitcoin and a major cryptocurrency exchange, Coinbase would benefit from increased institutional adoption and legitimacy if Bitcoin becomes a government-backed reserve asset."
-    },
-    {
-     "title": "Cathie Wood Is Buying Coinbase and Circle Stock as the Sell-Off Ramps Up Ahead of the Clarity Act Vote. Here's the Bet.",
-     "url": "https://www.fool.com/investing/2026/07/11/cathie-wood-buy-coinbase-circle-clarity-act-vote/?source=iedfolrf0000001",
-     "published": "2026-07-11T15:03:00Z",
-     "source": "The Motley Fool",
-     "summary": "Cathie Wood's Ark Invest is purchasing shares of Coinbase and Circle ahead of a potential Senate vote on the Clarity Act, a cryptocurrency regulation bill. The act would establish regulatory frameworks between the SEC and CFTC, define mature blockchains, and set rules for stablecoins. While the Hous",
-     "sentiment": "positive",
-     "reason": "Ark Invest is actively buying shares ahead of potential Clarity Act passage, which would provide regulatory clarity and enable traditional finance participation. Clear jurisdictional boundaries would allow easier cryptocurrency offerings on the platform."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 33051275.253000002,
@@ -142210,7 +142220,7 @@
     "put_vol": 39809,
     "call_oi": 215092,
     "put_oi": 230857,
-    "atm_iv": 0.7924539621144951,
+    "atm_iv": 0.7948658588400948,
     "pcr_vol": 0.78,
     "pcr_oi": 1.07,
     "net_premium": -1840218.817999985,
@@ -142224,7 +142234,7 @@
       "put_vol": 28858,
       "call_oi": 131432,
       "put_oi": 140482,
-      "atm_iv": 0.7924539621144951
+      "atm_iv": 0.7948658588400948
      },
      {
       "exp": "2026-07-24",
@@ -142234,7 +142244,7 @@
       "put_vol": 2954,
       "call_oi": 10816,
       "put_oi": 15988,
-      "atm_iv": 0.7520574398178028
+      "atm_iv": 0.7529864031594435
      },
      {
       "exp": "2026-07-31",
@@ -142244,7 +142254,7 @@
       "put_vol": 1423,
       "call_oi": 7956,
       "put_oi": 11001,
-      "atm_iv": 0.8174027996712488
+      "atm_iv": 0.8180360259600917
      },
      {
       "exp": "2026-08-07",
@@ -142254,7 +142264,7 @@
       "put_vol": 975,
       "call_oi": 4868,
       "put_oi": 9491,
-      "atm_iv": 0.8258016668271728
+      "atm_iv": 0.8262675408011767
      },
      {
       "exp": "2026-08-14",
@@ -142264,7 +142274,7 @@
       "put_vol": 671,
       "call_oi": 2658,
       "put_oi": 3064,
-      "atm_iv": 0.7607030180534758
+      "atm_iv": 0.7610405102795789
      },
      {
       "exp": "2026-08-21",
@@ -142274,7 +142284,7 @@
       "put_vol": 4928,
       "call_oi": 57362,
       "put_oi": 50831,
-      "atm_iv": 0.7782731093003373
+      "atm_iv": 0.7785576256159474
      }
     ],
     "by_strike": [
@@ -142698,7 +142708,12 @@
     "max_pain": 165,
     "max_pain_exp": "2026-07-17",
     "oi_changes": [],
-    "contracts": 920
+    "contracts": 920,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "FIG": {
