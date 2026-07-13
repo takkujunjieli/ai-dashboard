@@ -1,124 +1,124 @@
 {
- "updated_at": "2026-07-13T16:56:13+00:00",
+ "updated_at": "2026-07-13T16:58:07+00:00",
  "snapshots": {
+  "NFLX": {
+   "price": 74.55,
+   "chg": 1.1799999999999926,
+   "chg_pct": 1.608286765708045,
+   "day_vol": 18805394.0,
+   "prev_close": 73.37
+  },
+  "FIG": {
+   "price": 23.4,
+   "chg": 2.289999999999999,
+   "chg_pct": 10.847939365229745,
+   "day_vol": 14668858.0,
+   "prev_close": 21.11
+  },
+  "RIVN": {
+   "price": 17.245,
+   "chg": -0.23499999999999943,
+   "chg_pct": -1.3443935926773423,
+   "day_vol": 14724633.0,
+   "prev_close": 17.48
+  },
+  "MU": {
+   "price": 931.64,
+   "chg": -47.65999999999997,
+   "chg_pct": -4.866741550086793,
+   "day_vol": 21409689.0,
+   "prev_close": 979.3
+  },
+  "SNDK": {
+   "price": 1697.44,
+   "chg": -218.48000000000002,
+   "chg_pct": -11.403398889306443,
+   "day_vol": 8143723.0,
+   "prev_close": 1915.92
+  },
+  "TSLA": {
+   "price": 393.64,
+   "chg": -14.120000000000005,
+   "chg_pct": -3.4628212674122043,
+   "day_vol": 18666526.0,
+   "prev_close": 407.76
+  },
+  "U": {
+   "price": 30.54,
+   "chg": -0.3500000000000014,
+   "chg_pct": -1.1330527678860518,
+   "day_vol": 2862851.0,
+   "prev_close": 30.89
+  },
+  "HOOD": {
+   "price": 109.9914,
+   "chg": -1.9786000000000001,
+   "chg_pct": -1.7670804679824954,
+   "day_vol": 10245488.0,
+   "prev_close": 111.97
+  },
+  "LITE": {
+   "price": 776.485,
+   "chg": -25.524999999999977,
+   "chg_pct": -3.182628645528108,
+   "day_vol": 2057940.0,
+   "prev_close": 802.01
+  },
   "INTC": {
-   "price": 103.27,
-   "chg": -6.570000000000007,
-   "chg_pct": -5.981427530954122,
-   "day_vol": 49921557.0,
+   "price": 103.43,
+   "chg": -6.409999999999997,
+   "chg_pct": -5.835761107064819,
+   "day_vol": 50240916.0,
    "prev_close": 109.84
   },
-  "SPCX": {
-   "price": 138.98,
-   "chg": -6.320000000000022,
-   "chg_pct": -4.3496214728148805,
-   "day_vol": 43312243.0,
-   "prev_close": 145.3
-  },
   "AAOI": {
-   "price": 110.05,
-   "chg": -9.870000000000005,
-   "chg_pct": -8.230486991327556,
-   "day_vol": 3468254.0,
+   "price": 110.83,
+   "chg": -9.090000000000003,
+   "chg_pct": -7.580053368912611,
+   "day_vol": 3481294.0,
    "prev_close": 119.92
   },
   "KLAR": {
-   "price": 19.41,
-   "chg": -0.21000000000000085,
-   "chg_pct": -1.0703363914373132,
-   "day_vol": 1021297.0,
+   "price": 19.435,
+   "chg": -0.18500000000000227,
+   "chg_pct": -0.9429153924566884,
+   "day_vol": 1024680.0,
    "prev_close": 19.62
   },
-  "RKLB": {
-   "price": 76.54,
-   "chg": -4.5,
-   "chg_pct": -5.552813425468904,
-   "day_vol": 10834332.0,
-   "prev_close": 81.04
-  },
-  "SNDK": {
-   "price": 1691,
-   "chg": -224.92000000000007,
-   "chg_pct": -11.739529834231078,
-   "day_vol": 8103765.0,
-   "prev_close": 1915.92
+  "SPCX": {
+   "price": 139.125,
+   "chg": -6.175000000000011,
+   "chg_pct": -4.249827942188583,
+   "day_vol": 43419257.0,
+   "prev_close": 145.3
   },
   "AMD": {
-   "price": 536.23,
-   "chg": -21.659999999999968,
-   "chg_pct": -3.8824857946907043,
-   "day_vol": 12757650.0,
+   "price": 537.68,
+   "chg": -20.210000000000036,
+   "chg_pct": -3.6225779275484484,
+   "day_vol": 12812551.0,
    "prev_close": 557.89
   },
-  "TSLA": {
-   "price": 393.34,
-   "chg": -14.420000000000016,
-   "chg_pct": -3.536393957229747,
-   "day_vol": 18526933.0,
-   "prev_close": 407.76
-  },
-  "LITE": {
-   "price": 774.685,
-   "chg": -27.325000000000045,
-   "chg_pct": -3.4070647498160924,
-   "day_vol": 2051538.0,
-   "prev_close": 802.01
-  },
-  "FIG": {
-   "price": 23.4364,
-   "chg": 2.3263999999999996,
-   "chg_pct": 11.020369493131216,
-   "day_vol": 14594951.0,
-   "prev_close": 21.11
-  },
-  "MU": {
-   "price": 930.27,
-   "chg": -49.02999999999997,
-   "chg_pct": -5.006637394056977,
-   "day_vol": 21330473.0,
-   "prev_close": 979.3
-  },
-  "HOOD": {
-   "price": 109.88,
-   "chg": -2.0900000000000034,
-   "chg_pct": -1.8665714030543925,
-   "day_vol": 10213630.0,
-   "prev_close": 111.97
-  },
   "COIN": {
-   "price": 156.0151,
-   "chg": -3.0549000000000035,
-   "chg_pct": -1.920475262463069,
-   "day_vol": 2740170.0,
+   "price": 156.3195,
+   "chg": -2.750499999999988,
+   "chg_pct": -1.7291129691330787,
+   "day_vol": 2760392.0,
    "prev_close": 159.07
   },
-  "NFLX": {
-   "price": 74.59,
-   "chg": 1.2199999999999989,
-   "chg_pct": 1.6628049611557842,
-   "day_vol": 18720749.0,
-   "prev_close": 73.37
-  },
-  "RIVN": {
-   "price": 17.225,
-   "chg": -0.254999999999999,
-   "chg_pct": -1.45881006864988,
-   "day_vol": 14612180.0,
-   "prev_close": 17.48
-  },
   "CCL": {
-   "price": 26.92,
-   "chg": 0.09000000000000341,
-   "chg_pct": 0.33544539694373243,
-   "day_vol": 8036363.0,
+   "price": 26.975,
+   "chg": 0.14500000000000313,
+   "chg_pct": 0.5404398061871157,
+   "day_vol": 8066294.0,
    "prev_close": 26.83
   },
-  "U": {
-   "price": 30.5413,
-   "chg": -0.3487000000000009,
-   "chg_pct": -1.1288442861767591,
-   "day_vol": 2830588.0,
-   "prev_close": 30.89
+  "RKLB": {
+   "price": 76.72,
+   "chg": -4.320000000000007,
+   "chg_pct": -5.330700888450156,
+   "day_vol": 10916439.0,
+   "prev_close": 81.04
   }
  },
  "tickers": {
@@ -189047,7 +189047,7 @@
    }
   },
   "KLAR": {
-   "asof": "2026-07-13T16:46:37+00:00",
+   "asof": "2026-07-13T16:58:07+00:00",
    "src_1m": "massive",
    "bars_1m": [
     [
@@ -190921,6 +190921,114 @@
      19.435,
      2530.083392,
      19.4311
+    ],
+    [
+     1783961160000,
+     19.44,
+     19.45,
+     19.44,
+     19.45,
+     1431,
+     19.4429
+    ],
+    [
+     1783961220000,
+     19.45,
+     19.45,
+     19.44,
+     19.44,
+     1278.102907,
+     19.4458
+    ],
+    [
+     1783961280000,
+     19.42,
+     19.42,
+     19.42,
+     19.42,
+     1089,
+     19.4207
+    ],
+    [
+     1783961340000,
+     19.43,
+     19.435,
+     19.42,
+     19.43,
+     1725,
+     19.4294
+    ],
+    [
+     1783961400000,
+     19.425,
+     19.425,
+     19.39,
+     19.39,
+     2499,
+     19.4104
+    ],
+    [
+     1783961460000,
+     19.3995,
+     19.4,
+     19.3995,
+     19.4,
+     1724,
+     19.4012
+    ],
+    [
+     1783961520000,
+     19.4,
+     19.42,
+     19.4,
+     19.42,
+     858,
+     19.4095
+    ],
+    [
+     1783961580000,
+     19.41,
+     19.415,
+     19.4,
+     19.415,
+     1913.06317,
+     19.4093
+    ],
+    [
+     1783961640000,
+     19.41,
+     19.415,
+     19.41,
+     19.415,
+     813,
+     19.4124
+    ],
+    [
+     1783961700000,
+     19.41,
+     19.415,
+     19.41,
+     19.415,
+     1380.042492,
+     19.4116
+    ],
+    [
+     1783961760000,
+     19.41,
+     19.41,
+     19.4,
+     19.4,
+     1622,
+     19.4036
+    ],
+    [
+     1783961820000,
+     19.41,
+     19.415,
+     19.41,
+     19.415,
+     1283.669065,
+     19.411
     ]
    ],
    "src_5m": "massive",
@@ -195970,12 +196078,75 @@
      19.415,
      19.45,
      19.415,
-     19.435,
-     2530.083392,
-     19.4311
+     19.43,
+     8053.186299,
+     19.4338
+    ],
+    [
+     1783961400000,
+     19.425,
+     19.425,
+     19.39,
+     19.415,
+     7807.063169999999,
+     19.4082
+    ],
+    [
+     1783961700000,
+     19.41,
+     19.415,
+     19.4,
+     19.415,
+     4285.7115570000005,
+     19.4084
     ]
    ],
-   "src_d": "massive",
+   "vwap": 19.37,
+   "ind": {
+    "rsi_d": 57.05,
+    "rsi_m": 55.63,
+    "ema9_m": 19.42,
+    "ema21_m": 19.41
+   },
+   "short": {
+    "short_interest": 31353998,
+    "days_to_cover": 6.46,
+    "avg_daily_volume": 4855877,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 348403.864582,
+     "total_volume": 1294754.76132,
+     "ratio": 0.269
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 587892.716494,
+     "total_volume": 1527961.529806,
+     "ratio": 0.385
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 930491.098153,
+     "total_volume": 1877573.730837,
+     "ratio": 0.496
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 472474.105541,
+     "total_volume": 1578457.754763,
+     "ratio": 0.299
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 825185.427008,
+     "total_volume": 1702064.640333,
+     "ratio": 0.485
+    }
+   ],
+   "news": [],
    "bars_d": [
     [
      1768194000000,
@@ -197103,85 +197274,40 @@
      19.3692
     ]
    ],
-   "vwap": 19.37,
-   "ind": {
-    "rsi_d": 57.05,
-    "rsi_m": 55.63,
-    "ema9_m": 19.42,
-    "ema21_m": 19.41
-   },
-   "short": {
-    "short_interest": 31353998,
-    "days_to_cover": 6.46,
-    "avg_daily_volume": 4855877,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 348403.864582,
-     "total_volume": 1294754.76132,
-     "ratio": 0.269
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 587892.716494,
-     "total_volume": 1527961.529806,
-     "ratio": 0.385
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 930491.098153,
-     "total_volume": 1877573.730837,
-     "ratio": 0.496
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 472474.105541,
-     "total_volume": 1578457.754763,
-     "ratio": 0.299
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 825185.427008,
-     "total_volume": 1702064.640333,
-     "ratio": 0.485
-    }
-   ],
-   "news": [],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T16:46:37+00:00",
    "options": {
-    "call_premium": 592277.162,
-    "put_premium": 562477.2259999999,
-    "call_vol": 2923,
+    "call_premium": 594462.2320000001,
+    "put_premium": 562452.2259999999,
+    "call_vol": 2944,
     "put_vol": 5268,
     "call_oi": 23088,
     "put_oi": 12239,
-    "atm_iv": 0.7114001600380617,
-    "pcr_vol": 1.8,
+    "atm_iv": 0.7059291604248669,
+    "pcr_vol": 1.79,
     "pcr_oi": 0.53,
-    "net_premium": 29799.936000000103,
+    "net_premium": 32010.00600000017,
     "pcr_prem": 0.95,
     "by_expiry": [
      {
       "exp": "2026-07-17",
-      "call_premium": 402984.472,
+      "call_premium": 402994.532,
       "put_premium": 24533.486,
-      "call_vol": 1606,
+      "call_vol": 1607,
       "put_vol": 891,
       "call_oi": 8060,
       "put_oi": 4587,
-      "atm_iv": 0.7114001600380617
+      "atm_iv": 0.7059291604248669
      },
      {
       "exp": "2026-07-24",
       "call_premium": 71650.95999999999,
-      "put_premium": 161517.91999999998,
+      "put_premium": 161492.91999999998,
       "call_vol": 498,
       "put_vol": 1502,
       "call_oi": 2554,
       "put_oi": 1524,
-      "atm_iv": 0.6517231959927018
+      "atm_iv": 0.6643372658362237
      },
      {
       "exp": "2026-07-31",
@@ -197191,7 +197317,7 @@
       "put_vol": 220,
       "call_oi": 2226,
       "put_oi": 1263,
-      "atm_iv": 0.6525443781850067
+      "atm_iv": 0.652818914271846
      },
      {
       "exp": "2026-08-07",
@@ -197201,17 +197327,17 @@
       "put_vol": 1576,
       "call_oi": 423,
       "put_oi": 2075,
-      "atm_iv": 0.6663912955319805
+      "atm_iv": 0.6699913912860761
      },
      {
       "exp": "2026-08-14",
-      "call_premium": 16836.03,
+      "call_premium": 19011.039999999997,
       "put_premium": 14519.09,
-      "call_vol": 95,
+      "call_vol": 115,
       "put_vol": 80,
       "call_oi": 270,
       "put_oi": 380,
-      "atm_iv": 0.7562242753834315
+      "atm_iv": 0.7562589352269065
      },
      {
       "exp": "2026-08-21",
@@ -197221,7 +197347,7 @@
       "put_vol": 999,
       "call_oi": 9555,
       "put_oi": 2410,
-      "atm_iv": 0.7689269118718687
+      "atm_iv": 0.7690357567263697
      }
     ],
     "by_strike": [
@@ -197306,35 +197432,35 @@
       "strike": 20.5,
       "call_oi": 1313,
       "put_oi": 1324,
-      "call_vol": 79,
+      "call_vol": 88,
       "put_vol": 536
      },
      {
       "strike": 21,
       "call_oi": 1049,
       "put_oi": 61,
-      "call_vol": 49,
+      "call_vol": 50,
       "put_vol": 30
      },
      {
       "strike": 21.5,
       "call_oi": 540,
       "put_oi": 224,
-      "call_vol": 596,
+      "call_vol": 605,
       "put_vol": 179
      },
      {
       "strike": 22,
       "call_oi": 697,
       "put_oi": 998,
-      "call_vol": 39,
+      "call_vol": 40,
       "put_vol": 854
      },
      {
       "strike": 22.5,
       "call_oi": 871,
       "put_oi": 112,
-      "call_vol": 57,
+      "call_vol": 58,
       "put_vol": 12
      },
      {
@@ -197430,14 +197556,14 @@
     "oi_changes": [],
     "contracts": 366,
     "prem_delta": {
-     "call": 428.94999999995343,
-     "put": 1216.7099999999627,
-     "since": "2026-07-13T16:34:39+00:00"
+     "call": 2185.070000000065,
+     "put": -25.0,
+     "since": "2026-07-13T16:46:37+00:00"
     }
    }
   },
   "NFLX": {
-   "asof": "2026-07-13T16:46:37+00:00",
+   "asof": "2026-07-13T16:58:07+00:00",
    "src_1m": "massive",
    "bars_1m": [
     [
@@ -201363,28 +201489,118 @@
      74.825,
      42921.387923,
      74.8396
+    ],
+    [
+     1783961160000,
+     74.825,
+     74.86,
+     74.79,
+     74.8,
+     65806.875061,
+     74.8301
+    ],
+    [
+     1783961220000,
+     74.7999,
+     74.7999,
+     74.7,
+     74.7,
+     34261.611597,
+     74.7292
+    ],
+    [
+     1783961280000,
+     74.695,
+     74.7299,
+     74.695,
+     74.715,
+     29465.855383,
+     74.7162
+    ],
+    [
+     1783961340000,
+     74.715,
+     74.73,
+     74.705,
+     74.73,
+     39712.99308,
+     74.7192
+    ],
+    [
+     1783961400000,
+     74.73,
+     74.74,
+     74.68,
+     74.685,
+     42423.44663,
+     74.7125
+    ],
+    [
+     1783961460000,
+     74.69,
+     74.695,
+     74.65,
+     74.655,
+     31931.728886,
+     74.6697
+    ],
+    [
+     1783961520000,
+     74.655,
+     74.6587,
+     74.59,
+     74.605,
+     46955.207946,
+     74.6291
+    ],
+    [
+     1783961580000,
+     74.605,
+     74.61,
+     74.58,
+     74.595,
+     18729.603056,
+     74.6088
+    ],
+    [
+     1783961640000,
+     74.59,
+     74.59,
+     74.55,
+     74.55,
+     47119.604607,
+     74.5657
+    ],
+    [
+     1783961700000,
+     74.555,
+     74.61,
+     74.555,
+     74.59,
+     42922.131759,
+     74.5818
+    ],
+    [
+     1783961760000,
+     74.59,
+     74.625,
+     74.57,
+     74.59,
+     47770.819176,
+     74.5916
+    ],
+    [
+     1783961820000,
+     74.595,
+     74.595,
+     74.5499,
+     74.565,
+     37211.47193,
+     74.5775
     ]
    ],
    "src_5m": "massive",
    "bars_5m": [
-    [
-     1783431300000,
-     77.0801,
-     77.16,
-     76.56,
-     77.08,
-     603519.898952,
-     76.9363
-    ],
-    [
-     1783431600000,
-     77.08,
-     77.33,
-     76.91,
-     77.02,
-     496197.444041,
-     77.1013
-    ],
     [
      1783431900000,
      77,
@@ -208562,13 +208778,113 @@
      1783961100000,
      74.82,
      74.865,
-     74.81,
-     74.825,
-     42921.387923,
-     74.8396
+     74.695,
+     74.73,
+     212168.72304399998,
+     74.7792
+    ],
+    [
+     1783961400000,
+     74.73,
+     74.74,
+     74.55,
+     74.55,
+     187159.59112499998,
+     74.6369
+    ],
+    [
+     1783961700000,
+     74.555,
+     74.625,
+     74.5499,
+     74.565,
+     127904.422865,
+     74.5842
     ]
    ],
-   "src_d": "massive",
+   "vwap": 74.89,
+   "ind": {
+    "rsi_d": 42.58,
+    "rsi_m": 52.22,
+    "ema9_m": 74.86,
+    "ema21_m": 74.82
+   },
+   "short": {
+    "short_interest": 104117446,
+    "days_to_cover": 1.76,
+    "avg_daily_volume": 59183633,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 6676254.287074,
+     "total_volume": 23384420.803121,
+     "ratio": 0.286
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 4626797.154225,
+     "total_volume": 13482266.137473,
+     "ratio": 0.343
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 3662807.799579,
+     "total_volume": 13133826.987602,
+     "ratio": 0.279
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 5209725.648338,
+     "total_volume": 14357730.307954,
+     "ratio": 0.363
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 7702472.961747,
+     "total_volume": 16553846.426097,
+     "ratio": 0.465
+    }
+   ],
+   "news": [
+    {
+     "title": "Netflix Is Down 43% From Its Most Recent High. History Says This May Happen Next",
+     "url": "https://www.fool.com/investing/2026/07/13/netflix-is-down-43-from-its-most-recent-high-histo/?source=iedfolrf0000001",
+     "published": "2026-07-13T13:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Netflix stock has declined 43% from its recent high amid poor guidance, leadership changes, and low subscriber engagement. Historical precedent suggests the stock could either bottom out around 40% decline (as in 2018) or drop significantly further like the 70% decline in 2021-2022. However, the com",
+     "sentiment": "neutral",
+     "reason": "Stock faces near-term headwinds from low engagement and competitive pressures that could drive further declines, but long-term outlook is positive due to new growth initiatives (live TV, sports) and historical recovery patterns. Author recommends buying on the dip for long-term investors."
+    },
+    {
+     "title": "In 7 Words, Kevin Warsh Just Sent the Clearest Signal Yet About Where Interest Rates Are Headed in 2026",
+     "url": "https://www.fool.com/investing/2026/07/13/in-7-words-kevin-warsh-just-sent-the-clearest-sign/?source=iedfolrf0000001",
+     "published": "2026-07-13T12:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "Federal Reserve Chair Kevin Warsh signaled a hawkish stance on inflation at a recent Central Banking forum, stating 'prices are too high.' This comment has led markets to price in a 52% probability of a quarter-point rate increase in September 2026, with another expected in March 2027. Despite initi",
+     "sentiment": "neutral",
+     "reason": "Mentioned only in a 'Read Next' promotional section unrelated to the main article content; no substantive analysis provided."
+    },
+    {
+     "title": "Netflix Might Be Ready to Buy Something Again, but It's Not What You Think",
+     "url": "https://www.fool.com/investing/2026/07/12/netflix-might-be-ready-to-buy-something-again-but/?source=iedfolrf0000001",
+     "published": "2026-07-12T10:07:00Z",
+     "source": "The Motley Fool",
+     "summary": "Netflix is reportedly bidding for Letterboxd, a film-review platform with 30 million users, in a deal valued around $250 million. This represents Netflix's shift toward smaller, strategic acquisitions rather than major deals. The move comes as Netflix stock has fallen 41% over the past year amid inv",
+     "sentiment": "negative",
+     "reason": "Stock has declined 41% over the past year with disappointing quarterly results and guidance. The company faces a confidence crisis with investors, experiencing stock declines both when pursuing acquisitions and when being outbid. However, the smaller strategic acquisition approach shows some positive strategic direction."
+    },
+    {
+     "title": "3 Reasons Why Netflix Has a Lot to Prove on July 16",
+     "url": "https://www.fool.com/investing/2026/07/12/3-reasons-why-netflix-has-a-lot-to-prove-july-16/?source=iedfolrf0000001",
+     "published": "2026-07-12T08:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "Netflix faces significant pressure ahead of its Q2 2026 earnings report on July 16. With stock down nearly 20% in 2026 and 40% over the past year, investors are seeking reassurance on three key fronts: whether content costs remain under control, clarity on the company's acquisition strategy, and evi",
+     "sentiment": "negative",
+     "reason": "Stock has declined nearly 20% in 2026 and 40% over the past 12 months. Investors are concerned about rising content costs, unclear acquisition strategy, and the company's ability to reverse recent losses. The upcoming earnings report is positioned as a critical test of whether Netflix can stabilize."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -209696,165 +210012,90 @@
      74.8929
     ]
    ],
-   "vwap": 74.9,
-   "ind": {
-    "rsi_d": 42.58,
-    "rsi_m": 52.22,
-    "ema9_m": 74.86,
-    "ema21_m": 74.82
-   },
-   "short": {
-    "short_interest": 104117446,
-    "days_to_cover": 1.76,
-    "avg_daily_volume": 59183633,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 6676254.287074,
-     "total_volume": 23384420.803121,
-     "ratio": 0.286
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 4626797.154225,
-     "total_volume": 13482266.137473,
-     "ratio": 0.343
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 3662807.799579,
-     "total_volume": 13133826.987602,
-     "ratio": 0.279
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 5209725.648338,
-     "total_volume": 14357730.307954,
-     "ratio": 0.363
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 7702472.961747,
-     "total_volume": 16553846.426097,
-     "ratio": 0.465
-    }
-   ],
-   "news": [
-    {
-     "title": "Netflix Is Down 43% From Its Most Recent High. History Says This May Happen Next",
-     "url": "https://www.fool.com/investing/2026/07/13/netflix-is-down-43-from-its-most-recent-high-histo/?source=iedfolrf0000001",
-     "published": "2026-07-13T13:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Netflix stock has declined 43% from its recent high amid poor guidance, leadership changes, and low subscriber engagement. Historical precedent suggests the stock could either bottom out around 40% decline (as in 2018) or drop significantly further like the 70% decline in 2021-2022. However, the com",
-     "sentiment": "neutral",
-     "reason": "Stock faces near-term headwinds from low engagement and competitive pressures that could drive further declines, but long-term outlook is positive due to new growth initiatives (live TV, sports) and historical recovery patterns. Author recommends buying on the dip for long-term investors."
-    },
-    {
-     "title": "In 7 Words, Kevin Warsh Just Sent the Clearest Signal Yet About Where Interest Rates Are Headed in 2026",
-     "url": "https://www.fool.com/investing/2026/07/13/in-7-words-kevin-warsh-just-sent-the-clearest-sign/?source=iedfolrf0000001",
-     "published": "2026-07-13T12:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "Federal Reserve Chair Kevin Warsh signaled a hawkish stance on inflation at a recent Central Banking forum, stating 'prices are too high.' This comment has led markets to price in a 52% probability of a quarter-point rate increase in September 2026, with another expected in March 2027. Despite initi",
-     "sentiment": "neutral",
-     "reason": "Mentioned only in a 'Read Next' promotional section unrelated to the main article content; no substantive analysis provided."
-    },
-    {
-     "title": "Netflix Might Be Ready to Buy Something Again, but It's Not What You Think",
-     "url": "https://www.fool.com/investing/2026/07/12/netflix-might-be-ready-to-buy-something-again-but/?source=iedfolrf0000001",
-     "published": "2026-07-12T10:07:00Z",
-     "source": "The Motley Fool",
-     "summary": "Netflix is reportedly bidding for Letterboxd, a film-review platform with 30 million users, in a deal valued around $250 million. This represents Netflix's shift toward smaller, strategic acquisitions rather than major deals. The move comes as Netflix stock has fallen 41% over the past year amid inv",
-     "sentiment": "negative",
-     "reason": "Stock has declined 41% over the past year with disappointing quarterly results and guidance. The company faces a confidence crisis with investors, experiencing stock declines both when pursuing acquisitions and when being outbid. However, the smaller strategic acquisition approach shows some positive strategic direction."
-    },
-    {
-     "title": "3 Reasons Why Netflix Has a Lot to Prove on July 16",
-     "url": "https://www.fool.com/investing/2026/07/12/3-reasons-why-netflix-has-a-lot-to-prove-july-16/?source=iedfolrf0000001",
-     "published": "2026-07-12T08:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "Netflix faces significant pressure ahead of its Q2 2026 earnings report on July 16. With stock down nearly 20% in 2026 and 40% over the past year, investors are seeking reassurance on three key fronts: whether content costs remain under control, clarity on the company's acquisition strategy, and evi",
-     "sentiment": "negative",
-     "reason": "Stock has declined nearly 20% in 2026 and 40% over the past 12 months. Investors are concerned about rising content costs, unclear acquisition strategy, and the company's ability to reverse recent losses. The upcoming earnings report is positioned as a critical test of whether Netflix can stabilize."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T16:46:37+00:00",
    "options": {
-    "call_premium": 28613152.012999985,
-    "put_premium": 19037281.841000002,
-    "call_vol": 133853,
-    "put_vol": 54764,
+    "call_premium": 28967771.668999985,
+    "put_premium": 19396122.076999996,
+    "call_vol": 135909,
+    "put_vol": 56691,
     "call_oi": 1122795,
     "put_oi": 627224,
-    "atm_iv": 0.9326565386493989,
-    "pcr_vol": 0.41,
+    "atm_iv": 0.9298406359464615,
+    "pcr_vol": 0.42,
     "pcr_oi": 0.56,
-    "net_premium": 9575870.171999983,
+    "net_premium": 9571649.591999989,
     "pcr_prem": 0.67,
     "by_expiry": [
      {
       "exp": "2026-07-17",
-      "call_premium": 13534999.538999995,
-      "put_premium": 11414411.528,
-      "call_vol": 71428,
-      "put_vol": 40060,
+      "call_premium": 13729168.656999996,
+      "put_premium": 11598579.304,
+      "call_vol": 72706,
+      "put_vol": 40847,
       "call_oi": 597448,
       "put_oi": 276954,
-      "atm_iv": 0.9326565386493989
+      "atm_iv": 0.9298406359464615
      },
      {
       "exp": "2026-07-24",
-      "call_premium": 5707757.245000001,
-      "put_premium": 1094541.848,
-      "call_vol": 23242,
-      "put_vol": 4199,
+      "call_premium": 5769030.0550000025,
+      "put_premium": 1163938.448,
+      "call_vol": 23664,
+      "put_vol": 5244,
       "call_oi": 69057,
       "put_oi": 23307,
-      "atm_iv": 0.6391711414741014
+      "atm_iv": 0.6412121431016624
      },
      {
       "exp": "2026-07-31",
-      "call_premium": 1727198.34,
-      "put_premium": 1339573.94,
-      "call_vol": 8086,
-      "put_vol": 2578,
+      "call_premium": 1758244.61,
+      "put_premium": 1350991.88,
+      "call_vol": 8233,
+      "put_vol": 2521,
       "call_oi": 48610,
       "put_oi": 52793,
-      "atm_iv": 0.5552731768665102
+      "atm_iv": 0.5563889056236443
      },
      {
       "exp": "2026-08-07",
-      "call_premium": 2210138.7720000003,
-      "put_premium": 535978.0989999999,
-      "call_vol": 7425,
-      "put_vol": 2041,
+      "call_premium": 2220658.852,
+      "put_premium": 584188.419,
+      "call_vol": 7457,
+      "put_vol": 2097,
       "call_oi": 10385,
       "put_oi": 7971,
-      "atm_iv": 0.5169894073090686
+      "atm_iv": 0.5124623344356466
      },
      {
       "exp": "2026-08-14",
-      "call_premium": 716300.42,
-      "put_premium": 263395.53,
-      "call_vol": 6412,
-      "put_vol": 548,
+      "call_premium": 724674.0400000002,
+      "put_premium": 266222.5,
+      "call_vol": 6464,
+      "put_vol": 556,
       "call_oi": 6805,
       "put_oi": 2097,
-      "atm_iv": 0.49028473755888957
+      "atm_iv": 0.48818227472412795
      },
      {
       "exp": "2026-08-21",
-      "call_premium": 4716757.697000001,
-      "put_premium": 4389380.896000001,
-      "call_vol": 17260,
-      "put_vol": 5338,
+      "call_premium": 4765995.455000002,
+      "put_premium": 4432201.526000001,
+      "call_vol": 17385,
+      "put_vol": 5426,
       "call_oi": 390490,
       "put_oi": 264102,
-      "atm_iv": 0.46605867289999336
+      "atm_iv": 0.46717151125646195
      }
     ],
     "by_strike": [
+     {
+      "strike": 56,
+      "call_oi": 142,
+      "put_oi": 861,
+      "call_vol": 40,
+      "put_vol": 30
+     },
      {
       "strike": 58,
       "call_oi": 7,
@@ -209867,14 +210108,14 @@
       "call_oi": 892,
       "put_oi": 28291,
       "call_vol": 18,
-      "put_vol": 896
+      "put_vol": 906
      },
      {
       "strike": 61,
       "call_oi": 259,
       "put_oi": 2357,
       "call_vol": 292,
-      "put_vol": 446
+      "put_vol": 351
      },
      {
       "strike": 62,
@@ -209901,183 +210142,183 @@
       "strike": 65,
       "call_oi": 1077,
       "put_oi": 38171,
-      "call_vol": 74,
-      "put_vol": 1654
+      "call_vol": 78,
+      "put_vol": 2214
      },
      {
       "strike": 66,
       "call_oi": 245,
       "put_oi": 7322,
-      "call_vol": 73,
-      "put_vol": 1529
+      "call_vol": 76,
+      "put_vol": 1559
      },
      {
       "strike": 67,
       "call_oi": 447,
       "put_oi": 13246,
-      "call_vol": 184,
-      "put_vol": 1384
+      "call_vol": 185,
+      "put_vol": 1418
      },
      {
       "strike": 68,
       "call_oi": 278,
       "put_oi": 12457,
       "call_vol": 139,
-      "put_vol": 2189
+      "put_vol": 3083
      },
      {
       "strike": 69,
       "call_oi": 483,
       "put_oi": 5316,
       "call_vol": 323,
-      "put_vol": 1636
+      "put_vol": 1649
      },
      {
       "strike": 70,
       "call_oi": 11711,
       "put_oi": 58674,
-      "call_vol": 3132,
-      "put_vol": 5589
+      "call_vol": 3147,
+      "put_vol": 5636
      },
      {
       "strike": 71,
       "call_oi": 1122,
       "put_oi": 8054,
-      "call_vol": 350,
-      "put_vol": 990
+      "call_vol": 360,
+      "put_vol": 1033
      },
      {
       "strike": 72,
       "call_oi": 4393,
       "put_oi": 20472,
-      "call_vol": 625,
-      "put_vol": 1371
+      "call_vol": 626,
+      "put_vol": 1414
      },
      {
       "strike": 73,
       "call_oi": 7738,
       "put_oi": 55639,
-      "call_vol": 2084,
-      "put_vol": 1929
+      "call_vol": 2107,
+      "put_vol": 1941
      },
      {
       "strike": 74,
       "call_oi": 18863,
       "put_oi": 7285,
-      "call_vol": 2971,
-      "put_vol": 2640
+      "call_vol": 2991,
+      "put_vol": 2668
      },
      {
       "strike": 75,
       "call_oi": 35286,
       "put_oi": 76135,
-      "call_vol": 13650,
-      "put_vol": 22066
+      "call_vol": 13978,
+      "put_vol": 22116
      },
      {
       "strike": 76,
       "call_oi": 20960,
       "put_oi": 9249,
-      "call_vol": 11019,
-      "put_vol": 819
+      "call_vol": 11125,
+      "put_vol": 826
      },
      {
       "strike": 77,
       "call_oi": 15032,
       "put_oi": 5671,
-      "call_vol": 5799,
-      "put_vol": 863
+      "call_vol": 5904,
+      "put_vol": 872
      },
      {
       "strike": 78,
       "call_oi": 13978,
       "put_oi": 4029,
-      "call_vol": 9628,
-      "put_vol": 471
+      "call_vol": 9758,
+      "put_vol": 480
      },
      {
       "strike": 79,
       "call_oi": 13134,
       "put_oi": 3667,
-      "call_vol": 2820,
-      "put_vol": 222
+      "call_vol": 3002,
+      "put_vol": 234
      },
      {
       "strike": 80,
       "call_oi": 74339,
       "put_oi": 52039,
-      "call_vol": 16707,
-      "put_vol": 1150
+      "call_vol": 17094,
+      "put_vol": 1151
      },
      {
       "strike": 81,
       "call_oi": 8506,
       "put_oi": 4194,
-      "call_vol": 2908,
+      "call_vol": 2958,
       "put_vol": 120
      },
      {
       "strike": 82,
       "call_oi": 14369,
       "put_oi": 2478,
-      "call_vol": 3529,
-      "put_vol": 118
+      "call_vol": 3572,
+      "put_vol": 131
      },
      {
       "strike": 83,
       "call_oi": 11065,
       "put_oi": 3183,
-      "call_vol": 2953,
-      "put_vol": 53
+      "call_vol": 2992,
+      "put_vol": 54
      },
      {
       "strike": 84,
       "call_oi": 12383,
       "put_oi": 2611,
-      "call_vol": 2093,
-      "put_vol": 66
+      "call_vol": 2152,
+      "put_vol": 106
      },
      {
       "strike": 85,
       "call_oi": 54480,
       "put_oi": 25987,
-      "call_vol": 8771,
-      "put_vol": 1170
+      "call_vol": 8931,
+      "put_vol": 1348
      },
      {
       "strike": 86,
       "call_oi": 9745,
       "put_oi": 3660,
-      "call_vol": 1795,
-      "put_vol": 74
+      "call_vol": 1801,
+      "put_vol": 78
      },
      {
       "strike": 87,
       "call_oi": 10026,
       "put_oi": 3835,
-      "call_vol": 1452,
+      "call_vol": 1453,
       "put_vol": 33
      },
      {
       "strike": 88,
       "call_oi": 11155,
       "put_oi": 3434,
-      "call_vol": 1256,
+      "call_vol": 1295,
       "put_vol": 49
      },
      {
       "strike": 89,
       "call_oi": 3774,
       "put_oi": 1311,
-      "call_vol": 1250,
+      "call_vol": 1270,
       "put_vol": 123
      },
      {
       "strike": 90,
       "call_oi": 100581,
       "put_oi": 26347,
-      "call_vol": 8318,
-      "put_vol": 583
+      "call_vol": 8514,
+      "put_vol": 584
      },
      {
       "strike": 91,
@@ -210090,14 +210331,14 @@
       "strike": 92,
       "call_oi": 4144,
       "put_oi": 995,
-      "call_vol": 250,
+      "call_vol": 252,
       "put_vol": 9
      },
      {
       "strike": 93,
       "call_oi": 3616,
       "put_oi": 1090,
-      "call_vol": 3352,
+      "call_vol": 3353,
       "put_vol": 26
      }
     ],
@@ -210106,65 +210347,65 @@
       "exp": "2026-07-17",
       "strike": 75,
       "side": "put",
-      "vol": 21255,
+      "vol": 21266,
       "oi": 59042,
-      "premium": 6164375.1
+      "premium": 6167990.64
      },
      {
       "exp": "2026-07-17",
       "strike": 80,
       "side": "call",
-      "vol": 9869,
+      "vol": 10082,
       "oi": 37577,
-      "premium": 1300931.58
+      "premium": 1326892.02
      },
      {
       "exp": "2026-07-17",
       "strike": 75,
       "side": "call",
-      "vol": 7816,
+      "vol": 8075,
       "oi": 22482,
-      "premium": 2366997.44
+      "premium": 2443010.5
      },
      {
       "exp": "2026-08-21",
       "strike": 78,
       "side": "call",
-      "vol": 5979,
+      "vol": 6034,
       "oi": 3271,
-      "premium": 1957285.44
+      "premium": 1975652.2799999998
      },
      {
       "exp": "2026-07-17",
       "strike": 85,
       "side": "call",
-      "vol": 5648,
+      "vol": 5733,
       "oi": 34107,
-      "premium": 288782.24
+      "premium": 292669.64999999997
      },
      {
       "exp": "2026-07-17",
       "strike": 90,
       "side": "call",
-      "vol": 5435,
+      "vol": 5517,
       "oi": 64167,
-      "premium": 114515.45000000001
+      "premium": 116022.51
      },
      {
       "exp": "2026-07-17",
       "strike": 76,
       "side": "call",
-      "vol": 5005,
+      "vol": 5024,
       "oi": 10148,
-      "premium": 1309508.2
+      "premium": 1314177.9200000002
      },
      {
       "exp": "2026-07-17",
       "strike": 100,
       "side": "call",
-      "vol": 4829,
+      "vol": 4918,
       "oi": 47770,
-      "premium": 33508.431
+      "premium": 34012.888
      }
     ],
     "max_pain": 80,
@@ -210172,9 +210413,9 @@
     "oi_changes": [],
     "contracts": 762,
     "prem_delta": {
-     "call": 1367594.1569999643,
-     "put": 261164.48000001162,
-     "since": "2026-07-13T16:34:39+00:00"
+     "call": 354619.6559999995,
+     "put": 358840.235999994,
+     "since": "2026-07-13T16:46:37+00:00"
     }
    }
   }
