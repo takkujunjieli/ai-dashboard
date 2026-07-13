@@ -1,13 +1,14 @@
 /* 交易台 — 单票工作台:K线主图 + 共享价格轴行权价梯 + 期权面板 + 采集控制
    图表库: TradingView lightweight-charts v4(CDN,全局 LightweightCharts) */
 import {
-  $, esc, fmtDT, fmtMoney, fmtNum, REPO, loadFreshJSON, getPat, setPat, ghHeaders,
+  $, esc, fmtDT, fmtMoney, fmtNum, REPO, loadJSON, loadFreshJSON, getPat, setPat, ghHeaders,
 } from "./shared.js";
 
 const LWC = window.LightweightCharts;
 const ET = "America/New_York";
 
 let RESEARCH = null, GEX = null, GEXH = null;
+let CFG = { watchlist: [], deep: [] };  // 标的分组,来自 config/tickers.json,卡片开关就地编辑
 let SYM = localStorage.getItem("wbSym") || null;
 let TF = localStorage.getItem("wbTf") || "5m";
 let ladderMode = "gex";
@@ -230,24 +231,46 @@ function renderLadder() {
   svg.innerHTML = parts.join("");
 }
 
-/* ---------- 迷你行情卡(切票器) ---------- */
+/* ---------- 迷你行情卡(切票器 + 分组开关 + 增删) ---------- */
+const isDeep = (s) => CFG.deep.includes(s);
+
 function renderMiniCards() {
-  const syms = Object.keys(RESEARCH?.tickers || {});
-  if (!SYM || !syms.includes(SYM)) SYM = syms[0] || null;
-  $("mini-cards").innerHTML = syms.map((s) => {
+  const syms = CFG.watchlist.length ? CFG.watchlist : Object.keys(RESEARCH?.tickers || {});
+  const deepSyms = syms.filter(isDeep);
+  if (!SYM || !syms.includes(SYM)) SYM = deepSyms[0] || syms[0] || null;
+  const cards = syms.map((s) => {
     const snap = RESEARCH?.snapshots?.[s] || {};
     const price = snap.price ?? lastClose(s);
     const pct = snap.chg_pct;
-    return `<div class="quote-card mini-card ${s === SYM ? "active" : ""}" data-sym="${esc(s)}">
-      <div class="sym">${esc(s)}</div>
-      <div class="price">${price != null ? Number(price).toFixed(2) : "—"}</div>
-      <div class="chg ${(pct ?? 0) >= 0 ? "up" : "down"}">${pct != null ? ((pct >= 0 ? "+" : "") + pct.toFixed(2) + "%") : ""}</div>
+    const deep = isDeep(s);
+    return `<div class="quote-card mini-card ${s === SYM ? "active" : ""} ${deep ? "" : "wl-only"}" data-act="pick" data-sym="${esc(s)}">
+      <div class="mc-main">
+        <div class="sym">${esc(s)}</div>
+        <div class="price">${price != null ? Number(price).toFixed(2) : "—"}</div>
+        <div class="chg ${(pct ?? 0) >= 0 ? "up" : "down"}">${pct != null ? ((pct >= 0 ? "+" : "") + pct.toFixed(2) + "%") : ""}</div>
+      </div>
+      <div class="mc-side">
+        <div class="mc-grp">
+          <button class="${deep ? "on" : ""}" data-act="deep" data-sym="${esc(s)}" title="深度组:K线/期权/GEX/指标">深</button>
+          <button class="${deep ? "" : "on"}" data-act="wl" data-sym="${esc(s)}" title="仅行情/新闻">行</button>
+        </div>
+        <button class="mc-del" data-act="del" data-sym="${esc(s)}" title="从列表移除">✕</button>
+      </div>
     </div>`;
-  }).join("") || `<div class="empty">暂无数据 — 先启动一次采集</div>`;
+  }).join("");
+  const adder = `<div class="quote-card mini-card mc-add">
+    <input id="mc-add-input" placeholder="+ 代码" maxlength="6" autocomplete="off">
+  </div>`;
+  $("mini-cards").innerHTML = syms.length ? cards + adder : adder;
+  updateCfgStatus();
 }
 
 /* ---------- 指标栏 ---------- */
 function renderStats() {
+  if (SYM && CFG.watchlist.length && !isDeep(SYM)) {
+    $("wb-stats").innerHTML = `<span class="muted">${esc(SYM)} 在「仅行情」组,无深度数据 — 点卡片上的「深」加入深度组</span>`;
+    return;
+  }
   const d = researchOf(SYM);
   const o = d.options || {};
   const g = gexBucketData(SYM) || {};
@@ -337,42 +360,48 @@ function renderErrors() {
     ? `<details><summary>⚠️ ${msgs.length} 条数据源提示</summary><ul>${msgs.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></details>` : "";
 }
 
-/* ---------- 标的配置(读写仓库 config/tickers.json) ---------- */
-const parseTickers = (s) => [...new Set((s || "").toUpperCase().split(/[\s,]+/).filter(Boolean))];
+/* ---------- 标的分组(卡片开关直接改 CFG,防抖写回仓库) ---------- */
+let cfgStatus = "";
+let saveTimer = null;
 
-async function initTickerConfig() {
+function updateCfgStatus() {
+  const el = $("cfg-status");
+  if (el) el.innerHTML = cfgStatus;
+}
+
+async function loadCfg() {
   const cfg = await loadJSON("config/tickers.json") || {};
-  $("cfg-watchlist").value = (cfg.watchlist || []).join(", ");
-  $("cfg-deep").value = (cfg.deep || cfg.watchlist || []).join(", ");
+  CFG.watchlist = [...(cfg.watchlist || [])];
+  CFG.deep = (cfg.deep || cfg.watchlist || []).filter((t) => CFG.watchlist.includes(t));
+}
 
-  $("cfg-save-btn").addEventListener("click", async () => {
-    const pat = getPat() || $("gex-pat").value.trim();
-    if (!pat) { $("cfg-status").textContent = "⚠️ 需要 PAT(含 Contents 读写)"; return; }
-    const watchlist = parseTickers($("cfg-watchlist").value);
-    let deep = parseTickers($("cfg-deep").value).filter((t) => watchlist.includes(t));
-    if (!watchlist.length) { $("cfg-status").textContent = "⚠️ Watchlist 不能为空"; return; }
-    if (!deep.length) deep = watchlist;
-    const body = {
-      "_说明": "标的配置的唯一来源,由交易台「标的配置」面板编辑。",
-      watchlist, deep,
-    };
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(body, null, 2) + "\n")));
-    $("cfg-status").textContent = "保存中…";
-    try {
-      // 取当前文件 sha(更新需要)
-      const meta = await fetch(`https://api.github.com/repos/${REPO}/contents/config/tickers.json`,
-        { headers: ghHeaders(pat) });
-      const sha = meta.ok ? (await meta.json()).sha : undefined;
-      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/config/tickers.json`, {
-        method: "PUT", headers: ghHeaders(pat),
-        body: JSON.stringify({ message: "chore: UI 更新标的配置", content, sha, branch: "main" }),
-      });
-      if (!r.ok) throw new Error(`HTTP ${r.status}: ${(await r.json())?.message || ""}`);
-      $("cfg-status").innerHTML = `✅ 已保存(watchlist ${watchlist.length} · deep ${deep.length})。点采集「▶ 启动」按新配置抓取。`;
-    } catch (e) {
-      $("cfg-status").textContent = `❌ 保存失败: ${e.message}(PAT 需含 Contents 读写权限)`;
-    }
-  });
+function scheduleSave() {
+  cfgStatus = "待保存…"; updateCfgStatus();
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveCfg, 1500);  // 防抖:连续切换合并成一次提交
+}
+
+async function saveCfg() {
+  const pat = getPat() || $("gex-pat").value.trim();
+  const watchlist = [...new Set(CFG.watchlist)];
+  const deep = [...new Set(CFG.deep)].filter((t) => watchlist.includes(t));
+  if (!pat) { cfgStatus = "⚠️ 分组改动未保存 — 到采集控制处填 PAT(需含 Contents 读写)"; updateCfgStatus(); return; }
+  const body = { "_说明": "标的配置的唯一来源,由交易台迷你卡片上的 深/行 开关与增删编辑。", watchlist, deep };
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(body, null, 2) + "\n")));
+  cfgStatus = "保存中…"; updateCfgStatus();
+  try {
+    const meta = await fetch(`https://api.github.com/repos/${REPO}/contents/config/tickers.json`, { headers: ghHeaders(pat) });
+    const sha = meta.ok ? (await meta.json()).sha : undefined;
+    const r = await fetch(`https://api.github.com/repos/${REPO}/contents/config/tickers.json`, {
+      method: "PUT", headers: ghHeaders(pat),
+      body: JSON.stringify({ message: "chore: UI 更新标的分组", content, sha, branch: "main" }),
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}: ${(await r.json())?.message || ""}`);
+    cfgStatus = `✅ 已保存(全集 ${watchlist.length} · 深度 ${deep.length})`;
+  } catch (e) {
+    cfgStatus = `❌ 保存失败: ${esc(e.message)}(PAT 需含 Contents 读写)`;
+  }
+  updateCfgStatus();
 }
 
 /* ---------- 采集控制(GitHub Actions API) ---------- */
@@ -483,11 +512,29 @@ function startPolling() {
 /* ---------- 交互绑定 ---------- */
 function initToolbar() {
   $("mini-cards").addEventListener("click", (ev) => {
-    const card = ev.target.closest(".mini-card");
-    if (!card) return;
-    SYM = card.dataset.sym;
-    localStorage.setItem("wbSym", SYM);
-    renderAll();
+    const btn = ev.target.closest("[data-act]");
+    if (!btn) return;
+    const { act, sym } = btn.dataset;
+    if (act === "pick") {
+      SYM = sym; localStorage.setItem("wbSym", SYM); renderAll();
+    } else if (act === "deep") {
+      if (!CFG.deep.includes(sym)) CFG.deep.push(sym);
+      scheduleSave(); renderMiniCards(); renderAll();
+    } else if (act === "wl") {
+      CFG.deep = CFG.deep.filter((x) => x !== sym);
+      scheduleSave(); renderMiniCards(); renderAll();
+    } else if (act === "del") {
+      CFG.watchlist = CFG.watchlist.filter((x) => x !== sym);
+      CFG.deep = CFG.deep.filter((x) => x !== sym);
+      if (SYM === sym) SYM = null;
+      scheduleSave(); renderMiniCards(); renderAll();
+    }
+  });
+  // 末尾添加框:回车加入 watchlist(默认仅行情,想深度再点「深」)
+  $("mini-cards").addEventListener("keydown", (ev) => {
+    if (ev.target.id !== "mc-add-input" || ev.key !== "Enter") return;
+    const t = ev.target.value.trim().toUpperCase();
+    if (t && !CFG.watchlist.includes(t)) { CFG.watchlist.push(t); scheduleSave(); renderMiniCards(); }
   });
   $("tf-chips").addEventListener("click", (ev) => {
     const btn = ev.target.closest("button");
@@ -525,8 +572,8 @@ function initToolbar() {
   initCharts();
   initToolbar();
   initControls();
-  initTickerConfig();
   [...$("tf-chips").children].forEach((b) => b.classList.toggle("active", b.dataset.tf === TF));
+  await loadCfg();       // 标的分组只在启动时载入,避免轮询覆盖未保存的改动
   await loadData();
   renderAll();
   refreshRunStatus();
