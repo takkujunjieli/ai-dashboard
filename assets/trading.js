@@ -298,6 +298,12 @@ async function refreshRunStatus() {
 
 function initControls() {
   $("gex-pat").value = getPat();
+  // 粘贴/修改 PAT 即保存(仅本机 localStorage)并开启 60 秒自动轮询
+  $("gex-pat").addEventListener("change", () => {
+    setPat($("gex-pat").value.trim());
+    if (getPat()) { startPolling(); refreshData(); }
+    else if (pollTimer) { clearInterval(pollTimer); pollTimer = null; renderAll(true); }
+  });
   $("gex-start-btn").addEventListener("click", async () => {
     const pat = $("gex-pat").value.trim();
     if (!pat) { setGexStatus("⚠️ 需要 GitHub PAT(fine-grained,只授权本仓库 Actions 读写)"); return; }
