@@ -1,75 +1,12 @@
 {
- "updated_at": "2026-07-13T05:19:56+00:00",
+ "updated_at": "2026-07-13T05:22:34+00:00",
  "snapshots": {
-  "AAOI": {
-   "price": 119.96,
-   "chg": -2.25,
-   "chg_pct": -1.841093200229114,
-   "day_vol": 6737956.0,
-   "prev_close": 122.21
-  },
-  "CCL": {
-   "price": 26.8497,
-   "chg": 0.1296999999999997,
-   "chg_pct": 0.4854041916167654,
-   "day_vol": 12441421.0,
-   "prev_close": 26.72
-  },
-  "KLAR": {
-   "price": 19.61,
-   "chg": -0.379999999999999,
-   "chg_pct": -1.900950475237614,
-   "day_vol": 3307581.0,
-   "prev_close": 19.99
-  },
-  "INTC": {
-   "price": 109.6001,
-   "chg": -2.9399000000000086,
-   "chg_pct": -2.6123156211125007,
-   "day_vol": 70824190.0,
-   "prev_close": 112.54
-  },
-  "LITE": {
-   "price": 804.21,
-   "chg": 18.440000000000055,
-   "chg_pct": 2.34674268551867,
-   "day_vol": 3674890.0,
-   "prev_close": 785.77
-  },
-  "AMD": {
-   "price": 559.9,
-   "chg": 13.17999999999995,
-   "chg_pct": 2.4107404155692036,
-   "day_vol": 20701126.0,
-   "prev_close": 546.72
-  },
-  "MU": {
-   "price": 982.9821,
-   "chg": -8.65790000000004,
-   "chg_pct": -0.8730890242426728,
-   "day_vol": 31766740.0,
-   "prev_close": 991.64
-  },
-  "U": {
-   "price": 30.89,
-   "chg": 0.16000000000000014,
-   "chg_pct": 0.5206638464041657,
-   "day_vol": 13026697.0,
-   "prev_close": 30.73
-  },
-  "COIN": {
-   "price": 159.8,
-   "chg": 1.3600000000000136,
-   "chg_pct": 0.858369098712455,
-   "day_vol": 6133590.0,
-   "prev_close": 158.44
-  },
-  "RIVN": {
-   "price": 17.4899,
-   "chg": -0.6301000000000023,
-   "chg_pct": -3.4773730684326836,
-   "day_vol": 40152524.0,
-   "prev_close": 18.12
+  "TSLA": {
+   "price": 407.59,
+   "chg": 1.0399999999999636,
+   "chg_pct": 0.25581109334644286,
+   "day_vol": 33459572.0,
+   "prev_close": 406.55
   },
   "FIG": {
    "price": 21.1201,
@@ -78,26 +15,12 @@
    "day_vol": 18031072.0,
    "prev_close": 22.26
   },
-  "RKLB": {
-   "price": 81.5171,
-   "chg": -1.032899999999998,
-   "chg_pct": -1.2512416717141102,
-   "day_vol": 14591976.0,
-   "prev_close": 82.55
-  },
-  "SPCX": {
-   "price": 145.92,
-   "chg": -6.240000000000009,
-   "chg_pct": -4.100946372239753,
-   "day_vol": 46826329.0,
-   "prev_close": 152.16
-  },
-  "TSLA": {
-   "price": 407.59,
-   "chg": 1.0399999999999636,
-   "chg_pct": 0.25581109334644286,
-   "day_vol": 33459572.0,
-   "prev_close": 406.55
+  "AAOI": {
+   "price": 119.96,
+   "chg": -2.25,
+   "chg_pct": -1.841093200229114,
+   "day_vol": 6737956.0,
+   "prev_close": 122.21
   },
   "NFLX": {
    "price": 73.4,
@@ -106,6 +29,13 @@
    "day_vol": 46685795.0,
    "prev_close": 75.47
   },
+  "AMD": {
+   "price": 559.9,
+   "chg": 13.17999999999995,
+   "chg_pct": 2.4107404155692036,
+   "day_vol": 20701126.0,
+   "prev_close": 546.72
+  },
   "HOOD": {
    "price": 111.5689,
    "chg": -3.5411,
@@ -113,12 +43,82 @@
    "day_vol": 25929867.0,
    "prev_close": 115.11
   },
+  "U": {
+   "price": 30.89,
+   "chg": 0.16000000000000014,
+   "chg_pct": 0.5206638464041657,
+   "day_vol": 13026697.0,
+   "prev_close": 30.73
+  },
+  "MU": {
+   "price": 982.9821,
+   "chg": -8.65790000000004,
+   "chg_pct": -0.8730890242426728,
+   "day_vol": 31766740.0,
+   "prev_close": 991.64
+  },
+  "LITE": {
+   "price": 804.21,
+   "chg": 18.440000000000055,
+   "chg_pct": 2.34674268551867,
+   "day_vol": 3674890.0,
+   "prev_close": 785.77
+  },
+  "INTC": {
+   "price": 109.6001,
+   "chg": -2.9399000000000086,
+   "chg_pct": -2.6123156211125007,
+   "day_vol": 70824190.0,
+   "prev_close": 112.54
+  },
+  "KLAR": {
+   "price": 19.61,
+   "chg": -0.379999999999999,
+   "chg_pct": -1.900950475237614,
+   "day_vol": 3307581.0,
+   "prev_close": 19.99
+  },
   "SNDK": {
    "price": 1935,
    "chg": 76.73000000000002,
    "chg_pct": 4.129109332874126,
    "day_vol": 11022651.0,
    "prev_close": 1858.27
+  },
+  "CCL": {
+   "price": 26.8497,
+   "chg": 0.1296999999999997,
+   "chg_pct": 0.4854041916167654,
+   "day_vol": 12441421.0,
+   "prev_close": 26.72
+  },
+  "SPCX": {
+   "price": 145.92,
+   "chg": -6.240000000000009,
+   "chg_pct": -4.100946372239753,
+   "day_vol": 46826329.0,
+   "prev_close": 152.16
+  },
+  "RIVN": {
+   "price": 17.4899,
+   "chg": -0.6301000000000023,
+   "chg_pct": -3.4773730684326836,
+   "day_vol": 40152524.0,
+   "prev_close": 18.12
+  },
+  "COIN": {
+   "price": 159.8,
+   "chg": 1.3600000000000136,
+   "chg_pct": 0.858369098712455,
+   "day_vol": 6133590.0,
+   "prev_close": 158.44
+  },
+  "RKLB": {
+   "price": 81.5171,
+   "chg": -1.032899999999998,
+   "chg_pct": -1.2512416717141102,
+   "day_vol": 14591976.0,
+   "prev_close": 82.55
   }
  },
  "tickers": {
@@ -48506,7 +48506,7 @@
    }
   },
   "TSLA": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:22:34+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -62733,7 +62733,107 @@
      407.631
     ]
    ],
-   "src_d": "massive",
+   "vwap": 409.22,
+   "ind": {
+    "rsi_d": 51.43,
+    "rsi_m": 59.66,
+    "ema9_m": 407.55,
+    "ema21_m": 407.49
+   },
+   "short": {
+    "short_interest": 79109257,
+    "days_to_cover": 1.72,
+    "avg_daily_volume": 45999264,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 8867380.700515,
+     "total_volume": 17175550.335205,
+     "ratio": 0.516
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 8333530.557573,
+     "total_volume": 17985196.089971,
+     "ratio": 0.463
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 7521156.888735,
+     "total_volume": 15807880.624768,
+     "ratio": 0.476
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 9259030.976353,
+     "total_volume": 17907494.786739,
+     "ratio": 0.517
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 12061669.044301,
+     "total_volume": 23767515.72883,
+     "ratio": 0.507
+    }
+   ],
+   "news": [
+    {
+     "title": "J.P. Morgan Called a Potential Elon Musk SpaceX-Tesla Merger \"Strategically Coherent\"",
+     "url": "https://www.fool.com/investing/2026/07/12/jpmorgan-called-a-potential-elon-musk-spacex-tesla/?source=iedfolrf0000001",
+     "published": "2026-07-12T20:30:00Z",
+     "source": "The Motley Fool",
+     "summary": "J.P. Morgan analysts described a potential SpaceX-Tesla merger as 'strategically coherent on paper,' citing shared engineering talent, AI ambitions, and Musk's leadership. However, the bank flagged significant obstacles including regulatory hurdles, control disparities, and the appearance of SpaceX ",
+     "sentiment": "neutral",
+     "reason": "Merger speculation is described as 'coherent on paper' but faces major obstacles. Article advises buying Tesla for its own fundamentals rather than as a SpaceX proxy. Stock shows minimal movement (+0.22%)."
+    },
+    {
+     "title": "2 Beaten-Down Stocks With Massive Upside Potential",
+     "url": "https://www.fool.com/investing/2026/07/12/2-beaten-down-stocks-with-massive-upside-potential/?source=iedfolrf0000001",
+     "published": "2026-07-12T04:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Tesla and Meta Platforms, despite underperforming this year, offer significant long-term upside potential. Tesla's robotaxi service and humanoid robot (Optimus 3) development could create high-margin revenue streams, while Meta's AI-powered advertising business is already delivering strong results w",
+     "sentiment": "positive",
+     "reason": "Article highlights significant upside potential from robotaxi and humanoid robotics businesses, though acknowledges downside risks from competition and regulatory challenges. The overall tone emphasizes long-term growth opportunities despite current valuation concerns."
+    },
+    {
+     "title": "Micron's Biggest Long-Term Growth Catalyst Has Nothing to Do With AI Data Centers",
+     "url": "https://www.fool.com/investing/2026/07/11/microns-biggest-long-term-growth-catalyst-has-noth/?source=iedfolrf0000001",
+     "published": "2026-07-11T08:29:00Z",
+     "source": "The Motley Fool",
+     "summary": "Micron CEO Sanjay Mehrotra believes humanoid robots represent a larger long-term growth opportunity than AI data centers. Humanoid robots will require 10 times more memory than advanced vehicles, and Barclays projects the humanoid robot market could exceed $200 billion within 10 years. This anticipa",
+     "sentiment": "neutral",
+     "reason": "Mentioned as a humanoid robot developer (Optimus) that will benefit from Micron's memory chips, but the article's focus is on Micron as the supplier rather than Tesla's robotics prospects"
+    },
+    {
+     "title": "The 2 Magnificent Seven Stocks With the Most Upside Potential, According to Wall Street",
+     "url": "https://www.fool.com/investing/2026/07/11/the-2-magnificent-seven-stocks-with-the-most-upsid/?source=iedfolrf0000001",
+     "published": "2026-07-11T04:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Wall Street identifies Microsoft and Nvidia as the two most undervalued Magnificent Seven stocks with significant upside potential. Microsoft has a 45% upside target driven by strong AI business growth (123% YoY) and Azure expansion (40% YoY growth), while Nvidia is expected to benefit from continue",
+     "sentiment": "neutral",
+     "reason": "Mentioned as a company relying on Nvidia GPUs alongside custom chips. Not directly analyzed as an investment opportunity in this article."
+    },
+    {
+     "title": "Rivian Just Raised Guidance. So Why Is This Stock Falling?",
+     "url": "https://www.fool.com/investing/2026/07/10/rivian-just-raised-guidance-so-why-is-this-stock-f/?source=iedfolrf0000001",
+     "published": "2026-07-10T19:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Rivian raised its full-year production guidance after beating internal projections in Q2 and launched its mass-market R2 truck. However, the stock fell due to the company's announcement of a 75 million share offering at $15.50 per share (20% below market price) to raise over $1 billion for growth ca",
+     "sentiment": "neutral",
+     "reason": "Mentioned as a competitive benchmark in the EV market. No direct news impact; serves as context for Rivian's competitive positioning."
+    },
+    {
+     "title": "Rivian Automotive vs. Tesla: What Their Revenue Trends Tell Investors",
+     "url": "https://www.fool.com/coverage/charts/2026/07/10/rivian-automotive-vs-tesla-what-their-revenue-trends-tell-investors/?source=iedfolrf0000001",
+     "published": "2026-07-10T12:29:01Z",
+     "source": "The Motley Fool",
+     "summary": "Tesla's revenue significantly exceeds Rivian's, with Tesla reporting $22.4 billion in Q1 2026 compared to Rivian's $1.4 billion. While Rivian shows steadier growth with an 11% year-over-year increase, it remains unprofitable with a $655 million operating loss. Tesla demonstrates stronger financials ",
+     "sentiment": "positive",
+     "reason": "Tesla demonstrates superior financial performance with significantly higher revenue ($22.4B in Q1 2026), strong operating income ($941M), a 136% year-over-year improvement, a vertically-integrated business model, and strategic expansion into autonomous vehicles and robotics for future growth."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -63852,107 +63952,7 @@
      409.0685
     ]
    ],
-   "vwap": 409.22,
-   "ind": {
-    "rsi_d": 51.43,
-    "rsi_m": 59.66,
-    "ema9_m": 407.55,
-    "ema21_m": 407.49
-   },
-   "short": {
-    "short_interest": 79109257,
-    "days_to_cover": 1.72,
-    "avg_daily_volume": 45999264,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 8867380.700515,
-     "total_volume": 17175550.335205,
-     "ratio": 0.516
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 8333530.557573,
-     "total_volume": 17985196.089971,
-     "ratio": 0.463
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 7521156.888735,
-     "total_volume": 15807880.624768,
-     "ratio": 0.476
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 9259030.976353,
-     "total_volume": 17907494.786739,
-     "ratio": 0.517
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 12061669.044301,
-     "total_volume": 23767515.72883,
-     "ratio": 0.507
-    }
-   ],
-   "news": [
-    {
-     "title": "J.P. Morgan Called a Potential Elon Musk SpaceX-Tesla Merger \"Strategically Coherent\"",
-     "url": "https://www.fool.com/investing/2026/07/12/jpmorgan-called-a-potential-elon-musk-spacex-tesla/?source=iedfolrf0000001",
-     "published": "2026-07-12T20:30:00Z",
-     "source": "The Motley Fool",
-     "summary": "J.P. Morgan analysts described a potential SpaceX-Tesla merger as 'strategically coherent on paper,' citing shared engineering talent, AI ambitions, and Musk's leadership. However, the bank flagged significant obstacles including regulatory hurdles, control disparities, and the appearance of SpaceX ",
-     "sentiment": "neutral",
-     "reason": "Merger speculation is described as 'coherent on paper' but faces major obstacles. Article advises buying Tesla for its own fundamentals rather than as a SpaceX proxy. Stock shows minimal movement (+0.22%)."
-    },
-    {
-     "title": "2 Beaten-Down Stocks With Massive Upside Potential",
-     "url": "https://www.fool.com/investing/2026/07/12/2-beaten-down-stocks-with-massive-upside-potential/?source=iedfolrf0000001",
-     "published": "2026-07-12T04:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Tesla and Meta Platforms, despite underperforming this year, offer significant long-term upside potential. Tesla's robotaxi service and humanoid robot (Optimus 3) development could create high-margin revenue streams, while Meta's AI-powered advertising business is already delivering strong results w",
-     "sentiment": "positive",
-     "reason": "Article highlights significant upside potential from robotaxi and humanoid robotics businesses, though acknowledges downside risks from competition and regulatory challenges. The overall tone emphasizes long-term growth opportunities despite current valuation concerns."
-    },
-    {
-     "title": "Micron's Biggest Long-Term Growth Catalyst Has Nothing to Do With AI Data Centers",
-     "url": "https://www.fool.com/investing/2026/07/11/microns-biggest-long-term-growth-catalyst-has-noth/?source=iedfolrf0000001",
-     "published": "2026-07-11T08:29:00Z",
-     "source": "The Motley Fool",
-     "summary": "Micron CEO Sanjay Mehrotra believes humanoid robots represent a larger long-term growth opportunity than AI data centers. Humanoid robots will require 10 times more memory than advanced vehicles, and Barclays projects the humanoid robot market could exceed $200 billion within 10 years. This anticipa",
-     "sentiment": "neutral",
-     "reason": "Mentioned as a humanoid robot developer (Optimus) that will benefit from Micron's memory chips, but the article's focus is on Micron as the supplier rather than Tesla's robotics prospects"
-    },
-    {
-     "title": "The 2 Magnificent Seven Stocks With the Most Upside Potential, According to Wall Street",
-     "url": "https://www.fool.com/investing/2026/07/11/the-2-magnificent-seven-stocks-with-the-most-upsid/?source=iedfolrf0000001",
-     "published": "2026-07-11T04:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Wall Street identifies Microsoft and Nvidia as the two most undervalued Magnificent Seven stocks with significant upside potential. Microsoft has a 45% upside target driven by strong AI business growth (123% YoY) and Azure expansion (40% YoY growth), while Nvidia is expected to benefit from continue",
-     "sentiment": "neutral",
-     "reason": "Mentioned as a company relying on Nvidia GPUs alongside custom chips. Not directly analyzed as an investment opportunity in this article."
-    },
-    {
-     "title": "Rivian Just Raised Guidance. So Why Is This Stock Falling?",
-     "url": "https://www.fool.com/investing/2026/07/10/rivian-just-raised-guidance-so-why-is-this-stock-f/?source=iedfolrf0000001",
-     "published": "2026-07-10T19:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Rivian raised its full-year production guidance after beating internal projections in Q2 and launched its mass-market R2 truck. However, the stock fell due to the company's announcement of a 75 million share offering at $15.50 per share (20% below market price) to raise over $1 billion for growth ca",
-     "sentiment": "neutral",
-     "reason": "Mentioned as a competitive benchmark in the EV market. No direct news impact; serves as context for Rivian's competitive positioning."
-    },
-    {
-     "title": "Rivian Automotive vs. Tesla: What Their Revenue Trends Tell Investors",
-     "url": "https://www.fool.com/coverage/charts/2026/07/10/rivian-automotive-vs-tesla-what-their-revenue-trends-tell-investors/?source=iedfolrf0000001",
-     "published": "2026-07-10T12:29:01Z",
-     "source": "The Motley Fool",
-     "summary": "Tesla's revenue significantly exceeds Rivian's, with Tesla reporting $22.4 billion in Q1 2026 compared to Rivian's $1.4 billion. While Rivian shows steadier growth with an 11% year-over-year increase, it remains unprofitable with a $655 million operating loss. Tesla demonstrates stronger financials ",
-     "sentiment": "positive",
-     "reason": "Tesla demonstrates superior financial performance with significantly higher revenue ($22.4B in Q1 2026), strong operating income ($941M), a 136% year-over-year improvement, a vertically-integrated business model, and strategic expansion into autonomous vehicles and robotics for future growth."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 463883489.8360003,
@@ -63961,7 +63961,7 @@
     "put_vol": 434927,
     "call_oi": 915137,
     "put_oi": 640952,
-    "atm_iv": 0.5929217211158604,
+    "atm_iv": 0.6041772287634737,
     "pcr_vol": 0.68,
     "pcr_oi": 0.7,
     "net_premium": 189469450.49400067,
@@ -63975,7 +63975,7 @@
       "put_vol": 179806,
       "call_oi": 46484,
       "put_oi": 33828,
-      "atm_iv": 0.5929217211158604
+      "atm_iv": 0.6041772287634737
      },
      {
       "exp": "2026-07-15",
@@ -63985,7 +63985,7 @@
       "put_vol": 39728,
       "call_oi": 39824,
       "put_oi": 19247,
-      "atm_iv": 0.5347759004873835
+      "atm_iv": 0.5376334198048534
      },
      {
       "exp": "2026-07-17",
@@ -63995,7 +63995,7 @@
       "put_vol": 168993,
       "call_oi": 456481,
       "put_oi": 321061,
-      "atm_iv": 0.5094071610254562
+      "atm_iv": 0.5109909993186053
      },
      {
       "exp": "2026-07-20",
@@ -64005,7 +64005,7 @@
       "put_vol": 5927,
       "call_oi": 27537,
       "put_oi": 6501,
-      "atm_iv": 0.4474654193048127
+      "atm_iv": 0.4483206696368187
      },
      {
       "exp": "2026-07-24",
@@ -64015,7 +64015,7 @@
       "put_vol": 11798,
       "call_oi": 61842,
       "put_oi": 45768,
-      "atm_iv": 0.5603803188161272
+      "atm_iv": 0.5610872926222955
      },
      {
       "exp": "2026-07-31",
@@ -64025,7 +64025,7 @@
       "put_vol": 11219,
       "call_oi": 47378,
       "put_oi": 35578,
-      "atm_iv": 0.5133097680067875
+      "atm_iv": 0.5137160915024453
      }
     ],
     "by_strike": [
@@ -64666,11 +64666,16 @@
     "max_pain": 400,
     "max_pain_exp": "2026-07-13",
     "oi_changes": [],
-    "contracts": 2588
+    "contracts": 2588,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "U": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:22:34+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -76971,7 +76976,52 @@
      30.8905
     ]
    ],
-   "src_d": "massive",
+   "vwap": 31.74,
+   "ind": {
+    "rsi_d": 63.09,
+    "rsi_m": 20.0,
+    "ema9_m": 30.94,
+    "ema21_m": 30.93
+   },
+   "short": {
+    "short_interest": 34558878,
+    "days_to_cover": 5.29,
+    "avg_daily_volume": 6533854,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 2528804.392042,
+     "total_volume": 5983715.434888,
+     "ratio": 0.423
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 1262409.072576,
+     "total_volume": 2385323.942867,
+     "ratio": 0.529
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 772642.186589,
+     "total_volume": 1789966.527953,
+     "ratio": 0.432
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 1124966.470321,
+     "total_volume": 2633315.822671,
+     "ratio": 0.427
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 988344.75125,
+     "total_volume": 2427645.451676,
+     "ratio": 0.407
+    }
+   ],
+   "news": [],
    "bars_d": [
     [
      1768194000000,
@@ -78090,52 +78140,7 @@
      31.6529
     ]
    ],
-   "vwap": 31.74,
-   "ind": {
-    "rsi_d": 63.09,
-    "rsi_m": 20.0,
-    "ema9_m": 30.94,
-    "ema21_m": 30.93
-   },
-   "short": {
-    "short_interest": 34558878,
-    "days_to_cover": 5.29,
-    "avg_daily_volume": 6533854,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 2528804.392042,
-     "total_volume": 5983715.434888,
-     "ratio": 0.423
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 1262409.072576,
-     "total_volume": 2385323.942867,
-     "ratio": 0.529
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 772642.186589,
-     "total_volume": 1789966.527953,
-     "ratio": 0.432
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 1124966.470321,
-     "total_volume": 2633315.822671,
-     "ratio": 0.427
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 988344.75125,
-     "total_volume": 2427645.451676,
-     "ratio": 0.407
-    }
-   ],
-   "news": [],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 3873988.9659999995,
@@ -78144,7 +78149,7 @@
     "put_vol": 5102,
     "call_oi": 99374,
     "put_oi": 68140,
-    "atm_iv": 0.786175256793813,
+    "atm_iv": 0.7886027262376283,
     "pcr_vol": 0.51,
     "pcr_oi": 0.69,
     "net_premium": 3139212.4159999993,
@@ -78158,7 +78163,7 @@
       "put_vol": 1959,
       "call_oi": 28337,
       "put_oi": 9130,
-      "atm_iv": 0.786175256793813
+      "atm_iv": 0.7886027262376283
      },
      {
       "exp": "2026-07-24",
@@ -78168,7 +78173,7 @@
       "put_vol": 639,
       "call_oi": 1784,
       "put_oi": 1297,
-      "atm_iv": 0.7048397166007198
+      "atm_iv": 0.7057233563602848
      },
      {
       "exp": "2026-07-31",
@@ -78178,7 +78183,7 @@
       "put_vol": 480,
       "call_oi": 2650,
       "put_oi": 689,
-      "atm_iv": 0.7149061466579327
+      "atm_iv": 0.7154683319181009
      },
      {
       "exp": "2026-08-07",
@@ -78188,7 +78193,7 @@
       "put_vol": 932,
       "call_oi": 1537,
       "put_oi": 432,
-      "atm_iv": 0.8762700097017602
+      "atm_iv": 0.8767715063064001
      },
      {
       "exp": "2026-08-14",
@@ -78198,7 +78203,7 @@
       "put_vol": 76,
       "call_oi": 119,
       "put_oi": 67,
-      "atm_iv": 0.8548173591830766
+      "atm_iv": 0.8552022484995898
      },
      {
       "exp": "2026-08-21",
@@ -78208,7 +78213,7 @@
       "put_vol": 1016,
       "call_oi": 64947,
       "put_oi": 56525,
-      "atm_iv": 0.8224186504335665
+      "atm_iv": 0.8227237681513175
      }
     ],
     "by_strike": [
@@ -78499,11 +78504,16 @@
     "max_pain": 28,
     "max_pain_exp": "2026-07-17",
     "oi_changes": [],
-    "contracts": 430
+    "contracts": 430,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "HOOD": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:22:34+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -92730,7 +92740,71 @@
      111.5858
     ]
    ],
-   "src_d": "massive",
+   "vwap": 112.84,
+   "ind": {
+    "rsi_d": 61.72,
+    "rsi_m": 61.48,
+    "ema9_m": 111.57,
+    "ema21_m": 111.52
+   },
+   "short": {
+    "short_interest": 37497084,
+    "days_to_cover": 1.08,
+    "avg_daily_volume": 34670649,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 8121844.593004,
+     "total_volume": 12600640.363094,
+     "ratio": 0.645
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 5500221.044304,
+     "total_volume": 8644661.903142,
+     "ratio": 0.636
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 5134738.150057,
+     "total_volume": 8093260.832428,
+     "ratio": 0.634
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 5410038.824198,
+     "total_volume": 9013507.988914,
+     "ratio": 0.6
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 8021033.764652,
+     "total_volume": 12819534.954206,
+     "ratio": 0.626
+    }
+   ],
+   "news": [
+    {
+     "title": "Strategy Says It Might Sell Up to $1.25 Billion in Bitcoin. So Is MSTR a Buy, Sell, or Hold Right Now?",
+     "url": "https://www.fool.com/investing/2026/07/11/strategy-says-it-might-sell-up-to-125-billion-in-b/?source=iedfolrf0000001",
+     "published": "2026-07-11T09:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Strategy (MSTR), a company that built its business model around buying and holding Bitcoin as a 'Bitcoin treasury,' is now planning to sell up to $1.25 billion in Bitcoin to fund stock buybacks, preferred stock payments, and build cash reserves. This strategic shift signals that the simple buy-and-h",
+     "sentiment": "neutral",
+     "reason": "While Robinhood experienced a nearly 50% decline in crypto revenue in Q1 2026, the company is diversifying successfully with prediction market revenue rising 320%. This suggests the company is adapting to market shifts, though it indicates declining interest in cryptocurrency specifically."
+    },
+    {
+     "title": "Robinhood Could Be a Major Threat to Solana. Here's Why.",
+     "url": "https://www.fool.com/investing/2026/07/10/robinhood-could-be-a-major-threat-to-solana-heres/?source=iedfolrf0000001",
+     "published": "2026-07-10T09:30:00Z",
+     "source": "The Motley Fool",
+     "summary": "Robinhood launched 24/7 tokenized stock trading on Arbitrum, a Layer-2 Ethereum chain, positioning itself as a competitor to Solana's dominance in tokenized asset trading. While Solana currently handles 95% of tokenized stock volume with superior speed and lower fees, Robinhood's massive user base (",
+     "sentiment": "positive",
+     "reason": "Launching innovative tokenized stock trading platform with 28 million customers across 38 countries. The article positions Robinhood as a significant competitive threat with advantages in user convenience and revenue generation ($157 per account annually)."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -93849,71 +93923,7 @@
      112.8034
     ]
    ],
-   "vwap": 112.84,
-   "ind": {
-    "rsi_d": 61.72,
-    "rsi_m": 61.48,
-    "ema9_m": 111.57,
-    "ema21_m": 111.52
-   },
-   "short": {
-    "short_interest": 37497084,
-    "days_to_cover": 1.08,
-    "avg_daily_volume": 34670649,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 8121844.593004,
-     "total_volume": 12600640.363094,
-     "ratio": 0.645
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 5500221.044304,
-     "total_volume": 8644661.903142,
-     "ratio": 0.636
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 5134738.150057,
-     "total_volume": 8093260.832428,
-     "ratio": 0.634
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 5410038.824198,
-     "total_volume": 9013507.988914,
-     "ratio": 0.6
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 8021033.764652,
-     "total_volume": 12819534.954206,
-     "ratio": 0.626
-    }
-   ],
-   "news": [
-    {
-     "title": "Strategy Says It Might Sell Up to $1.25 Billion in Bitcoin. So Is MSTR a Buy, Sell, or Hold Right Now?",
-     "url": "https://www.fool.com/investing/2026/07/11/strategy-says-it-might-sell-up-to-125-billion-in-b/?source=iedfolrf0000001",
-     "published": "2026-07-11T09:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Strategy (MSTR), a company that built its business model around buying and holding Bitcoin as a 'Bitcoin treasury,' is now planning to sell up to $1.25 billion in Bitcoin to fund stock buybacks, preferred stock payments, and build cash reserves. This strategic shift signals that the simple buy-and-h",
-     "sentiment": "neutral",
-     "reason": "While Robinhood experienced a nearly 50% decline in crypto revenue in Q1 2026, the company is diversifying successfully with prediction market revenue rising 320%. This suggests the company is adapting to market shifts, though it indicates declining interest in cryptocurrency specifically."
-    },
-    {
-     "title": "Robinhood Could Be a Major Threat to Solana. Here's Why.",
-     "url": "https://www.fool.com/investing/2026/07/10/robinhood-could-be-a-major-threat-to-solana-heres/?source=iedfolrf0000001",
-     "published": "2026-07-10T09:30:00Z",
-     "source": "The Motley Fool",
-     "summary": "Robinhood launched 24/7 tokenized stock trading on Arbitrum, a Layer-2 Ethereum chain, positioning itself as a competitor to Solana's dominance in tokenized asset trading. While Solana currently handles 95% of tokenized stock volume with superior speed and lower fees, Robinhood's massive user base (",
-     "sentiment": "positive",
-     "reason": "Launching innovative tokenized stock trading platform with 28 million customers across 38 countries. The article positions Robinhood as a significant competitive threat with advantages in user convenience and revenue generation ($157 per account annually)."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 76221560.10399996,
@@ -93922,7 +93932,7 @@
     "put_vol": 45003,
     "call_oi": 369305,
     "put_oi": 276379,
-    "atm_iv": 0.7342657635756596,
+    "atm_iv": 0.7365251464282991,
     "pcr_vol": 0.36,
     "pcr_oi": 0.75,
     "net_premium": 64956737.34199996,
@@ -93936,7 +93946,7 @@
       "put_vol": 23784,
       "call_oi": 197316,
       "put_oi": 130206,
-      "atm_iv": 0.7342657635756596
+      "atm_iv": 0.7365251464282991
      },
      {
       "exp": "2026-07-24",
@@ -93946,7 +93956,7 @@
       "put_vol": 13230,
       "call_oi": 32920,
       "put_oi": 29563,
-      "atm_iv": 0.6952411372402042
+      "atm_iv": 0.6961095726930919
      },
      {
       "exp": "2026-07-31",
@@ -93956,7 +93966,7 @@
       "put_vol": 1753,
       "call_oi": 27040,
       "put_oi": 13709,
-      "atm_iv": 0.8055217305488277
+      "atm_iv": 0.8061526319924415
      },
      {
       "exp": "2026-08-07",
@@ -93966,7 +93976,7 @@
       "put_vol": 1616,
       "call_oi": 7340,
       "put_oi": 5101,
-      "atm_iv": 0.7629903515461876
+      "atm_iv": 0.7634256418788277
      },
      {
       "exp": "2026-08-14",
@@ -93976,7 +93986,7 @@
       "put_vol": 1264,
       "call_oi": 4239,
       "put_oi": 2086,
-      "atm_iv": 0.740015577339744
+      "atm_iv": 0.7403476017235691
      },
      {
       "exp": "2026-08-21",
@@ -93986,7 +93996,7 @@
       "put_vol": 3356,
       "call_oi": 100450,
       "put_oi": 95714,
-      "atm_iv": 0.7286546495889952
+      "atm_iv": 0.7289242914077224
      }
     ],
     "by_strike": [
@@ -94452,7 +94462,12 @@
     "max_pain": 96,
     "max_pain_exp": "2026-07-17",
     "oi_changes": [],
-    "contracts": 810
+    "contracts": 810,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "MU": {
