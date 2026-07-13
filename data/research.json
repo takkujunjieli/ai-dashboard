@@ -1,12 +1,12 @@
 {
- "updated_at": "2026-07-13T04:36:19+00:00",
+ "updated_at": "2026-07-13T05:19:56+00:00",
  "snapshots": {
-  "AMD": {
-   "price": 559.9,
-   "chg": 13.17999999999995,
-   "chg_pct": 2.4107404155692036,
-   "day_vol": 20701126.0,
-   "prev_close": 546.72
+  "AAOI": {
+   "price": 119.96,
+   "chg": -2.25,
+   "chg_pct": -1.841093200229114,
+   "day_vol": 6737956.0,
+   "prev_close": 122.21
   },
   "CCL": {
    "price": 26.8497,
@@ -15,12 +15,19 @@
    "day_vol": 12441421.0,
    "prev_close": 26.72
   },
-  "FIG": {
-   "price": 21.1201,
-   "chg": -1.1399000000000008,
-   "chg_pct": -5.120844564240794,
-   "day_vol": 18031072.0,
-   "prev_close": 22.26
+  "KLAR": {
+   "price": 19.61,
+   "chg": -0.379999999999999,
+   "chg_pct": -1.900950475237614,
+   "day_vol": 3307581.0,
+   "prev_close": 19.99
+  },
+  "INTC": {
+   "price": 109.6001,
+   "chg": -2.9399000000000086,
+   "chg_pct": -2.6123156211125007,
+   "day_vol": 70824190.0,
+   "prev_close": 112.54
   },
   "LITE": {
    "price": 804.21,
@@ -29,19 +36,12 @@
    "day_vol": 3674890.0,
    "prev_close": 785.77
   },
-  "RIVN": {
-   "price": 17.4899,
-   "chg": -0.6301000000000023,
-   "chg_pct": -3.4773730684326836,
-   "day_vol": 40152524.0,
-   "prev_close": 18.12
-  },
-  "U": {
-   "price": 30.89,
-   "chg": 0.16000000000000014,
-   "chg_pct": 0.5206638464041657,
-   "day_vol": 13026697.0,
-   "prev_close": 30.73
+  "AMD": {
+   "price": 559.9,
+   "chg": 13.17999999999995,
+   "chg_pct": 2.4107404155692036,
+   "day_vol": 20701126.0,
+   "prev_close": 546.72
   },
   "MU": {
    "price": 982.9821,
@@ -50,12 +50,40 @@
    "day_vol": 31766740.0,
    "prev_close": 991.64
   },
-  "AAOI": {
-   "price": 119.96,
-   "chg": -2.25,
-   "chg_pct": -1.841093200229114,
-   "day_vol": 6737956.0,
-   "prev_close": 122.21
+  "U": {
+   "price": 30.89,
+   "chg": 0.16000000000000014,
+   "chg_pct": 0.5206638464041657,
+   "day_vol": 13026697.0,
+   "prev_close": 30.73
+  },
+  "COIN": {
+   "price": 159.8,
+   "chg": 1.3600000000000136,
+   "chg_pct": 0.858369098712455,
+   "day_vol": 6133590.0,
+   "prev_close": 158.44
+  },
+  "RIVN": {
+   "price": 17.4899,
+   "chg": -0.6301000000000023,
+   "chg_pct": -3.4773730684326836,
+   "day_vol": 40152524.0,
+   "prev_close": 18.12
+  },
+  "FIG": {
+   "price": 21.1201,
+   "chg": -1.1399000000000008,
+   "chg_pct": -5.120844564240794,
+   "day_vol": 18031072.0,
+   "prev_close": 22.26
+  },
+  "RKLB": {
+   "price": 81.5171,
+   "chg": -1.032899999999998,
+   "chg_pct": -1.2512416717141102,
+   "day_vol": 14591976.0,
+   "prev_close": 82.55
   },
   "SPCX": {
    "price": 145.92,
@@ -64,19 +92,12 @@
    "day_vol": 46826329.0,
    "prev_close": 152.16
   },
-  "KLAR": {
-   "price": 19.61,
-   "chg": -0.379999999999999,
-   "chg_pct": -1.900950475237614,
-   "day_vol": 3307581.0,
-   "prev_close": 19.99
-  },
-  "COIN": {
-   "price": 159.8,
-   "chg": 1.3600000000000136,
-   "chg_pct": 0.858369098712455,
-   "day_vol": 6133590.0,
-   "prev_close": 158.44
+  "TSLA": {
+   "price": 407.59,
+   "chg": 1.0399999999999636,
+   "chg_pct": 0.25581109334644286,
+   "day_vol": 33459572.0,
+   "prev_close": 406.55
   },
   "NFLX": {
    "price": 73.4,
@@ -92,38 +113,17 @@
    "day_vol": 25929867.0,
    "prev_close": 115.11
   },
-  "RKLB": {
-   "price": 81.5171,
-   "chg": -1.032899999999998,
-   "chg_pct": -1.2512416717141102,
-   "day_vol": 14591976.0,
-   "prev_close": 82.55
-  },
   "SNDK": {
    "price": 1935,
    "chg": 76.73000000000002,
    "chg_pct": 4.129109332874126,
    "day_vol": 11022651.0,
    "prev_close": 1858.27
-  },
-  "TSLA": {
-   "price": 407.59,
-   "chg": 1.0399999999999636,
-   "chg_pct": 0.25581109334644286,
-   "day_vol": 33459572.0,
-   "prev_close": 406.55
-  },
-  "INTC": {
-   "price": 109.6001,
-   "chg": -2.9399000000000086,
-   "chg_pct": -2.6123156211125007,
-   "day_vol": 70824190.0,
-   "prev_close": 112.54
   }
  },
  "tickers": {
   "AMD": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:19:56+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -14350,7 +14350,134 @@
      559.6967
     ]
    ],
-   "src_d": "massive",
+   "vwap": 552.57,
+   "ind": {
+    "rsi_d": 57.55,
+    "rsi_m": 68.8,
+    "ema9_m": 559.64,
+    "ema21_m": 559.39
+   },
+   "short": {
+    "short_interest": 41583210,
+    "days_to_cover": 1.3,
+    "avg_daily_volume": 31906834,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 5960858.317682,
+     "total_volume": 11216087.641639,
+     "ratio": 0.531
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 4751266.585384,
+     "total_volume": 11661836.461231,
+     "ratio": 0.407
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 4461557.0431,
+     "total_volume": 10349923.692547,
+     "ratio": 0.431
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 5765407.192888,
+     "total_volume": 12220357.518803,
+     "ratio": 0.472
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 7079440.517986,
+     "total_volume": 14212352.181335,
+     "ratio": 0.498
+    }
+   ],
+   "news": [
+    {
+     "title": "Did Nvidia's 2028 Rack Delay Under Jensen Huang Open a Door for AMD and Google?",
+     "url": "https://www.fool.com/investing/2026/07/12/did-nvidias-2028-rack-delay-under-jensen-huang-ope/?source=iedfolrf0000001",
+     "published": "2026-07-13T03:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Nvidia's reported delay of its Kyber NVL144 AI rack system until 2028 due to circuit board manufacturing issues could create opportunities for competitors AMD and Alphabet. While Nvidia maintains its market dominance through aggressive technology roadmaps, physical manufacturing constraints may fina",
+     "sentiment": "positive",
+     "reason": "Positioned to gain market share from Nvidia's delay; improved ROCm software platform, chiplet designs for increased memory, and recent Mext acquisition strengthen its competitive position in inference-optimized server solutions."
+    },
+    {
+     "title": "Best Artificial Intelligence (AI) Stock: AMD, Nvidia, or Broadcom",
+     "url": "https://www.fool.com/investing/2026/07/12/best-artificial-intelligence-ai-stock-amd-nvidia-o/?source=iedfolrf0000001",
+     "published": "2026-07-12T22:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "Comparing three AI chip leaders, Nvidia emerges as the best buy despite underperformance year-to-date, offering superior growth and attractive valuation. Broadcom is a solid alternative with strong 2027 growth prospects from custom AI chips for major hyperscalers. AMD, despite its 2026 rally, appear",
+     "sentiment": "negative",
+     "reason": "Despite strong 2026 rally, faces major uphill battle against Nvidia's entrenched ecosystem in data centers, significantly more expensive on valuation metrics, and trailing far behind in growth projections."
+    },
+    {
+     "title": "Nvidia Stock Just Did Something for the First Time in 7 Years. Here's What History Says Happens Next.",
+     "url": "https://www.fool.com/investing/2026/07/12/nvidia-stock-just-did-something-for-the-first-time/?source=iedfolrf0000001",
+     "published": "2026-07-12T13:37:00Z",
+     "source": "The Motley Fool",
+     "summary": "Nvidia's P/E ratio has compressed to its lowest level in seven years as the stock gained only 5% in 2026, a stark contrast to its 1,100% rise since ChatGPT's launch. Despite concerns about AI capex moderation and competitive threats, historical patterns suggest this valuation compression typically p",
+     "sentiment": "neutral",
+     "reason": "Mentioned as a competitive threat with new accelerator architectures that could erode Nvidia's market share in certain data center workloads, but no detailed analysis or outlook provided."
+    },
+    {
+     "title": "The S&P 500 Could Jump 18% Over the Next 1 Year. Here Are My Top Growth Stocks to Buy Before That Happens",
+     "url": "https://www.fool.com/investing/2026/07/11/the-sp-500-could-jump-18-over-the-next-1-year-here/?source=iedfolrf0000001",
+     "published": "2026-07-11T13:23:00Z",
+     "source": "The Motley Fool",
+     "summary": "FactSet predicts the S&P 500 could reach 8,920 within a year, representing an 18% increase from current levels. Tech stocks are expected to lead the rally, with semiconductor companies Micron Technology and Advanced Micro Devices benefiting from AI infrastructure investments, while software company ",
+     "sentiment": "positive",
+     "reason": "Stock has delivered 149% gains in 2026 with projected 77% earnings growth in 2026 and 78% in 2027. Gaining market share in AI chip market with major customers including Meta and OpenAI. Positioned to capture significant portion of $132 billion server CPU market opportunity by 2030."
+    },
+    {
+     "title": "Shares of Intel and AMD Have Plummeted in the Last Few Days. Is It Time to Panic?",
+     "url": "https://www.fool.com/investing/2026/07/11/intel-and-amds-stock-have-plummeted-in-the-last-fe/?source=iedfolrf0000001",
+     "published": "2026-07-11T07:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Intel and AMD stocks have declined sharply in early July after strong gains in 2026, but analyst Keithen Drury argues this is not a buying opportunity. Both companies are expensive turnaround plays that are significantly underperforming their dominant rivals—AMD versus Nvidia in GPUs and Intel versu",
+     "sentiment": "negative",
+     "reason": "AMD's data center division, while growing 57% YoY, is vastly smaller and slower-growing than Nvidia's ($5.8B vs $75.2B revenue). Stock is overvalued at 70x forward earnings compared to Nvidia's 22.8x, requiring a tripling of earnings to reach fair valuation while facing stronger competition."
+    },
+    {
+     "title": "Advanced Micro Devices vs. Texas Instruments: Which Technology Stock Is a Better Buy in 2026?",
+     "url": "https://www.fool.com/coverage/better-buy/2026/07/10/advanced-micro-devices-vs-texas-instruments-which-technology-stock-is-a-better-buy-in-2026/?source=iedfolrf0000001",
+     "published": "2026-07-11T03:16:12Z",
+     "source": "The Motley Fool",
+     "summary": "AMD and Texas Instruments represent two different semiconductor investment approaches. AMD offers higher growth potential through AI and data center expansion but trades at a rich valuation with concentrated customer risk. Texas Instruments provides steadier returns with diversified customers, lower",
+     "sentiment": "positive",
+     "reason": "Strong 34.3% revenue growth in FY2025, expanding AI accelerator business, solid balance sheet with low debt (0.1x), and good free cash flow ($6.7B). However, positive sentiment is tempered by high valuation (P/E 179.43) and customer concentration risk."
+    },
+    {
+     "title": "A Potential New Rival Wants to Undercut TSMC. Here's What Investors Need to Know.",
+     "url": "https://www.fool.com/investing/2026/07/10/a-potential-new-rival-wants-to-undercut-tsmc-heres-what-investors-need-to-know/?source=iedfolrf0000001",
+     "published": "2026-07-10T16:21:58Z",
+     "source": "The Motley Fool",
+     "summary": "Japanese semiconductor company Rapidus plans to mass-produce 2nm chips by 2027 at $21,000 per wafer, undercutting TSMC's $30,000 price point. However, analysts believe TSMC's dominant 73% market share, proven track record, established customer relationships, and year-long head start in 2nm productio",
+     "sentiment": "neutral",
+     "reason": "Listed as a key TSMC customer. No direct competitive threat from Rapidus is suggested, as established relationships and quality considerations outweigh price competition."
+    },
+    {
+     "title": "Silicon Interposer Market Size to Hit USD 14.04 Billion by 2035 | SNS Insider",
+     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325435/0/en/Silicon-Interposer-Market-Size-to-Hit-USD-14-04-Billion-by-2035-SNS-Insider.html",
+     "published": "2026-07-10T11:30:00Z",
+     "source": "GlobeNewswire Inc.",
+     "summary": "The global silicon interposer market, valued at $4.00 billion in 2025, is expected to grow to $14.04 billion by 2035 at a CAGR of 13.38%. Growth is driven by rising adoption of AI, chiplet architectures, and advanced semiconductor packaging. North America leads with 49% market share, while Asia Paci",
+     "sentiment": "positive",
+     "reason": "Listed as a leading market player positioned to benefit from the growing silicon interposer market driven by AI and high-performance computing demand."
+    },
+    {
+     "title": "Edge AI Semiconductor Market Size to Hit USD 151.30 Billion by 2035 | Research by SNS Insider",
+     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325326/0/en/Edge-AI-Semiconductor-Market-Size-to-Hit-USD-151-30-Billion-by-2035-Research-by-SNS-Insider.html",
+     "published": "2026-07-10T07:30:00Z",
+     "source": "GlobeNewswire Inc.",
+     "summary": "The global Edge AI Semiconductor Market was valued at $25.36 billion in 2025 and is projected to reach $151.30 billion by 2035, growing at a CAGR of 19.57%. Growth is driven by rising adoption of edge AI computing across consumer electronics, automotive, industrial IoT, and healthcare sectors. North",
+     "sentiment": "positive",
+     "reason": "AMD is identified as a leading market player in the edge AI semiconductor market with significant growth opportunities ahead."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -15469,134 +15596,7 @@
      553.1699
     ]
    ],
-   "vwap": 552.57,
-   "ind": {
-    "rsi_d": 57.55,
-    "rsi_m": 68.8,
-    "ema9_m": 559.64,
-    "ema21_m": 559.39
-   },
-   "short": {
-    "short_interest": 41583210,
-    "days_to_cover": 1.3,
-    "avg_daily_volume": 31906834,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 5960858.317682,
-     "total_volume": 11216087.641639,
-     "ratio": 0.531
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 4751266.585384,
-     "total_volume": 11661836.461231,
-     "ratio": 0.407
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 4461557.0431,
-     "total_volume": 10349923.692547,
-     "ratio": 0.431
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 5765407.192888,
-     "total_volume": 12220357.518803,
-     "ratio": 0.472
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 7079440.517986,
-     "total_volume": 14212352.181335,
-     "ratio": 0.498
-    }
-   ],
-   "news": [
-    {
-     "title": "Did Nvidia's 2028 Rack Delay Under Jensen Huang Open a Door for AMD and Google?",
-     "url": "https://www.fool.com/investing/2026/07/12/did-nvidias-2028-rack-delay-under-jensen-huang-ope/?source=iedfolrf0000001",
-     "published": "2026-07-13T03:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Nvidia's reported delay of its Kyber NVL144 AI rack system until 2028 due to circuit board manufacturing issues could create opportunities for competitors AMD and Alphabet. While Nvidia maintains its market dominance through aggressive technology roadmaps, physical manufacturing constraints may fina",
-     "sentiment": "positive",
-     "reason": "Positioned to gain market share from Nvidia's delay; improved ROCm software platform, chiplet designs for increased memory, and recent Mext acquisition strengthen its competitive position in inference-optimized server solutions."
-    },
-    {
-     "title": "Best Artificial Intelligence (AI) Stock: AMD, Nvidia, or Broadcom",
-     "url": "https://www.fool.com/investing/2026/07/12/best-artificial-intelligence-ai-stock-amd-nvidia-o/?source=iedfolrf0000001",
-     "published": "2026-07-12T22:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "Comparing three AI chip leaders, Nvidia emerges as the best buy despite underperformance year-to-date, offering superior growth and attractive valuation. Broadcom is a solid alternative with strong 2027 growth prospects from custom AI chips for major hyperscalers. AMD, despite its 2026 rally, appear",
-     "sentiment": "negative",
-     "reason": "Despite strong 2026 rally, faces major uphill battle against Nvidia's entrenched ecosystem in data centers, significantly more expensive on valuation metrics, and trailing far behind in growth projections."
-    },
-    {
-     "title": "Nvidia Stock Just Did Something for the First Time in 7 Years. Here's What History Says Happens Next.",
-     "url": "https://www.fool.com/investing/2026/07/12/nvidia-stock-just-did-something-for-the-first-time/?source=iedfolrf0000001",
-     "published": "2026-07-12T13:37:00Z",
-     "source": "The Motley Fool",
-     "summary": "Nvidia's P/E ratio has compressed to its lowest level in seven years as the stock gained only 5% in 2026, a stark contrast to its 1,100% rise since ChatGPT's launch. Despite concerns about AI capex moderation and competitive threats, historical patterns suggest this valuation compression typically p",
-     "sentiment": "neutral",
-     "reason": "Mentioned as a competitive threat with new accelerator architectures that could erode Nvidia's market share in certain data center workloads, but no detailed analysis or outlook provided."
-    },
-    {
-     "title": "The S&P 500 Could Jump 18% Over the Next 1 Year. Here Are My Top Growth Stocks to Buy Before That Happens",
-     "url": "https://www.fool.com/investing/2026/07/11/the-sp-500-could-jump-18-over-the-next-1-year-here/?source=iedfolrf0000001",
-     "published": "2026-07-11T13:23:00Z",
-     "source": "The Motley Fool",
-     "summary": "FactSet predicts the S&P 500 could reach 8,920 within a year, representing an 18% increase from current levels. Tech stocks are expected to lead the rally, with semiconductor companies Micron Technology and Advanced Micro Devices benefiting from AI infrastructure investments, while software company ",
-     "sentiment": "positive",
-     "reason": "Stock has delivered 149% gains in 2026 with projected 77% earnings growth in 2026 and 78% in 2027. Gaining market share in AI chip market with major customers including Meta and OpenAI. Positioned to capture significant portion of $132 billion server CPU market opportunity by 2030."
-    },
-    {
-     "title": "Shares of Intel and AMD Have Plummeted in the Last Few Days. Is It Time to Panic?",
-     "url": "https://www.fool.com/investing/2026/07/11/intel-and-amds-stock-have-plummeted-in-the-last-fe/?source=iedfolrf0000001",
-     "published": "2026-07-11T07:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Intel and AMD stocks have declined sharply in early July after strong gains in 2026, but analyst Keithen Drury argues this is not a buying opportunity. Both companies are expensive turnaround plays that are significantly underperforming their dominant rivals—AMD versus Nvidia in GPUs and Intel versu",
-     "sentiment": "negative",
-     "reason": "AMD's data center division, while growing 57% YoY, is vastly smaller and slower-growing than Nvidia's ($5.8B vs $75.2B revenue). Stock is overvalued at 70x forward earnings compared to Nvidia's 22.8x, requiring a tripling of earnings to reach fair valuation while facing stronger competition."
-    },
-    {
-     "title": "Advanced Micro Devices vs. Texas Instruments: Which Technology Stock Is a Better Buy in 2026?",
-     "url": "https://www.fool.com/coverage/better-buy/2026/07/10/advanced-micro-devices-vs-texas-instruments-which-technology-stock-is-a-better-buy-in-2026/?source=iedfolrf0000001",
-     "published": "2026-07-11T03:16:12Z",
-     "source": "The Motley Fool",
-     "summary": "AMD and Texas Instruments represent two different semiconductor investment approaches. AMD offers higher growth potential through AI and data center expansion but trades at a rich valuation with concentrated customer risk. Texas Instruments provides steadier returns with diversified customers, lower",
-     "sentiment": "positive",
-     "reason": "Strong 34.3% revenue growth in FY2025, expanding AI accelerator business, solid balance sheet with low debt (0.1x), and good free cash flow ($6.7B). However, positive sentiment is tempered by high valuation (P/E 179.43) and customer concentration risk."
-    },
-    {
-     "title": "A Potential New Rival Wants to Undercut TSMC. Here's What Investors Need to Know.",
-     "url": "https://www.fool.com/investing/2026/07/10/a-potential-new-rival-wants-to-undercut-tsmc-heres-what-investors-need-to-know/?source=iedfolrf0000001",
-     "published": "2026-07-10T16:21:58Z",
-     "source": "The Motley Fool",
-     "summary": "Japanese semiconductor company Rapidus plans to mass-produce 2nm chips by 2027 at $21,000 per wafer, undercutting TSMC's $30,000 price point. However, analysts believe TSMC's dominant 73% market share, proven track record, established customer relationships, and year-long head start in 2nm productio",
-     "sentiment": "neutral",
-     "reason": "Listed as a key TSMC customer. No direct competitive threat from Rapidus is suggested, as established relationships and quality considerations outweigh price competition."
-    },
-    {
-     "title": "Silicon Interposer Market Size to Hit USD 14.04 Billion by 2035 | SNS Insider",
-     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325435/0/en/Silicon-Interposer-Market-Size-to-Hit-USD-14-04-Billion-by-2035-SNS-Insider.html",
-     "published": "2026-07-10T11:30:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "The global silicon interposer market, valued at $4.00 billion in 2025, is expected to grow to $14.04 billion by 2035 at a CAGR of 13.38%. Growth is driven by rising adoption of AI, chiplet architectures, and advanced semiconductor packaging. North America leads with 49% market share, while Asia Paci",
-     "sentiment": "positive",
-     "reason": "Listed as a leading market player positioned to benefit from the growing silicon interposer market driven by AI and high-performance computing demand."
-    },
-    {
-     "title": "Edge AI Semiconductor Market Size to Hit USD 151.30 Billion by 2035 | Research by SNS Insider",
-     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325326/0/en/Edge-AI-Semiconductor-Market-Size-to-Hit-USD-151-30-Billion-by-2035-Research-by-SNS-Insider.html",
-     "published": "2026-07-10T07:30:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "The global Edge AI Semiconductor Market was valued at $25.36 billion in 2025 and is projected to reach $151.30 billion by 2035, growing at a CAGR of 19.57%. Growth is driven by rising adoption of edge AI computing across consumer electronics, automotive, industrial IoT, and healthcare sectors. North",
-     "sentiment": "positive",
-     "reason": "AMD is identified as a leading market player in the edge AI semiconductor market with significant growth opportunities ahead."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 240100460.97300008,
@@ -15605,7 +15605,7 @@
     "put_vol": 108924,
     "call_oi": 399314,
     "put_oi": 399031,
-    "atm_iv": 1.0082508463169446,
+    "atm_iv": 1.0276568576641136,
     "pcr_vol": 1.03,
     "pcr_oi": 1.0,
     "net_premium": 148421392.8620001,
@@ -15619,7 +15619,7 @@
       "put_vol": 23847,
       "call_oi": 11343,
       "put_oi": 6796,
-      "atm_iv": 1.0082508463169446
+      "atm_iv": 1.0276568576641136
      },
      {
       "exp": "2026-07-15",
@@ -15629,7 +15629,7 @@
       "put_vol": 3920,
       "call_oi": 1361,
       "put_oi": 1865,
-      "atm_iv": 0.8868591498828594
+      "atm_iv": 0.8916723163866506
      },
      {
       "exp": "2026-07-17",
@@ -15639,7 +15639,7 @@
       "put_vol": 60387,
       "call_oi": 181159,
       "put_oi": 168693,
-      "atm_iv": 0.8698078554094992
+      "atm_iv": 0.8725563711140782
      },
      {
       "exp": "2026-07-20",
@@ -15649,7 +15649,7 @@
       "put_vol": 986,
       "call_oi": 2847,
       "put_oi": 2167,
-      "atm_iv": 0.740586731565804
+      "atm_iv": 0.7420256558278988
      },
      {
       "exp": "2026-07-22",
@@ -15659,7 +15659,7 @@
       "put_vol": 1877,
       "call_oi": 820,
       "put_oi": 1596,
-      "atm_iv": 0.7624123050595741
+      "atm_iv": 0.7635909786012613
      },
      {
       "exp": "2026-07-24",
@@ -15669,7 +15669,7 @@
       "put_vol": 4742,
       "call_oi": 32129,
       "put_oi": 27047,
-      "atm_iv": 0.8295037801216439
+      "atm_iv": 0.8305683343780282
      }
     ],
     "by_strike": [
@@ -16527,11 +16527,16 @@
     "max_pain": 520,
     "max_pain_exp": "2026-07-13",
     "oi_changes": [],
-    "contracts": 3588
+    "contracts": 3588,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "CCL": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:19:56+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -30227,7 +30232,52 @@
      26.8497
     ]
    ],
-   "src_d": "massive",
+   "vwap": 26.9,
+   "ind": {
+    "rsi_d": 44.59,
+    "rsi_m": 41.51,
+    "ema9_m": 26.85,
+    "ema21_m": 26.85
+   },
+   "short": {
+    "short_interest": 33733508,
+    "days_to_cover": 1.19,
+    "avg_daily_volume": 28297994,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 1561036.462841,
+     "total_volume": 5248103.212681,
+     "ratio": 0.297
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 1735669.787507,
+     "total_volume": 7887191.76083,
+     "ratio": 0.22
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 2848670.930287,
+     "total_volume": 10938239.829171,
+     "ratio": 0.26
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 2908852.835579,
+     "total_volume": 7307696.323109,
+     "ratio": 0.398
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 1572683.008171,
+     "total_volume": 5376906.479087,
+     "ratio": 0.292
+    }
+   ],
+   "news": [],
    "bars_d": [
     [
      1768194000000,
@@ -31346,52 +31396,7 @@
      26.8912
     ]
    ],
-   "vwap": 26.9,
-   "ind": {
-    "rsi_d": 44.59,
-    "rsi_m": 41.51,
-    "ema9_m": 26.85,
-    "ema21_m": 26.85
-   },
-   "short": {
-    "short_interest": 33733508,
-    "days_to_cover": 1.19,
-    "avg_daily_volume": 28297994,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 1561036.462841,
-     "total_volume": 5248103.212681,
-     "ratio": 0.297
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 1735669.787507,
-     "total_volume": 7887191.76083,
-     "ratio": 0.22
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 2848670.930287,
-     "total_volume": 10938239.829171,
-     "ratio": 0.26
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 2908852.835579,
-     "total_volume": 7307696.323109,
-     "ratio": 0.398
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 1572683.008171,
-     "total_volume": 5376906.479087,
-     "ratio": 0.292
-    }
-   ],
-   "news": [],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 624942.6829999997,
@@ -31400,7 +31405,7 @@
     "put_vol": 6668,
     "call_oi": 148717,
     "put_oi": 160309,
-    "atm_iv": 0.4926261486033976,
+    "atm_iv": 0.49417573719238855,
     "pcr_vol": 0.91,
     "pcr_oi": 1.08,
     "net_premium": -99841.70000000019,
@@ -31414,7 +31419,7 @@
       "put_vol": 3631,
       "call_oi": 102393,
       "put_oi": 110685,
-      "atm_iv": 0.4926261486033976
+      "atm_iv": 0.49417573719238855
      },
      {
       "exp": "2026-07-24",
@@ -31424,7 +31429,7 @@
       "put_vol": 930,
       "call_oi": 5038,
       "put_oi": 5264,
-      "atm_iv": 0.4466239553637495
+      "atm_iv": 0.4471940455587739
      },
      {
       "exp": "2026-07-31",
@@ -31434,7 +31439,7 @@
       "put_vol": 531,
       "call_oi": 8199,
       "put_oi": 5743,
-      "atm_iv": 0.460110903203758
+      "atm_iv": 0.46047926690867225
      },
      {
       "exp": "2026-08-07",
@@ -31444,7 +31449,7 @@
       "put_vol": 321,
       "call_oi": 1810,
       "put_oi": 1778,
-      "atm_iv": 0.4628191875291515
+      "atm_iv": 0.4630889822201774
      },
      {
       "exp": "2026-08-14",
@@ -31454,7 +31459,7 @@
       "put_vol": 163,
       "call_oi": 563,
       "put_oi": 1570,
-      "atm_iv": 0.47975940783096993
+      "atm_iv": 0.4799792115998399
      },
      {
       "exp": "2026-08-21",
@@ -31464,7 +31469,7 @@
       "put_vol": 1092,
       "call_oi": 30714,
       "put_oi": 35269,
-      "atm_iv": 0.4563658664692313
+      "atm_iv": 0.45653807321248085
      }
     ],
     "by_strike": [
@@ -31706,11 +31711,16 @@
     "max_pain": 29.5,
     "max_pain_exp": "2026-07-17",
     "oi_changes": [],
-    "contracts": 358
+    "contracts": 358,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "SNDK": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:19:56+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -45937,7 +45947,80 @@
      1933.0011
     ]
    ],
-   "src_d": "massive",
+   "vwap": 1880.15,
+   "ind": {
+    "rsi_d": 52.17,
+    "rsi_m": 73.75,
+    "ema9_m": 1931.47,
+    "ema21_m": 1928.81
+   },
+   "short": {
+    "short_interest": 7197631,
+    "days_to_cover": 1.0,
+    "avg_daily_volume": 11850362,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 2508406.015895,
+     "total_volume": 5194754.77676,
+     "ratio": 0.483
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 2256813.506019,
+     "total_volume": 5759136.444624,
+     "ratio": 0.392
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 1923360.625513,
+     "total_volume": 5439127.106818,
+     "ratio": 0.354
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 2229604.994504,
+     "total_volume": 6618469.237957,
+     "ratio": 0.337
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 1278095.403249,
+     "total_volume": 3999177.642379,
+     "ratio": 0.32
+    }
+   ],
+   "news": [
+    {
+     "title": "History Says Doing This 1 Thing Will Score You an Investing Win -- Even After a Market Crash.",
+     "url": "https://www.fool.com/investing/2026/07/11/history-says-doing-this-1-thing-will-score-you-an/?source=iedfolrf0000001",
+     "published": "2026-07-11T08:02:00Z",
+     "source": "The Motley Fool",
+     "summary": "Despite recent market gains driven by AI stocks, valuations are at historically expensive levels similar to the dot-com bubble. The article recommends a simple strategy: invest in quality stocks and hold them long-term. History shows the S&P 500 has always recovered after crashes, making buy-and-hol",
+     "sentiment": "positive",
+     "reason": "Named as the top performer in the S&P 500 in the first six months with over 600% gains; memory company benefiting from AI growth."
+    },
+    {
+     "title": "Why Sandisk Stock Popped Again Today",
+     "url": "https://www.fool.com/investing/2026/07/10/why-sandisk-stock-popped-again-today/?source=iedfolrf0000001",
+     "published": "2026-07-10T19:17:20Z",
+     "source": "The Motley Fool",
+     "summary": "Sandisk stock gained 3.4% as investors bought memory stocks following SK Hynix's Nasdaq listing of its ADRs. SK Hynix forecasted that the computer memory deficit will persist until 2030 and beyond, with 2027 seeing the worst-ever supply shortage, which could drive memory prices and profits higher fo",
+     "sentiment": "positive",
+     "reason": "Stock gained 3.4% today due to positive sentiment from SK Hynix's IPO and bullish forecasts about extended memory shortages through 2030, which could drive windfall profits for memory manufacturers like Sandisk."
+    },
+    {
+     "title": "Backpack Launches First 24/7 Market for Real U.S. Equities",
+     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325394/0/en/Backpack-Launches-First-24-7-Market-for-Real-U-S-Equities.html",
+     "published": "2026-07-10T10:00:00Z",
+     "source": "GlobeNewswire Inc.",
+     "summary": "Backpack, a crypto-traditional finance bridge platform, launched 24/7 trading for select U.S. equities including SpaceX, Micron, and SanDisk for international investors. Unlike synthetic derivatives, investors hold real securities with instant settlement and continuous price discovery, available via",
+     "sentiment": "neutral",
+     "reason": "SanDisk is listed among the first equities available for 24/7 trading but receives no specific analysis or performance information in the article."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -47056,80 +47139,7 @@
      1885.6023
     ]
    ],
-   "vwap": 1880.15,
-   "ind": {
-    "rsi_d": 52.17,
-    "rsi_m": 73.75,
-    "ema9_m": 1931.47,
-    "ema21_m": 1928.81
-   },
-   "short": {
-    "short_interest": 7197631,
-    "days_to_cover": 1.0,
-    "avg_daily_volume": 11850362,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 2508406.015895,
-     "total_volume": 5194754.77676,
-     "ratio": 0.483
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 2256813.506019,
-     "total_volume": 5759136.444624,
-     "ratio": 0.392
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 1923360.625513,
-     "total_volume": 5439127.106818,
-     "ratio": 0.354
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 2229604.994504,
-     "total_volume": 6618469.237957,
-     "ratio": 0.337
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 1278095.403249,
-     "total_volume": 3999177.642379,
-     "ratio": 0.32
-    }
-   ],
-   "news": [
-    {
-     "title": "History Says Doing This 1 Thing Will Score You an Investing Win -- Even After a Market Crash.",
-     "url": "https://www.fool.com/investing/2026/07/11/history-says-doing-this-1-thing-will-score-you-an/?source=iedfolrf0000001",
-     "published": "2026-07-11T08:02:00Z",
-     "source": "The Motley Fool",
-     "summary": "Despite recent market gains driven by AI stocks, valuations are at historically expensive levels similar to the dot-com bubble. The article recommends a simple strategy: invest in quality stocks and hold them long-term. History shows the S&P 500 has always recovered after crashes, making buy-and-hol",
-     "sentiment": "positive",
-     "reason": "Named as the top performer in the S&P 500 in the first six months with over 600% gains; memory company benefiting from AI growth."
-    },
-    {
-     "title": "Why Sandisk Stock Popped Again Today",
-     "url": "https://www.fool.com/investing/2026/07/10/why-sandisk-stock-popped-again-today/?source=iedfolrf0000001",
-     "published": "2026-07-10T19:17:20Z",
-     "source": "The Motley Fool",
-     "summary": "Sandisk stock gained 3.4% as investors bought memory stocks following SK Hynix's Nasdaq listing of its ADRs. SK Hynix forecasted that the computer memory deficit will persist until 2030 and beyond, with 2027 seeing the worst-ever supply shortage, which could drive memory prices and profits higher fo",
-     "sentiment": "positive",
-     "reason": "Stock gained 3.4% today due to positive sentiment from SK Hynix's IPO and bullish forecasts about extended memory shortages through 2030, which could drive windfall profits for memory manufacturers like Sandisk."
-    },
-    {
-     "title": "Backpack Launches First 24/7 Market for Real U.S. Equities",
-     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325394/0/en/Backpack-Launches-First-24-7-Market-for-Real-U-S-Equities.html",
-     "published": "2026-07-10T10:00:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "Backpack, a crypto-traditional finance bridge platform, launched 24/7 trading for select U.S. equities including SpaceX, Micron, and SanDisk for international investors. Unlike synthetic derivatives, investors hold real securities with instant settlement and continuous price discovery, available via",
-     "sentiment": "neutral",
-     "reason": "SanDisk is listed among the first equities available for 24/7 trading but receives no specific analysis or performance information in the article."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 576302617.9,
@@ -47138,7 +47148,7 @@
     "put_vol": 42226,
     "call_oi": 107970,
     "put_oi": 174802,
-    "atm_iv": 1.3716742278925038,
+    "atm_iv": 1.375979743156025,
     "pcr_vol": 1.14,
     "pcr_oi": 1.62,
     "net_premium": 145551201.79700023,
@@ -47152,7 +47162,7 @@
       "put_vol": 28074,
       "call_oi": 50741,
       "put_oi": 91544,
-      "atm_iv": 1.3716742278925038
+      "atm_iv": 1.375979743156025
      },
      {
       "exp": "2026-07-24",
@@ -47162,7 +47172,7 @@
       "put_vol": 4656,
       "call_oi": 15449,
       "put_oi": 16845,
-      "atm_iv": 1.3116961606617183
+      "atm_iv": 1.3133667712182615
      },
      {
       "exp": "2026-07-31",
@@ -47172,7 +47182,7 @@
       "put_vol": 4132,
       "call_oi": 9874,
       "put_oi": 14910,
-      "atm_iv": 1.2952396671703643
+      "atm_iv": 1.2962737998372966
      },
      {
       "exp": "2026-08-07",
@@ -47182,7 +47192,7 @@
       "put_vol": 1430,
       "call_oi": 4089,
       "put_oi": 4946,
-      "atm_iv": 1.3753447011077278
+      "atm_iv": 1.376143811655877
      },
      {
       "exp": "2026-08-14",
@@ -47192,7 +47202,7 @@
       "put_vol": 1052,
       "call_oi": 1683,
       "put_oi": 1408,
-      "atm_iv": 1.3452311162874773
+      "atm_iv": 1.3458451161552916
      },
      {
       "exp": "2026-08-21",
@@ -47202,7 +47212,7 @@
       "put_vol": 2882,
       "call_oi": 26134,
       "put_oi": 45149,
-      "atm_iv": 1.3119159427822678
+      "atm_iv": 1.3124090264449197
      }
     ],
     "by_strike": [
@@ -48487,7 +48497,12 @@
     "max_pain": 1750,
     "max_pain_exp": "2026-07-17",
     "oi_changes": [],
-    "contracts": 4382
+    "contracts": 4382,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "TSLA": {
