@@ -1,12 +1,54 @@
 {
- "updated_at": "2026-07-13T05:25:58+00:00",
+ "updated_at": "2026-07-13T05:26:31+00:00",
  "snapshots": {
+  "NFLX": {
+   "price": 73.4,
+   "chg": -2.069999999999993,
+   "chg_pct": -2.7428117132635395,
+   "day_vol": 46685795.0,
+   "prev_close": 75.47
+  },
+  "AMD": {
+   "price": 559.9,
+   "chg": 13.17999999999995,
+   "chg_pct": 2.4107404155692036,
+   "day_vol": 20701126.0,
+   "prev_close": 546.72
+  },
+  "HOOD": {
+   "price": 111.5689,
+   "chg": -3.5411,
+   "chg_pct": -3.0762748675180265,
+   "day_vol": 25929867.0,
+   "prev_close": 115.11
+  },
+  "U": {
+   "price": 30.89,
+   "chg": 0.16000000000000014,
+   "chg_pct": 0.5206638464041657,
+   "day_vol": 13026697.0,
+   "prev_close": 30.73
+  },
+  "MU": {
+   "price": 982.9821,
+   "chg": -8.65790000000004,
+   "chg_pct": -0.8730890242426728,
+   "day_vol": 31766740.0,
+   "prev_close": 991.64
+  },
   "LITE": {
    "price": 804.21,
    "chg": 18.440000000000055,
    "chg_pct": 2.34674268551867,
    "day_vol": 3674890.0,
    "prev_close": 785.77
+  },
+  "INTC": {
+   "price": 109.6001,
+   "chg": -2.9399000000000086,
+   "chg_pct": -2.6123156211125007,
+   "day_vol": 70824190.0,
+   "prev_close": 112.54
   },
   "KLAR": {
    "price": 19.61,
@@ -22,40 +64,19 @@
    "day_vol": 11022651.0,
    "prev_close": 1858.27
   },
+  "CCL": {
+   "price": 26.8497,
+   "chg": 0.1296999999999997,
+   "chg_pct": 0.4854041916167654,
+   "day_vol": 12441421.0,
+   "prev_close": 26.72
+  },
   "SPCX": {
    "price": 145.92,
    "chg": -6.240000000000009,
    "chg_pct": -4.100946372239753,
    "day_vol": 46826329.0,
    "prev_close": 152.16
-  },
-  "U": {
-   "price": 30.89,
-   "chg": 0.16000000000000014,
-   "chg_pct": 0.5206638464041657,
-   "day_vol": 13026697.0,
-   "prev_close": 30.73
-  },
-  "INTC": {
-   "price": 109.6001,
-   "chg": -2.9399000000000086,
-   "chg_pct": -2.6123156211125007,
-   "day_vol": 70824190.0,
-   "prev_close": 112.54
-  },
-  "MU": {
-   "price": 982.9821,
-   "chg": -8.65790000000004,
-   "chg_pct": -0.8730890242426728,
-   "day_vol": 31766740.0,
-   "prev_close": 991.64
-  },
-  "TSLA": {
-   "price": 407.59,
-   "chg": 1.0399999999999636,
-   "chg_pct": 0.25581109334644286,
-   "day_vol": 33459572.0,
-   "prev_close": 406.55
   },
   "RIVN": {
    "price": 17.4899,
@@ -64,12 +85,12 @@
    "day_vol": 40152524.0,
    "prev_close": 18.12
   },
-  "HOOD": {
-   "price": 111.5689,
-   "chg": -3.5411,
-   "chg_pct": -3.0762748675180265,
-   "day_vol": 25929867.0,
-   "prev_close": 115.11
+  "COIN": {
+   "price": 159.8,
+   "chg": 1.3600000000000136,
+   "chg_pct": 0.858369098712455,
+   "day_vol": 6133590.0,
+   "prev_close": 158.44
   },
   "RKLB": {
    "price": 81.5171,
@@ -78,19 +99,12 @@
    "day_vol": 14591976.0,
    "prev_close": 82.55
   },
-  "CCL": {
-   "price": 26.8497,
-   "chg": 0.1296999999999997,
-   "chg_pct": 0.4854041916167654,
-   "day_vol": 12441421.0,
-   "prev_close": 26.72
-  },
-  "COIN": {
-   "price": 159.8,
-   "chg": 1.3600000000000136,
-   "chg_pct": 0.858369098712455,
-   "day_vol": 6133590.0,
-   "prev_close": 158.44
+  "TSLA": {
+   "price": 407.59,
+   "chg": 1.0399999999999636,
+   "chg_pct": 0.25581109334644286,
+   "day_vol": 33459572.0,
+   "prev_close": 406.55
   },
   "FIG": {
    "price": 21.1201,
@@ -98,20 +112,6 @@
    "chg_pct": -5.120844564240794,
    "day_vol": 18031072.0,
    "prev_close": 22.26
-  },
-  "NFLX": {
-   "price": 73.4,
-   "chg": -2.069999999999993,
-   "chg_pct": -2.7428117132635395,
-   "day_vol": 46685795.0,
-   "prev_close": 75.47
-  },
-  "AMD": {
-   "price": 559.9,
-   "chg": 13.17999999999995,
-   "chg_pct": 2.4107404155692036,
-   "day_vol": 20701126.0,
-   "prev_close": 546.72
   },
   "AAOI": {
    "price": 119.96,
@@ -190063,7 +190063,7 @@
    }
   },
   "SPCX": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:26:31+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -204290,7 +204290,188 @@
      145.9257
     ]
    ],
-   "src_d": "massive",
+   "vwap": 147.99,
+   "ind": {
+    "rsi_d": 59.36,
+    "rsi_m": 62.48,
+    "ema9_m": 145.9,
+    "ema21_m": 145.87
+   },
+   "short": {
+    "short_interest": 111298613,
+    "days_to_cover": 1.0,
+    "avg_daily_volume": 151628172,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 12178705.407431,
+     "total_volume": 17264992.151518,
+     "ratio": 0.705
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 12114493.006482,
+     "total_volume": 18535767.368377,
+     "ratio": 0.654
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 18683362.038105,
+     "total_volume": 25329281.687466,
+     "ratio": 0.738
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 19898174.125961,
+     "total_volume": 29686090.517253,
+     "ratio": 0.67
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 23670381.384846,
+     "total_volume": 35457491.636116,
+     "ratio": 0.668
+    }
+   ],
+   "news": [
+    {
+     "title": "J.P. Morgan Called a Potential Elon Musk SpaceX-Tesla Merger \"Strategically Coherent\"",
+     "url": "https://www.fool.com/investing/2026/07/12/jpmorgan-called-a-potential-elon-musk-spacex-tesla/?source=iedfolrf0000001",
+     "published": "2026-07-12T20:30:00Z",
+     "source": "The Motley Fool",
+     "summary": "J.P. Morgan analysts described a potential SpaceX-Tesla merger as 'strategically coherent on paper,' citing shared engineering talent, AI ambitions, and Musk's leadership. However, the bank flagged significant obstacles including regulatory hurdles, control disparities, and the appearance of SpaceX ",
+     "sentiment": "neutral",
+     "reason": "Recently went public with strong market debut, but article emphasizes caution about speculative merger scenarios rather than company fundamentals. Stock is down 4.51% on the day."
+    },
+    {
+     "title": "Prediction: SpaceX Shares Can Reach $220 by End of 2026",
+     "url": "https://www.fool.com/investing/2026/07/12/predict-spacex-shares-can-reach-220-2026/?source=iedfolrf0000001",
+     "published": "2026-07-12T20:20:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX shares, trading near $149 after its July IPO, could reach $220 by end of 2026 based on revenue growth from Starlink, AI compute contracts, and Starship progress. The company's $2 trillion market cap reflects a 51.4x forward sales multiple on 2026 estimates, which analysts expect to compress b",
+     "sentiment": "positive",
+     "reason": "Strong revenue growth (33% YoY to $18.7B in 2025), major AI compute deals with Alphabet ($920M/month) and Anthropic, expanding Starlink user base (10.3M users), and credible path to $220 share price by end of 2026 support positive outlook despite current valuation richness."
+    },
+    {
+     "title": "If I Could Tell Every QQQ Investor 1 Thing About SpaceX's Nasdaq-100 Entry, It's This",
+     "url": "https://www.fool.com/investing/2026/07/12/tell-every-qqq-investor-nasdaq-100-spacex-its-this/?source=iedfolrf0000001",
+     "published": "2026-07-12T19:29:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX joined the Nasdaq-100 index on July 7, 2026, but despite its $2 trillion market cap, its influence on the index is minimal. Due to free-float market capitalization weighting (only ~5% of SpaceX shares are publicly available), SpaceX ranks only 21st in the index with a 1.25% weight, not in the",
+     "sentiment": "neutral",
+     "reason": "While SpaceX is a major company by market cap, the article tempers expectations about its index impact due to low free-float availability. The stock shows high volatility but no fundamental criticism is presented."
+    },
+    {
+     "title": "Sam Altman Is Waiting for a $1 Trillion OpenAI Valuation. SoftBank Has a $40 Billion Loan Due March 2027.",
+     "url": "https://www.fool.com/investing/2026/07/12/sam-altman-is-waiting-for-a-1-trillion-openai-valu/?source=iedfolrf0000001",
+     "published": "2026-07-12T17:27:00Z",
+     "source": "The Motley Fool",
+     "summary": "OpenAI CEO Sam Altman is holding out for a $1 trillion valuation and plans to delay the company's IPO until 2027, but this creates a conflict with major investor SoftBank, which took a $40 billion bridge loan due in March 2027 and expected to cash out through an earlier IPO. Meanwhile, OpenAI's oper",
+     "sentiment": "neutral",
+     "reason": "Mentioned as context for recent IPO activity with $1.77 trillion valuation, but not directly impacted by OpenAI situation. Serves as benchmark for large tech IPOs."
+    },
+    {
+     "title": "SpaceX Has Officially Joined the Nasdaq-100. Here Are 3 Better Nasdaq-100 Stocks to Buy in July.",
+     "url": "https://www.fool.com/investing/2026/07/12/spacex-has-officially-joined-the-nasdaq-100-here-a/?source=iedfolrf0000001",
+     "published": "2026-07-12T17:12:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX's recent addition to the Nasdaq-100 has generated significant hype due to mechanical buying from index funds, but the article argues that three other Nasdaq-100 consumer stocks offer better investment opportunities. Keurig Dr Pepper is undergoing a major transformation with its JDE Peet's acq",
+     "sentiment": "negative",
+     "reason": "Recently added to Nasdaq-100 with inflated valuation driven by mechanical index fund buying. Author recommends waiting for hype to fade and for the company to prove its numbers as a public business before investing."
+    },
+    {
+     "title": "Why This Could Be the Worst Time to Buy SpaceX Stock",
+     "url": "https://www.fool.com/investing/2026/07/12/why-this-could-be-worst-time-buy-spacex-stock/?source=iedfolrf0000001",
+     "published": "2026-07-12T15:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX stock has fallen below its IPO opening price of $150 despite raising a record $86.7 billion. The article warns this may be the worst time to buy due to three factors: general tech sector weakness, early investor profit-taking, and an upcoming lockup period expiration in early August that coul",
+     "sentiment": "negative",
+     "reason": "Stock is trading below IPO opening price; upcoming lockup period expiration will release 6.8% of shares to insiders, likely causing further downward pressure. General tech sector weakness and lack of new operational information since IPO also contribute to negative outlook."
+    },
+    {
+     "title": "Could SpaceX Become the Next $3 Trillion Company?",
+     "url": "https://www.fool.com/investing/2026/07/12/could-spacex-become-the-next-3-trillion-company/?source=iedfolrf0000001",
+     "published": "2026-07-12T13:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX briefly reached a $3 trillion market valuation after its IPO but has since lost nearly $1 trillion in value. For the company to justify a $3 trillion valuation, it would need to generate $100 billion in annual revenue while maintaining a 30x price-to-sales multiple. This would require success",
+     "sentiment": "neutral",
+     "reason": "SpaceX has significant growth potential through AI infrastructure deals, Starlink, and Starship, but faces execution risks and macroeconomic headwinds. The article acknowledges both compelling opportunities and the difficulty of achieving $3 trillion valuation, presenting a balanced view of near-term challenges despite long-term potential."
+    },
+    {
+     "title": "SpaceX Just Joined the Nasdaq-100. Is It Time to Buy?",
+     "url": "https://www.fool.com/investing/2026/07/12/spacex-just-joined-the-nasdaq-100-is-it-time-to-bu/?source=iedfolrf0000001",
+     "published": "2026-07-12T10:12:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX joined the Nasdaq-100 index, which typically triggers buying pressure, but the stock declined instead and now trades below its $150 debut price. The analyst argues the stock is overvalued at 104 times sales with a $1.9 trillion market cap, and warns of potential selling pressure once the lock",
+     "sentiment": "negative",
+     "reason": "The analyst rates SpaceX negatively due to excessive valuation (104x sales), lack of profitability, high expectations already priced in, and upcoming lockup period expiration that could trigger significant selling pressure. The stock's failure to rally on Nasdaq-100 inclusion and decline below debut price are viewed as cautionary signs."
+    },
+    {
+     "title": "What a $5,000 Investment in SpaceX at Launch Would Be Worth Now",
+     "url": "https://www.fool.com/investing/2026/07/12/what-a-5000-investment-in-spacex-at-launch-would-b/?source=iedfolrf0000001",
+     "published": "2026-07-12T06:35:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX's post-IPO performance has been lackluster, with returns varying dramatically based on entry timing. Early IPO participants at $135/share are up 12%, while those buying at market open are roughly breaking even, and those who bought at the June 16 peak of $225.64 are down 33%. The article sugg",
+     "sentiment": "neutral",
+     "reason": "While the stock has shown significant volatility and mixed returns depending on entry point, the author takes a balanced view, noting that post-IPO erratic performance is normal and it's too early to judge the investment. The article suggests patience is warranted as the market awaits quarterly results to validate the premium valuation, neither endorsing nor condemning the investment at this stage."
+    },
+    {
+     "title": "SpaceX Stock Just Dropped Below Its Debut Price. Is the Stock a Buy?",
+     "url": "https://www.fool.com/investing/2026/07/12/spacex-stock-just-dropped-below-its-debut-price-is/?source=iedfolrf0000001",
+     "published": "2026-07-12T04:23:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX's stock has fallen below its $150 IPO opening price to $145 after reaching a high of $225. While the company has significant growth opportunities through Starship, Starlink, and AI initiatives, analysts remain skeptical due to lack of profitability, execution risks, regulatory challenges, and",
+     "sentiment": "negative",
+     "reason": "Despite promising long-term opportunities in reusable rockets, Starlink expansion, and AI, the article concludes the stock is not a buy even below its opening price. Key concerns include lack of consistent profitability, significant spending without near-term returns, regulatory risks, execution challenges, and increasing competition. The valuation is considered too high relative to current fundamentals."
+    },
+    {
+     "title": "Elon Musk's SpaceX Just Joined the Nasdaq-100. Now What?",
+     "url": "https://www.fool.com/investing/2026/07/11/elon-musks-spacex-just-joined-the-nasdaq-100-now-w/?source=iedfolrf0000001",
+     "published": "2026-07-11T21:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX entered the Nasdaq-100 index on July 7, which will trigger passive fund buying and provide stock price support. However, investors should be cautious about upcoming lock-up expiry dates that could release billions of additional shares to the market, potentially offsetting the benefits of inde",
+     "sentiment": "neutral",
+     "reason": "While Nasdaq-100 inclusion provides positive support through forced passive buying, this is offset by significant downside risk from upcoming lock-up expirations that could flood the market with up to 13.17 billion shares, creating potential selling pressure that may outweigh the index inclusion benefits."
+    },
+    {
+     "title": "President Trump Delivers Massive News for all Stock Market Investors",
+     "url": "https://www.fool.com/investing/2026/07/11/president-trump-delivers-massive-news-for-all-stoc/?source=iedfolrf0000001",
+     "published": "2026-07-11T18:32:26Z",
+     "source": "The Motley Fool",
+     "summary": "President Trump announced the end of a ceasefire with Iran and ordered strikes to resume. The article suggests this development will have broad implications for stock market investors, though specific market impacts are not detailed in the provided content.",
+     "sentiment": "negative",
+     "reason": "Stock price shows significant decline (-4.5%, -$6.87) on the date of the article, though the article does not explicitly connect this to the Iran news. Geopolitical tensions could negatively impact aerospace/defense sector stocks."
+    },
+    {
+     "title": "Could SpaceX Stock Make You a Millionaire?",
+     "url": "https://www.fool.com/investing/2026/07/11/could-spacex-stock-make-you-a-millionaire/?source=iedfolrf0000001",
+     "published": "2026-07-11T18:30:02Z",
+     "source": "The Motley Fool",
+     "summary": "Wall Street analysts are setting bullish price targets for SpaceX stock, with investors excited about its potential returns. The article discusses various scenarios of SpaceX investment outcomes and explores whether the stock could help investors achieve millionaire status.",
+     "sentiment": "positive",
+     "reason": "Wall Street analysts are setting bullish price targets for SpaceX stock. The article's title and focus on potential millionaire returns, combined with mentions of key Congressional members buying the stock and multiple articles about positive investment scenarios, indicate optimistic sentiment about the company's future prospects."
+    },
+    {
+     "title": "SpaceX IPO Lock-Up Period: A Golden Buying Opportunity or a Liquidity Trap?",
+     "url": "https://www.fool.com/investing/2026/07/11/spacex-ipo-lock-up-buying-opportunity-or-trap/?source=iedfolrf0000001",
+     "published": "2026-07-11T09:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX stock has returned to near its IPO price after an initial surge and subsequent decline. Unlike typical 180-day lockup periods, SpaceX insiders can begin selling shares in waves starting within two months, with up to 83% of non-Musk-controlled shares potentially available for sale by Q3 earnin",
+     "sentiment": "negative",
+     "reason": "The article presents a bearish outlook on SpaceX stock, arguing that periodic insider selling waves beginning in less than two months will create downward pressure. The author characterizes the situation as a 'liquidity trap' where insiders will use retail investor appetite to exit their positions at favorable prices, suggesting future selling pressure outweighs buying interest."
+    },
+    {
+     "title": "SpaceX Stock Just Received Its Highest Price Target Yet. Here's What a $10,000 Investment Would Be Worth if This Insanely Bullish Wall Street Analyst Is Right.",
+     "url": "https://www.fool.com/investing/2026/07/11/spacex-stock-just-received-its-highest-price-targe/?source=iedfolrf0000001",
+     "published": "2026-07-11T06:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Raymond James analyst Brian Gesuale set SpaceX's highest price target yet at $800, implying 425% upside from current levels. The bullish call is based on Starship's potential to revolutionize space transportation and enable orbital data centers. However, the analyst cautions that the target relies o",
+     "sentiment": "positive",
+     "reason": "Raymond James set an $800 price target (425% upside) based on Starship's transformative potential and SpaceX's role as critical infrastructure. 22 of 27 analysts have buy ratings with 60% average upside. However, sentiment is tempered by execution risks, unproven orbital data center economics, and aggressive timeline assumptions."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -204986,188 +205167,7 @@
      147.6952
     ]
    ],
-   "vwap": 147.99,
-   "ind": {
-    "rsi_d": 59.36,
-    "rsi_m": 62.48,
-    "ema9_m": 145.9,
-    "ema21_m": 145.87
-   },
-   "short": {
-    "short_interest": 111298613,
-    "days_to_cover": 1.0,
-    "avg_daily_volume": 151628172,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 12178705.407431,
-     "total_volume": 17264992.151518,
-     "ratio": 0.705
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 12114493.006482,
-     "total_volume": 18535767.368377,
-     "ratio": 0.654
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 18683362.038105,
-     "total_volume": 25329281.687466,
-     "ratio": 0.738
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 19898174.125961,
-     "total_volume": 29686090.517253,
-     "ratio": 0.67
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 23670381.384846,
-     "total_volume": 35457491.636116,
-     "ratio": 0.668
-    }
-   ],
-   "news": [
-    {
-     "title": "J.P. Morgan Called a Potential Elon Musk SpaceX-Tesla Merger \"Strategically Coherent\"",
-     "url": "https://www.fool.com/investing/2026/07/12/jpmorgan-called-a-potential-elon-musk-spacex-tesla/?source=iedfolrf0000001",
-     "published": "2026-07-12T20:30:00Z",
-     "source": "The Motley Fool",
-     "summary": "J.P. Morgan analysts described a potential SpaceX-Tesla merger as 'strategically coherent on paper,' citing shared engineering talent, AI ambitions, and Musk's leadership. However, the bank flagged significant obstacles including regulatory hurdles, control disparities, and the appearance of SpaceX ",
-     "sentiment": "neutral",
-     "reason": "Recently went public with strong market debut, but article emphasizes caution about speculative merger scenarios rather than company fundamentals. Stock is down 4.51% on the day."
-    },
-    {
-     "title": "Prediction: SpaceX Shares Can Reach $220 by End of 2026",
-     "url": "https://www.fool.com/investing/2026/07/12/predict-spacex-shares-can-reach-220-2026/?source=iedfolrf0000001",
-     "published": "2026-07-12T20:20:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX shares, trading near $149 after its July IPO, could reach $220 by end of 2026 based on revenue growth from Starlink, AI compute contracts, and Starship progress. The company's $2 trillion market cap reflects a 51.4x forward sales multiple on 2026 estimates, which analysts expect to compress b",
-     "sentiment": "positive",
-     "reason": "Strong revenue growth (33% YoY to $18.7B in 2025), major AI compute deals with Alphabet ($920M/month) and Anthropic, expanding Starlink user base (10.3M users), and credible path to $220 share price by end of 2026 support positive outlook despite current valuation richness."
-    },
-    {
-     "title": "If I Could Tell Every QQQ Investor 1 Thing About SpaceX's Nasdaq-100 Entry, It's This",
-     "url": "https://www.fool.com/investing/2026/07/12/tell-every-qqq-investor-nasdaq-100-spacex-its-this/?source=iedfolrf0000001",
-     "published": "2026-07-12T19:29:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX joined the Nasdaq-100 index on July 7, 2026, but despite its $2 trillion market cap, its influence on the index is minimal. Due to free-float market capitalization weighting (only ~5% of SpaceX shares are publicly available), SpaceX ranks only 21st in the index with a 1.25% weight, not in the",
-     "sentiment": "neutral",
-     "reason": "While SpaceX is a major company by market cap, the article tempers expectations about its index impact due to low free-float availability. The stock shows high volatility but no fundamental criticism is presented."
-    },
-    {
-     "title": "Sam Altman Is Waiting for a $1 Trillion OpenAI Valuation. SoftBank Has a $40 Billion Loan Due March 2027.",
-     "url": "https://www.fool.com/investing/2026/07/12/sam-altman-is-waiting-for-a-1-trillion-openai-valu/?source=iedfolrf0000001",
-     "published": "2026-07-12T17:27:00Z",
-     "source": "The Motley Fool",
-     "summary": "OpenAI CEO Sam Altman is holding out for a $1 trillion valuation and plans to delay the company's IPO until 2027, but this creates a conflict with major investor SoftBank, which took a $40 billion bridge loan due in March 2027 and expected to cash out through an earlier IPO. Meanwhile, OpenAI's oper",
-     "sentiment": "neutral",
-     "reason": "Mentioned as context for recent IPO activity with $1.77 trillion valuation, but not directly impacted by OpenAI situation. Serves as benchmark for large tech IPOs."
-    },
-    {
-     "title": "SpaceX Has Officially Joined the Nasdaq-100. Here Are 3 Better Nasdaq-100 Stocks to Buy in July.",
-     "url": "https://www.fool.com/investing/2026/07/12/spacex-has-officially-joined-the-nasdaq-100-here-a/?source=iedfolrf0000001",
-     "published": "2026-07-12T17:12:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX's recent addition to the Nasdaq-100 has generated significant hype due to mechanical buying from index funds, but the article argues that three other Nasdaq-100 consumer stocks offer better investment opportunities. Keurig Dr Pepper is undergoing a major transformation with its JDE Peet's acq",
-     "sentiment": "negative",
-     "reason": "Recently added to Nasdaq-100 with inflated valuation driven by mechanical index fund buying. Author recommends waiting for hype to fade and for the company to prove its numbers as a public business before investing."
-    },
-    {
-     "title": "Why This Could Be the Worst Time to Buy SpaceX Stock",
-     "url": "https://www.fool.com/investing/2026/07/12/why-this-could-be-worst-time-buy-spacex-stock/?source=iedfolrf0000001",
-     "published": "2026-07-12T15:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX stock has fallen below its IPO opening price of $150 despite raising a record $86.7 billion. The article warns this may be the worst time to buy due to three factors: general tech sector weakness, early investor profit-taking, and an upcoming lockup period expiration in early August that coul",
-     "sentiment": "negative",
-     "reason": "Stock is trading below IPO opening price; upcoming lockup period expiration will release 6.8% of shares to insiders, likely causing further downward pressure. General tech sector weakness and lack of new operational information since IPO also contribute to negative outlook."
-    },
-    {
-     "title": "Could SpaceX Become the Next $3 Trillion Company?",
-     "url": "https://www.fool.com/investing/2026/07/12/could-spacex-become-the-next-3-trillion-company/?source=iedfolrf0000001",
-     "published": "2026-07-12T13:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX briefly reached a $3 trillion market valuation after its IPO but has since lost nearly $1 trillion in value. For the company to justify a $3 trillion valuation, it would need to generate $100 billion in annual revenue while maintaining a 30x price-to-sales multiple. This would require success",
-     "sentiment": "neutral",
-     "reason": "SpaceX has significant growth potential through AI infrastructure deals, Starlink, and Starship, but faces execution risks and macroeconomic headwinds. The article acknowledges both compelling opportunities and the difficulty of achieving $3 trillion valuation, presenting a balanced view of near-term challenges despite long-term potential."
-    },
-    {
-     "title": "SpaceX Just Joined the Nasdaq-100. Is It Time to Buy?",
-     "url": "https://www.fool.com/investing/2026/07/12/spacex-just-joined-the-nasdaq-100-is-it-time-to-bu/?source=iedfolrf0000001",
-     "published": "2026-07-12T10:12:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX joined the Nasdaq-100 index, which typically triggers buying pressure, but the stock declined instead and now trades below its $150 debut price. The analyst argues the stock is overvalued at 104 times sales with a $1.9 trillion market cap, and warns of potential selling pressure once the lock",
-     "sentiment": "negative",
-     "reason": "The analyst rates SpaceX negatively due to excessive valuation (104x sales), lack of profitability, high expectations already priced in, and upcoming lockup period expiration that could trigger significant selling pressure. The stock's failure to rally on Nasdaq-100 inclusion and decline below debut price are viewed as cautionary signs."
-    },
-    {
-     "title": "What a $5,000 Investment in SpaceX at Launch Would Be Worth Now",
-     "url": "https://www.fool.com/investing/2026/07/12/what-a-5000-investment-in-spacex-at-launch-would-b/?source=iedfolrf0000001",
-     "published": "2026-07-12T06:35:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX's post-IPO performance has been lackluster, with returns varying dramatically based on entry timing. Early IPO participants at $135/share are up 12%, while those buying at market open are roughly breaking even, and those who bought at the June 16 peak of $225.64 are down 33%. The article sugg",
-     "sentiment": "neutral",
-     "reason": "While the stock has shown significant volatility and mixed returns depending on entry point, the author takes a balanced view, noting that post-IPO erratic performance is normal and it's too early to judge the investment. The article suggests patience is warranted as the market awaits quarterly results to validate the premium valuation, neither endorsing nor condemning the investment at this stage."
-    },
-    {
-     "title": "SpaceX Stock Just Dropped Below Its Debut Price. Is the Stock a Buy?",
-     "url": "https://www.fool.com/investing/2026/07/12/spacex-stock-just-dropped-below-its-debut-price-is/?source=iedfolrf0000001",
-     "published": "2026-07-12T04:23:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX's stock has fallen below its $150 IPO opening price to $145 after reaching a high of $225. While the company has significant growth opportunities through Starship, Starlink, and AI initiatives, analysts remain skeptical due to lack of profitability, execution risks, regulatory challenges, and",
-     "sentiment": "negative",
-     "reason": "Despite promising long-term opportunities in reusable rockets, Starlink expansion, and AI, the article concludes the stock is not a buy even below its opening price. Key concerns include lack of consistent profitability, significant spending without near-term returns, regulatory risks, execution challenges, and increasing competition. The valuation is considered too high relative to current fundamentals."
-    },
-    {
-     "title": "Elon Musk's SpaceX Just Joined the Nasdaq-100. Now What?",
-     "url": "https://www.fool.com/investing/2026/07/11/elon-musks-spacex-just-joined-the-nasdaq-100-now-w/?source=iedfolrf0000001",
-     "published": "2026-07-11T21:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX entered the Nasdaq-100 index on July 7, which will trigger passive fund buying and provide stock price support. However, investors should be cautious about upcoming lock-up expiry dates that could release billions of additional shares to the market, potentially offsetting the benefits of inde",
-     "sentiment": "neutral",
-     "reason": "While Nasdaq-100 inclusion provides positive support through forced passive buying, this is offset by significant downside risk from upcoming lock-up expirations that could flood the market with up to 13.17 billion shares, creating potential selling pressure that may outweigh the index inclusion benefits."
-    },
-    {
-     "title": "President Trump Delivers Massive News for all Stock Market Investors",
-     "url": "https://www.fool.com/investing/2026/07/11/president-trump-delivers-massive-news-for-all-stoc/?source=iedfolrf0000001",
-     "published": "2026-07-11T18:32:26Z",
-     "source": "The Motley Fool",
-     "summary": "President Trump announced the end of a ceasefire with Iran and ordered strikes to resume. The article suggests this development will have broad implications for stock market investors, though specific market impacts are not detailed in the provided content.",
-     "sentiment": "negative",
-     "reason": "Stock price shows significant decline (-4.5%, -$6.87) on the date of the article, though the article does not explicitly connect this to the Iran news. Geopolitical tensions could negatively impact aerospace/defense sector stocks."
-    },
-    {
-     "title": "Could SpaceX Stock Make You a Millionaire?",
-     "url": "https://www.fool.com/investing/2026/07/11/could-spacex-stock-make-you-a-millionaire/?source=iedfolrf0000001",
-     "published": "2026-07-11T18:30:02Z",
-     "source": "The Motley Fool",
-     "summary": "Wall Street analysts are setting bullish price targets for SpaceX stock, with investors excited about its potential returns. The article discusses various scenarios of SpaceX investment outcomes and explores whether the stock could help investors achieve millionaire status.",
-     "sentiment": "positive",
-     "reason": "Wall Street analysts are setting bullish price targets for SpaceX stock. The article's title and focus on potential millionaire returns, combined with mentions of key Congressional members buying the stock and multiple articles about positive investment scenarios, indicate optimistic sentiment about the company's future prospects."
-    },
-    {
-     "title": "SpaceX IPO Lock-Up Period: A Golden Buying Opportunity or a Liquidity Trap?",
-     "url": "https://www.fool.com/investing/2026/07/11/spacex-ipo-lock-up-buying-opportunity-or-trap/?source=iedfolrf0000001",
-     "published": "2026-07-11T09:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX stock has returned to near its IPO price after an initial surge and subsequent decline. Unlike typical 180-day lockup periods, SpaceX insiders can begin selling shares in waves starting within two months, with up to 83% of non-Musk-controlled shares potentially available for sale by Q3 earnin",
-     "sentiment": "negative",
-     "reason": "The article presents a bearish outlook on SpaceX stock, arguing that periodic insider selling waves beginning in less than two months will create downward pressure. The author characterizes the situation as a 'liquidity trap' where insiders will use retail investor appetite to exit their positions at favorable prices, suggesting future selling pressure outweighs buying interest."
-    },
-    {
-     "title": "SpaceX Stock Just Received Its Highest Price Target Yet. Here's What a $10,000 Investment Would Be Worth if This Insanely Bullish Wall Street Analyst Is Right.",
-     "url": "https://www.fool.com/investing/2026/07/11/spacex-stock-just-received-its-highest-price-targe/?source=iedfolrf0000001",
-     "published": "2026-07-11T06:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Raymond James analyst Brian Gesuale set SpaceX's highest price target yet at $800, implying 425% upside from current levels. The bullish call is based on Starship's potential to revolutionize space transportation and enable orbital data centers. However, the analyst cautions that the target relies o",
-     "sentiment": "positive",
-     "reason": "Raymond James set an $800 price target (425% upside) based on Starship's transformative potential and SpaceX's role as critical infrastructure. 22 of 27 analysts have buy ratings with 60% average upside. However, sentiment is tempered by execution risks, unproven orbital data center economics, and aggressive timeline assumptions."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 52999662.15999999,
@@ -205176,7 +205176,7 @@
     "put_vol": 115079,
     "call_oi": 750636,
     "put_oi": 524154,
-    "atm_iv": 0.7436858790839619,
+    "atm_iv": 0.7459239712983132,
     "pcr_vol": 0.95,
     "pcr_oi": 0.7,
     "net_premium": -35521678.62200003,
@@ -205190,7 +205190,7 @@
       "put_vol": 62253,
       "call_oi": 516739,
       "put_oi": 217501,
-      "atm_iv": 0.7436858790839619
+      "atm_iv": 0.7459239712983132
      },
      {
       "exp": "2026-07-24",
@@ -205200,7 +205200,7 @@
       "put_vol": 14040,
       "call_oi": 41238,
       "put_oi": 27386,
-      "atm_iv": 0.6977605854368838
+      "atm_iv": 0.698611779781174
      },
      {
       "exp": "2026-07-31",
@@ -205210,7 +205210,7 @@
       "put_vol": 7044,
       "call_oi": 24916,
       "put_oi": 26129,
-      "atm_iv": 0.7273614142630488
+      "atm_iv": 0.7279173556644544
      },
      {
       "exp": "2026-08-07",
@@ -205220,7 +205220,7 @@
       "put_vol": 5277,
       "call_oi": 11716,
       "put_oi": 26441,
-      "atm_iv": 0.8580571994870012
+      "atm_iv": 0.8585344304426239
      },
      {
       "exp": "2026-08-14",
@@ -205230,7 +205230,7 @@
       "put_vol": 3504,
       "call_oi": 8746,
       "put_oi": 11784,
-      "atm_iv": 0.8915097919312571
+      "atm_iv": 0.8918993443204799
      },
      {
       "exp": "2026-08-21",
@@ -205240,7 +205240,7 @@
       "put_vol": 22961,
       "call_oi": 147281,
       "put_oi": 214913,
-      "atm_iv": 0.8640091662529972
+      "atm_iv": 0.8643198383121831
      }
     ],
     "by_strike": [
@@ -205685,11 +205685,16 @@
     "max_pain": 165,
     "max_pain_exp": "2026-07-17",
     "oi_changes": [],
-    "contracts": 1216
+    "contracts": 1216,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "LITE": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:26:31+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -219916,7 +219921,52 @@
      804.6235
     ]
    ],
-   "src_d": "massive",
+   "vwap": 783.83,
+   "ind": {
+    "rsi_d": 47.42,
+    "rsi_m": 47.38,
+    "ema9_m": 804.34,
+    "ema21_m": 804.33
+   },
+   "short": {
+    "short_interest": 9655854,
+    "days_to_cover": 1.65,
+    "avg_daily_volume": 5863865,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 983757.104282,
+     "total_volume": 1902509.002169,
+     "ratio": 0.517
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 1569199.951061,
+     "total_volume": 2761811.305492,
+     "ratio": 0.568
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 426274.288878,
+     "total_volume": 1184348.682143,
+     "ratio": 0.36
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 703709.387637,
+     "total_volume": 1656465.270108,
+     "ratio": 0.425
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 607335.163244,
+     "total_volume": 1532534.719458,
+     "ratio": 0.396
+    }
+   ],
+   "news": [],
    "bars_d": [
     [
      1768194000000,
@@ -221035,52 +221085,7 @@
      785.3396
     ]
    ],
-   "vwap": 783.83,
-   "ind": {
-    "rsi_d": 47.42,
-    "rsi_m": 47.38,
-    "ema9_m": 804.34,
-    "ema21_m": 804.33
-   },
-   "short": {
-    "short_interest": 9655854,
-    "days_to_cover": 1.65,
-    "avg_daily_volume": 5863865,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 983757.104282,
-     "total_volume": 1902509.002169,
-     "ratio": 0.517
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 1569199.951061,
-     "total_volume": 2761811.305492,
-     "ratio": 0.568
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 426274.288878,
-     "total_volume": 1184348.682143,
-     "ratio": 0.36
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 703709.387637,
-     "total_volume": 1656465.270108,
-     "ratio": 0.425
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 607335.163244,
-     "total_volume": 1532534.719458,
-     "ratio": 0.396
-    }
-   ],
-   "news": [],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 40194428.617,
@@ -221089,7 +221094,7 @@
     "put_vol": 9883,
     "call_oi": 36999,
     "put_oi": 44507,
-    "atm_iv": 1.064194488497713,
+    "atm_iv": 1.067385965679363,
     "pcr_vol": 0.82,
     "pcr_oi": 1.2,
     "net_premium": -4728626.870999992,
@@ -221103,7 +221108,7 @@
       "put_vol": 5397,
       "call_oi": 20377,
       "put_oi": 23979,
-      "atm_iv": 1.064194488497713
+      "atm_iv": 1.067385965679363
      },
      {
       "exp": "2026-07-24",
@@ -221113,7 +221118,7 @@
       "put_vol": 1345,
       "call_oi": 2930,
       "put_oi": 3204,
-      "atm_iv": 0.984168628322418
+      "atm_iv": 0.9853660197969791
      },
      {
       "exp": "2026-07-31",
@@ -221123,7 +221128,7 @@
       "put_vol": 716,
       "call_oi": 3826,
       "put_oi": 3311,
-      "atm_iv": 0.965792604462044
+      "atm_iv": 0.9665293576901046
      },
      {
       "exp": "2026-08-07",
@@ -221133,7 +221138,7 @@
       "put_vol": 798,
       "call_oi": 1591,
       "put_oi": 1491,
-      "atm_iv": 0.9734417293465477
+      "atm_iv": 0.9739824161669716
      },
      {
       "exp": "2026-08-14",
@@ -221143,7 +221148,7 @@
       "put_vol": 292,
       "call_oi": 436,
       "put_oi": 298,
-      "atm_iv": 1.001894727912796
+      "atm_iv": 1.002332189573175
      },
      {
       "exp": "2026-08-21",
@@ -221153,7 +221158,7 @@
       "put_vol": 1335,
       "call_oi": 7839,
       "put_oi": 12224,
-      "atm_iv": 1.0015850723285047
+      "atm_iv": 1.001945216338825
      }
     ],
     "by_strike": [
@@ -221997,11 +222002,16 @@
     "max_pain": 850,
     "max_pain_exp": "2026-07-17",
     "oi_changes": [],
-    "contracts": 2132
+    "contracts": 2132,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "INTC": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:26:31+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -236228,7 +236238,125 @@
      109.593
     ]
    ],
-   "src_d": "massive",
+   "vwap": 109.36,
+   "ind": {
+    "rsi_d": 43.38,
+    "rsi_m": 62.63,
+    "ema9_m": 109.59,
+    "ema21_m": 109.55
+   },
+   "short": {
+    "short_interest": 127787110,
+    "days_to_cover": 1.0,
+    "avg_daily_volume": 127904196,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 12686132.192486,
+     "total_volume": 32082229.178194,
+     "ratio": 0.395
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 16581449.928973,
+     "total_volume": 40704140.325283,
+     "ratio": 0.407
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 16940291.323449,
+     "total_volume": 46421755.92,
+     "ratio": 0.365
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 23132770.376407,
+     "total_volume": 65410355.858547,
+     "ratio": 0.354
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 13038520.210501,
+     "total_volume": 36836610.073253,
+     "ratio": 0.354
+    }
+   ],
+   "news": [
+    {
+     "title": "401(k) Champions and Soaring Value Stocks",
+     "url": "https://www.fool.com/investing/2026/07/12/401k-champions-and-soaring-value-stocks/?source=iedfolrf0000001",
+     "published": "2026-07-13T00:12:48Z",
+     "source": "The Motley Fool",
+     "summary": "The article discusses the importance of grassroots 401(k) education and mentorship through the 401(k) Champion Award program, which recognizes employees who educate colleagues about retirement savings. It also highlights that value stocks, particularly those in the Vanguard Value ETF, are outperform",
+     "sentiment": "positive",
+     "reason": "Included in top 10 holdings of value ETFs with significant gains, up 499% over the trailing 12 months."
+    },
+    {
+     "title": "Shares of Intel and AMD Have Plummeted in the Last Few Days. Is It Time to Panic?",
+     "url": "https://www.fool.com/investing/2026/07/11/intel-and-amds-stock-have-plummeted-in-the-last-fe/?source=iedfolrf0000001",
+     "published": "2026-07-11T07:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Intel and AMD stocks have declined sharply in early July after strong gains in 2026, but analyst Keithen Drury argues this is not a buying opportunity. Both companies are expensive turnaround plays that are significantly underperforming their dominant rivals—AMD versus Nvidia in GPUs and Intel versu",
+     "sentiment": "negative",
+     "reason": "Intel's foundry division grew only 16% YoY to $5.4B, significantly underperforming TSMC's 41% growth and $35.9B revenue. Trading at 100x forward earnings versus TSMC's 27.5x, Intel would need to quadruple earnings to justify current valuation while competitors continue pulling ahead."
+    },
+    {
+     "title": "Advanced Micro Devices vs. Texas Instruments: Which Technology Stock Is a Better Buy in 2026?",
+     "url": "https://www.fool.com/coverage/better-buy/2026/07/10/advanced-micro-devices-vs-texas-instruments-which-technology-stock-is-a-better-buy-in-2026/?source=iedfolrf0000001",
+     "published": "2026-07-11T03:16:12Z",
+     "source": "The Motley Fool",
+     "summary": "AMD and Texas Instruments represent two different semiconductor investment approaches. AMD offers higher growth potential through AI and data center expansion but trades at a rich valuation with concentrated customer risk. Texas Instruments provides steadier returns with diversified customers, lower",
+     "sentiment": "neutral",
+     "reason": "Mentioned as a competitor to AMD in processor markets, but no detailed analysis provided."
+    },
+    {
+     "title": "Why The iShares Semiconductor ETF Soared 112.8% In The First Half of 2026",
+     "url": "https://www.fool.com/investing/2026/07/10/why-the-ishares-semiconductor-etf-soared-1128-in-t/?source=iedfolrf0000001",
+     "published": "2026-07-10T19:27:00Z",
+     "source": "The Motley Fool",
+     "summary": "The iShares Semiconductor ETF (SOXX) surged 112.8% in the first half of 2026, driven by strong AI infrastructure demand and memory chip shortages. Key gainers include Micron Technology (up 314% YTD) and Intel, alongside Nvidia. However, the article cautions that semiconductors are cyclical and inves",
+     "sentiment": "positive",
+     "reason": "Benefits from increased CPU demand for AI software and its role as a U.S. national champion in semiconductors."
+    },
+    {
+     "title": "SBA, Intel to Host Arizona Supplier Matchmaking Expo for Aerospace and Semiconductor Industries",
+     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325732/0/en/SBA-Intel-to-Host-Arizona-Supplier-Matchmaking-Expo-for-Aerospace-and-Semiconductor-Industries.html",
+     "published": "2026-07-10T19:26:00Z",
+     "source": "GlobeNewswire Inc.",
+     "summary": "The SBA announced its third Supplier Matchmaking Expo scheduled for July 29, 2026, in Scottsdale, Arizona, co-hosted by Intel. The event focuses on connecting major buyers in the space and semiconductor industries with small domestic suppliers to strengthen supply chains and boost U.S. manufacturing",
+     "sentiment": "positive",
+     "reason": "Intel is co-hosting the expo and actively participating as a buyer, demonstrating commitment to strengthening domestic semiconductor supply chains and sourcing from U.S. small businesses."
+    },
+    {
+     "title": "Silicon Interposer Market Size to Hit USD 14.04 Billion by 2035 | SNS Insider",
+     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325435/0/en/Silicon-Interposer-Market-Size-to-Hit-USD-14-04-Billion-by-2035-SNS-Insider.html",
+     "published": "2026-07-10T11:30:00Z",
+     "source": "GlobeNewswire Inc.",
+     "summary": "The global silicon interposer market, valued at $4.00 billion in 2025, is expected to grow to $14.04 billion by 2035 at a CAGR of 13.38%. Growth is driven by rising adoption of AI, chiplet architectures, and advanced semiconductor packaging. North America leads with 49% market share, while Asia Paci",
+     "sentiment": "positive",
+     "reason": "Identified as a key player and recently expanded its advanced packaging roadmap with EMIB and heterogeneous integration technologies for AI accelerators and HPC systems, directly benefiting from market growth."
+    },
+    {
+     "title": "AI in Spintronics Market Size to Skyrocket: Predicted $7.11 Billion by 2030 with a CAGR of 30.9%",
+     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325432/28124/en/AI-in-Spintronics-Market-Size-to-Skyrocket-Predicted-7-11-Billion-by-2030-with-a-CAGR-of-30-9.html",
+     "published": "2026-07-10T11:27:00Z",
+     "source": "GlobeNewswire Inc.",
+     "summary": "The AI in spintronics market is experiencing rapid growth, expanding from $1.84 billion in 2025 to $2.42 billion in 2026 (31.2% CAGR), with projections reaching $7.11 billion by 2030. Growth is driven by spintronic memory adoption, quantum computing investments, neuromorphic computing innovations, a",
+     "sentiment": "positive",
+     "reason": "Listed among major companies focused on developing advanced neuromorphic computing components for spintronic applications, indicating strategic involvement in this high-growth market segment."
+    },
+    {
+     "title": "Edge AI Semiconductor Market Size to Hit USD 151.30 Billion by 2035 | Research by SNS Insider",
+     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325326/0/en/Edge-AI-Semiconductor-Market-Size-to-Hit-USD-151-30-Billion-by-2035-Research-by-SNS-Insider.html",
+     "published": "2026-07-10T07:30:00Z",
+     "source": "GlobeNewswire Inc.",
+     "summary": "The global Edge AI Semiconductor Market was valued at $25.36 billion in 2025 and is projected to reach $151.30 billion by 2035, growing at a CAGR of 19.57%. Growth is driven by rising adoption of edge AI computing across consumer electronics, automotive, industrial IoT, and healthcare sectors. North",
+     "sentiment": "positive",
+     "reason": "Intel is identified as a leading market player in the edge AI semiconductor market, which is experiencing robust growth at 19.57% CAGR through 2035."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -237347,125 +237475,7 @@
      109.4493
     ]
    ],
-   "vwap": 109.36,
-   "ind": {
-    "rsi_d": 43.38,
-    "rsi_m": 62.63,
-    "ema9_m": 109.59,
-    "ema21_m": 109.55
-   },
-   "short": {
-    "short_interest": 127787110,
-    "days_to_cover": 1.0,
-    "avg_daily_volume": 127904196,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 12686132.192486,
-     "total_volume": 32082229.178194,
-     "ratio": 0.395
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 16581449.928973,
-     "total_volume": 40704140.325283,
-     "ratio": 0.407
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 16940291.323449,
-     "total_volume": 46421755.92,
-     "ratio": 0.365
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 23132770.376407,
-     "total_volume": 65410355.858547,
-     "ratio": 0.354
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 13038520.210501,
-     "total_volume": 36836610.073253,
-     "ratio": 0.354
-    }
-   ],
-   "news": [
-    {
-     "title": "401(k) Champions and Soaring Value Stocks",
-     "url": "https://www.fool.com/investing/2026/07/12/401k-champions-and-soaring-value-stocks/?source=iedfolrf0000001",
-     "published": "2026-07-13T00:12:48Z",
-     "source": "The Motley Fool",
-     "summary": "The article discusses the importance of grassroots 401(k) education and mentorship through the 401(k) Champion Award program, which recognizes employees who educate colleagues about retirement savings. It also highlights that value stocks, particularly those in the Vanguard Value ETF, are outperform",
-     "sentiment": "positive",
-     "reason": "Included in top 10 holdings of value ETFs with significant gains, up 499% over the trailing 12 months."
-    },
-    {
-     "title": "Shares of Intel and AMD Have Plummeted in the Last Few Days. Is It Time to Panic?",
-     "url": "https://www.fool.com/investing/2026/07/11/intel-and-amds-stock-have-plummeted-in-the-last-fe/?source=iedfolrf0000001",
-     "published": "2026-07-11T07:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Intel and AMD stocks have declined sharply in early July after strong gains in 2026, but analyst Keithen Drury argues this is not a buying opportunity. Both companies are expensive turnaround plays that are significantly underperforming their dominant rivals—AMD versus Nvidia in GPUs and Intel versu",
-     "sentiment": "negative",
-     "reason": "Intel's foundry division grew only 16% YoY to $5.4B, significantly underperforming TSMC's 41% growth and $35.9B revenue. Trading at 100x forward earnings versus TSMC's 27.5x, Intel would need to quadruple earnings to justify current valuation while competitors continue pulling ahead."
-    },
-    {
-     "title": "Advanced Micro Devices vs. Texas Instruments: Which Technology Stock Is a Better Buy in 2026?",
-     "url": "https://www.fool.com/coverage/better-buy/2026/07/10/advanced-micro-devices-vs-texas-instruments-which-technology-stock-is-a-better-buy-in-2026/?source=iedfolrf0000001",
-     "published": "2026-07-11T03:16:12Z",
-     "source": "The Motley Fool",
-     "summary": "AMD and Texas Instruments represent two different semiconductor investment approaches. AMD offers higher growth potential through AI and data center expansion but trades at a rich valuation with concentrated customer risk. Texas Instruments provides steadier returns with diversified customers, lower",
-     "sentiment": "neutral",
-     "reason": "Mentioned as a competitor to AMD in processor markets, but no detailed analysis provided."
-    },
-    {
-     "title": "Why The iShares Semiconductor ETF Soared 112.8% In The First Half of 2026",
-     "url": "https://www.fool.com/investing/2026/07/10/why-the-ishares-semiconductor-etf-soared-1128-in-t/?source=iedfolrf0000001",
-     "published": "2026-07-10T19:27:00Z",
-     "source": "The Motley Fool",
-     "summary": "The iShares Semiconductor ETF (SOXX) surged 112.8% in the first half of 2026, driven by strong AI infrastructure demand and memory chip shortages. Key gainers include Micron Technology (up 314% YTD) and Intel, alongside Nvidia. However, the article cautions that semiconductors are cyclical and inves",
-     "sentiment": "positive",
-     "reason": "Benefits from increased CPU demand for AI software and its role as a U.S. national champion in semiconductors."
-    },
-    {
-     "title": "SBA, Intel to Host Arizona Supplier Matchmaking Expo for Aerospace and Semiconductor Industries",
-     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325732/0/en/SBA-Intel-to-Host-Arizona-Supplier-Matchmaking-Expo-for-Aerospace-and-Semiconductor-Industries.html",
-     "published": "2026-07-10T19:26:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "The SBA announced its third Supplier Matchmaking Expo scheduled for July 29, 2026, in Scottsdale, Arizona, co-hosted by Intel. The event focuses on connecting major buyers in the space and semiconductor industries with small domestic suppliers to strengthen supply chains and boost U.S. manufacturing",
-     "sentiment": "positive",
-     "reason": "Intel is co-hosting the expo and actively participating as a buyer, demonstrating commitment to strengthening domestic semiconductor supply chains and sourcing from U.S. small businesses."
-    },
-    {
-     "title": "Silicon Interposer Market Size to Hit USD 14.04 Billion by 2035 | SNS Insider",
-     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325435/0/en/Silicon-Interposer-Market-Size-to-Hit-USD-14-04-Billion-by-2035-SNS-Insider.html",
-     "published": "2026-07-10T11:30:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "The global silicon interposer market, valued at $4.00 billion in 2025, is expected to grow to $14.04 billion by 2035 at a CAGR of 13.38%. Growth is driven by rising adoption of AI, chiplet architectures, and advanced semiconductor packaging. North America leads with 49% market share, while Asia Paci",
-     "sentiment": "positive",
-     "reason": "Identified as a key player and recently expanded its advanced packaging roadmap with EMIB and heterogeneous integration technologies for AI accelerators and HPC systems, directly benefiting from market growth."
-    },
-    {
-     "title": "AI in Spintronics Market Size to Skyrocket: Predicted $7.11 Billion by 2030 with a CAGR of 30.9%",
-     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325432/28124/en/AI-in-Spintronics-Market-Size-to-Skyrocket-Predicted-7-11-Billion-by-2030-with-a-CAGR-of-30-9.html",
-     "published": "2026-07-10T11:27:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "The AI in spintronics market is experiencing rapid growth, expanding from $1.84 billion in 2025 to $2.42 billion in 2026 (31.2% CAGR), with projections reaching $7.11 billion by 2030. Growth is driven by spintronic memory adoption, quantum computing investments, neuromorphic computing innovations, a",
-     "sentiment": "positive",
-     "reason": "Listed among major companies focused on developing advanced neuromorphic computing components for spintronic applications, indicating strategic involvement in this high-growth market segment."
-    },
-    {
-     "title": "Edge AI Semiconductor Market Size to Hit USD 151.30 Billion by 2035 | Research by SNS Insider",
-     "url": "https://www.globenewswire.com/news-release/2026/07/10/3325326/0/en/Edge-AI-Semiconductor-Market-Size-to-Hit-USD-151-30-Billion-by-2035-Research-by-SNS-Insider.html",
-     "published": "2026-07-10T07:30:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "The global Edge AI Semiconductor Market was valued at $25.36 billion in 2025 and is projected to reach $151.30 billion by 2035, growing at a CAGR of 19.57%. Growth is driven by rising adoption of edge AI computing across consumer electronics, automotive, industrial IoT, and healthcare sectors. North",
-     "sentiment": "positive",
-     "reason": "Intel is identified as a leading market player in the edge AI semiconductor market, which is experiencing robust growth at 19.57% CAGR through 2035."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 181132929.122,
@@ -237474,7 +237484,7 @@
     "put_vol": 124767,
     "call_oi": 773229,
     "put_oi": 625961,
-    "atm_iv": 1.096037064338766,
+    "atm_iv": 1.1160966178292289,
     "pcr_vol": 0.6,
     "pcr_oi": 0.81,
     "net_premium": 147104511.78900003,
@@ -237488,7 +237498,7 @@
       "put_vol": 20003,
       "call_oi": 14096,
       "put_oi": 8151,
-      "atm_iv": 1.096037064338766
+      "atm_iv": 1.1160966178292289
      },
      {
       "exp": "2026-07-15",
@@ -237498,7 +237508,7 @@
       "put_vol": 2367,
       "call_oi": 5703,
       "put_oi": 1561,
-      "atm_iv": 0.9612165533251611
+      "atm_iv": 0.9661503123651786
      },
      {
       "exp": "2026-07-17",
@@ -237508,7 +237518,7 @@
       "put_vol": 71596,
       "call_oi": 369608,
       "put_oi": 337186,
-      "atm_iv": 0.9504895253951288
+      "atm_iv": 0.9533265896652782
      },
      {
       "exp": "2026-07-20",
@@ -237518,7 +237528,7 @@
       "put_vol": 1093,
       "call_oi": 3524,
       "put_oi": 2404,
-      "atm_iv": 0.8142176197665286
+      "atm_iv": 0.81571076532681
      },
      {
       "exp": "2026-07-22",
@@ -237528,7 +237538,7 @@
       "put_vol": 643,
       "call_oi": 3014,
       "put_oi": 1472,
-      "atm_iv": 0.8548208353143117
+      "atm_iv": 0.8560676582666892
      },
      {
       "exp": "2026-07-24",
@@ -237538,7 +237548,7 @@
       "put_vol": 7634,
       "call_oi": 61791,
       "put_oi": 35643,
-      "atm_iv": 1.1075198001493678
+      "atm_iv": 1.1088602919897381
      }
     ],
     "by_strike": [
@@ -238025,7 +238035,12 @@
     "max_pain": 110,
     "max_pain_exp": "2026-07-13",
     "oi_changes": [],
-    "contracts": 1638
+    "contracts": 1638,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "KLAR": {
