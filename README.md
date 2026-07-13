@@ -13,8 +13,8 @@
 **运行方式**: GitHub Actions 定时/手动抓取 → JSON 存进仓库 → GitHub Pages 托管页面。
 盘中采集(K线/期权/GEX)在期权页选好 开始/结束/间隔 一键启动。
 
-**ticker 分组**: [config/ticker_sets.json](config/ticker_sets.json) —
-`research` 是深度数据(K线/期权)覆盖的标的(建议 ≤5 只),`sets` 是主页可切换的分组。
+**标的范围**: 深度数据(K线/指标/期权链/GEX)覆盖 [config/watchlist.yml](config/watchlist.yml)
+里的全部标的,与信息页一致。
 
 **Massive key(可选但推荐)**: 注册 <https://massive.com> 免费拿 key,然后
 `gh secret set MASSIVE_API_KEY`。免费版限速 5 次/分钟、K 线为盘后数据;

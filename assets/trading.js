@@ -208,7 +208,7 @@ function renderMiniCards() {
       <div class="price">${price != null ? Number(price).toFixed(2) : "—"}</div>
       <div class="chg ${(pct ?? 0) >= 0 ? "up" : "down"}">${pct != null ? ((pct >= 0 ? "+" : "") + pct.toFixed(2) + "%") : ""}</div>
     </div>`;
-  }).join("") || `<div class="empty">research 组暂无数据 — 先启动一次采集</div>`;
+  }).join("") || `<div class="empty">暂无数据 — 先启动一次采集</div>`;
 }
 
 /* ---------- 指标栏 ---------- */

@@ -164,6 +164,53 @@ def session_vwap(bars_1m: list) -> float | None:
 
 # ---------- 期权 ----------
 
+def bs_gamma(spot: float, strike: float, t_years: float, iv: float) -> float:
+    """Black-Scholes gamma,雅虎回退时由 IV 现算(Massive 链自带 gamma)。"""
+    import math
+    if not iv or iv <= 0 or t_years <= 0 or spot <= 0 or strike <= 0:
+        return 0.0
+    d1 = (math.log(spot / strike) + (0.04 + iv * iv / 2) * t_years) / (iv * math.sqrt(t_years))
+    return math.exp(-d1 * d1 / 2) / math.sqrt(2 * math.pi) / (spot * iv * math.sqrt(t_years))
+
+
+def compute_gex(contracts: list, spot: float) -> dict | None:
+    """GEX = gamma × OI × 100 × 现价² × 1%,call 正 put 负;flip 取离现价最近的累计过零点。"""
+    if not spot:
+        return None
+    today = date.today()
+    strikes: dict[float, list[float]] = {}
+    for c in contracts:
+        oi = c["oi"]
+        if not oi:
+            continue
+        g = c.get("gamma")
+        if not g:
+            t_years = ((date.fromisoformat(c["exp"]) - today).days + 0.5) / 365
+            g = bs_gamma(spot, c["strike"], t_years, c.get("iv") or 0)
+        if not g:
+            continue
+        slot = strikes.setdefault(c["strike"], [0.0, 0.0])
+        slot[0 if c["type"] == "call" else 1] += g * oi
+    if not strikes:
+        return None
+    scale = 100 * spot * spot * 0.01
+    rows = [{"strike": k, "call": cv * scale, "put": -pv * scale, "net": (cv - pv) * scale}
+            for k, (cv, pv) in sorted(strikes.items())]
+    crossings, cum, prev_cum, prev_k = [], 0.0, None, None
+    for r in rows:
+        cum += r["net"]
+        if prev_cum is not None and (prev_cum < 0) != (cum < 0):
+            crossings.append((prev_k + r["strike"]) / 2)
+        prev_cum, prev_k = cum, r["strike"]
+    lo, hi = spot * 0.75, spot * 1.25
+    return {
+        "spot": round(spot, 2),
+        "net_gex": sum(r["net"] for r in rows),
+        "flip": round(min(crossings, key=lambda k: abs(k - spot)), 2) if crossings else None,
+        "by_strike": [r for r in rows if lo <= r["strike"] <= hi],
+    }
+
+
 def rebase_url(url: str | None) -> str | None:
     """分页 next_url 可能指向官方域名,重写到配置的基址(自定义网关场景)。"""
     if not url:
@@ -188,6 +235,7 @@ def options_massive(sym: str) -> list:
                 "strike": det.get("strike_price"),
                 "exp": exp,
                 "iv": o.get("implied_volatility"),
+                "gamma": (o.get("greeks") or {}).get("gamma"),
                 "oi": o.get("open_interest") or 0,
                 "vol": day.get("volume") or 0,
                 "price": day.get("vwap") or day.get("close") or 0,
@@ -311,11 +359,13 @@ def summarize_options(sym: str, contracts: list, spot: float | None,
 # ---------- 主流程 ----------
 
 def main() -> None:
-    research = json.loads((ROOT / "config" / "ticker_sets.json").read_text())["research"]
+    # 深度数据覆盖整个 watchlist(与信息页一致)
     watchlist = yaml.safe_load((ROOT / "config" / "watchlist.yml").read_text())["tickers"]
+    research = watchlist
     now = datetime.now(timezone.utc)
     out = {"updated_at": now.isoformat(timespec="seconds"),
            "snapshots": {}, "tickers": {}, "errors": [], "options_source": None}
+    gex_out = {"updated_at": out["updated_at"], "tickers": {}, "errors": []}
 
     prev_path = ROOT / "data" / "oi_prev.json"
     oi_prev, oi_next = {}, {}
@@ -405,6 +455,9 @@ def main() -> None:
                 or (entry.get("bars_1m") or entry.get("bars_5m") or [[0] * 5])[-1][4] or None
             entry["options"] = summarize_options(sym, contracts, spot, oi_prev, oi_next)
             entry["options"]["contracts"] = len(contracts)
+            gex = compute_gex(contracts, spot)  # GEX 直接由链上 gamma 计算
+            if gex:
+                gex_out["tickers"][sym] = gex
 
         out["tickers"][sym] = entry
         done = [k for k in ("bars_1m", "bars_5m", "ind", "short", "short_vol", "news", "options") if entry.get(k)]
@@ -417,7 +470,25 @@ def main() -> None:
     if oi_next:
         prev_path.write_text(json.dumps(
             {"date": now.date().isoformat(), "oi": oi_next}, ensure_ascii=False))
-    print(f"已写入 data/research.json(期权源: {out['options_source']}, 错误 {len(out['errors'])} 条)")
+
+    # GEX 快照 + 当日盘中净 GEX 序列(隔日清空)
+    (ROOT / "data" / "gex.json").write_text(json.dumps(gex_out, ensure_ascii=False, indent=1))
+    hist_path = ROOT / "data" / "gex_history.json"
+    hist = {"date": "", "points": []}
+    if hist_path.exists():
+        try:
+            hist = json.loads(hist_path.read_text())
+        except json.JSONDecodeError:
+            pass
+    today_str = now.date().isoformat()
+    if hist.get("date") != today_str:
+        hist = {"date": today_str, "points": []}
+    for sym, g in gex_out["tickers"].items():
+        hist["points"].append({"t": out["updated_at"], "sym": sym,
+                               "net": g["net_gex"], "spot": g["spot"]})
+    hist_path.write_text(json.dumps(hist, ensure_ascii=False, indent=1))
+    print(f"已写入 research/gex/gex_history(期权源: {out['options_source']}, "
+          f"GEX {len(gex_out['tickers'])} 只, 错误 {len(out['errors'])} 条)")
 
 
 if __name__ == "__main__":

@@ -67,7 +67,6 @@ jobs:
 
           job_start=$(date -u +%s)
           while :; do
-            python scripts/fetch_gex.py
             python scripts/fetch_research.py
 
             git add data/gex.json data/gex_history.json data/research.json data/oi_prev.json
