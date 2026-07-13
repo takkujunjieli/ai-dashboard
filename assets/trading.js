@@ -102,7 +102,7 @@ function initCharts() {
   vwapL = chart.addLineSeries({ color: "#fbbf24", lineWidth: 1, lineStyle: LWC.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false });
 
   subChart = LWC.createChart($("gex-sub"), { ...chartTheme, timeScale: { ...chartTheme.timeScale, timeVisible: true } });
-  gexLine = subChart.addLineSeries({ color: "#60a5fa", lineWidth: 2, priceFormat: { type: "custom", formatter: (v) => (v / 1e9).toFixed(2) + "B" } });
+  gexLine = subChart.addLineSeries({ color: "#60a5fa", lineWidth: 2, priceFormat: { type: "custom", formatter: (v) => (v / 1e6).toFixed(0) + "M" } });
 
   chart.timeScale().subscribeVisibleLogicalRangeChange(() => requestAnimationFrame(renderLadder));
   new ResizeObserver(() => requestAnimationFrame(renderLadder)).observe($("chart"));
@@ -223,7 +223,12 @@ function renderStats() {
   add("RSI(1m)", d.ind?.rsi_m);
   add("RSI(日)", d.ind?.rsi_d);
   add("VWAP", d.vwap);
-  add("净GEX", g.net_gex != null ? fmtMoney(g.net_gex) + "/1%" : null, g.net_gex >= 0 ? "up" : "down");
+  // GEX 相对日均成交额:1% 变动的对冲量 ≈ 一天成交量的百分之几(跨标的可比的强度)
+  const adv = d.short?.avg_daily_volume;
+  const gexPct = (g.net_gex != null && adv && g.spot) ? g.net_gex / (adv * g.spot) * 100 : null;
+  add("净GEX", g.net_gex != null
+    ? fmtMoney(g.net_gex) + "/1%" + (gexPct != null ? ` (${gexPct >= 0 ? "+" : ""}${gexPct.toFixed(1)}% ADV)` : "")
+    : null, g.net_gex >= 0 ? "up" : "down");
   add("flip", g.flip);
   add("MaxPain", o.max_pain);
   add("ATM IV", o.atm_iv != null ? (o.atm_iv * 100).toFixed(1) + "%" : null);
