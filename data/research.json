@@ -1,48 +1,6 @@
 {
- "updated_at": "2026-07-13T05:23:43+00:00",
+ "updated_at": "2026-07-13T05:25:58+00:00",
  "snapshots": {
-  "CCL": {
-   "price": 26.8497,
-   "chg": 0.1296999999999997,
-   "chg_pct": 0.4854041916167654,
-   "day_vol": 12441421.0,
-   "prev_close": 26.72
-  },
-  "COIN": {
-   "price": 159.8,
-   "chg": 1.3600000000000136,
-   "chg_pct": 0.858369098712455,
-   "day_vol": 6133590.0,
-   "prev_close": 158.44
-  },
-  "FIG": {
-   "price": 21.1201,
-   "chg": -1.1399000000000008,
-   "chg_pct": -5.120844564240794,
-   "day_vol": 18031072.0,
-   "prev_close": 22.26
-  },
-  "NFLX": {
-   "price": 73.4,
-   "chg": -2.069999999999993,
-   "chg_pct": -2.7428117132635395,
-   "day_vol": 46685795.0,
-   "prev_close": 75.47
-  },
-  "AMD": {
-   "price": 559.9,
-   "chg": 13.17999999999995,
-   "chg_pct": 2.4107404155692036,
-   "day_vol": 20701126.0,
-   "prev_close": 546.72
-  },
-  "AAOI": {
-   "price": 119.96,
-   "chg": -2.25,
-   "chg_pct": -1.841093200229114,
-   "day_vol": 6737956.0,
-   "prev_close": 122.21
-  },
   "LITE": {
    "price": 804.21,
    "chg": 18.440000000000055,
@@ -119,6 +77,48 @@
    "chg_pct": -1.2512416717141102,
    "day_vol": 14591976.0,
    "prev_close": 82.55
+  },
+  "CCL": {
+   "price": 26.8497,
+   "chg": 0.1296999999999997,
+   "chg_pct": 0.4854041916167654,
+   "day_vol": 12441421.0,
+   "prev_close": 26.72
+  },
+  "COIN": {
+   "price": 159.8,
+   "chg": 1.3600000000000136,
+   "chg_pct": 0.858369098712455,
+   "day_vol": 6133590.0,
+   "prev_close": 158.44
+  },
+  "FIG": {
+   "price": 21.1201,
+   "chg": -1.1399000000000008,
+   "chg_pct": -5.120844564240794,
+   "day_vol": 18031072.0,
+   "prev_close": 22.26
+  },
+  "NFLX": {
+   "price": 73.4,
+   "chg": -2.069999999999993,
+   "chg_pct": -2.7428117132635395,
+   "day_vol": 46685795.0,
+   "prev_close": 75.47
+  },
+  "AMD": {
+   "price": 559.9,
+   "chg": 13.17999999999995,
+   "chg_pct": 2.4107404155692036,
+   "day_vol": 20701126.0,
+   "prev_close": 546.72
+  },
+  "AAOI": {
+   "price": 119.96,
+   "chg": -2.25,
+   "chg_pct": -1.841093200229114,
+   "day_vol": 6737956.0,
+   "prev_close": 122.21
   }
  },
  "tickers": {
@@ -142717,7 +142717,7 @@
    }
   },
   "FIG": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:25:58+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -156944,7 +156944,52 @@
      21.127
     ]
    ],
-   "src_d": "massive",
+   "vwap": 21.77,
+   "ind": {
+    "rsi_d": 53.01,
+    "rsi_m": 30.08,
+    "ema9_m": 21.14,
+    "ema21_m": 21.14
+   },
+   "short": {
+    "short_interest": 84499336,
+    "days_to_cover": 4.07,
+    "avg_daily_volume": 20785117,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 2137234.574688,
+     "total_volume": 6206882.237018,
+     "ratio": 0.344
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 2991018.454156,
+     "total_volume": 5859084.500348,
+     "ratio": 0.51
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 2292779.829633,
+     "total_volume": 5836325.067295,
+     "ratio": 0.393
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 5157748.640802,
+     "total_volume": 12277095.004172,
+     "ratio": 0.42
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 1824185.821876,
+     "total_volume": 6175423.335124,
+     "ratio": 0.295
+    }
+   ],
+   "news": [],
    "bars_d": [
     [
      1768194000000,
@@ -158063,52 +158108,7 @@
      21.5645
     ]
    ],
-   "vwap": 21.77,
-   "ind": {
-    "rsi_d": 53.01,
-    "rsi_m": 30.08,
-    "ema9_m": 21.14,
-    "ema21_m": 21.14
-   },
-   "short": {
-    "short_interest": 84499336,
-    "days_to_cover": 4.07,
-    "avg_daily_volume": 20785117,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 2137234.574688,
-     "total_volume": 6206882.237018,
-     "ratio": 0.344
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 2991018.454156,
-     "total_volume": 5859084.500348,
-     "ratio": 0.51
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 2292779.829633,
-     "total_volume": 5836325.067295,
-     "ratio": 0.393
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 5157748.640802,
-     "total_volume": 12277095.004172,
-     "ratio": 0.42
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 1824185.821876,
-     "total_volume": 6175423.335124,
-     "ratio": 0.295
-    }
-   ],
-   "news": [],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 2232932.256,
@@ -158117,7 +158117,7 @@
     "put_vol": 8914,
     "call_oi": 118175,
     "put_oi": 49068,
-    "atm_iv": 0.9353867497796354,
+    "atm_iv": 0.9382271501265423,
     "pcr_vol": 0.48,
     "pcr_oi": 0.42,
     "net_premium": 1491160.2859999998,
@@ -158131,7 +158131,7 @@
       "put_vol": 5560,
       "call_oi": 71689,
       "put_oi": 29738,
-      "atm_iv": 0.9353867497796354
+      "atm_iv": 0.9382271501265423
      },
      {
       "exp": "2026-07-24",
@@ -158141,7 +158141,7 @@
       "put_vol": 1076,
       "call_oi": 5655,
       "put_oi": 3387,
-      "atm_iv": 0.8534559488157711
+      "atm_iv": 0.8545077316540258
      },
      {
       "exp": "2026-07-31",
@@ -158151,7 +158151,7 @@
       "put_vol": 679,
       "call_oi": 7208,
       "put_oi": 2112,
-      "atm_iv": 0.854419604549092
+      "atm_iv": 0.8550800030217535
      },
      {
       "exp": "2026-08-07",
@@ -158161,7 +158161,7 @@
       "put_vol": 133,
       "call_oi": 4500,
       "put_oi": 780,
-      "atm_iv": 0.921755079616004
+      "atm_iv": 0.9222737797480187
      },
      {
       "exp": "2026-08-14",
@@ -158171,7 +158171,7 @@
       "put_vol": 259,
       "call_oi": 1131,
       "put_oi": 705,
-      "atm_iv": 0.9407068479879238
+      "atm_iv": 0.9411229758593388
      },
      {
       "exp": "2026-08-21",
@@ -158402,11 +158402,16 @@
     "max_pain": 20,
     "max_pain_exp": "2026-07-17",
     "oi_changes": [],
-    "contracts": 360
+    "contracts": 360,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "RIVN": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:25:58+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -172633,7 +172638,80 @@
      17.49
     ]
    ],
-   "src_d": "massive",
+   "vwap": 18.25,
+   "ind": {
+    "rsi_d": 53.9,
+    "rsi_m": 43.6,
+    "ema9_m": 17.49,
+    "ema21_m": 17.49
+   },
+   "short": {
+    "short_interest": 150409525,
+    "days_to_cover": 4.98,
+    "avg_daily_volume": 30182349,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 9077358.367857,
+     "total_volume": 17984127.348027,
+     "ratio": 0.505
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 15458101.992106,
+     "total_volume": 32283097.773265,
+     "ratio": 0.479
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 13055824.657486,
+     "total_volume": 40632141.957221,
+     "ratio": 0.321
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 26204521.92526,
+     "total_volume": 44029200.427779,
+     "ratio": 0.595
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 8460967.79176,
+     "total_volume": 18153714.825794,
+     "ratio": 0.466
+    }
+   ],
+   "news": [
+    {
+     "title": "2 Beaten-Down Stocks With Massive Upside Potential",
+     "url": "https://www.fool.com/investing/2026/07/12/2-beaten-down-stocks-with-massive-upside-potential/?source=iedfolrf0000001",
+     "published": "2026-07-12T04:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Tesla and Meta Platforms, despite underperforming this year, offer significant long-term upside potential. Tesla's robotaxi service and humanoid robot (Optimus 3) development could create high-margin revenue streams, while Meta's AI-powered advertising business is already delivering strong results w",
+     "sentiment": "neutral",
+     "reason": "Mentioned only as a competitor to Tesla in the EV market with recent Model Y alternative launch. No detailed analysis or sentiment provided in the article."
+    },
+    {
+     "title": "Rivian Just Raised Guidance. So Why Is This Stock Falling?",
+     "url": "https://www.fool.com/investing/2026/07/10/rivian-just-raised-guidance-so-why-is-this-stock-f/?source=iedfolrf0000001",
+     "published": "2026-07-10T19:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Rivian raised its full-year production guidance after beating internal projections in Q2 and launched its mass-market R2 truck. However, the stock fell due to the company's announcement of a 75 million share offering at $15.50 per share (20% below market price) to raise over $1 billion for growth ca",
+     "sentiment": "neutral",
+     "reason": "Mixed signals: positive production beat and raised guidance offset by negative shareholder dilution from a discounted equity offering. Stock fell initially but recovered above the offering price, suggesting cautious optimism about the company's path to profitability."
+    },
+    {
+     "title": "Rivian Automotive vs. Tesla: What Their Revenue Trends Tell Investors",
+     "url": "https://www.fool.com/coverage/charts/2026/07/10/rivian-automotive-vs-tesla-what-their-revenue-trends-tell-investors/?source=iedfolrf0000001",
+     "published": "2026-07-10T12:29:01Z",
+     "source": "The Motley Fool",
+     "summary": "Tesla's revenue significantly exceeds Rivian's, with Tesla reporting $22.4 billion in Q1 2026 compared to Rivian's $1.4 billion. While Rivian shows steadier growth with an 11% year-over-year increase, it remains unprofitable with a $655 million operating loss. Tesla demonstrates stronger financials ",
+     "sentiment": "neutral",
+     "reason": "Rivian shows steady revenue growth (11% year-over-year increase to $1.4B in Q1 2026) and more consistent quarter-over-quarter performance than Tesla, but remains unprofitable with a $655 million operating loss and lacks Tesla's scale, requiring partnerships like Volkswagen to sustain operations."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -173752,80 +173830,7 @@
      18.1238
     ]
    ],
-   "vwap": 18.25,
-   "ind": {
-    "rsi_d": 53.9,
-    "rsi_m": 43.6,
-    "ema9_m": 17.49,
-    "ema21_m": 17.49
-   },
-   "short": {
-    "short_interest": 150409525,
-    "days_to_cover": 4.98,
-    "avg_daily_volume": 30182349,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 9077358.367857,
-     "total_volume": 17984127.348027,
-     "ratio": 0.505
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 15458101.992106,
-     "total_volume": 32283097.773265,
-     "ratio": 0.479
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 13055824.657486,
-     "total_volume": 40632141.957221,
-     "ratio": 0.321
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 26204521.92526,
-     "total_volume": 44029200.427779,
-     "ratio": 0.595
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 8460967.79176,
-     "total_volume": 18153714.825794,
-     "ratio": 0.466
-    }
-   ],
-   "news": [
-    {
-     "title": "2 Beaten-Down Stocks With Massive Upside Potential",
-     "url": "https://www.fool.com/investing/2026/07/12/2-beaten-down-stocks-with-massive-upside-potential/?source=iedfolrf0000001",
-     "published": "2026-07-12T04:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Tesla and Meta Platforms, despite underperforming this year, offer significant long-term upside potential. Tesla's robotaxi service and humanoid robot (Optimus 3) development could create high-margin revenue streams, while Meta's AI-powered advertising business is already delivering strong results w",
-     "sentiment": "neutral",
-     "reason": "Mentioned only as a competitor to Tesla in the EV market with recent Model Y alternative launch. No detailed analysis or sentiment provided in the article."
-    },
-    {
-     "title": "Rivian Just Raised Guidance. So Why Is This Stock Falling?",
-     "url": "https://www.fool.com/investing/2026/07/10/rivian-just-raised-guidance-so-why-is-this-stock-f/?source=iedfolrf0000001",
-     "published": "2026-07-10T19:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Rivian raised its full-year production guidance after beating internal projections in Q2 and launched its mass-market R2 truck. However, the stock fell due to the company's announcement of a 75 million share offering at $15.50 per share (20% below market price) to raise over $1 billion for growth ca",
-     "sentiment": "neutral",
-     "reason": "Mixed signals: positive production beat and raised guidance offset by negative shareholder dilution from a discounted equity offering. Stock fell initially but recovered above the offering price, suggesting cautious optimism about the company's path to profitability."
-    },
-    {
-     "title": "Rivian Automotive vs. Tesla: What Their Revenue Trends Tell Investors",
-     "url": "https://www.fool.com/coverage/charts/2026/07/10/rivian-automotive-vs-tesla-what-their-revenue-trends-tell-investors/?source=iedfolrf0000001",
-     "published": "2026-07-10T12:29:01Z",
-     "source": "The Motley Fool",
-     "summary": "Tesla's revenue significantly exceeds Rivian's, with Tesla reporting $22.4 billion in Q1 2026 compared to Rivian's $1.4 billion. While Rivian shows steadier growth with an 11% year-over-year increase, it remains unprofitable with a $655 million operating loss. Tesla demonstrates stronger financials ",
-     "sentiment": "neutral",
-     "reason": "Rivian shows steady revenue growth (11% year-over-year increase to $1.4B in Q1 2026) and more consistent quarter-over-quarter performance than Tesla, but remains unprofitable with a $655 million operating loss and lacks Tesla's scale, requiring partnerships like Volkswagen to sustain operations."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 3416674.832000002,
@@ -173834,7 +173839,7 @@
     "put_vol": 37917,
     "call_oi": 188850,
     "put_oi": 102475,
-    "atm_iv": 0.7533726680224371,
+    "atm_iv": 0.7556546324389016,
     "pcr_vol": 0.9,
     "pcr_oi": 0.54,
     "net_premium": 1450337.457000002,
@@ -173848,7 +173853,7 @@
       "put_vol": 27274,
       "call_oi": 108021,
       "put_oi": 48782,
-      "atm_iv": 0.7533726680224371
+      "atm_iv": 0.7556546324389016
      },
      {
       "exp": "2026-07-24",
@@ -173858,7 +173863,7 @@
       "put_vol": 3396,
       "call_oi": 21110,
       "put_oi": 16410,
-      "atm_iv": 0.6608658031556699
+      "atm_iv": 0.6616783348261879
      },
      {
       "exp": "2026-07-31",
@@ -173868,7 +173873,7 @@
       "put_vol": 1697,
       "call_oi": 24222,
       "put_oi": 13463,
-      "atm_iv": 0.815429597245407
+      "atm_iv": 0.8160580987536283
      },
      {
       "exp": "2026-08-07",
@@ -173878,7 +173883,7 @@
       "put_vol": 861,
       "call_oi": 7346,
       "put_oi": 2646,
-      "atm_iv": 0.8261200001923514
+      "atm_iv": 0.8265837763324031
      },
      {
       "exp": "2026-08-14",
@@ -173888,7 +173893,7 @@
       "put_vol": 483,
       "call_oi": 1386,
       "put_oi": 2608,
-      "atm_iv": 0.7725903424905098
+      "atm_iv": 0.7729313944857575
      },
      {
       "exp": "2026-08-21",
@@ -173898,7 +173903,7 @@
       "put_vol": 4206,
       "call_oi": 26765,
       "put_oi": 18566,
-      "atm_iv": 0.7351920126185987
+      "atm_iv": 0.7354594067162066
      }
     ],
     "by_strike": [
@@ -174091,11 +174096,16 @@
     "max_pain": 16,
     "max_pain_exp": "2026-07-17",
     "oi_changes": [],
-    "contracts": 346
+    "contracts": 346,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "AAOI": {
-   "asof": "2026-07-13T04:36:19+00:00",
+   "asof": "2026-07-13T05:25:58+00:00",
    "src_1m": "yahoo",
    "bars_1m": [
     [
@@ -188313,7 +188323,52 @@
      119.6827
     ]
    ],
-   "src_d": "massive",
+   "vwap": 117.33,
+   "ind": {
+    "rsi_d": 39.28,
+    "rsi_m": 64.36,
+    "ema9_m": 119.75,
+    "ema21_m": 119.71
+   },
+   "short": {
+    "short_interest": 10756408,
+    "days_to_cover": 1.0,
+    "avg_daily_volume": 12803113,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-10",
+     "short_volume": 1524570.676368,
+     "total_volume": 2947977.630924,
+     "ratio": 0.517
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 2051390.042371,
+     "total_volume": 3695801.592033,
+     "ratio": 0.555
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 1084270.95994,
+     "total_volume": 2735854.216248,
+     "ratio": 0.396
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 1575260.023709,
+     "total_volume": 4065495.996539,
+     "ratio": 0.387
+    },
+    {
+     "date": "2026-07-06",
+     "short_volume": 1253070.862134,
+     "total_volume": 3111476.834599,
+     "ratio": 0.403
+    }
+   ],
+   "news": [],
    "bars_d": [
     [
      1768194000000,
@@ -189432,52 +189487,7 @@
      117.6393
     ]
    ],
-   "vwap": 117.33,
-   "ind": {
-    "rsi_d": 39.28,
-    "rsi_m": 64.36,
-    "ema9_m": 119.75,
-    "ema21_m": 119.71
-   },
-   "short": {
-    "short_interest": 10756408,
-    "days_to_cover": 1.0,
-    "avg_daily_volume": 12803113,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-10",
-     "short_volume": 1524570.676368,
-     "total_volume": 2947977.630924,
-     "ratio": 0.517
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 2051390.042371,
-     "total_volume": 3695801.592033,
-     "ratio": 0.555
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 1084270.95994,
-     "total_volume": 2735854.216248,
-     "ratio": 0.396
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 1575260.023709,
-     "total_volume": 4065495.996539,
-     "ratio": 0.387
-    },
-    {
-     "date": "2026-07-06",
-     "short_volume": 1253070.862134,
-     "total_volume": 3111476.834599,
-     "ratio": 0.403
-    }
-   ],
-   "news": [],
+   "src_d": "massive",
    "extras_asof": "2026-07-13T04:36:19+00:00",
    "options": {
     "call_premium": 9527105.144999994,
@@ -189486,7 +189496,7 @@
     "put_vol": 17707,
     "call_oi": 65355,
     "put_oi": 41738,
-    "atm_iv": 1.4228733260051964,
+    "atm_iv": 1.4271680080084395,
     "pcr_vol": 1.3,
     "pcr_oi": 0.64,
     "net_premium": -1559302.9829999972,
@@ -189500,7 +189510,7 @@
       "put_vol": 14251,
       "call_oi": 46285,
       "put_oi": 24855,
-      "atm_iv": 1.4228733260051964
+      "atm_iv": 1.4271680080084395
      },
      {
       "exp": "2026-07-24",
@@ -189510,7 +189520,7 @@
       "put_vol": 895,
       "call_oi": 7739,
       "put_oi": 4968,
-      "atm_iv": 1.316837150797023
+      "atm_iv": 1.318449507697952
      },
      {
       "exp": "2026-07-31",
@@ -189520,7 +189530,7 @@
       "put_vol": 760,
       "call_oi": 4206,
       "put_oi": 3120,
-      "atm_iv": 1.2705659616740805
+      "atm_iv": 1.2715415013459708
      },
      {
       "exp": "2026-08-07",
@@ -189530,7 +189540,7 @@
       "put_vol": 447,
       "call_oi": 1540,
       "put_oi": 1348,
-      "atm_iv": 1.4273271735743316
+      "atm_iv": 1.4281250200684592
      },
      {
       "exp": "2026-08-14",
@@ -189540,7 +189550,7 @@
       "put_vol": 370,
       "call_oi": 471,
       "put_oi": 489,
-      "atm_iv": 1.3958915820279203
+      "atm_iv": 1.3965049760565624
      },
      {
       "exp": "2026-08-21",
@@ -189550,7 +189560,7 @@
       "put_vol": 984,
       "call_oi": 5114,
       "put_oi": 6958,
-      "atm_iv": 1.366642969659444
+      "atm_iv": 1.3671377673092193
      }
     ],
     "by_strike": [
@@ -190044,7 +190054,12 @@
     "max_pain": 140,
     "max_pain_exp": "2026-07-17",
     "oi_changes": [],
-    "contracts": 1016
+    "contracts": 1016,
+    "prem_delta": {
+     "call": 0.0,
+     "put": 0.0,
+     "since": "2026-07-13T04:36:19+00:00"
+    }
    }
   },
   "SPCX": {
