@@ -359,19 +359,31 @@ function renderAll(keepRange = false) {
   if (lr) chart.timeScale().setVisibleLogicalRange(lr);
   const upd = RESEARCH?.updated_at || GEX?.updated_at;
   $("poll-status").textContent = (upd ? `数据 ${fmtDT(upd)}` : "暂无数据")
-    + ` · 自动刷新(${getPat() ? "60秒" : "5分钟,填 PAT 提速"})`;
+    + ` · 自动刷新(${marketWindow() ? (getPat() ? "60秒" : "5分钟,填 PAT 提速") : "盘外30分钟"})`;
 }
 
 async function refreshData() {
   await loadData();
   renderAll(true);
   refreshRunStatus();
+  startPolling(); // 每次刷新后按当前时段重排下一次
 }
 
-/* 无 PAT 也自动轮询:匿名 5 分钟(3文件×12次/时 < 60次/时限额),有 PAT 60 秒 */
+/* 时段感知轮询:盘中(ET 9:25-16:10 工作日)60秒(PAT)/5分钟(匿名);盘外 30 分钟 */
+function marketWindow() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: ET, hourCycle: "h23", weekday: "short", hour: "numeric", minute: "numeric",
+  }).formatToParts(new Date());
+  const get = (t) => parts.find((p) => p.type === t)?.value;
+  if (["Sat", "Sun"].includes(get("weekday"))) return false;
+  const mins = parseInt(get("hour"), 10) * 60 + parseInt(get("minute"), 10);
+  return mins >= 9 * 60 + 25 && mins <= 16 * 60 + 10;
+}
+
 function startPolling() {
-  if (pollTimer) clearInterval(pollTimer);
-  pollTimer = setInterval(refreshData, getPat() ? 60_000 : 300_000);
+  if (pollTimer) clearTimeout(pollTimer);
+  const iv = marketWindow() ? (getPat() ? 60_000 : 300_000) : 1_800_000;
+  pollTimer = setTimeout(refreshData, iv);
 }
 
 /* ---------- 交互绑定 ---------- */
