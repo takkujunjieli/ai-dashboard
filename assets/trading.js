@@ -18,6 +18,7 @@ const GEX_BUCKET_LABEL = { "0dte": "0DTE", week: "本周", "2wk": "≤14天", al
 let chart, candles, volume, ema9L, ema21L, vwapL, subChart, gexLine;
 let priceLines = [];
 let pollTimer = null;
+let ladderRetry = 0;  // 首屏梯子重试计数(坐标系就绪前 priceToCoordinate 返回 null)
 
 /* lightweight-charts 按 UTC 显示,把时间戳平移成本地时间 */
 const tconv = (ms) => Math.floor(ms / 1000) - new Date(ms).getTimezoneOffset() * 60;
@@ -123,8 +124,12 @@ function initCharts() {
   subChart = LWC.createChart($("gex-sub"), { ...chartTheme, timeScale: { ...chartTheme.timeScale, timeVisible: true } });
   gexLine = subChart.addLineSeries({ color: "#60a5fa", lineWidth: 2, priceFormat: { type: "custom", formatter: (v) => (v / 1e6).toFixed(0) + "M" } });
 
-  chart.timeScale().subscribeVisibleLogicalRangeChange(() => requestAnimationFrame(renderLadder));
-  new ResizeObserver(() => requestAnimationFrame(renderLadder)).observe($("chart"));
+  // 直接调用(不裹 rAF):后台标签页 rAF 会被节流不触发。
+  // subscribeVisibleLogicalRangeChange 在图表坐标就绪后才触发,是最可靠的重画时机。
+  chart.timeScale().subscribeVisibleLogicalRangeChange(renderLadder);
+  const ro = new ResizeObserver(renderLadder);  // 首屏 flex 宽度就绪后重画
+  ro.observe($("chart"));
+  ro.observe($("ladder-box"));
 }
 
 /* ---------- 主图 ---------- */
@@ -150,7 +155,7 @@ function renderChart() {
 
   const visible = TF === "1d" ? 130 : TF === "1m" ? 200 : 160;
   chart.timeScale().setVisibleLogicalRange({ from: Math.max(0, bars.length - visible), to: bars.length + 3 });
-  requestAnimationFrame(renderLadder);
+  renderLadder();  // setVisibleLogicalRange 也会触发上面的 subscribe 兜底
 }
 
 /* ---------- 盘中净 GEX 副图(按所选到期桶) ---------- */
@@ -193,30 +198,43 @@ function renderLadder() {
   updateLadderTitle();
   const rows = ladderRows();
   const box = $("ladder-box").getBoundingClientRect();
-  const W = Math.max(box.width, 60), H = $("chart").getBoundingClientRect().height;
+  const H = $("chart").getBoundingClientRect().height;
+  // 容器或图表尚未完成布局(宽/高≈0)→ 稍后重试,别画进塌陷的画布
+  if ((box.width < 40 || H < 40) && ladderRetry < 40) { ladderRetry++; setTimeout(renderLadder, 80); return; }
+  const W = Math.max(box.width, 60);
   svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   svg.setAttribute("width", W); svg.setAttribute("height", H);
   if (!rows.length) { svg.innerHTML = `<text x="8" y="20" fill="#8b96ad" font-size="11">暂无数据(先采集一次)</text>`; return; }
-  const maxV = Math.max(...rows.map((r) => Math.abs(r.a) + Math.abs(r.b)), 1);
-  const parts = [];
+  // 中间零轴发散:正(绿)向右、负(红)向左;OI/量 模式 call 向右、put 向左
+  const cx = W / 2, half = cx - 3;
+  const magOf = (r) => r.net ? Math.abs(r.a) : Math.max(r.a, r.b);
+  const maxV = Math.max(...rows.map(magOf), 1);
+  const parts = [`<line x1="${cx}" y1="0" x2="${cx}" y2="${H}" stroke="#2a3550" stroke-width="1"/>`];
   const rowH = Math.max(Math.min(H / rows.length * 0.7, 9), 2);
+  let placed = 0;
   for (const r of rows) {
     const y = candles.priceToCoordinate(r.strike);
     if (y == null || y < 0 || y > H) continue;
+    placed++;
+    const yr = (y - rowH / 2).toFixed(1);
     if (r.net) {
-      const w = Math.abs(r.a) / maxV * (W - 46);
-      parts.push(`<rect x="0" y="${(y - rowH / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${rowH}" fill="${r.a >= 0 ? "#34d399" : "#f87171"}" opacity="0.85"><title>${r.strike}: ${fmtMoney(r.a)}</title></rect>`);
+      const w = Math.abs(r.a) / maxV * half, pos = r.a >= 0;
+      parts.push(`<rect x="${(pos ? cx : cx - w).toFixed(1)}" y="${yr}" width="${w.toFixed(1)}" height="${rowH}" fill="${pos ? "#34d399" : "#f87171"}" opacity="0.85"><title>${r.strike}: ${fmtMoney(r.a)}</title></rect>`);
     } else {
-      const wc = r.a / maxV * (W - 46), wp = r.b / maxV * (W - 46);
-      parts.push(`<rect x="0" y="${(y - rowH / 2).toFixed(1)}" width="${wc.toFixed(1)}" height="${rowH}" fill="#34d399" opacity="0.85"><title>${r.strike} Call: ${fmtNum(r.a)}</title></rect>`);
-      parts.push(`<rect x="${wc.toFixed(1)}" y="${(y - rowH / 2).toFixed(1)}" width="${wp.toFixed(1)}" height="${rowH}" fill="#f87171" opacity="0.85"><title>${r.strike} Put: ${fmtNum(r.b)}</title></rect>`);
+      const wc = r.a / maxV * half, wp = r.b / maxV * half;
+      parts.push(`<rect x="${cx.toFixed(1)}" y="${yr}" width="${wc.toFixed(1)}" height="${rowH}" fill="#34d399" opacity="0.85"><title>${r.strike} Call: ${fmtNum(r.a)}</title></rect>`);
+      parts.push(`<rect x="${(cx - wp).toFixed(1)}" y="${yr}" width="${wp.toFixed(1)}" height="${rowH}" fill="#f87171" opacity="0.85"><title>${r.strike} Put: ${fmtNum(r.b)}</title></rect>`);
     }
   }
-  // 量级最大的 4 行标注行权价
-  [...rows].sort((x, y2) => (Math.abs(y2.a) + Math.abs(y2.b)) - (Math.abs(x.a) + Math.abs(x.b))).slice(0, 4).forEach((r) => {
+  // 量级最大的 4 行标注行权价(放在柱末端外侧,越界则贴边)
+  [...rows].sort((a, b) => magOf(b) - magOf(a)).slice(0, 4).forEach((r) => {
     const y = candles.priceToCoordinate(r.strike);
     if (y == null || y < 8 || y > H - 4) return;
-    parts.push(`<text x="${W - 2}" y="${(y + 3).toFixed(1)}" fill="#8b96ad" font-size="10" text-anchor="end">${r.strike}</text>`);
+    const toRight = r.net ? r.a >= 0 : true;  // net 按方向;OI/量 标在右侧
+    const w = (r.net ? Math.abs(r.a) : Math.max(r.a, r.b)) / maxV * half;
+    let lx = toRight ? cx + w + 2 : cx - w - 2, anchor = toRight ? "start" : "end";
+    if (lx > W - 2) { lx = W - 2; anchor = "end"; } else if (lx < 2) { lx = 2; anchor = "start"; }
+    parts.push(`<text x="${lx.toFixed(1)}" y="${(y + 3).toFixed(1)}" fill="#8b96ad" font-size="10" text-anchor="${anchor}">${r.strike}</text>`);
   });
   // 现价与 flip 横线
   const mark = (price, color, label) => {
@@ -229,6 +247,9 @@ function renderLadder() {
   mark(spotOf(SYM), "#60a5fa", "现价");
   if (ladderMode === "gex") mark(gexBucketData(SYM)?.flip, "#fbbf24", "flip");
   svg.innerHTML = parts.join("");
+  // 首屏图表坐标系未就绪时 priceToCoordinate 全返回 null → 稍后重试(用 setTimeout,后台标签页 rAF 会被节流)
+  if (placed === 0 && rows.length && ladderRetry < 40) { ladderRetry++; setTimeout(renderLadder, 80); }
+  else if (placed > 0) ladderRetry = 0;
 }
 
 /* ---------- 迷你行情卡(切票器 + 分组开关 + 增删) ---------- */
