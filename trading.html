@@ -59,6 +59,27 @@
   <div id="opt-panel"></div>
 </section>
 
+<!-- 标的配置(写回仓库 config/tickers.json,需 PAT 含 Contents 读写) -->
+<section>
+  <h2>🧩 标的配置 <span class="muted small">保存后写回仓库,下次采集生效</span></h2>
+  <div class="card gex-controls">
+    <div class="ctl-row">
+      <label style="flex:1">Watchlist(全集·行情/新闻/财报,逗号或空格分隔)
+        <input type="text" id="cfg-watchlist" placeholder="AMD, TSLA, QQQ, ...">
+      </label>
+    </div>
+    <div class="ctl-row">
+      <label style="flex:1">Deep(深度组·K线/期权/GEX/指标,建议精简,SPY/QQQ 期权较重)
+        <input type="text" id="cfg-deep" placeholder="TSLA, AMD, MU, QQQ, ...">
+      </label>
+    </div>
+    <div class="ctl-row">
+      <button id="cfg-save-btn">💾 保存配置</button>
+      <span id="cfg-status" class="muted small"></span>
+    </div>
+  </div>
+</section>
+
 <!-- 采集控制 -->
 <section>
   <h2>🎛️ 采集控制 <span class="muted">(交易日 ET 9:30-16:00 自动滚动采集,此处仅手动补充)</span></h2>

@@ -26,11 +26,13 @@ K 线周期固定四档:1m / 5m / 15m / 日线。15m 由 1m 客户端聚合;日�
 交易页始终自动轮询 GitHub contents API,无手动刷新依赖:填了 PAT(与采集控制共用)→ 60 秒;
 未填 → 5 分钟(3 文件 × 12 次/时 = 36 次,低于匿名 60 次/时限额)。
 
-### watchlist
-`config/watchlist.yml` 里的全部关注标的(约 16 只)。行情条、财报日历、公司新闻、分析师评级覆盖这一层。
+### watchlist / deep(标的配置)
+唯一来源是 `config/tickers.json`(旧 `watchlist.yml` 仅作回退),**由交易台「标的配置」面板在 UI 编辑**(PAT 经 GitHub contents API 写回,PAT 需含 Contents 读写):
+- `watchlist` — 全集:行情条、快照、财报日历、公司新闻、分析师评级。
+- `deep` — 深度子集:分钟K线/技术指标/做空/期权链/GEX,是交易页切票器的对象。缺省等于 watchlist;SPY/QQQ 期权重,可精简。
 
-### research 组(已废弃,2026-07-12)
-早期免费档限速时的概念:深度数据只覆盖一个小子集。升级 Advanced 后深度数据覆盖整个 [[watchlist]],交易页切票器与信息页标的一致。
+### 调用量约束
+期权额度仅 50/分钟。降负载:①期权链服务端只取现价 ±20% 行权价 + ≤45 天(`OPT_FETCH_BAND`);②RSI/EMA 本地从 K 线算,不走计费的 indicators 端点;③滚动采集按 `deep` 分批(BATCH=3)提交,单批期权调用远低于额度。
 
 ### 滚动采集 (Rolling Collection,2026-07-12 起)
 交易日 ET 9:30-16:00 自动运行的采集会话(cron 启动,无需手动):watchlist 按 3 只一批轮转,

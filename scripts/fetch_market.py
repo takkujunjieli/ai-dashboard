@@ -34,7 +34,8 @@ def get(path: str, **params):
 
 
 def main() -> None:
-    watchlist = yaml.safe_load((ROOT / "config" / "watchlist.yml").read_text())["tickers"]
+    from _cfg import load_tickers
+    watchlist, _ = load_tickers()
     out = {
         "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "watchlist": watchlist,

@@ -1,0 +1,5 @@
+{
+  "_说明": "标的配置的唯一来源,由交易台的「标的配置」面板在 UI 上编辑(写回本文件)。watchlist=全集(行情/新闻/财报);deep=深度子集(K线/期权/GEX/指标,建议按需精简,SPY/QQQ 期权较重)。",
+  "watchlist": ["AMD", "CCL", "SNDK", "TSLA", "U", "HOOD", "MU", "RKLB", "COIN", "FIG", "RIVN", "AAOI", "SPCX", "LITE", "INTC", "KLAR", "NFLX", "SOXX", "QQQ", "SPY"],
+  "deep": ["AMD", "CCL", "SNDK", "TSLA", "U", "HOOD", "MU", "RKLB", "COIN", "FIG", "RIVN", "AAOI", "SPCX", "LITE", "INTC", "KLAR", "NFLX", "SOXX", "QQQ", "SPY"]
+}

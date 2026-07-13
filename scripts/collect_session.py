@@ -57,13 +57,14 @@ def commit_push(msg: str) -> None:
 
 
 def main() -> None:
-    watchlist = yaml.safe_load((ROOT / "config" / "watchlist.yml").read_text())["tickers"]
-    batches = [watchlist[i:i + BATCH] for i in range(0, len(watchlist), BATCH)]
+    from _cfg import load_tickers
+    _, deep = load_tickers()  # 滚动采集只跑深度组
+    batches = [deep[i:i + BATCH] for i in range(0, len(deep), BATCH)]
     job_start = time.time()
 
     if ONCE:
         end_utc = None
-        print(f"单轮模式: {len(watchlist)} 只 / {len(batches)} 批")
+        print(f"单轮模式: {len(deep)} 只 / {len(batches)} 批")
     else:
         if datetime.now(ET).weekday() >= 5:
             print("周末,不采集")
@@ -78,7 +79,7 @@ def main() -> None:
             wait = (open_utc - utc_now()).total_seconds()
             print(f"等待开盘 {wait / 60:.0f} 分钟(ET 9:30)")
             time.sleep(wait)
-        print(f"滚动采集: {len(watchlist)} 只 / {len(batches)} 批,至 {end_utc.isoformat(timespec='minutes')}")
+        print(f"滚动采集: {len(deep)} 只 / {len(batches)} 批,至 {end_utc.isoformat(timespec='minutes')}")
 
     sh("git", "config", "user.name", "github-actions[bot]")
     sh("git", "config", "user.email", "github-actions[bot]@users.noreply.github.com")

@@ -100,14 +100,6 @@ def bars_yahoo(sym: str, interval: str, period: str) -> list:
             for ts, r in df.iterrows()][-BAR_KEEP:]
 
 
-def latest_indicator(sym: str, kind: str, timespan: str, window: int):
-    """RSI/EMA 等指标的最新值(官方 indicators 端点)。"""
-    data = mget(f"/v1/indicators/{kind}/{sym}", timespan=timespan, window=window,
-                **{"series_type": "close", "order": "desc", "limit": 1})
-    vals = ((data.get("results") or {}).get("values")) or []
-    return round(vals[0]["value"], 2) if vals else None
-
-
 def fetch_short(sym: str) -> dict:
     rows = (mget("/stocks/v1/short-interest", ticker=sym, limit=1,
                  sort="settlement_date.desc").get("results")) or []
@@ -171,6 +163,35 @@ def session_vwap(bars_1m: list) -> float | None:
 
 
 # ---------- 期权 ----------
+
+def rsi(closes: list, n: int = 14) -> float | None:
+    """Wilder RSI,本地从收盘价算(替代按次计费的指标端点)。"""
+    if len(closes) <= n:
+        return None
+    gains = losses = 0.0
+    for i in range(1, n + 1):
+        d = closes[i] - closes[i - 1]
+        gains += max(d, 0); losses += max(-d, 0)
+    ag, al = gains / n, losses / n
+    for i in range(n + 1, len(closes)):
+        d = closes[i] - closes[i - 1]
+        ag = (ag * (n - 1) + max(d, 0)) / n
+        al = (al * (n - 1) + max(-d, 0)) / n
+    if al == 0:
+        return 100.0
+    return round(100 - 100 / (1 + ag / al), 2)
+
+
+def ema_last(closes: list, n: int) -> float | None:
+    """EMA 末值,本地算。"""
+    if len(closes) < n:
+        return None
+    k = 2 / (n + 1)
+    e = sum(closes[:n]) / n
+    for c in closes[n:]:
+        e = c * k + e * (1 - k)
+    return round(e, 2)
+
 
 def bs_gamma(spot: float, strike: float, t_years: float, iv: float) -> float:
     """Black-Scholes gamma,雅虎回退时由 IV 现算(Massive 链自带 gamma)。"""
@@ -246,8 +267,19 @@ def rebase_url(url: str | None) -> str | None:
     return f"{BASE}{p.path}" + (f"?{p.query}" if p.query else "")
 
 
-def options_massive(sym: str) -> list:
-    contracts, url, today = [], f"/v3/snapshot/options/{sym}?limit=250", date.today()
+OPT_FETCH_BAND = 0.20  # 期权只抓现价 ±20% 的行权价,大幅减少 SPY/QQQ 分页
+
+
+def options_massive(sym: str, spot: float | None = None) -> list:
+    from urllib.parse import urlencode
+    today = date.today()
+    params = {"limit": 250,
+              "expiration_date.gte": today.isoformat(),
+              "expiration_date.lte": (today + timedelta(days=MAX_DTE)).isoformat()}
+    if spot:  # 服务端行权价过滤,减少页数
+        params["strike_price.gte"] = round(spot * (1 - OPT_FETCH_BAND), 2)
+        params["strike_price.lte"] = round(spot * (1 + OPT_FETCH_BAND), 2)
+    contracts, url = [], f"/v3/snapshot/options/{sym}?{urlencode(params)}"
     while url:
         data = mget(url)
         for o in data.get("results") or []:
@@ -388,7 +420,7 @@ def summarize_options(sym: str, contracts: list, spot: float | None,
 # ---------- 主流程 ----------
 
 EXTRAS_TTL = int(os.environ.get("EXTRAS_TTL", "3600"))  # 指标/short/新闻/日线的刷新周期(秒)
-EXTRAS_KEYS = ("ind", "short", "short_vol", "news", "bars_d", "src_d", "extras_asof")
+EXTRAS_KEYS = ("short", "short_vol", "news", "bars_d", "src_d", "extras_asof")
 
 
 def load_json(path: Path, default):
@@ -420,9 +452,10 @@ def extras_fresh(old: dict, now: datetime) -> bool:
 
 
 def main(tickers: list | None = None, merge: bool = False) -> None:
-    """tickers=None 抓全 watchlist;merge=True 增量合并进现有 JSON(滚动采集的批模式)。"""
-    watchlist = yaml.safe_load((ROOT / "config" / "watchlist.yml").read_text())["tickers"]
-    targets = [t for t in (tickers or watchlist) if t in watchlist] or watchlist
+    """tickers=None 抓深度组(deep);merge=True 增量合并进现有 JSON(滚动采集的批模式)。"""
+    from _cfg import load_tickers
+    watchlist, deep = load_tickers()  # snapshots 用全集,深度数据用 deep
+    targets = [t for t in (tickers or deep) if t in watchlist] or deep
     now = datetime.now(timezone.utc)
     now_iso = now.isoformat(timespec="seconds")
 
@@ -482,16 +515,6 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                 if k in old:
                     entry[k] = old[k]
         elif KEY:
-            ind = {}
-            for name, kind, ts, win in (("rsi_d", "rsi", "day", 14),
-                                        ("rsi_m", "rsi", "minute", 14),
-                                        ("ema9_m", "ema", "minute", 9),
-                                        ("ema21_m", "ema", "minute", 21)):
-                try:
-                    ind[name] = latest_indicator(sym, kind, ts, win)
-                except Exception as exc:  # noqa: BLE001
-                    out["errors"].append(f"{sym} 指标{name}: {redact(exc)}")
-            entry["ind"] = ind
             try:
                 entry["short"] = fetch_short(sym)
             except Exception as exc:  # noqa: BLE001
@@ -506,11 +529,21 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                 out["errors"].append(f"{sym} 新闻(massive): {redact(exc)}")
             entry["extras_asof"] = now_iso
 
+        # 技术指标:本地从 K 线算(零 API 成本),每批刷新
+        closes_m = [b[4] for b in entry.get("bars_1m", [])]
+        closes_d = [b[4] for b in entry.get("bars_d", [])]
+        if closes_m or closes_d:
+            entry["ind"] = {"rsi_m": rsi(closes_m), "rsi_d": rsi(closes_d),
+                            "ema9_m": ema_last(closes_m, 9), "ema21_m": ema_last(closes_m, 21)}
+
+        spot = (out["snapshots"].get(sym) or {}).get("price") \
+            or (entry.get("bars_1m") or entry.get("bars_5m") or [[0] * 5])[-1][4] or None
+
         # 期权(每批都刷,GEX 由链上 gamma 一并算出)
         contracts = None
         if use_massive_options:
             try:
-                contracts = options_massive(sym)
+                contracts = options_massive(sym, spot)
                 out["options_source"] = "massive"
             except requests.HTTPError as exc:
                 if exc.response is not None and exc.response.status_code in (401, 403):
@@ -524,8 +557,6 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
             except Exception as exc:  # noqa: BLE001
                 out["errors"].append(f"{sym} 期权(yahoo): {redact(exc)}")
         if contracts:
-            spot = (out["snapshots"].get(sym) or {}).get("price") \
-                or (entry.get("bars_1m") or entry.get("bars_5m") or [[0] * 5])[-1][4] or None
             entry["options"] = summarize_options(sym, contracts, spot, oi_all, oi_next)
             entry["options"]["contracts"] = len(contracts)
             # 批间 premium 增量(仅同一交易日内比较,premium 是当日累计值)

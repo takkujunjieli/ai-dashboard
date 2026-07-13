@@ -337,6 +337,44 @@ function renderErrors() {
     ? `<details><summary>⚠️ ${msgs.length} 条数据源提示</summary><ul>${msgs.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></details>` : "";
 }
 
+/* ---------- 标的配置(读写仓库 config/tickers.json) ---------- */
+const parseTickers = (s) => [...new Set((s || "").toUpperCase().split(/[\s,]+/).filter(Boolean))];
+
+async function initTickerConfig() {
+  const cfg = await loadJSON("config/tickers.json") || {};
+  $("cfg-watchlist").value = (cfg.watchlist || []).join(", ");
+  $("cfg-deep").value = (cfg.deep || cfg.watchlist || []).join(", ");
+
+  $("cfg-save-btn").addEventListener("click", async () => {
+    const pat = getPat() || $("gex-pat").value.trim();
+    if (!pat) { $("cfg-status").textContent = "⚠️ 需要 PAT(含 Contents 读写)"; return; }
+    const watchlist = parseTickers($("cfg-watchlist").value);
+    let deep = parseTickers($("cfg-deep").value).filter((t) => watchlist.includes(t));
+    if (!watchlist.length) { $("cfg-status").textContent = "⚠️ Watchlist 不能为空"; return; }
+    if (!deep.length) deep = watchlist;
+    const body = {
+      "_说明": "标的配置的唯一来源,由交易台「标的配置」面板编辑。",
+      watchlist, deep,
+    };
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(body, null, 2) + "\n")));
+    $("cfg-status").textContent = "保存中…";
+    try {
+      // 取当前文件 sha(更新需要)
+      const meta = await fetch(`https://api.github.com/repos/${REPO}/contents/config/tickers.json`,
+        { headers: ghHeaders(pat) });
+      const sha = meta.ok ? (await meta.json()).sha : undefined;
+      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/config/tickers.json`, {
+        method: "PUT", headers: ghHeaders(pat),
+        body: JSON.stringify({ message: "chore: UI 更新标的配置", content, sha, branch: "main" }),
+      });
+      if (!r.ok) throw new Error(`HTTP ${r.status}: ${(await r.json())?.message || ""}`);
+      $("cfg-status").innerHTML = `✅ 已保存(watchlist ${watchlist.length} · deep ${deep.length})。点采集「▶ 启动」按新配置抓取。`;
+    } catch (e) {
+      $("cfg-status").textContent = `❌ 保存失败: ${e.message}(PAT 需含 Contents 读写权限)`;
+    }
+  });
+}
+
 /* ---------- 采集控制(GitHub Actions API) ---------- */
 function setGexStatus(msg) { $("gex-status").innerHTML = msg; }
 
@@ -487,6 +525,7 @@ function initToolbar() {
   initCharts();
   initToolbar();
   initControls();
+  initTickerConfig();
   [...$("tf-chips").children].forEach((b) => b.classList.toggle("active", b.dataset.tf === TF));
   await loadData();
   renderAll();
