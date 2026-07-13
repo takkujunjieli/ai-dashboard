@@ -181,12 +181,34 @@ def bs_gamma(spot: float, strike: float, t_years: float, iv: float) -> float:
     return math.exp(-d1 * d1 / 2) / math.sqrt(2 * math.pi) / (spot * iv * math.sqrt(t_years))
 
 
+# GEX 按到期分桶(累计口径,0dte ⊂ week ⊂ 2wk ⊂ all),前端可切,默认 0DTE
+GEX_BUCKETS = [("0dte", 0), ("week", 7), ("2wk", 14), ("all", MAX_DTE)]
+
+
+def _gex_summary(pairs: dict, spot: float) -> dict:
+    """把 {strike: [call_gO, put_gO]} 汇总为 net_gex / flip / by_strike(现价±25%)。"""
+    scale = 100 * spot * spot * 0.01
+    rows = [{"strike": k, "net": (cv - pv) * scale} for k, (cv, pv) in sorted(pairs.items())]
+    crossings, cum, prev_cum, prev_k = [], 0.0, None, None
+    for r in rows:
+        cum += r["net"]
+        if prev_cum is not None and (prev_cum < 0) != (cum < 0):
+            crossings.append((prev_k + r["strike"]) / 2)
+        prev_cum, prev_k = cum, r["strike"]
+    lo, hi = spot * 0.75, spot * 1.25
+    return {
+        "net_gex": sum(r["net"] for r in rows),
+        "flip": round(min(crossings, key=lambda k: abs(k - spot)), 2) if crossings else None,
+        "by_strike": [r for r in rows if lo <= r["strike"] <= hi],
+    }
+
+
 def compute_gex(contracts: list, spot: float) -> dict | None:
-    """GEX = gamma × OI × 100 × 现价² × 1%,call 正 put 负;flip 取离现价最近的累计过零点。"""
+    """GEX = gamma × OI × 100 × 现价² × 1%,call 正 put 负;按到期分桶。"""
     if not spot:
         return None
     today = date.today()
-    strikes: dict[float, list[float]] = {}
+    enriched = []  # (dte, strike, is_call, gamma×oi)
     for c in contracts:
         oi = c["oi"]
         if not oi:
@@ -197,26 +219,22 @@ def compute_gex(contracts: list, spot: float) -> dict | None:
             g = bs_gamma(spot, c["strike"], t_years, c.get("iv") or 0)
         if not g:
             continue
-        slot = strikes.setdefault(c["strike"], [0.0, 0.0])
-        slot[0 if c["type"] == "call" else 1] += g * oi
-    if not strikes:
+        dte = (date.fromisoformat(c["exp"]) - today).days
+        enriched.append((dte, c["strike"], c["type"] == "call", g * oi))
+    if not enriched:
         return None
-    scale = 100 * spot * spot * 0.01
-    rows = [{"strike": k, "call": cv * scale, "put": -pv * scale, "net": (cv - pv) * scale}
-            for k, (cv, pv) in sorted(strikes.items())]
-    crossings, cum, prev_cum, prev_k = [], 0.0, None, None
-    for r in rows:
-        cum += r["net"]
-        if prev_cum is not None and (prev_cum < 0) != (cum < 0):
-            crossings.append((prev_k + r["strike"]) / 2)
-        prev_cum, prev_k = cum, r["strike"]
-    lo, hi = spot * 0.75, spot * 1.25
-    return {
-        "spot": round(spot, 2),
-        "net_gex": sum(r["net"] for r in rows),
-        "flip": round(min(crossings, key=lambda k: abs(k - spot)), 2) if crossings else None,
-        "by_strike": [r for r in rows if lo <= r["strike"] <= hi],
-    }
+    buckets = {}
+    for name, cap in GEX_BUCKETS:
+        pairs: dict[float, list[float]] = {}
+        for dte, strike, is_call, go in enriched:
+            if 0 <= dte <= cap:
+                slot = pairs.setdefault(strike, [0.0, 0.0])
+                slot[0 if is_call else 1] += go
+        buckets[name] = _gex_summary(pairs, spot) if pairs \
+            else {"net_gex": 0.0, "flip": None, "by_strike": []}
+    a = buckets["all"]  # 顶层沿用全量,兼容旧字段
+    return {"spot": round(spot, 2), "buckets": buckets,
+            "net_gex": a["net_gex"], "flip": a["flip"], "by_strike": a["by_strike"]}
 
 
 def rebase_url(url: str | None) -> str | None:
@@ -547,7 +565,8 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
         g = gex_out["tickers"].get(sym)
         if g:
             hist["points"].append({"t": now_iso, "sym": sym,
-                                   "net": g["net_gex"], "spot": g["spot"]})
+                                   "net": g["net_gex"], "spot": g["spot"],
+                                   "nets": {k: v["net_gex"] for k, v in g.get("buckets", {}).items()}})
     hist_path.write_text(json.dumps(hist, ensure_ascii=False, indent=1))
     print(f"已写入 research/gex/gex_history(期权源: {out['options_source']}, "
           f"本批 {len(targets)} 只, 错误 {len(out['errors'])} 条)")
