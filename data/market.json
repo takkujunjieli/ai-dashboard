@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-07-13T03:16:54+00:00",
+ "updated_at": "2026-07-13T04:12:00+00:00",
  "watchlist": [
   "AMD",
   "CCL",
@@ -16,7 +16,8 @@
   "SPCX",
   "LITE",
   "INTC",
-  "KLAR"
+  "KLAR",
+  "NFLX"
  ],
  "quotes": {
   "AMD": {
@@ -177,6 +178,16 @@
    "l": 19.5535,
    "o": 20.5,
    "pc": 19.99,
+   "t": 1783713600
+  },
+  "NFLX": {
+   "c": 73.37,
+   "d": -2.1,
+   "dp": -2.7826,
+   "h": 75.6986,
+   "l": 72.51,
+   "o": 75.44,
+   "pc": 75.47,
    "t": 1783713600
   }
  },
@@ -858,6 +869,48 @@
     "year": 2025,
     "quarter": 3
    }
+  ],
+  "NFLX": [
+   {
+    "symbol": "NFLX",
+    "estimate": 0.7791,
+    "actual": 0.7,
+    "period": "2026-03-31",
+    "surprise": -0.0791,
+    "surprisePercent": -10.1527,
+    "year": 2026,
+    "quarter": 1
+   },
+   {
+    "symbol": "NFLX",
+    "estimate": 0.5628,
+    "actual": 0.56,
+    "period": "2025-12-31",
+    "surprise": -0.0028,
+    "surprisePercent": -0.4975,
+    "year": 2025,
+    "quarter": 4
+   },
+   {
+    "symbol": "NFLX",
+    "estimate": 0.7106,
+    "actual": 0.587,
+    "period": "2025-09-30",
+    "surprise": -0.1236,
+    "surprisePercent": -17.3938,
+    "year": 2025,
+    "quarter": 3
+   },
+   {
+    "symbol": "NFLX",
+    "estimate": 0.7219,
+    "actual": 0.719,
+    "period": "2025-06-30",
+    "surprise": -0.0029,
+    "surprisePercent": -0.4017,
+    "year": 2025,
+    "quarter": 2
+   }
   ]
  },
  "recommendations": {
@@ -1441,10 +1494,81 @@
     "sell": 0,
     "strongSell": 0
    }
+  ],
+  "NFLX": [
+   {
+    "symbol": "NFLX",
+    "period": "2026-07-01",
+    "strongBuy": 16,
+    "buy": 29,
+    "hold": 13,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "NFLX",
+    "period": "2026-06-01",
+    "strongBuy": 16,
+    "buy": 29,
+    "hold": 13,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "NFLX",
+    "period": "2026-05-01",
+    "strongBuy": 17,
+    "buy": 29,
+    "hold": 13,
+    "sell": 0,
+    "strongSell": 0
+   },
+   {
+    "symbol": "NFLX",
+    "period": "2026-04-01",
+    "strongBuy": 16,
+    "buy": 29,
+    "hold": 14,
+    "sell": 0,
+    "strongSell": 0
+   }
   ]
  },
  "company_news": {
   "AMD": [
+   {
+    "category": "company",
+    "datetime": 1783913700,
+    "headline": "Did Nvidia's 2028 Rack Delay Under Jensen Huang Open a Door for AMD and Google?",
+    "id": 140882981,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "AMD",
+    "source": "Yahoo",
+    "summary": "A potential rare Nvidia misstep could be a big tailwind for AMD and Alphabet.",
+    "url": "https://finnhub.io/api/news?id=3cd991655d4cdeaa4a578b841f964bf00d3d1d0fe2f441922829c044b64ee7a4"
+   },
+   {
+    "category": "company",
+    "datetime": 1783908708,
+    "headline": "Why Meta Platforms Stock Surged This Week",
+    "id": 140882985,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "AMD",
+    "source": "Yahoo",
+    "summary": "New AI innovations are piquing investors' interest.",
+    "url": "https://finnhub.io/api/news?id=b34acf39590aa00671d1e047382c8fa67ec4264fd52d89832cd52767ef2c9b34"
+   },
+   {
+    "category": "company",
+    "datetime": 1783908300,
+    "headline": "Nvidia Stock Is Losing to the Market in 2026. Time to Walk Away or Double Down?",
+    "id": 140882986,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "AMD",
+    "source": "Yahoo",
+    "summary": "Nvidia could have a strong second half of the year.",
+    "url": "https://finnhub.io/api/news?id=6686122da6e997d407187e3c17d719217334eb7ceb6847077c1ed285683b739e"
+   },
    {
     "category": "company",
     "datetime": 1783904422,
@@ -1466,6 +1590,17 @@
     "source": "Yahoo",
     "summary": "This trio is dominating the AI computing space.",
     "url": "https://finnhub.io/api/news?id=f8f440b5020fec9773812b6e07bb077dc0b0761cadf62b52cd0675093362cfce"
+   },
+   {
+    "category": "company",
+    "datetime": 1783885565,
+    "headline": "Taiwan Semi Stock Is Approaching Fair Value Ahead of July 16. How to Play TSM Here.",
+    "id": 140882989,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "AMD",
+    "source": "Yahoo",
+    "summary": "GF Securities expects strong growth for Taiwan Semiconductor in Q2.",
+    "url": "https://finnhub.io/api/news?id=0b9360ed51d1b9f642543975a87d32b50d4b5526094aa3ee63d525bd8d23a8f8"
    },
    {
     "category": "company",
@@ -1510,50 +1645,6 @@
     "source": "Yahoo",
     "summary": "On Thursday, a top tech analyst said Meta Platforms, Inc.’s massive AI infrastructure investment underscores its long-term ambitions, arguing the company’s custom chip strategy is designed to expand computing capacity alongside Nvidia Corp and Advanced Micro Devices, Inc. —not replace...",
     "url": "https://finnhub.io/api/news?id=87077c82c63a7e1df662e78c5926dfc3038909b320c69b20459cbdc422a7a4a4"
-   },
-   {
-    "category": "company",
-    "datetime": 1783843502,
-    "headline": "Top Wall Street analysts are confident about these 3 stocks for the long haul",
-    "id": 140878373,
-    "image": "https://image.cnbcfm.com/api/v1/image/108190250-1756132836678-gettyimages-2169879267-INTEL_MARVELL_ALTERA.jpeg?v=1779213827&w=1920&h=1080",
-    "related": "AMD",
-    "source": "CNBC",
-    "summary": "Those looking for attractive stock picks amid the ongoing volatility can gain key insights by tracking the recommendations of top Wall Street analysts.",
-    "url": "https://finnhub.io/api/news?id=89dbba184031f3efdbbcc82753d0721ace943d9eda8bedf8c5c2f7cf7cf5afc7"
-   },
-   {
-    "category": "company",
-    "datetime": 1783794000,
-    "headline": "Coca-Cola Is Crushing the S&P 500 and Nasdaq-100. But There's an Even Better Reason to Buy the Stock in July.",
-    "id": 140872968,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "AMD",
-    "source": "Yahoo",
-    "summary": "Coca-Cola offers one of the best ways to participate in the stock market while generating reliable passive income.",
-    "url": "https://finnhub.io/api/news?id=595bbda3b42f27076691f16123eab3b84b1c59b7594d7c80f4cfecb798f92821"
-   },
-   {
-    "category": "company",
-    "datetime": 1783791180,
-    "headline": "5-star analyst sends AMD stock investors a warning",
-    "id": 140872471,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "AMD",
-    "source": "Yahoo",
-    "summary": "Advanced Micro Devices (AMD) bulls were expecting Wall Street to continue rewarding the stock following a momentous run spearheaded by AI demand, data-center expansion, and renewed confidence in the chipmaker's roadmap. For perspective, according to Seeking Alpha, AMD has dramatically outperformed ...",
-    "url": "https://finnhub.io/api/news?id=980312e15080d612cd3d4ca93ec5a50e1a48adae714b19ebe2a6d3354ea9de02"
-   },
-   {
-    "category": "company",
-    "datetime": 1783786299,
-    "headline": "Nvidia Stock is Finally Soaring, and Rare Chart Pattern Points to More Upside",
-    "id": 140873779,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/07/11/Bahia--Brazil---August-28--2025-Nvidia-L.jpg?width=2048&height=1536",
-    "related": "AMD",
-    "source": "Benzinga",
-    "summary": "Nvidia stock price is rising after moving to a technical bear market, and a rare falling wedge pattern points to a rebound.",
-    "url": "https://finnhub.io/api/news?id=328a9d2fc24f19598820abb1157a69125fd7e57e0ed72f28f336a7d8ab5221ad"
    }
   ],
   "CCL": [
@@ -1943,6 +2034,28 @@
   "MU": [
    {
     "category": "company",
+    "datetime": 1783909238,
+    "headline": "SK Hynix Falls In Seoul After Strong Nasdaq Debut: MU, SNDK, US Memory Stocks Decline Overnight Amid Fresh US-Iran Tensions",
+    "id": 140882994,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "MU",
+    "source": "Yahoo",
+    "summary": "The moves come after SK Hynix’s blockbuster Nasdaq debut on Friday that sent its shares up nearly 13%.",
+    "url": "https://finnhub.io/api/news?id=3c86d879088df112342ca9e9fe56acf5db442a34914e8bd8d7371d43e55617d9"
+   },
+   {
+    "category": "company",
+    "datetime": 1783907373,
+    "headline": "Why Retail Traders Couldn’t Take Their Eyes Off These Stocks Last Week: AAPL, MU, MSFT, META, BABA",
+    "id": 140882988,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "MU",
+    "source": "Yahoo",
+    "summary": "Tech companies advanced AI, chips, cloud, space, and autonomous technologies while navigating legal battles, investments and restructuring efforts.",
+    "url": "https://finnhub.io/api/news?id=2af4a92a53fac03e62a99995662b5df522f9b0403ffc6e4669825248889146f1"
+   },
+   {
+    "category": "company",
     "datetime": 1783906080,
     "headline": "Is a Deal With Ford and a $100 Billion Backlog Enough to Get Micron Stock Back Over $1,200?",
     "id": 140882588,
@@ -2028,28 +2141,6 @@
     "source": "Yahoo",
     "summary": "Analysts expect Alphabet’s second-quarter capital expenditures to reach $44.9 billion, a 100% increase from the prior year period.",
     "url": "https://finnhub.io/api/news?id=9721db2d6fcd4d4dab5a1715d45c546bee3188f6d9ca7ff30565a5f3eef4a506"
-   },
-   {
-    "category": "company",
-    "datetime": 1783879080,
-    "headline": "The AI Memory Chip Market Could Reach $476 Billion by 2030. Here Are 2 Stocks Positioned to Win.",
-    "id": 140879778,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "MU",
-    "source": "Yahoo",
-    "summary": "The memory market is in the up phase of a powerful supercycle, and Micron and Sandisk could benefit from it for years.",
-    "url": "https://finnhub.io/api/news?id=9dba7bd4d678d29b4c9cb3a530daed3153e5f73d0b8b60841ba67b96f93deac6"
-   },
-   {
-    "category": "company",
-    "datetime": 1783874820,
-    "headline": "Goldman Sachs sets jaw-dropping SanDisk stock price target for 2026",
-    "id": 140878509,
-    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
-    "related": "MU",
-    "source": "Yahoo",
-    "summary": "I have been tracking SanDisk's numbers. It’s one of my favourites. Why? Its performance, and the reason behind the big numbers. And the numbers keep doing something unusual for sure. They keep getting bigger than the already-big numbers that preceded them. If you didn’t know, SanDisk (SNDK) is the ...",
-    "url": "https://finnhub.io/api/news?id=1377c8f1c900acedefc491a91a007fd0cfe7822cbbfc57d429733b3f41dfb27d"
    }
   ],
   "RKLB": [
@@ -2661,7 +2752,119 @@
     "url": "https://finnhub.io/api/news?id=86606d6a2e516b22a9a161597cc4a0e796ca5eefd91c6461a44aa1e7e7924d1d"
    }
   ],
-  "KLAR": []
+  "KLAR": [],
+  "NFLX": [
+   {
+    "category": "company",
+    "datetime": 1783871348,
+    "headline": "Netflix Is Losing Viewers To The World Cup. That May Be The Wrong Measure Of The Business.",
+    "id": 140880945,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "NFLX",
+    "source": "Yahoo",
+    "summary": "Netflix’s real test is not whether the World Cup temporarily hurts viewing but whether pricing, advertising growth, and margins remain intact.",
+    "url": "https://finnhub.io/api/news?id=48b55c65b3df897247f68d8bdd69360c87eebaec2758ab05063d07844d103755"
+   },
+   {
+    "category": "company",
+    "datetime": 1783859700,
+    "headline": "Wall Street Brunch: Will AI Steal Earnings Spotlight From Banks?",
+    "id": 140878072,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2228018324/image_2228018324.jpg?io=getty-c-w1536",
+    "related": "NFLX",
+    "source": "SeekingAlpha",
+    "summary": "Will AI earnings eclipse big bank reports. Taiwan Semi, ASML offer clues on AI demand. Headline CPI seen cooling.",
+    "url": "https://finnhub.io/api/news?id=0cc77e30ad19e0252aafb19bbd465d9fc5f1e33058f06a29444b97b0bf5ff854"
+   },
+   {
+    "category": "company",
+    "datetime": 1783852020,
+    "headline": "Netflix Might Be Ready to Buy Something Again, but It's Not What You Think",
+    "id": 140876677,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "NFLX",
+    "source": "Yahoo",
+    "summary": "Love is in the air, not in the despair.",
+    "url": "https://finnhub.io/api/news?id=fbdb9ecfdba0c948a9e2b7faff692e305aa5d581ef029b25fd24b8eeb4130eac"
+   },
+   {
+    "category": "company",
+    "datetime": 1783844700,
+    "headline": "3 Reasons Why Netflix Has a Lot to Prove on July 16",
+    "id": 140876157,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "NFLX",
+    "source": "Yahoo",
+    "summary": "Shareholders are looking for reassurance in this upcoming earnings report.",
+    "url": "https://finnhub.io/api/news?id=c12b4513557069e1b3cdf7b3559ef6790820c94edc8491251e5cf02a16d93d4b"
+   },
+   {
+    "category": "company",
+    "datetime": 1783838208,
+    "headline": "Wall Street Week Ahead",
+    "id": 140876376,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/165090199/image_165090199.jpg?io=getty-c-w1536",
+    "related": "NFLX",
+    "source": "SeekingAlpha",
+    "summary": "Preview key market catalysts this week: big bank earnings, TSM, Netflix, CPI/PPI & Fed testimonyâplus SpaceX valuation insights.",
+    "url": "https://finnhub.io/api/news?id=a77b6a16e9d7a09cda7e708cd54b49ae5c2a7756f06852dfd9ceedcef2b6af02"
+   },
+   {
+    "category": "company",
+    "datetime": 1783827720,
+    "headline": "Mar Vista U.S. Quality Premier Portfolio Q2 2026 Portfolio Activity",
+    "id": 140875597,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/1359132436/image_1359132436.jpg?io=getty-c-w1536",
+    "related": "NFLX",
+    "source": "SeekingAlpha",
+    "summary": "Mar Vista's U.S. Quality Premier strategy returned +10.15% net-of-fees in the second quarter of 2026. Read more here.",
+    "url": "https://finnhub.io/api/news?id=58dd51c165523cf6f8fdca73ce8120ffc91320b6d1f05d38c15fc981bb3749aa"
+   },
+   {
+    "category": "company",
+    "datetime": 1783792800,
+    "headline": "Paramount–Warner Bros. merger could make HBO Max a 'staple' — even rivaling Netflix",
+    "id": 140872627,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "NFLX",
+    "source": "Yahoo",
+    "summary": "Investors are still waiting for the Paramount (PSKY)–Warner Bros. (WBD) merger to finalize. Morgan Stanley head of media & entertainment and cable & telecom equity research, Sean Diffley, chats with Yahoo Finance Executive Editor Brian Sozzi about AI's impact on the creative process, his outlook for streaming, and more.",
+    "url": "https://finnhub.io/api/news?id=ba2fe7ba8015565781ef7fd2601c80b86605fb7ec2a049616d92d73c0eb4ac66"
+   },
+   {
+    "category": "company",
+    "datetime": 1783713677,
+    "headline": "US Equity Markets End Higher Amid Broad Rally, US-Iran Diplomatic Progress",
+    "id": 140866178,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "NFLX",
+    "source": "Yahoo",
+    "summary": "US equity indexes closed higher Friday amid a broad-based rally after the US and Iran displayed prog",
+    "url": "https://finnhub.io/api/news?id=25c9dea095afe3702a2d9e876d10592e086fb02a1a692a0f93e3b7b40466a9e0"
+   },
+   {
+    "category": "company",
+    "datetime": 1783712920,
+    "headline": "Netflix's Viewer Retention Push Gets Bigger",
+    "id": 140865334,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "NFLX",
+    "source": "Yahoo",
+    "summary": "Streaming giant explores live television and bundle options",
+    "url": "https://finnhub.io/api/news?id=d1003c938b2f8a1056a1fca887be7421ebe62a5329eb0b834603f37347f728e2"
+   },
+   {
+    "category": "company",
+    "datetime": 1783712797,
+    "headline": "Sector Update: Consumer Stocks Rise Late Afternoon",
+    "id": 140865282,
+    "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+    "related": "NFLX",
+    "source": "Yahoo",
+    "summary": "Consumer stocks were higher late Friday afternoon, with the State Street Consumer Staples Select Sec",
+    "url": "https://finnhub.io/api/news?id=3950ba12d1f78e090a2162ad805700691eeabaedc9a25cbb8b5a2bc2711ce71a"
+   }
+  ]
  },
  "errors": []
 }
