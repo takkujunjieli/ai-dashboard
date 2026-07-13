@@ -164,6 +164,15 @@ def session_vwap(bars_1m: list) -> float | None:
 
 # ---------- 期权 ----------
 
+def rebase_url(url: str | None) -> str | None:
+    """分页 next_url 可能指向官方域名,重写到配置的基址(自定义网关场景)。"""
+    if not url:
+        return None
+    from urllib.parse import urlparse
+    p = urlparse(url)
+    return f"{BASE}{p.path}" + (f"?{p.query}" if p.query else "")
+
+
 def options_massive(sym: str) -> list:
     contracts, url, today = [], f"/v3/snapshot/options/{sym}?limit=250", date.today()
     while url:
@@ -183,7 +192,7 @@ def options_massive(sym: str) -> list:
                 "vol": day.get("volume") or 0,
                 "price": day.get("vwap") or day.get("close") or 0,
             })
-        url = data.get("next_url")
+        url = rebase_url(data.get("next_url"))
     return contracts
 
 
