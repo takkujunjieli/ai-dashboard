@@ -24,7 +24,24 @@ def get(path, **params):
     return r
 
 
+def dump_conditions():
+    r = get("/v3/reference/conditions", asset_class="options", data_type="trade", limit=1000)
+    print(f"conditions 参考 状态码: {r.status_code}")
+    if r.status_code != 200:
+        print(f"  不可用: {r.text[:160]}")
+        return
+    for c in r.json().get("results") or []:
+        rules = c.get("update_rules") or {}
+        # 影响成交量/最后价的规则,判断该条件是否"非常规"的线索
+        flags = [k for k, v in {"consolidated": rules.get("consolidated", {}),
+                                "market_center": rules.get("market_center", {})}.items()]
+        print(f"  [{c.get('id')}] {c.get('name')} | abbr={c.get('abbreviation')} "
+              f"| type={c.get('type')} | 影响={c.get('data_types')}")
+
+
 def main():
+    dump_conditions()
+    print("-" * 40)
     today = date.today()
     # 现价
     q = get(f"/v2/aggs/ticker/{SYM}/prev").json()
