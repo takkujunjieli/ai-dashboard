@@ -17,6 +17,8 @@ let gexCaliber = localStorage.getItem("wbGexCaliber") || "nominal";  // 名义 /
 const GEX_BUCKET_ORDER = ["0dte", "week", "2wk", "all"];
 const GEX_BUCKET_LABEL = { "0dte": "0DTE", week: "本周", "2wk": "≤14天", all: "全部" };
 let chart, candles, volume, ema9L, ema21L, vwapL, bbU, bbL, vsU, vsL, subChart, gexLine;
+let hoverLevels = [];       // flip / MaxPain 横线的 {name,color,price},供 hover 识别
+let hoverSeries = [];       // 叠加曲线的 {series,name,color},供 hover 识别
 let priceLines = [];
 let pollTimer = null;
 let ladderRetry = 0;  // 首屏梯子重试计数(坐标系就绪前 priceToCoordinate 返回 null)
@@ -155,16 +157,24 @@ function initCharts() {
   });
   volume = chart.addHistogramSeries({ priceFormat: { type: "volume" }, priceScaleId: "vol" });
   chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
-  // title + lastValueVisible:线右端显示名称标签(和 MaxPain 一样),让各条线一目了然
-  ema9L = chart.addLineSeries({ color: "#60a5fa", lineWidth: 1, priceLineVisible: false, lastValueVisible: true, title: "EMA9" });
-  ema21L = chart.addLineSeries({ color: "#c084fc", lineWidth: 1, priceLineVisible: false, lastValueVisible: true, title: "EMA21" });
-  vwapL = chart.addLineSeries({ color: "#fbbf24", lineWidth: 1, lineStyle: LWC.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: true, title: "VWAP" });
-  // 布林带 BB(20,2):青虚线,只在上轨标注
-  bbU = chart.addLineSeries({ color: "#2dd4bf", lineWidth: 1, lineStyle: LWC.LineStyle.Dashed, priceLineVisible: false, lastValueVisible: true, title: "BB±2σ" });
+  // 标签默认隐藏(不占右轴),改为 hover 到线附近时浮出名称(见 initHoverLegend)
+  ema9L = chart.addLineSeries({ color: "#60a5fa", lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
+  ema21L = chart.addLineSeries({ color: "#c084fc", lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
+  vwapL = chart.addLineSeries({ color: "#fbbf24", lineWidth: 1, lineStyle: LWC.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false });
+  bbU = chart.addLineSeries({ color: "#2dd4bf", lineWidth: 1, lineStyle: LWC.LineStyle.Dashed, priceLineVisible: false, lastValueVisible: false });
   bbL = chart.addLineSeries({ color: "#2dd4bf", lineWidth: 1, lineStyle: LWC.LineStyle.Dashed, priceLineVisible: false, lastValueVisible: false });
-  // VWAP ±σ 带:淡黄点线,只在上轨标注(仅盘中,日线不显示)
-  vsU = chart.addLineSeries({ color: "#fcd34d", lineWidth: 1, lineStyle: LWC.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: true, title: "VWAP±σ" });
+  vsU = chart.addLineSeries({ color: "#fcd34d", lineWidth: 1, lineStyle: LWC.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false });
   vsL = chart.addLineSeries({ color: "#fcd34d", lineWidth: 1, lineStyle: LWC.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false });
+  hoverSeries = [
+    { series: ema9L, name: "EMA9", color: "#60a5fa" },
+    { series: ema21L, name: "EMA21", color: "#c084fc" },
+    { series: vwapL, name: "VWAP", color: "#fbbf24" },
+    { series: bbU, name: "BB 上轨(+2σ)", color: "#2dd4bf" },
+    { series: bbL, name: "BB 下轨(−2σ)", color: "#2dd4bf" },
+    { series: vsU, name: "VWAP +σ", color: "#fcd34d" },
+    { series: vsL, name: "VWAP −σ", color: "#fcd34d" },
+  ];
+  initHoverLegend();
 
   subChart = LWC.createChart($("gex-sub"), { ...chartTheme, timeScale: { ...chartTheme.timeScale, timeVisible: true } });
   gexLine = subChart.addLineSeries({ color: "#60a5fa", lineWidth: 2, priceFormat: { type: "custom", formatter: (v) => (v / 1e6).toFixed(0) + "M" } });
@@ -175,6 +185,35 @@ function initCharts() {
   const ro = new ResizeObserver(renderLadder);  // 首屏 flex 宽度就绪后重画
   ro.observe($("chart"));
   ro.observe($("ladder-box"));
+}
+
+/* hover 到某条线附近(纵向 ≤7px)才浮出它的名称+数值;不占右轴、默认隐藏 */
+function initHoverLegend() {
+  const HIT = 7;  // 命中容差(像素)
+  chart.subscribeCrosshairMove((param) => {
+    const el = $("chart-legend");
+    if (!el) return;
+    if (!param.point || !param.time) { el.style.display = "none"; return; }
+    const cy = param.point.y;
+    const hits = [];
+    for (const it of hoverSeries) {
+      const d = param.seriesData.get(it.series);
+      const v = d && (d.value ?? d.close);
+      if (v == null) continue;
+      const y = it.series.priceToCoordinate(v);
+      if (y != null && Math.abs(y - cy) <= HIT) hits.push({ name: it.name, color: it.color, v });
+    }
+    for (const lv of hoverLevels) {
+      const y = candles.priceToCoordinate(lv.price);
+      if (y != null && Math.abs(y - cy) <= HIT) hits.push({ name: lv.name, color: lv.color, v: lv.price });
+    }
+    if (!hits.length) { el.style.display = "none"; return; }
+    el.innerHTML = hits.map((h) => `<span style="color:${h.color}">● ${esc(h.name)} ${h.v.toFixed(2)}</span>`).join("<br>");
+    el.style.display = "block";
+    const w = $("chart").clientWidth;
+    el.style.left = Math.min(param.point.x + 14, w - 130) + "px";
+    el.style.top = (cy + 12) + "px";
+  });
 }
 
 /* ---------- 主图 ---------- */
@@ -196,13 +235,16 @@ function renderChart() {
   if (daily) { vsU.setData([]); vsL.setData([]); }
   else { const vb = vwapBands(bars, 1); vsU.setData(line(vb.up)); vsL.setData(line(vb.lo)); }
 
-  // 关键价位线: gamma flip / Max Pain
+  // 关键价位线: gamma flip / Max Pain(名称也走 hover,不常驻)
   priceLines.forEach((l) => candles.removePriceLine(l));
   priceLines = [];
   const flip = gexBucketData(SYM)?.flip;
   const mp = researchOf(SYM).options?.max_pain;
-  if (flip != null) priceLines.push(candles.createPriceLine({ price: flip, color: "#fbbf24", lineStyle: LWC.LineStyle.Dashed, lineWidth: 1, title: "flip" }));
-  if (mp != null) priceLines.push(candles.createPriceLine({ price: mp, color: "#c084fc", lineStyle: LWC.LineStyle.Dashed, lineWidth: 1, title: "MaxPain" }));
+  if (flip != null) priceLines.push(candles.createPriceLine({ price: flip, color: "#fbbf24", lineStyle: LWC.LineStyle.Dashed, lineWidth: 1 }));
+  if (mp != null) priceLines.push(candles.createPriceLine({ price: mp, color: "#c084fc", lineStyle: LWC.LineStyle.Dashed, lineWidth: 1 }));
+  hoverLevels = [];
+  if (flip != null) hoverLevels.push({ name: "flip", color: "#fbbf24", price: flip });
+  if (mp != null) hoverLevels.push({ name: "MaxPain", color: "#c084fc", price: mp });
 
   const visible = TF === "1d" ? 130 : TF === "1m" ? 200 : 160;
   chart.timeScale().setVisibleLogicalRange({ from: Math.max(0, bars.length - visible), to: bars.length + 3 });
