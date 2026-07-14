@@ -30,8 +30,10 @@ ROOT = Path(__file__).resolve().parent.parent
 KEY = os.environ.get("MASSIVE_API_KEY", "").strip()
 BASE = os.environ.get("MASSIVE_BASE_URL", "https://api.massive.com").rstrip("/")
 HEADERS = {"Authorization": f"Bearer {KEY}"}
-SLEEP = float(os.environ.get("MASSIVE_SLEEP", "0.2"))  # 股票类 REST 限额 500/分钟
-OPT_SLEEP = float(os.environ.get("MASSIVE_SLEEP_OPTIONS", "1.3"))  # 期权限额 50/分钟,单独降速
+# 实测网关对 REST 不限流(期权/股票突发 200+ 并发零 429),仅留极小礼貌间隔,不滥用服务器。
+# 50/min 是期权 websocket 上限,与我们纯 REST 无关。
+SLEEP = float(os.environ.get("MASSIVE_SLEEP", "0.08"))
+OPT_SLEEP = float(os.environ.get("MASSIVE_SLEEP_OPTIONS", "0.08"))
 MAX_DTE = 45
 MAX_EXPIRATIONS = 6
 BAR_KEEP = 800  # 每个粒度最多保留的 bar 数
@@ -540,10 +542,11 @@ def extras_fresh(old: dict, now: datetime) -> bool:
 
 
 def main(tickers: list | None = None, merge: bool = False) -> None:
-    """tickers=None 抓深度组(deep);merge=True 增量合并进现有 JSON(滚动采集的批模式)。"""
+    """tickers=None 抓全 watchlist(普通组=全量深度待遇);merge=True 增量合并。
+    注:deep 字段暂不作门槛(含义待定),全量给 K线/期权/GEX/指标。"""
     from _cfg import load_tickers
-    watchlist, deep = load_tickers()  # snapshots 用全集,深度数据用 deep
-    targets = [t for t in (tickers or deep) if t in watchlist] or deep
+    watchlist, _ = load_tickers()
+    targets = [t for t in (tickers or watchlist) if t in watchlist] or watchlist
     now = datetime.now(timezone.utc)
     now_iso = now.isoformat(timespec="seconds")
 

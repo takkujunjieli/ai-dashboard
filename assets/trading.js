@@ -600,7 +600,7 @@ function renderAll(keepRange = false) {
   if (lr) chart.timeScale().setVisibleLogicalRange(lr);
   const upd = RESEARCH?.updated_at || GEX?.updated_at;
   $("poll-status").textContent = (upd ? `Data ${fmtDT(upd)}` : "No data")
-    + ` · auto-refresh (${marketWindow() ? (getPat() ? "60s" : "5m, add PAT to speed up") : "off-hours 30m"})`;
+    + ` · auto-refresh (${marketWindow() ? (getPat() ? "20s" : "2m, add PAT to speed up") : "off-hours 15m"})`;
 }
 
 async function refreshData() {
@@ -623,7 +623,7 @@ function marketWindow() {
 
 function startPolling() {
   if (pollTimer) clearTimeout(pollTimer);
-  const iv = marketWindow() ? (getPat() ? 60_000 : 300_000) : 1_800_000;
+  const iv = marketWindow() ? (getPat() ? 20_000 : 120_000) : 900_000;
   pollTimer = setTimeout(refreshData, iv);
 }
 

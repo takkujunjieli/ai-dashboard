@@ -58,13 +58,12 @@ def commit_push(msg: str) -> None:
 
 def main() -> None:
     from _cfg import load_tickers
-    _, deep = load_tickers()  # 滚动采集只跑深度组
-    batches = [deep[i:i + BATCH] for i in range(0, len(deep), BATCH)]
+    watchlist, _ = load_tickers()  # 全量普通组;REST 不限流,一轮全抓,每轮一次提交
     job_start = time.time()
 
     if ONCE:
         end_utc = None
-        print(f"单轮模式: {len(deep)} 只 / {len(batches)} 批")
+        print(f"单轮模式: {len(watchlist)} 只")
     else:
         if datetime.now(ET).weekday() >= 5:
             print("周末,不采集")
@@ -79,30 +78,27 @@ def main() -> None:
             wait = (open_utc - utc_now()).total_seconds()
             print(f"等待开盘 {wait / 60:.0f} 分钟(ET 9:30)")
             time.sleep(wait)
-        print(f"滚动采集: {len(deep)} 只 / {len(batches)} 批,至 {end_utc.isoformat(timespec='minutes')}")
+        print(f"滚动采集: {len(watchlist)} 只,至 {end_utc.isoformat(timespec='minutes')}")
 
     sh("git", "config", "user.name", "github-actions[bot]")
     sh("git", "config", "user.email", "github-actions[bot]@users.noreply.github.com")
 
     rounds = 0
     while True:
-        for batch in batches:
-            if end_utc and utc_now() >= end_utc:
-                break
-            # 接近单 job 上限,续派一个 run 接力剩余时段
-            if not ONCE and time.time() - job_start > MAX_SECONDS:
-                print("接近运行上限,续派新 run 接力")
-                subprocess.run(["gh", "workflow", "run", "gex.yml",
-                                "-R", os.environ.get("GITHUB_REPOSITORY", ""),
-                                "-f", f"end={END_OVERRIDE}"], cwd=ROOT)
-                return
-            t0 = time.time()
-            try:
-                fetch_research.main(tickers=batch, merge=True)
-            except Exception as exc:  # noqa: BLE001 单批失败不终止会话
-                print(f"批次 {batch} 失败: {fetch_research.redact(exc)}")
-            commit_push(f"chore: 滚动采集 {datetime.now(ET).strftime('%H:%M')} {'/'.join(batch)}")
-            print(f"批 {'/'.join(batch)} 用时 {time.time() - t0:.0f}s")
+        # 接近单 job 上限,续派一个 run 接力剩余时段
+        if not ONCE and time.time() - job_start > MAX_SECONDS:
+            print("接近运行上限,续派新 run 接力")
+            subprocess.run(["gh", "workflow", "run", "gex.yml",
+                            "-R", os.environ.get("GITHUB_REPOSITORY", ""),
+                            "-f", f"end={END_OVERRIDE}"], cwd=ROOT)
+            return
+        t0 = time.time()
+        try:
+            fetch_research.main(merge=True)  # 全 watchlist,一轮抓完
+        except Exception as exc:  # noqa: BLE001 单轮失败不终止会话
+            print(f"本轮失败: {fetch_research.redact(exc)}")
+        commit_push(f"chore: 滚动采集 {datetime.now(ET).strftime('%H:%M')} (第{rounds + 1}轮)")
+        print(f"第{rounds + 1}轮用时 {time.time() - t0:.0f}s")
         rounds += 1
         if ONCE or (end_utc and utc_now() >= end_utc):
             break
