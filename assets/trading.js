@@ -16,7 +16,7 @@ let gexBucket = localStorage.getItem("wbGexBucket") || "0dte";  // GEX 到期范
 let gexCaliber = localStorage.getItem("wbGexCaliber") || "nominal";  // 名义 / 流量
 const GEX_BUCKET_ORDER = ["0dte", "week", "2wk", "all"];
 const GEX_BUCKET_LABEL = { "0dte": "0DTE", week: "本周", "2wk": "≤14天", all: "全部" };
-let chart, candles, volume, ema9L, ema21L, vwapL, subChart, gexLine;
+let chart, candles, volume, ema9L, ema21L, vwapL, bbU, bbL, vsU, vsL, subChart, gexLine;
 let priceLines = [];
 let pollTimer = null;
 let ladderRetry = 0;  // 首屏梯子重试计数(坐标系就绪前 priceToCoordinate 返回 null)
@@ -79,6 +79,39 @@ function vwapPerDay(bars) {
   return out;
 }
 
+/* 布林带:中轨 SMA(n),上下轨 ±k×标准差。返回 {up, lo} 与 closes 对齐(前 n-1 为 null) */
+function bollinger(closes, n = 20, k = 2) {
+  const up = [], lo = [];
+  for (let i = 0; i < closes.length; i++) {
+    if (i < n - 1) { up.push(null); lo.push(null); continue; }
+    let s = 0;
+    for (let j = i - n + 1; j <= i; j++) s += closes[j];
+    const m = s / n;
+    let v = 0;
+    for (let j = i - n + 1; j <= i; j++) v += (closes[j] - m) ** 2;
+    const sd = Math.sqrt(v / n);
+    up.push(m + k * sd); lo.push(m - k * sd);
+  }
+  return { up, lo };
+}
+
+/* VWAP ±kσ 带:σ 为按会话累计的成交量加权标准差(每日重置),返回 {up, lo} */
+function vwapBands(bars, k = 1) {
+  const up = [], lo = [];
+  let day = null, sv = 0, svp = 0, svp2 = 0;
+  for (const b of bars) {
+    const d = etDay(b[0]);
+    if (d !== day) { day = d; sv = svp = svp2 = 0; }
+    const p = b[6] || (b[2] + b[3] + b[4]) / 3, v = b[5];
+    sv += v; svp += v * p; svp2 += v * p * p;
+    if (sv > 0) {
+      const vw = svp / sv, sd = Math.sqrt(Math.max(svp2 / sv - vw * vw, 0));
+      up.push(vw + k * sd); lo.push(vw - k * sd);
+    } else { up.push(null); lo.push(null); }
+  }
+  return { up, lo };
+}
+
 const lastClose = (sym) => {
   const b = researchOf(sym).bars_1m || researchOf(sym).bars_5m || [];
   return b.length ? b[b.length - 1][4] : null;
@@ -122,9 +155,16 @@ function initCharts() {
   });
   volume = chart.addHistogramSeries({ priceFormat: { type: "volume" }, priceScaleId: "vol" });
   chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
-  ema9L = chart.addLineSeries({ color: "#60a5fa", lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
-  ema21L = chart.addLineSeries({ color: "#c084fc", lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
-  vwapL = chart.addLineSeries({ color: "#fbbf24", lineWidth: 1, lineStyle: LWC.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false });
+  // title + lastValueVisible:线右端显示名称标签(和 MaxPain 一样),让各条线一目了然
+  ema9L = chart.addLineSeries({ color: "#60a5fa", lineWidth: 1, priceLineVisible: false, lastValueVisible: true, title: "EMA9" });
+  ema21L = chart.addLineSeries({ color: "#c084fc", lineWidth: 1, priceLineVisible: false, lastValueVisible: true, title: "EMA21" });
+  vwapL = chart.addLineSeries({ color: "#fbbf24", lineWidth: 1, lineStyle: LWC.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: true, title: "VWAP" });
+  // 布林带 BB(20,2):青虚线,只在上轨标注
+  bbU = chart.addLineSeries({ color: "#2dd4bf", lineWidth: 1, lineStyle: LWC.LineStyle.Dashed, priceLineVisible: false, lastValueVisible: true, title: "BB±2σ" });
+  bbL = chart.addLineSeries({ color: "#2dd4bf", lineWidth: 1, lineStyle: LWC.LineStyle.Dashed, priceLineVisible: false, lastValueVisible: false });
+  // VWAP ±σ 带:淡黄点线,只在上轨标注(仅盘中,日线不显示)
+  vsU = chart.addLineSeries({ color: "#fcd34d", lineWidth: 1, lineStyle: LWC.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: true, title: "VWAP±σ" });
+  vsL = chart.addLineSeries({ color: "#fcd34d", lineWidth: 1, lineStyle: LWC.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false });
 
   subChart = LWC.createChart($("gex-sub"), { ...chartTheme, timeScale: { ...chartTheme.timeScale, timeVisible: true } });
   gexLine = subChart.addLineSeries({ color: "#60a5fa", lineWidth: 2, priceFormat: { type: "custom", formatter: (v) => (v / 1e6).toFixed(0) + "M" } });
@@ -149,6 +189,12 @@ function renderChart() {
   ema9L.setData(line(ema(closes, 9)));
   ema21L.setData(line(ema(closes, 21)));
   vwapL.setData(daily ? [] : line(vwapPerDay(bars)));
+  // 布林带 BB(20,2)
+  const bb = bollinger(closes, 20, 2);
+  bbU.setData(line(bb.up)); bbL.setData(line(bb.lo));
+  // VWAP ±1σ 带(仅盘中)
+  if (daily) { vsU.setData([]); vsL.setData([]); }
+  else { const vb = vwapBands(bars, 1); vsU.setData(line(vb.up)); vsL.setData(line(vb.lo)); }
 
   // 关键价位线: gamma flip / Max Pain
   priceLines.forEach((l) => candles.removePriceLine(l));
