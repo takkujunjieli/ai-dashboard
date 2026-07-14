@@ -1,5 +1,5 @@
 {
-  "_说明": "标的配置的唯一来源,由交易台迷你卡片上的 深/行 开关与增删编辑。",
+  "_note": "Single source of truth for tickers; edited via the D/Q toggles and add/remove on the trading-desk mini cards.",
   "watchlist": [
     "AMD",
     "CCL",
@@ -20,7 +20,8 @@
     "NFLX",
     "SOXX",
     "QQQ",
-    "SPY"
+    "SPY",
+    "GLW"
   ],
   "deep": [
     "AMD",
