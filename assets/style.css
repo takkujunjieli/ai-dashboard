@@ -176,12 +176,15 @@ footer { margin-top: 50px; text-align: center; }
 }
 #gex-sub { height: 110px; }
 .sub-title { padding: 6px 0 2px; }
-.wb-ladder { width: 250px; flex: 0 0 250px; }
-#ladder-box { position: relative; }
-#ladder { display: block; }
+.wb-ladder { width: 190px; flex: 0 0 190px; }
+.wb-vp { width: 130px; flex: 0 0 130px; }
+#ladder-box, #vp-box { position: relative; }
+#ladder, #vp { display: block; }
+.wb-overlays { gap: 8px; }
+.wb-overlays .chips button { font-size: 11px; padding: 3px 9px; }
 
 @media (max-width: 900px) {
   .wb-main { flex-direction: column; }
-  .wb-ladder { width: 100%; flex: none; }
+  .wb-ladder, .wb-vp { width: 100%; flex: none; }
   #chart { height: 380px; }
 }
