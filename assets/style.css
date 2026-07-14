@@ -140,7 +140,10 @@ footer { margin-top: 50px; text-align: center; }
 .mini-btn:hover { background: var(--card-hover); }
 .tab-link { text-decoration: none; display: inline-flex; align-items: center; }
 
-.mini-strip { padding: 10px 0 6px; }
+/* 切票卡换行铺满(不横滑,避免卡片被隐藏在视口外) */
+.mini-strip { padding: 10px 0 6px; flex-wrap: wrap; overflow-x: visible; }
+#cfg-status { padding: 2px 0 6px; }
+#cfg-status:not(:empty) { color: var(--text); }
 .mini-card { cursor: pointer; border-width: 1px; display: flex; align-items: stretch; gap: 8px; }
 .mini-card:hover { background: var(--card-hover); }
 .mini-card.active { border-color: var(--accent); background: rgba(96, 165, 250, .12); }
