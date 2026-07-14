@@ -163,7 +163,7 @@ function gexBucketData(sym) {
 
 /* ---------- 图表初始化 ---------- */
 const chartTheme = {
-  layout: { background: { color: "transparent" }, textColor: "#8b96ad", fontSize: 11 },
+  layout: { background: { color: "transparent" }, textColor: "#8b96ad", fontSize: 11, attributionLogo: false },
   grid: { vertLines: { color: "#1c2539" }, horzLines: { color: "#1c2539" } },
   crosshair: { mode: LWC.CrosshairMode.Normal },
   timeScale: { timeVisible: true, secondsVisible: false, borderColor: "#2a3550" },
@@ -420,20 +420,22 @@ function volProfileFragment(W, H) {
   const maxV = Math.max(...bins, 1);
   const poc = bins.indexOf(maxV);
   const VPW = Math.min(W * 0.55, 120);
+  const x0 = W - VPW;  // 0 轴(底边)在左,成交量向右生长
   const price = (i) => lo + (i + 0.5) * binH;
   const pts = [];
   for (let i = 0; i < NB; i++) {
     const y = candles.priceToCoordinate(price(i));
     if (y == null || y < 0 || y > H) continue;
-    pts.push([+(W - bins[i] / maxV * VPW).toFixed(1), +y.toFixed(1)]);
+    pts.push([+(x0 + bins[i] / maxV * VPW).toFixed(1), +y.toFixed(1)]);
   }
   if (pts.length < 2) return "";
   const poly = pts.map((p, i) => `${i ? "L" : "M"}${p[0]},${p[1]}`).join("");
-  const area = `M${W},${pts[0][1]} ` + pts.map((p) => `L${p[0]},${p[1]}`).join("") + ` L${W},${pts[pts.length - 1][1]} Z`;
-  let out = `<path d="${area}" fill="#a78bfa22"/><path d="${poly}" fill="none" stroke="#a78bfa" stroke-width="1.2"/>`;
+  const area = `M${x0},${pts[0][1]} ` + pts.map((p) => `L${p[0]},${p[1]}`).join("") + ` L${x0},${pts[pts.length - 1][1]} Z`;
+  let out = `<line x1="${x0}" y1="0" x2="${x0}" y2="${H}" stroke="#a78bfa55" stroke-width="1"/>`  // VP 0 轴
+    + `<path d="${area}" fill="#a78bfa22"/><path d="${poly}" fill="none" stroke="#a78bfa" stroke-width="1.2"/>`;
   const yp = candles.priceToCoordinate(price(poc));
   if (yp != null && yp >= 0 && yp <= H) {
-    out += `<line x1="${(W - VPW).toFixed(1)}" y1="${yp.toFixed(1)}" x2="${W}" y2="${yp.toFixed(1)}" stroke="#f59e0b" stroke-dasharray="3 3" stroke-width="1"/><text x="${W}" y="${(yp - 2).toFixed(1)}" fill="#f59e0b" font-size="9" text-anchor="end">POC ${price(poc).toFixed(1)}</text>`;
+    out += `<line x1="${x0.toFixed(1)}" y1="${yp.toFixed(1)}" x2="${W}" y2="${yp.toFixed(1)}" stroke="#f59e0b" stroke-dasharray="3 3" stroke-width="1"/><text x="${W}" y="${(yp - 2).toFixed(1)}" fill="#f59e0b" font-size="9" text-anchor="end">POC ${price(poc).toFixed(1)}</text>`;
   }
   return out;
 }
