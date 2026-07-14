@@ -46,7 +46,9 @@ def mget(path: str, **params):
     url = path if path.startswith("http") else f"{BASE}{path}"
     if KEY:
         params.setdefault("apiKey", KEY)  # 兼容只认查询参数的网关;官方两种都支持
-    sleep = OPT_SLEEP if "/v3/snapshot/options/" in url else SLEEP
+    # 期权端点(链快照 + 单合约逐笔成交)共用 50/分钟额度,单独降速
+    is_opt = "/v3/snapshot/options/" in url or "/v3/trades/O" in url or "/v3/quotes/O" in url
+    sleep = OPT_SLEEP if is_opt else SLEEP
     resp = None
     for _ in range(3):
         resp = requests.get(url, params=params, headers=HEADERS, timeout=30)
@@ -206,10 +208,10 @@ def bs_gamma(spot: float, strike: float, t_years: float, iv: float) -> float:
 GEX_BUCKETS = [("0dte", 0), ("week", 7), ("2wk", 14), ("all", MAX_DTE)]
 
 
-def _gex_summary(pairs: dict, spot: float) -> dict:
-    """把 {strike: [call_gO, put_gO]} 汇总为 net_gex / flip / by_strike(现价±25%)。"""
+def _gex_summary(signed: dict, spot: float) -> dict:
+    """把 {strike: 带符号的 gamma×OI 之和} 汇总为 net_gex / flip / by_strike(现价±25%)。"""
     scale = 100 * spot * spot * 0.01
-    rows = [{"strike": k, "net": (cv - pv) * scale} for k, (cv, pv) in sorted(pairs.items())]
+    rows = [{"strike": k, "net": v * scale} for k, v in sorted(signed.items())]
     crossings, cum, prev_cum, prev_k = [], 0.0, None, None
     for r in rows:
         cum += r["net"]
@@ -224,38 +226,123 @@ def _gex_summary(pairs: dict, spot: float) -> dict:
     }
 
 
-def compute_gex(contracts: list, spot: float) -> dict | None:
-    """GEX = gamma × OI × 100 × 现价² × 1%,call 正 put 负;按到期分桶。"""
-    if not spot:
+def _contract_gamma_oi(c: dict, spot: float, today) -> float | None:
+    """单合约 gamma×OI(gamma 缺失时由 IV 现算)。"""
+    oi = c["oi"]
+    if not oi:
         return None
-    today = date.today()
-    enriched = []  # (dte, strike, is_call, gamma×oi)
-    for c in contracts:
-        oi = c["oi"]
-        if not oi:
-            continue
-        g = c.get("gamma")
-        if not g:
-            t_years = ((date.fromisoformat(c["exp"]) - today).days + 0.5) / 365
-            g = bs_gamma(spot, c["strike"], t_years, c.get("iv") or 0)
-        if not g:
-            continue
-        dte = (date.fromisoformat(c["exp"]) - today).days
-        enriched.append((dte, c["strike"], c["type"] == "call", g * oi))
+    g = c.get("gamma")
+    if not g:
+        g = bs_gamma(spot, c["strike"], ((date.fromisoformat(c["exp"]) - today).days + 0.5) / 365,
+                     c.get("iv") or 0)
+    return g * oi if g else None
+
+
+def _bucketize(enriched: list, spot: float) -> dict:
+    """enriched: [(dte, strike, signed gamma×oi)] → 按到期桶汇总。"""
     if not enriched:
         return None
     buckets = {}
     for name, cap in GEX_BUCKETS:
-        pairs: dict[float, list[float]] = {}
-        for dte, strike, is_call, go in enriched:
+        signed = {}
+        for dte, strike, val in enriched:
             if 0 <= dte <= cap:
-                slot = pairs.setdefault(strike, [0.0, 0.0])
-                slot[0 if is_call else 1] += go
-        buckets[name] = _gex_summary(pairs, spot) if pairs \
+                signed[strike] = signed.get(strike, 0.0) + val
+        buckets[name] = _gex_summary(signed, spot) if signed \
             else {"net_gex": 0.0, "flip": None, "by_strike": []}
-    a = buckets["all"]  # 顶层沿用全量,兼容旧字段
+    a = buckets["all"]
     return {"spot": round(spot, 2), "buckets": buckets,
             "net_gex": a["net_gex"], "flip": a["flip"], "by_strike": a["by_strike"]}
+
+
+def compute_gex(contracts: list, spot: float) -> dict | None:
+    """名义 GEX:call 正、put 负;按到期分桶。"""
+    if not spot:
+        return None
+    today = date.today()
+    enriched = []
+    for c in contracts:
+        go = _contract_gamma_oi(c, spot, today)
+        if go is None:
+            continue
+        sign = 1 if c["type"] == "call" else -1
+        enriched.append(((date.fromisoformat(c["exp"]) - today).days, c["strike"], sign * go))
+    return _bucketize(enriched, spot)
+
+
+# ---------- 流量分类 GEX(top-N 活跃合约按真实买卖方向定 dealer 符号) ----------
+# 保留的单腿常规成交条件码之外一律排除(多腿/组合/取消/迟到/拍卖/交叉/盘后)
+FLOW_BAD_CONDITIONS = {201, 202, 203, 204, 205, 206, 207, 208, 210, 227, 228, 229, 230,
+                       232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244,
+                       245, 246, 247, 248}
+FLOW_SKIP = {"SPY", "QQQ", "SOXX", "IWM", "DIA", "IVV", "VOO", "SMH", "XLK"}  # ETF/指数期权面太大
+FLOW_TOPN = int(os.environ.get("FLOW_TOPN", "40"))
+FLOW_STRIKE_BAND = 0.15
+FLOW_MAX_DTE = 14
+
+
+def fetch_option_trades(contract_ticker: str) -> list:
+    """单合约当日逐笔成交(时间升序),返回 [(price, size, conditions)]。"""
+    out, url, pages = [], f"/v3/trades/{contract_ticker}?limit=50000&order=asc&sort=timestamp", 0
+    while url and pages < 3:
+        d = mget(url)
+        for t in d.get("results") or []:
+            out.append((t.get("price"), t.get("size") or 0, t.get("conditions") or []))
+        url = rebase_url(d.get("next_url"))
+        pages += 1
+    return out
+
+
+def classify_net_flow(trades: list) -> tuple[float, float]:
+    """conditions 过滤 + 零档 tick rule + size 加权 → (净方向=买size−卖size, 已分类size)。"""
+    buy = sell = 0.0
+    prev = None
+    last_dir = 0
+    for price, size, conds in trades:
+        if price is None or not size or any(c in FLOW_BAD_CONDITIONS for c in conds):
+            continue
+        if prev is None:
+            prev = price
+            continue
+        d = 1 if price > prev else -1 if price < prev else last_dir  # 零档沿用上一方向
+        prev = price
+        if d > 0:
+            buy += size; last_dir = 1
+        elif d < 0:
+            sell += size; last_dir = -1
+    return buy - sell, buy + sell
+
+
+def compute_gex_flow(sym: str, spot: float, contracts: list, errors: list) -> dict | None:
+    """流量分类 GEX:±15%/≤14天里 top-N 活跃合约按真实买卖方向定 dealer 符号,其余用名义符号。"""
+    if not spot or sym in FLOW_SKIP:
+        return None
+    today = date.today()
+    lo, hi = spot * (1 - FLOW_STRIKE_BAND), spot * (1 + FLOW_STRIKE_BAND)
+    cand = [c for c in contracts if c.get("ticker") and c["vol"] and lo <= c["strike"] <= hi
+            and 0 <= (date.fromisoformat(c["exp"]) - today).days <= FLOW_MAX_DTE]
+    ranked = sorted(cand, key=lambda c: -c["vol"])[:FLOW_TOPN]
+    flow_sign = {}  # ticker -> dealer 符号(客户净多→dealer空→-1)
+    for c in ranked:
+        try:
+            net, sz = classify_net_flow(fetch_option_trades(c["ticker"]))
+            if sz > 0 and net != 0:
+                flow_sign[c["ticker"]] = -1 if net > 0 else 1
+        except Exception as exc:  # noqa: BLE001 单合约失败不影响整体
+            errors.append(f"{sym} 流量 {c['ticker']}: {redact(exc)}")
+    if not flow_sign:
+        return None  # 一个都没分类到就不出流量版,避免和名义版完全一样
+    enriched = []
+    for c in contracts:
+        go = _contract_gamma_oi(c, spot, today)
+        if go is None:
+            continue
+        sign = flow_sign.get(c.get("ticker"), 1 if c["type"] == "call" else -1)  # 未分类→名义
+        enriched.append(((date.fromisoformat(c["exp"]) - today).days, c["strike"], sign * go))
+    out = _bucketize(enriched, spot)
+    if out:
+        out["classified"] = len(flow_sign)  # 实际分类到的合约数,前端可显示
+    return out
 
 
 def rebase_url(url: str | None) -> str | None:
@@ -289,6 +376,7 @@ def options_massive(sym: str, spot: float | None = None) -> list:
                 continue
             day = o.get("day") or {}
             contracts.append({
+                "ticker": det.get("ticker"),  # OCC 代码,拉逐笔成交用
                 "type": det.get("contract_type"),
                 "strike": det.get("strike_price"),
                 "exp": exp,
@@ -570,6 +658,15 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                 }
             gex = compute_gex(contracts, spot)
             if gex:
+                # 流量分类版:重(每合约一次 trades 调用),只在低频层跑,其余批次沿用上次
+                if skip_extras:
+                    prevf = ((gex_prev.get("tickers") or {}).get(sym) or {}).get("flow")
+                    if prevf:
+                        gex["flow"] = prevf
+                else:
+                    flow = compute_gex_flow(sym, spot, contracts, out["errors"])
+                    if flow:
+                        gex["flow"] = flow
                 gex_out["tickers"][sym] = gex
 
         out["tickers"][sym] = entry
