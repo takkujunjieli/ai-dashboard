@@ -518,11 +518,17 @@ function updateCfgStatus() {
 
 async function loadCfg() {
   const cfg = await loadJSON("config/tickers.json") || {};
-  CFG.watchlist = [...(cfg.watchlist || [])];
-  CFG.deep = (cfg.deep || cfg.watchlist || []).filter((t) => CFG.watchlist.includes(t));
+  // 本机未保存的改动(add/remove/分组)存 localStorage,优先于 repo,防刷新丢失
+  const local = JSON.parse(localStorage.getItem("wbCfgPending") || "null");
+  const wl = local?.watchlist?.length ? local.watchlist : [...(cfg.watchlist || [])];
+  const dp = local?.deep || cfg.deep || cfg.watchlist || [];
+  CFG.watchlist = wl;
+  CFG.deep = dp.filter((t) => wl.includes(t));
 }
 
 function scheduleSave() {
+  // 立刻存本机(不依赖 PAT,刷新不丢);再防抖写 repo
+  localStorage.setItem("wbCfgPending", JSON.stringify({ watchlist: CFG.watchlist, deep: CFG.deep }));
   cfgStatus = "Pending save…"; updateCfgStatus();
   if (saveTimer) clearTimeout(saveTimer);
   saveTimer = setTimeout(saveCfg, 1500);  // 防抖:连续切换合并成一次提交
@@ -532,7 +538,7 @@ async function saveCfg() {
   const pat = getPat() || $("gex-pat").value.trim();
   const watchlist = [...new Set(CFG.watchlist)];
   const deep = [...new Set(CFG.deep)].filter((t) => watchlist.includes(t));
-  if (!pat) { cfgStatus = "⚠️ Group change not saved — enter PAT in Collection (needs Contents read/write)"; updateCfgStatus(); return; }
+  if (!pat) { cfgStatus = "⚠️ Saved on THIS device only. To sync (so data actually loads for new tickers), enter a PAT with Contents read/write in the Collection panel below."; updateCfgStatus(); return; }
   const body = { "_note": "Single source of truth for tickers; edited via the D/Q toggles and add/remove on the trading-desk mini cards.", watchlist, deep };
   const content = btoa(unescape(encodeURIComponent(JSON.stringify(body, null, 2) + "\n")));
   cfgStatus = "Saving…"; updateCfgStatus();
@@ -544,7 +550,8 @@ async function saveCfg() {
       body: JSON.stringify({ message: "chore: update ticker groups via UI", content, sha, branch: "main" }),
     });
     if (!r.ok) throw new Error(`HTTP ${r.status}: ${(await r.json())?.message || ""}`);
-    cfgStatus = `✅ Saved (watchlist ${watchlist.length} · deep ${deep.length})`;
+    localStorage.removeItem("wbCfgPending");  // 已同步到 repo,清本机暂存,让 repo 成为权威
+    cfgStatus = `✅ Synced (watchlist ${watchlist.length}); new tickers get data on the next collection run`;
   } catch (e) {
     cfgStatus = `❌ Save failed: ${esc(e.message)} (PAT needs Contents read/write)`;
   }
@@ -677,11 +684,16 @@ function initToolbar() {
       scheduleSave(); renderMiniCards(); renderAll();
     }
   });
-  // 末尾添加框:回车加入 watchlist(默认仅行情,想深度再点「深」)
+  // 末尾添加框:回车加入(全量普通组待遇,同时进 deep 保持一致)
   $("mini-cards").addEventListener("keydown", (ev) => {
     if (ev.target.id !== "mc-add-input" || ev.key !== "Enter") return;
-    const t = ev.target.value.trim().toUpperCase();
-    if (t && !CFG.watchlist.includes(t)) { CFG.watchlist.push(t); scheduleSave(); renderMiniCards(); }
+    const t = ev.target.value.trim().toUpperCase().replace(/[^A-Z0-9.]/g, "");
+    if (t && !CFG.watchlist.includes(t)) {
+      CFG.watchlist.push(t);
+      if (!CFG.deep.includes(t)) CFG.deep.push(t);
+      SYM = t; localStorage.setItem("wbSym", t);
+      scheduleSave(); renderMiniCards(); renderAll();
+    }
   });
   $("tf-chips").addEventListener("click", (ev) => {
     const btn = ev.target.closest("button");
