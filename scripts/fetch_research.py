@@ -661,8 +661,10 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                 }
             gex = compute_gex(contracts, spot)
             if gex:
-                # 流量分类版:重(每合约一次 trades 调用),只在低频层跑,其余批次沿用上次
-                if skip_extras:
+                # 流量分类版很重(每合约一次逐笔成交调用),会阻塞轮次几分钟。
+                # 盘中滚动循环设 SKIP_FLOW=1 跳过、沿用上次;由每天 2 次的 update.yml 计算。
+                skip_flow = skip_extras or os.environ.get("SKIP_FLOW", "").lower() in ("1", "true")
+                if skip_flow:
                     prevf = ((gex_prev.get("tickers") or {}).get(sym) or {}).get("flow")
                     if prevf:
                         gex["flow"] = prevf

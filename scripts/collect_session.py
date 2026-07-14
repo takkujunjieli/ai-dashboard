@@ -23,6 +23,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent.parent
 ET = ZoneInfo("America/New_York")
 BATCH = int(os.environ.get("BATCH") or 3)
+os.environ.setdefault("SKIP_FLOW", "1")  # 盘中滚动跳过重的流量分类,保持轮次快;flow 交 update.yml
 ONCE = (os.environ.get("ONCE") or "").lower() == "true"
 END_OVERRIDE = (os.environ.get("END") or "").strip()
 MAX_SECONDS = 18600  # 5h10m,留出续派与收尾余量(job 上限 6h)
