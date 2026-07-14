@@ -19,6 +19,11 @@
 ### GEX 到期桶 (GEX Expiry Bucket)
 GEX 梯/净GEX/flip 按到期日分桶,**累计**口径(0dte ⊂ week ⊂ 2wk ⊂ all,对应 ≤0/7/14/45 天)。交易页默认 **0DTE**——决定当日盘中钉价的是近月 gamma,远月汇总会稀释信号。当选中桶为空(如周末无当日到期合约)时前端自动回退到最近的非空桶并标注。后端 `compute_gex` 产出全部桶,`gex_history` 每点存各桶净值供 sparkline 联动。
 
+### GEX 口径 (GEX Caliber):名义 vs 流量
+- **名义**:call 记正、put 记负(假设 dealer 多 call 空 put)。每批算,覆盖全 watchlist。
+- **流量**:±15%/≤14天里**当日成交量 top-40** 的合约,逐笔成交经 conditions 过滤(只留单腿常规 209/219/231)+ 零档 tick rule + size 加权,得净客户方向 → 反推 dealer 符号(客户净多→dealer空→负);其余合约仍用名义符号。修正 covered-call 等"名义符号反了"的情形。
+- 流量版**重**(每合约一次 `/v3/trades` 调用,占 50/min 期权额度),只对**单名股**(`FLOW_SKIP` 排除 ETF/指数)、在**低频层每小时**跑一次,批间沿用;存于 gex.json 的 `tickers[sym].flow`。交易页「口径」开关切换,流量数据缺失时自动退回名义并标注。是**估计**(tick rule ~75-80%、仅当日流量、存量 OI 用名义种子)。
+
 ### 周期集合
 K 线周期固定四档:1m / 5m / 15m / 日线。15m 由 1m 客户端聚合;日线单独抓取(6 个月)。
 

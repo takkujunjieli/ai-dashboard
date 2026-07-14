@@ -13,6 +13,7 @@ let SYM = localStorage.getItem("wbSym") || null;
 let TF = localStorage.getItem("wbTf") || "5m";
 let ladderMode = "gex";
 let gexBucket = localStorage.getItem("wbGexBucket") || "0dte";  // GEX 到期范围,默认 0DTE
+let gexCaliber = localStorage.getItem("wbGexCaliber") || "nominal";  // 名义 / 流量
 const GEX_BUCKET_ORDER = ["0dte", "week", "2wk", "all"];
 const GEX_BUCKET_LABEL = { "0dte": "0DTE", week: "本周", "2wk": "≤14天", all: "全部" };
 let chart, candles, volume, ema9L, ema21L, vwapL, subChart, gexLine;
@@ -84,19 +85,23 @@ const lastClose = (sym) => {
 };
 const spotOf = (sym) => (RESEARCH?.snapshots?.[sym]?.price) ?? lastClose(sym) ?? GEX?.tickers?.[sym]?.spot;
 
-/* 选中到期桶的 GEX;为空(如当日无 0DTE 合约)则回退到最近的非空桶 */
+/* 选中到期桶的 GEX;为空(如当日无 0DTE 合约)则回退到最近的非空桶。
+   口径=流量时读 .flow(无流量数据则自动退回名义并标注) */
 function gexBucketData(sym) {
-  const t = GEX?.tickers?.[sym];
-  if (!t) return null;
+  const t0 = GEX?.tickers?.[sym];
+  if (!t0) return null;
+  const flowMiss = gexCaliber === "flow" && !t0.flow;
+  const t = gexCaliber === "flow" && t0.flow ? t0.flow : t0;
   const buckets = t.buckets;
-  if (!buckets) return { ...t, bucket: "all", fallback: false };  // 兼容旧数据
+  if (!buckets) return { ...t, bucket: "all", fallback: false, caliber: "nominal", flowMiss };
+  const cal = gexCaliber === "flow" && t0.flow ? "flow" : "nominal";
   const nonEmpty = (b) => b && b.by_strike && b.by_strike.length;
   const start = GEX_BUCKET_ORDER.indexOf(gexBucket);
   for (let i = start; i < GEX_BUCKET_ORDER.length; i++) {
     const name = GEX_BUCKET_ORDER[i];
-    if (nonEmpty(buckets[name])) return { spot: t.spot, ...buckets[name], bucket: name, fallback: i !== start };
+    if (nonEmpty(buckets[name])) return { spot: t.spot, ...buckets[name], bucket: name, fallback: i !== start, caliber: cal, flowMiss, classified: t.classified };
   }
-  return { spot: t.spot, ...(buckets[gexBucket] || { net_gex: 0, flip: null, by_strike: [] }), bucket: gexBucket, fallback: false };
+  return { spot: t.spot, ...(buckets[gexBucket] || { net_gex: 0, flip: null, by_strike: [] }), bucket: gexBucket, fallback: false, caliber: cal, flowMiss, classified: t.classified };
 }
 
 /* ---------- 图表初始化 ---------- */
@@ -184,12 +189,14 @@ function updateLadderTitle() {
   let suffix;
   if (ladderMode === "gex") {
     const b = gexBucketData(SYM);
-    suffix = ` (${GEX_BUCKET_LABEL[b?.bucket] || GEX_BUCKET_LABEL[gexBucket]}${b?.fallback ? "·回退到最近" : ""})`;
+    const cal = b?.caliber === "flow" ? "·流量" : gexCaliber === "flow" ? "·流量缺失退名义" : "";
+    suffix = ` (${GEX_BUCKET_LABEL[b?.bucket] || GEX_BUCKET_LABEL[gexBucket]}${b?.fallback ? "·回退到最近" : ""}${cal})`;
   } else {
     suffix = " · 全部到期";
   }
   $("ladder-title").textContent = `行权价梯 · ${m}${suffix}`;
   $("gex-exp").style.opacity = ladderMode === "gex" ? "1" : "0.4";
+  $("gex-caliber").style.opacity = ladderMode === "gex" ? "1" : "0.4";
 }
 
 function renderLadder() {
@@ -306,9 +313,11 @@ function renderStats() {
   const adv = d.short?.avg_daily_volume;
   const gexPct = (g.net_gex != null && adv && g.spot) ? g.net_gex / (adv * g.spot) * 100 : null;
   const bLabel = GEX_BUCKET_LABEL[g.bucket] || "";
-  add(`净GEX(${bLabel}${g.fallback ? "·回退" : ""})`, g.net_gex != null
+  const calTag = g.caliber === "flow" ? `·流量${g.classified ? "/" + g.classified + "合约" : ""}` : "";
+  add(`净GEX(${bLabel}${g.fallback ? "·回退" : ""}${calTag})`, g.net_gex != null
     ? fmtMoney(g.net_gex) + "/1%" + (gexPct != null ? ` (${gexPct >= 0 ? "+" : ""}${gexPct.toFixed(1)}% ADV)` : "")
     : null, (g.net_gex ?? 0) >= 0 ? "up" : "down");
+  if (g.flowMiss) add("", "流量版暂无(需每小时低频层跑出,或该票被排除)", "muted");
   add("flip", g.flip);
   add("MaxPain", o.max_pain);
   add("ATM IV", o.atm_iv != null ? (o.atm_iv * 100).toFixed(1) + "%" : null);
@@ -584,8 +593,21 @@ function initToolbar() {
     renderGexSub();    // sparkline 随桶更新
     renderLadder();
   });
+  $("gex-caliber").addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button");
+    if (!btn) return;
+    gexCaliber = btn.dataset.c;
+    localStorage.setItem("wbGexCaliber", gexCaliber);
+    [...$("gex-caliber").children].forEach((b) => b.classList.toggle("active", b === btn));
+    if (ladderMode !== "gex") { ladderMode = "gex"; [...$("ladder-mode").children].forEach((b) => b.classList.toggle("active", b.dataset.m === "gex")); }
+    renderStats();
+    renderChart();
+    renderGexSub();
+    renderLadder();
+  });
   $("refresh-btn").addEventListener("click", refreshData);
   [...$("gex-exp").children].forEach((b) => b.classList.toggle("active", b.dataset.b === gexBucket));
+  [...$("gex-caliber").children].forEach((b) => b.classList.toggle("active", b.dataset.c === gexCaliber));
 }
 
 /* ---------- 入口 ---------- */
