@@ -1,0 +1,17 @@
+name: GEX regime 回测
+# 用累积的 data/gex_daily.json 检验 GEX flip 作为波动分界的有效性,并比较名义/流量两版
+on:
+  workflow_dispatch: {}
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements.txt
+      - run: python scripts/backtest.py
+        env:
+          MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+          MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}

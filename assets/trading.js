@@ -131,12 +131,13 @@ function gexBucketData(sym) {
   if (!buckets) return { ...t, bucket: "all", fallback: false, caliber: "nominal", flowMiss };
   const cal = gexCaliber === "flow" && t0.flow ? "flow" : "nominal";
   const nonEmpty = (b) => b && b.by_strike && b.by_strike.length;
+  const conf = { classified: t.classified, coverage: t.coverage, ambiguity: t.ambiguity };
   const start = GEX_BUCKET_ORDER.indexOf(gexBucket);
   for (let i = start; i < GEX_BUCKET_ORDER.length; i++) {
     const name = GEX_BUCKET_ORDER[i];
-    if (nonEmpty(buckets[name])) return { spot: t.spot, ...buckets[name], bucket: name, fallback: i !== start, caliber: cal, flowMiss, classified: t.classified };
+    if (nonEmpty(buckets[name])) return { spot: t.spot, ...buckets[name], bucket: name, fallback: i !== start, caliber: cal, flowMiss, ...conf };
   }
-  return { spot: t.spot, ...(buckets[gexBucket] || { net_gex: 0, flip: null, by_strike: [] }), bucket: gexBucket, fallback: false, caliber: cal, flowMiss, classified: t.classified };
+  return { spot: t.spot, ...(buckets[gexBucket] || { net_gex: 0, flip: null, by_strike: [] }), bucket: gexBucket, fallback: false, caliber: cal, flowMiss, ...conf };
 }
 
 /* ---------- 图表初始化 ---------- */
@@ -401,11 +402,15 @@ function renderStats() {
   const adv = d.short?.avg_daily_volume;
   const gexPct = (g.net_gex != null && adv && g.spot) ? g.net_gex / (adv * g.spot) * 100 : null;
   const bLabel = GEX_BUCKET_LABEL[g.bucket] || "";
-  const calTag = g.caliber === "flow" ? `·Flow${g.classified ? "/" + g.classified + " ctr" : ""}` : "";
+  const calTag = g.caliber === "flow"
+    ? `·Flow${g.classified ? "/" + g.classified + " ctr" : ""}`
+      + (g.coverage != null ? ` cov${Math.round(g.coverage * 100)}%` : "")
+      + (g.ambiguity != null ? ` amb${Math.round(g.ambiguity * 100)}%` : "")
+    : "";
   add(`Net GEX(${bLabel}${g.fallback ? "·nearest" : ""}${calTag})`, g.net_gex != null
     ? fmtMoney(g.net_gex) + "/1%" + (gexPct != null ? ` (${gexPct >= 0 ? "+" : ""}${gexPct.toFixed(1)}% ADV)` : "")
     : null, (g.net_gex ?? 0) >= 0 ? "up" : "down");
-  if (g.flowMiss) add("", "Flow version N/A (runs hourly in low-freq layer, or ticker excluded)", "muted");
+  if (g.flowMiss) add("", "Flow N/A (computed 2×/day, single-names only; ETFs excluded)", "muted");
   add("flip", g.flip);
   add("MaxPain", o.max_pain);
   add("ATM IV", o.atm_iv != null ? (o.atm_iv * 100).toFixed(1) + "%" : null);

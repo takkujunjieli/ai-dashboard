@@ -295,9 +295,10 @@ def fetch_option_trades(contract_ticker: str) -> list:
     return out
 
 
-def classify_net_flow(trades: list) -> tuple[float, float]:
-    """conditions 过滤 + 零档 tick rule + size 加权 → (净方向=买size−卖size, 已分类size)。"""
-    buy = sell = 0.0
+def classify_net_flow(trades: list) -> tuple[float, float, float]:
+    """conditions 过滤 + 零档 tick rule + size 加权
+    → (净方向=买size−卖size, 已判向size, 无法判向的平价size)。平价占比 = 分类歧义度。"""
+    buy = sell = flat = 0.0
     prev = None
     last_dir = 0
     for price, size, conds in trades:
@@ -312,7 +313,9 @@ def classify_net_flow(trades: list) -> tuple[float, float]:
             buy += size; last_dir = 1
         elif d < 0:
             sell += size; last_dir = -1
-    return buy - sell, buy + sell
+        else:
+            flat += size  # 平价且此前无方向,无法判向
+    return buy - sell, buy + sell, flat
 
 
 def compute_gex_flow(sym: str, spot: float, contracts: list, errors: list) -> dict | None:
@@ -325,9 +328,12 @@ def compute_gex_flow(sym: str, spot: float, contracts: list, errors: list) -> di
             and 0 <= (date.fromisoformat(c["exp"]) - today).days <= FLOW_MAX_DTE]
     ranked = sorted(cand, key=lambda c: -c["vol"])[:FLOW_TOPN]
     flow_sign = {}  # ticker -> dealer 符号(客户净多→dealer空→-1)
+    tot_dir = tot_flat = 0.0
     for c in ranked:
         try:
-            net, sz = classify_net_flow(fetch_option_trades(c["ticker"]))
+            net, sz, flat = classify_net_flow(fetch_option_trades(c["ticker"]))
+            tot_dir += sz
+            tot_flat += flat
             if sz > 0 and net != 0:
                 flow_sign[c["ticker"]] = -1 if net > 0 else 1
         except Exception as exc:  # noqa: BLE001 单合约失败不影响整体
@@ -343,7 +349,13 @@ def compute_gex_flow(sym: str, spot: float, contracts: list, errors: list) -> di
         enriched.append(((date.fromisoformat(c["exp"]) - today).days, c["strike"], sign * go))
     out = _bucketize(enriched, spot)
     if out:
-        out["classified"] = len(flow_sign)  # 实际分类到的合约数,前端可显示
+        out["classified"] = len(flow_sign)  # 实际分类到的合约数
+        # 置信度:coverage = 已按流量定符号的合约占近价 gamma 的比例;ambiguity = 平价 tick 占比
+        g_cand = sum((_contract_gamma_oi(c, spot, today) or 0) for c in cand)
+        g_clf = sum((_contract_gamma_oi(c, spot, today) or 0)
+                    for c in cand if c.get("ticker") in flow_sign)
+        out["coverage"] = round(g_clf / g_cand, 3) if g_cand else None
+        out["ambiguity"] = round(tot_flat / (tot_dir + tot_flat), 3) if (tot_dir + tot_flat) else None
     return out
 
 
@@ -701,7 +713,26 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                                    "net": g["net_gex"], "spot": g["spot"],
                                    "nets": {k: v["net_gex"] for k, v in g.get("buckets", {}).items()}})
     hist_path.write_text(json.dumps(hist, ensure_ascii=False, indent=1))
-    print(f"已写入 research/gex/gex_history(期权源: {out['options_source']}, "
+
+    # 累积日志(供回测):每 (日期,标的) 一条,当日多次运行则更新为最后一次读数;留最近 250 天
+    daily_path = ROOT / "data" / "gex_daily.json"
+    daily = load_json(daily_path, {})
+    today_str = now.date().isoformat()
+    day = daily.setdefault(today_str, {})
+    for sym in targets:
+        g = gex_out["tickers"].get(sym)
+        if not g:
+            continue
+        fl = g.get("flow") or {}
+        day[sym] = {"t": now_iso, "spot": g["spot"],
+                    "flip_nom": g["flip"], "net_nom": g["net_gex"],
+                    "flip_flow": fl.get("flip"), "net_flow": fl.get("net_gex"),
+                    "coverage": fl.get("coverage"), "ambiguity": fl.get("ambiguity")}
+    for k in sorted(daily)[:-250]:  # 只留最近 250 天
+        del daily[k]
+    daily_path.write_text(json.dumps(daily, ensure_ascii=False, indent=1))
+
+    print(f"已写入 research/gex/gex_history/gex_daily(期权源: {out['options_source']}, "
           f"本批 {len(targets)} 只, 错误 {len(out['errors'])} 条)")
 
 
