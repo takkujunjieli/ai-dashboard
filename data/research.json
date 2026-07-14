@@ -1,359 +1,152 @@
 {
- "updated_at": "2026-07-14T16:25:23+00:00",
+ "updated_at": "2026-07-14T16:25:41+00:00",
  "snapshots": {
-  "CCL": {
-   "price": 26.465,
-   "chg": -0.14499999999999957,
-   "chg_pct": -0.5449079293498669,
-   "day_vol": 6027654.0,
-   "prev_close": 26.61
-  },
-  "KLAR": {
-   "price": 19.445,
-   "chg": 0.1750000000000007,
-   "chg_pct": 0.9081473793461377,
-   "day_vol": 826649,
-   "prev_close": 19.27
-  },
-  "QQQ": {
-   "price": 719.2011,
-   "chg": 7.461099999999988,
-   "chg_pct": 1.0482901059375598,
-   "day_vol": 17606352.0,
-   "prev_close": 711.74
-  },
-  "RKLB": {
-   "price": 80.42035,
-   "chg": 3.690349999999995,
-   "chg_pct": 4.809526912550495,
-   "day_vol": 9236261.0,
-   "prev_close": 76.73
-  },
-  "U": {
-   "price": 31.4,
-   "chg": 0.7199999999999989,
-   "chg_pct": 2.346805736636241,
-   "day_vol": 2410034.0,
-   "prev_close": 30.68
-  },
-  "SPY": {
-   "price": 750.38,
-   "chg": 1.2100000000000364,
-   "chg_pct": 0.16151207336119125,
-   "day_vol": 16589425.0,
-   "prev_close": 749.17
-  },
-  "SPCX": {
-   "price": 140.98,
-   "chg": 1.8400000000000034,
-   "chg_pct": 1.322409084375452,
-   "day_vol": 22124777.0,
-   "prev_close": 139.14
-  },
-  "NFLX": {
-   "price": 73.635,
-   "chg": -0.19499999999999318,
-   "chg_pct": -0.26412027631043367,
-   "day_vol": 14258010.0,
-   "prev_close": 73.83
-  },
-  "TSLA": {
-   "price": 396.4401,
-   "chg": 1.6800999999999817,
-   "chg_pct": 0.42560036477859503,
-   "day_vol": 12802589.0,
-   "prev_close": 394.76
-  },
-  "RIVN": {
-   "price": 17.435,
-   "chg": 0.125,
-   "chg_pct": 0.7221259387637204,
-   "day_vol": 8281190.0,
-   "prev_close": 17.31
-  },
-  "SOXX": {
-   "price": 570.28,
-   "chg": 16.66999999999996,
-   "chg_pct": 3.0111450298946836,
-   "day_vol": 4235006.0,
-   "prev_close": 553.61
-  },
-  "AMD": {
-   "price": 555.82,
-   "chg": 21.430000000000064,
-   "chg_pct": 4.010179831209428,
-   "day_vol": 13212685.0,
-   "prev_close": 534.39
-  },
   "COIN": {
-   "price": 159.6249,
-   "chg": 2.254899999999992,
-   "chg_pct": 1.4328652220880678,
-   "day_vol": 3240361.0,
+   "price": 159.8,
+   "chg": 2.430000000000007,
+   "chg_pct": 1.5441316642307978,
+   "day_vol": 3245791.0,
    "prev_close": 157.37
   },
   "SNDK": {
-   "price": 1768.12,
-   "chg": 94.14999999999986,
-   "chg_pct": 5.624354080419593,
-   "day_vol": 5949844.0,
+   "price": 1768.875,
+   "chg": 94.90499999999997,
+   "chg_pct": 5.669456441871716,
+   "day_vol": 5964766.0,
    "prev_close": 1673.97
   },
   "MU": {
-   "price": 985.32,
-   "chg": 48.32000000000005,
-   "chg_pct": 5.156883671291361,
-   "day_vol": 18285725.0,
+   "price": 985.28,
+   "chg": 48.27999999999997,
+   "chg_pct": 5.1526147278548535,
+   "day_vol": 18335667.0,
    "prev_close": 937
   },
   "FIG": {
-   "price": 24.335,
-   "chg": 0.6850000000000023,
-   "chg_pct": 2.8964059196617433,
-   "day_vol": 20934298.0,
+   "price": 24.44,
+   "chg": 0.7900000000000027,
+   "chg_pct": 3.3403805496828873,
+   "day_vol": 21224840.0,
    "prev_close": 23.65
   },
   "AAOI": {
-   "price": 128.1,
-   "chg": 16.22,
-   "chg_pct": 14.497676081515909,
-   "day_vol": 6130016.0,
+   "price": 126.74,
+   "chg": 14.86,
+   "chg_pct": 13.282087951376475,
+   "day_vol": 6177240.0,
    "prev_close": 111.88
   },
   "HOOD": {
-   "price": 110.29,
-   "chg": 0.4300000000000068,
-   "chg_pct": 0.3914072455852966,
-   "day_vol": 8098603.0,
+   "price": 110.2401,
+   "chg": 0.38009999999999877,
+   "chg_pct": 0.3459858001092288,
+   "day_vol": 8120391.0,
    "prev_close": 109.86
   },
   "INTC": {
-   "price": 107.155,
-   "chg": 4.034999999999997,
-   "chg_pct": 3.9129169899146587,
-   "day_vol": 49407411.0,
+   "price": 107.06,
+   "chg": 3.9399999999999977,
+   "chg_pct": 3.820791311093869,
+   "day_vol": 49587324.0,
    "prev_close": 103.12
   },
   "LITE": {
-   "price": 818.32,
-   "chg": 50.17000000000007,
-   "chg_pct": 6.531276443402991,
-   "day_vol": 2224740.0,
+   "price": 817.77,
+   "chg": 49.620000000000005,
+   "chg_pct": 6.459675844561611,
+   "day_vol": 2231751.0,
    "prev_close": 768.15
+  },
+  "CCL": {
+   "price": 26.485,
+   "chg": -0.125,
+   "chg_pct": -0.46974821495678315,
+   "day_vol": 6048487.0,
+   "prev_close": 26.61
+  },
+  "KLAR": {
+   "price": 19.485,
+   "chg": 0.21499999999999986,
+   "chg_pct": 1.115723923196678,
+   "day_vol": 828177,
+   "prev_close": 19.27
+  },
+  "QQQ": {
+   "price": 719.17,
+   "chg": 7.42999999999995,
+   "chg_pct": 1.0439205327788166,
+   "day_vol": 17647493.0,
+   "prev_close": 711.74
+  },
+  "RKLB": {
+   "price": 80.44,
+   "chg": 3.7099999999999937,
+   "chg_pct": 4.835136191841514,
+   "day_vol": 9266071.0,
+   "prev_close": 76.73
+  },
+  "U": {
+   "price": 31.44,
+   "chg": 0.7600000000000016,
+   "chg_pct": 2.4771838331160416,
+   "day_vol": 2414107.0,
+   "prev_close": 30.68
+  },
+  "SPY": {
+   "price": 750.435,
+   "chg": 1.2649999999999864,
+   "chg_pct": 0.1688535312412385,
+   "day_vol": 16627674.0,
+   "prev_close": 749.17
+  },
+  "SPCX": {
+   "price": 140.825,
+   "chg": 1.6850000000000023,
+   "chg_pct": 1.211010493028606,
+   "day_vol": 22201749.0,
+   "prev_close": 139.14
+  },
+  "NFLX": {
+   "price": 73.625,
+   "chg": -0.2049999999999983,
+   "chg_pct": -0.2776649058648223,
+   "day_vol": 14308689.0,
+   "prev_close": 73.83
+  },
+  "TSLA": {
+   "price": 396.33,
+   "chg": 1.5699999999999932,
+   "chg_pct": 0.3977100010132722,
+   "day_vol": 12846312.0,
+   "prev_close": 394.76
+  },
+  "RIVN": {
+   "price": 17.455,
+   "chg": 0.14499999999999957,
+   "chg_pct": 0.8376660889659132,
+   "day_vol": 8314503.0,
+   "prev_close": 17.31
+  },
+  "SOXX": {
+   "price": 569.98,
+   "chg": 16.370000000000005,
+   "chg_pct": 2.956955257311104,
+   "day_vol": 4243299.0,
+   "prev_close": 553.61
+  },
+  "AMD": {
+   "price": 554.9849,
+   "chg": 20.594900000000052,
+   "chg_pct": 3.8539081943898745,
+   "day_vol": 13254003.0,
+   "prev_close": 534.39
   }
  },
  "tickers": {
   "AMD": {
-   "asof": "2026-07-14T16:03:28+00:00",
+   "asof": "2026-07-14T16:25:41+00:00",
    "src_1m": "massive",
    "bars_1m": [
-    [
-     1783954980000,
-     547.5,
-     548.28,
-     547.36,
-     548.145,
-     35652.960564,
-     547.7291
-    ],
-    [
-     1783955040000,
-     548.145,
-     548.64,
-     547.6601,
-     548.03,
-     35833.500728,
-     548.1862
-    ],
-    [
-     1783955100000,
-     548.095,
-     548.99,
-     547.93,
-     548.46,
-     34170.518114,
-     548.3176
-    ],
-    [
-     1783955160000,
-     548.53,
-     549.57,
-     548.2201,
-     548.55,
-     65168.319695,
-     548.9943
-    ],
-    [
-     1783955220000,
-     548.622883,
-     548.622883,
-     547.16,
-     547.645,
-     52196.270274,
-     547.8089
-    ],
-    [
-     1783955280000,
-     547.51,
-     547.725,
-     546.78,
-     547.01,
-     25107.803106,
-     547.1813
-    ],
-    [
-     1783955340000,
-     546.975,
-     547.0338,
-     546.13,
-     546.435,
-     30627.430448,
-     546.6008
-    ],
-    [
-     1783955400000,
-     546.67,
-     547.5,
-     545.88,
-     547.175,
-     27319.807815,
-     546.6003
-    ],
-    [
-     1783955460000,
-     547.19,
-     548.4497,
-     547,
-     548.25,
-     38486.509579,
-     547.8459
-    ],
-    [
-     1783955520000,
-     547.93,
-     547.935,
-     546.7846,
-     546.945,
-     20081.90311,
-     547.3855
-    ],
-    [
-     1783955580000,
-     546.945,
-     547.82,
-     546.8,
-     547.14,
-     19180.119763,
-     547.276
-    ],
-    [
-     1783955640000,
-     547.14,
-     547.61,
-     546.69,
-     547.535,
-     19461.869499,
-     547.1957
-    ],
-    [
-     1783955700000,
-     547.47,
-     547.62,
-     546.2501,
-     546.54,
-     35234.413343,
-     546.822
-    ],
-    [
-     1783955760000,
-     546.8,
-     548.25,
-     546.39,
-     547.7851,
-     37949.648201,
-     547.6902
-    ],
-    [
-     1783955820000,
-     547.795,
-     548.2,
-     547.311,
-     547.9,
-     33472.658541,
-     547.8647
-    ],
-    [
-     1783955880000,
-     548.08,
-     548.64,
-     547.5,
-     547.8616,
-     34224.918506,
-     548.1329
-    ],
-    [
-     1783955940000,
-     547.4144,
-     548.7,
-     547,
-     548.25,
-     38583.114354,
-     547.6859
-    ],
-    [
-     1783956000000,
-     548.7,
-     548.79,
-     547.91,
-     548.02,
-     19047.853328,
-     548.2527
-    ],
-    [
-     1783956060000,
-     548.02,
-     548.32,
-     547.62,
-     548.17,
-     18243.636682,
-     547.9833
-    ],
-    [
-     1783956120000,
-     548.155,
-     548.79,
-     547.92,
-     548.345,
-     32112.344191,
-     548.2967
-    ],
-    [
-     1783956180000,
-     548.2,
-     549.7599,
-     548.1,
-     549.39,
-     58477.959531,
-     549.1285
-    ],
-    [
-     1783956240000,
-     549.41,
-     550.5246,
-     549.4,
-     550,
-     80901.137443,
-     550.0016
-    ],
-    [
-     1783956300000,
-     550.205,
-     550.205,
-     548.955,
-     549.17,
-     34730.054771,
-     549.3231
-    ],
     [
      1783956360000,
      549.03,
@@ -7346,55 +7139,217 @@
      558.355,
      47424.816887,
      558.7944
+    ],
+    [
+     1784044980000,
+     558.42,
+     559.0489,
+     557.44,
+     557.44,
+     34902.804645,
+     558.3006
+    ],
+    [
+     1784045040000,
+     557.44,
+     558,
+     556.24,
+     557.04,
+     57618.14511,
+     557.2734
+    ],
+    [
+     1784045100000,
+     557.2,
+     557.5624,
+     556.38,
+     556.69,
+     31919.931929,
+     557.0064
+    ],
+    [
+     1784045160000,
+     556.66,
+     556.99,
+     556.02,
+     556.2268,
+     36769.554929,
+     556.5112
+    ],
+    [
+     1784045220000,
+     556.17,
+     556.17,
+     554.1,
+     555.36,
+     115200.639932,
+     555.372
+    ],
+    [
+     1784045280000,
+     555.0601,
+     556.35,
+     555.0601,
+     556.0001,
+     30900.875404,
+     555.9371
+    ],
+    [
+     1784045340000,
+     556.01,
+     556.71,
+     555.21,
+     555.34,
+     49130.743679,
+     556.1434
+    ],
+    [
+     1784045400000,
+     555.1721,
+     555.67,
+     553.76,
+     553.97,
+     62549.034518,
+     554.6879
+    ],
+    [
+     1784045460000,
+     553.98,
+     554.71,
+     553.76,
+     554.56,
+     47429.800712,
+     554.2489
+    ],
+    [
+     1784045520000,
+     554.6048,
+     555.35,
+     554.29,
+     554.415,
+     42910.992508,
+     554.8572
+    ],
+    [
+     1784045580000,
+     554.6799,
+     554.95,
+     553.82,
+     554.7899,
+     48269.524641,
+     554.2127
+    ],
+    [
+     1784045640000,
+     554.5,
+     554.7799,
+     553.6275,
+     553.6275,
+     47115.167646,
+     554.3096
+    ],
+    [
+     1784045700000,
+     553.82,
+     553.92,
+     552.2,
+     553.0852,
+     62191.646348,
+     553.0191
+    ],
+    [
+     1784045760000,
+     552.9711,
+     553.8,
+     552.64,
+     553.57,
+     25667.26018,
+     553.2556
+    ],
+    [
+     1784045820000,
+     553.68,
+     554.4995,
+     553.65,
+     554.005,
+     30888.886809,
+     554.1153
+    ],
+    [
+     1784045880000,
+     553.8601,
+     554.4,
+     553.85,
+     554.3737,
+     16899.433351,
+     554.1178
+    ],
+    [
+     1784045940000,
+     554.4999,
+     554.9899,
+     554.091,
+     554.89,
+     33137.469153,
+     554.663
+    ],
+    [
+     1784046000000,
+     554.82,
+     555.34,
+     554.3,
+     554.435,
+     50046.419327,
+     554.9441
+    ],
+    [
+     1784046060000,
+     554.33,
+     555,
+     553.8,
+     555,
+     32925.628689,
+     554.3889
+    ],
+    [
+     1784046120000,
+     555.22,
+     555.69,
+     554.1919,
+     554.9025,
+     31792.201006,
+     554.9821
+    ],
+    [
+     1784046180000,
+     555.08,
+     555.34,
+     553.29,
+     553.605,
+     33718.704196,
+     554.3254
+    ],
+    [
+     1784046240000,
+     553.605,
+     554.75,
+     553.32,
+     554.31,
+     21982.360005,
+     554.1533
+    ],
+    [
+     1784046300000,
+     554.29,
+     555.9622,
+     554.15,
+     555.21,
+     41560.203432,
+     555.3777
     ]
    ],
    "src_5m": "massive",
    "bars_5m": [
-    [
-     1783509900000,
-     504,
-     505,
-     503.2211,
-     503.2211,
-     9846.173923,
-     504.0058
-    ],
-    [
-     1783510200000,
-     504,
-     504.3,
-     503.56,
-     504.2562,
-     7092.090294,
-     504.2507
-    ],
-    [
-     1783510500000,
-     505,
-     505.72,
-     504.23,
-     505.25,
-     7409.166432,
-     505.2301
-    ],
-    [
-     1783510800000,
-     505.0646,
-     509.01,
-     504.0757,
-     508.01,
-     14888.102376,
-     506.7992
-    ],
-    [
-     1783511100000,
-     508,
-     508.5,
-     507,
-     507.41,
-     11310.718268999999,
-     508.0359
-    ],
     [
      1783511400000,
      507.41,
@@ -14545,13 +14500,233 @@
      1784044800000,
      560.665,
      561.38,
-     558.08,
-     558.355,
-     121982.673216,
-     559.6851
+     556.24,
+     557.04,
+     214503.62297099998,
+     558.812
+    ],
+    [
+     1784045100000,
+     557.2,
+     557.5624,
+     554.1,
+     555.34,
+     263921.745873,
+     555.9382
+    ],
+    [
+     1784045400000,
+     555.1721,
+     555.67,
+     553.6275,
+     553.6275,
+     248274.52002499998,
+     554.4691
+    ],
+    [
+     1784045700000,
+     553.82,
+     554.9899,
+     552.2,
+     554.89,
+     168784.695841,
+     553.6884
+    ],
+    [
+     1784046000000,
+     554.82,
+     555.69,
+     553.29,
+     554.31,
+     170465.313223,
+     554.6196
+    ],
+    [
+     1784046300000,
+     554.29,
+     555.9622,
+     554.15,
+     555.21,
+     41560.203432,
+     555.3777
     ]
    ],
-   "src_d": "massive",
+   "vwap": 559.08,
+   "short": {
+    "short_interest": 41583210,
+    "days_to_cover": 1.3,
+    "avg_daily_volume": 31906834,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-13",
+     "short_volume": 4708361.620541,
+     "total_volume": 9780340.41841,
+     "ratio": 0.481
+    },
+    {
+     "date": "2026-07-10",
+     "short_volume": 5960858.317682,
+     "total_volume": 11216087.641639,
+     "ratio": 0.531
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 4751266.585384,
+     "total_volume": 11661836.461231,
+     "ratio": 0.407
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 4461557.0431,
+     "total_volume": 10349923.692547,
+     "ratio": 0.431
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 5765407.192888,
+     "total_volume": 12220357.518803,
+     "ratio": 0.472
+    }
+   ],
+   "news": [
+    {
+     "title": "Had You Bought This Magnificent Vanguard ETF at the Start of January, You'd Be Crushing the S&P 500 in 2026",
+     "url": "https://www.fool.com/investing/2026/07/14/bought-vanguard-etf-january-crushing-sp-500-2026/?source=iedfolrf0000001",
+     "published": "2026-07-14T15:17:00Z",
+     "source": "The Motley Fool",
+     "summary": "The Vanguard Information Technology ETF (VGT) has returned 23.3% in 2026, significantly outpacing the S&P 500's 10.3% return. The ETF's strong performance is driven by five trillion-dollar tech companies—Nvidia, Apple, Microsoft, Alphabet, and Amazon—which comprise 50.6% of its portfolio. While AI i",
+     "sentiment": "positive",
+     "reason": "Stock more than doubled in 2026, central to AI infrastructure boom."
+    },
+    {
+     "title": "The KOSPI Bubble",
+     "url": "https://www.investing.com/analysis/the-kospi-bubble-200683889",
+     "published": "2026-07-14T13:33:00Z",
+     "source": "Investing.com",
+     "summary": "The Korean Composite Stock Price Index (KOSPI) has surged over 88% in 2026 and 200% in two years, driven primarily by semiconductor companies Samsung Electronics and SK Hynix, which now account for nearly 60% of the index. This extreme concentration poses regulatory risks, as Goldman Sachs warns tha",
+     "sentiment": "positive",
+     "reason": "AMD has risen 138% year-to-date, benefiting from strong semiconductor momentum and AI infrastructure buildout narrative."
+    },
+    {
+     "title": "Where Will Nvidia Stock Be in 2030?",
+     "url": "https://www.fool.com/investing/2026/07/14/where-will-nvidia-stock-be-in-2030/?source=iedfolrf0000001",
+     "published": "2026-07-14T13:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Nvidia stock has risen 380% over three years but struggled in 2026 with only 12% gains. However, analysts project significant upside by 2030, with the AI data center chip market potentially reaching $825 billion. Even if Nvidia's market share declines to 50%, it could generate over $400 billion in d",
+     "sentiment": "neutral",
+     "reason": "Mentioned as a competitor making solid strides in AI data center chips, but no specific positive or negative outlook provided. Presented as a threat to Nvidia's market share dominance."
+    },
+    {
+     "title": "Silo Pharma's QwikAgents Joins AMD AI Developer Program to Advance Enterprise AI Agent Platform",
+     "url": "https://www.globenewswire.com/news-release/2026/07/14/3326873/0/en/Silo-Pharma-s-QwikAgents-Joins-AMD-AI-Developer-Program-to-Advance-Enterprise-AI-Agent-Platform.html",
+     "published": "2026-07-14T12:55:00Z",
+     "source": "GlobeNewswire Inc.",
+     "summary": "Silo Pharma announced that its subsidiary QwikAgents has been accepted into Advanced Micro Devices' AMD AI Developer Program. The acceptance provides access to AMD Developer Cloud credits, AI development tools, and technical resources to support QwikAgents' next-generation AI agent platform designed",
+     "sentiment": "neutral",
+     "reason": "AMD is mentioned as a partner providing developer resources and cloud infrastructure. While the partnership is positive for Silo Pharma, there is no material impact disclosed for AMD itself, making this a neutral mention from AMD's perspective."
+    },
+    {
+     "title": "Got $1,000? 2 Magnificent Artificial Intelligence (AI) Stocks Down Over 15% to Buy Hand Over Fist",
+     "url": "https://www.fool.com/investing/2026/07/14/got-1000-2-magnificent-artificial-intelligence-ai/?source=iedfolrf0000001",
+     "published": "2026-07-14T10:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "The article recommends buying Micron Technology and Broadcom as both AI semiconductor stocks have declined over 15% from their all-time highs. Micron benefits from surging memory chip demand for AI data centers with expected 81% revenue growth in FY2027, while Broadcom is positioned to generate over",
+     "sentiment": "neutral",
+     "reason": "Mentioned as a competitor to Broadcom in AI chip design; no specific analysis or recommendation provided."
+    },
+    {
+     "title": "Prediction: Lisa Su Will Deliver Great News for Advanced Micro Devices (AMD) Investors on Aug. 4",
+     "url": "https://www.fool.com/investing/2026/07/14/prediction-lisa-su-deliver-great-news-amd-on-aug-4/?source=iedfolrf0000001",
+     "published": "2026-07-14T09:35:00Z",
+     "source": "The Motley Fool",
+     "summary": "AMD is expected to deliver bullish guidance during its Q2 2026 earnings call on Aug. 4, driven by strong data center GPU demand and new MI450 series deployments from major customers like OpenAI and Meta. However, AMD's stock trades at a P/E ratio of 121.8—nearly four times higher than Nvidia's 32.2—",
+     "sentiment": "neutral",
+     "reason": "While the article acknowledges strong business fundamentals, impressive revenue growth (38% YoY), and bullish forward guidance expectations, it emphasizes that AMD's valuation is extremely stretched at 121.8x P/E—nearly 4x Nvidia's multiple. The author explicitly states they are 'not rushing out to buy AMD stock' despite positive news, indicating the positive business outlook is offset by overvaluation concerns."
+    },
+    {
+     "title": "This AI Giant Has Climbed 900% Over the Past Five Years. Now Wall Street Expects the Stock to Jump Another 40%.",
+     "url": "https://www.fool.com/investing/2026/07/14/this-ai-giant-has-climbed-900-over-the-past-five-y/?source=iedfolrf0000001",
+     "published": "2026-07-14T09:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "Nvidia, the dominant AI chip designer, has surged 900% over five years and Wall Street predicts another 40% gain. The company is expanding beyond GPUs into the CPU market for agentic AI, targeting a $200 billion opportunity. With $81 billion in recent quarterly revenue and a 74% gross margin, Nvidia",
+     "sentiment": "neutral",
+     "reason": "Positioned as a CPU leader competing with Nvidia in the data center market. No specific negative or positive developments mentioned, but faces competitive pressure from Nvidia's CPU expansion."
+    },
+    {
+     "title": "Data Center Chip Market Size to Hit $56.80 Billion by 2035 | SNS Insider",
+     "url": "https://www.globenewswire.com/news-release/2026/07/14/3326582/0/en/Data-Center-Chip-Market-Size-to-Hit-56-80-Billion-by-2035-SNS-Insider.html",
+     "published": "2026-07-14T06:30:00Z",
+     "source": "GlobeNewswire Inc.",
+     "summary": "The global data center chip market, valued at $22.50 billion in 2025, is expected to reach $56.80 billion by 2035, growing at a CAGR of 9.70%. Growth is driven by generative AI workload demand, hyperscaler capital expenditure commitments of $300 billion in 2025, and enterprise AI adoption. GPUs are ",
+     "sentiment": "positive",
+     "reason": "Identified as a major player in North America's data center chip design capability with significant market presence alongside NVIDIA and Intel."
+    },
+    {
+     "title": "Cboe Global Markets to Launch Extended Hours for Single-Stock Options. Here's Why It Wins When Volatility Spikes.",
+     "url": "https://www.fool.com/investing/2026/07/13/cboe-global-markets-begins-extended-hours-for-sing/?source=iedfolrf0000001",
+     "published": "2026-07-13T21:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "Cboe Global Markets is launching extended trading hours (7:30 a.m. to 4:15 p.m. ET) for single-stock options on approximately 20 mega-cap stocks including the Magnificent Seven. The move is expected to boost revenue through increased trading volume and fees, particularly when market volatility is hi",
+     "sentiment": "neutral",
+     "reason": "AMD is mentioned as one of the mega-cap stocks included in the extended options trading hours program. No specific company analysis is provided in the article."
+    },
+    {
+     "title": "Why SK Hynix’s Crash Should Worry Every AI Investor",
+     "url": "https://www.investing.com/analysis/why-sk-hynixs-crash-should-worry-every-ai-investor-200683822",
+     "published": "2026-07-13T14:20:00Z",
+     "source": "Investing.com",
+     "summary": "SK Hynix surged 13% on its Nasdaq debut Friday but crashed 8.4% by Monday, highlighting how AI-linked stocks are driven by hype rather than fundamentals. The selloff dragged down the broader semiconductor sector, while TSMC bucked the trend with gains based on strong earnings. The article warns inve",
+     "sentiment": "negative",
+     "reason": "Lost 2% alongside broader semiconductor sector selloff triggered by SK Hynix crash, suggesting momentum-driven losses rather than fundamental deterioration."
+    },
+    {
+     "title": "Nvidia's Biggest Risk Isn't Custom AI Chips From Broadcom or AMD -- It's Something That's Hidden in Plain Sight",
+     "url": "https://www.fool.com/investing/2026/07/13/nvda-biggest-risk-isnt-custom-ai-chips-avgo-or-amd/?source=iedfolrf0000001",
+     "published": "2026-07-13T11:06:00Z",
+     "source": "The Motley Fool",
+     "summary": "While Broadcom and AMD are often cited as competitive threats to Nvidia's AI dominance, the article argues that Nvidia's greatest risk comes from its own major customers developing internal AI chips. These in-house solutions are cheaper, more available, and could erode Nvidia's pricing power, gross ",
+     "sentiment": "neutral",
+     "reason": "AMD is mentioned as a potential competitor but dismissed as a major threat. While it can compete on price and availability, it lacks the compute capabilities to significantly challenge Nvidia's dominance."
+    },
+    {
+     "title": "Will Memory Giants Micron, Sandisk, and SK Hynix Continue to Soar? History Is Strikingly Clear About What Happens Next.",
+     "url": "https://www.fool.com/investing/2026/07/13/will-memory-giants-micron-sandisk-and-sk-hynix-con/?source=iedfolrf0000001",
+     "published": "2026-07-13T10:10:00Z",
+     "source": "The Motley Fool",
+     "summary": "Memory chip manufacturers Micron, Sandisk, and SK Hynix have experienced massive stock gains (up 700-4000% in the past year) driven by AI data center demand. However, historical analysis shows memory stocks are cyclical, typically experiencing peaks followed by declines as supply increases. While th",
+     "sentiment": "positive",
+     "reason": "Logic chip designer positioned to benefit from ongoing AI compute demand, though not directly discussed in article details."
+    },
+    {
+     "title": "Does \"The Big Short's\" Michael Burry Know Something Wall Street Doesn't? He Just Placed Bets Against AI and Sees the \"Beginning of the End.\"",
+     "url": "https://www.fool.com/investing/2026/07/13/does-the-big-shorts-michael-burry-know-something-w/?source=iedfolrf0000001",
+     "published": "2026-07-13T08:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "Contrarian investor Michael Burry, famous for predicting the 2008 financial crisis, has placed significant bearish bets against AI stocks and semiconductor companies. He recently shorted Applied Materials, Tesla, Caterpillar, Micron Technology, and the iShares Semiconductor ETF, signaling concerns t",
+     "sentiment": "negative",
+     "reason": "Major holding in the iShares Semiconductor ETF that Burry is shorting, indicating skepticism about the company's valuation."
+    },
+    {
+     "title": "How Low Can SpaceX Stock Go?",
+     "url": "https://www.fool.com/investing/2026/07/13/how-low-can-spacex-stock-go/?source=iedfolrf0000001",
+     "published": "2026-07-13T07:28:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX stock has plummeted 35% from its $225 peak to $145 since its June IPO, losing $1 trillion in market value. While the company has strong growth potential across space transportation, satellite internet, and AI infrastructure segments with forecasted revenue doubling to $38.8B in 2026, its valu",
+     "sentiment": "positive",
+     "reason": "Also mentioned as a supplier of specialized AI chips to SpaceX's data centers, positioning it to benefit from SpaceX's AI infrastructure growth."
+    },
+    {
+     "title": "Did Nvidia's 2028 Rack Delay Under Jensen Huang Open a Door for AMD and Google?",
+     "url": "https://www.fool.com/investing/2026/07/12/did-nvidias-2028-rack-delay-under-jensen-huang-ope/?source=iedfolrf0000001",
+     "published": "2026-07-13T03:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Nvidia's reported delay of its Kyber NVL144 AI rack system until 2028 due to circuit board manufacturing issues could create opportunities for competitors AMD and Alphabet. While Nvidia maintains its market dominance through aggressive technology roadmaps, physical manufacturing constraints may fina",
+     "sentiment": "positive",
+     "reason": "Positioned to gain market share from Nvidia's delay; improved ROCm software platform, chiplet designs for increased memory, and recent Mext acquisition strengthen its competitive position in inference-optimized server solutions."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -15688,808 +15863,640 @@
      559.2643
     ]
    ],
-   "vwap": 559.4,
-   "short": {
-    "short_interest": 41583210,
-    "days_to_cover": 1.3,
-    "avg_daily_volume": 31906834,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-13",
-     "short_volume": 4708361.620541,
-     "total_volume": 9780340.41841,
-     "ratio": 0.481
-    },
-    {
-     "date": "2026-07-10",
-     "short_volume": 5960858.317682,
-     "total_volume": 11216087.641639,
-     "ratio": 0.531
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 4751266.585384,
-     "total_volume": 11661836.461231,
-     "ratio": 0.407
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 4461557.0431,
-     "total_volume": 10349923.692547,
-     "ratio": 0.431
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 5765407.192888,
-     "total_volume": 12220357.518803,
-     "ratio": 0.472
-    }
-   ],
-   "news": [
-    {
-     "title": "Had You Bought This Magnificent Vanguard ETF at the Start of January, You'd Be Crushing the S&P 500 in 2026",
-     "url": "https://www.fool.com/investing/2026/07/14/bought-vanguard-etf-january-crushing-sp-500-2026/?source=iedfolrf0000001",
-     "published": "2026-07-14T15:17:00Z",
-     "source": "The Motley Fool",
-     "summary": "The Vanguard Information Technology ETF (VGT) has returned 23.3% in 2026, significantly outpacing the S&P 500's 10.3% return. The ETF's strong performance is driven by five trillion-dollar tech companies—Nvidia, Apple, Microsoft, Alphabet, and Amazon—which comprise 50.6% of its portfolio. While AI i",
-     "sentiment": "positive",
-     "reason": "Stock more than doubled in 2026, central to AI infrastructure boom."
-    },
-    {
-     "title": "The KOSPI Bubble",
-     "url": "https://www.investing.com/analysis/the-kospi-bubble-200683889",
-     "published": "2026-07-14T13:33:00Z",
-     "source": "Investing.com",
-     "summary": "The Korean Composite Stock Price Index (KOSPI) has surged over 88% in 2026 and 200% in two years, driven primarily by semiconductor companies Samsung Electronics and SK Hynix, which now account for nearly 60% of the index. This extreme concentration poses regulatory risks, as Goldman Sachs warns tha",
-     "sentiment": "positive",
-     "reason": "AMD has risen 138% year-to-date, benefiting from strong semiconductor momentum and AI infrastructure buildout narrative."
-    },
-    {
-     "title": "Where Will Nvidia Stock Be in 2030?",
-     "url": "https://www.fool.com/investing/2026/07/14/where-will-nvidia-stock-be-in-2030/?source=iedfolrf0000001",
-     "published": "2026-07-14T13:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Nvidia stock has risen 380% over three years but struggled in 2026 with only 12% gains. However, analysts project significant upside by 2030, with the AI data center chip market potentially reaching $825 billion. Even if Nvidia's market share declines to 50%, it could generate over $400 billion in d",
-     "sentiment": "neutral",
-     "reason": "Mentioned as a competitor making solid strides in AI data center chips, but no specific positive or negative outlook provided. Presented as a threat to Nvidia's market share dominance."
-    },
-    {
-     "title": "Silo Pharma's QwikAgents Joins AMD AI Developer Program to Advance Enterprise AI Agent Platform",
-     "url": "https://www.globenewswire.com/news-release/2026/07/14/3326873/0/en/Silo-Pharma-s-QwikAgents-Joins-AMD-AI-Developer-Program-to-Advance-Enterprise-AI-Agent-Platform.html",
-     "published": "2026-07-14T12:55:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "Silo Pharma announced that its subsidiary QwikAgents has been accepted into Advanced Micro Devices' AMD AI Developer Program. The acceptance provides access to AMD Developer Cloud credits, AI development tools, and technical resources to support QwikAgents' next-generation AI agent platform designed",
-     "sentiment": "neutral",
-     "reason": "AMD is mentioned as a partner providing developer resources and cloud infrastructure. While the partnership is positive for Silo Pharma, there is no material impact disclosed for AMD itself, making this a neutral mention from AMD's perspective."
-    },
-    {
-     "title": "Got $1,000? 2 Magnificent Artificial Intelligence (AI) Stocks Down Over 15% to Buy Hand Over Fist",
-     "url": "https://www.fool.com/investing/2026/07/14/got-1000-2-magnificent-artificial-intelligence-ai/?source=iedfolrf0000001",
-     "published": "2026-07-14T10:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "The article recommends buying Micron Technology and Broadcom as both AI semiconductor stocks have declined over 15% from their all-time highs. Micron benefits from surging memory chip demand for AI data centers with expected 81% revenue growth in FY2027, while Broadcom is positioned to generate over",
-     "sentiment": "neutral",
-     "reason": "Mentioned as a competitor to Broadcom in AI chip design; no specific analysis or recommendation provided."
-    },
-    {
-     "title": "Prediction: Lisa Su Will Deliver Great News for Advanced Micro Devices (AMD) Investors on Aug. 4",
-     "url": "https://www.fool.com/investing/2026/07/14/prediction-lisa-su-deliver-great-news-amd-on-aug-4/?source=iedfolrf0000001",
-     "published": "2026-07-14T09:35:00Z",
-     "source": "The Motley Fool",
-     "summary": "AMD is expected to deliver bullish guidance during its Q2 2026 earnings call on Aug. 4, driven by strong data center GPU demand and new MI450 series deployments from major customers like OpenAI and Meta. However, AMD's stock trades at a P/E ratio of 121.8—nearly four times higher than Nvidia's 32.2—",
-     "sentiment": "neutral",
-     "reason": "While the article acknowledges strong business fundamentals, impressive revenue growth (38% YoY), and bullish forward guidance expectations, it emphasizes that AMD's valuation is extremely stretched at 121.8x P/E—nearly 4x Nvidia's multiple. The author explicitly states they are 'not rushing out to buy AMD stock' despite positive news, indicating the positive business outlook is offset by overvaluation concerns."
-    },
-    {
-     "title": "This AI Giant Has Climbed 900% Over the Past Five Years. Now Wall Street Expects the Stock to Jump Another 40%.",
-     "url": "https://www.fool.com/investing/2026/07/14/this-ai-giant-has-climbed-900-over-the-past-five-y/?source=iedfolrf0000001",
-     "published": "2026-07-14T09:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "Nvidia, the dominant AI chip designer, has surged 900% over five years and Wall Street predicts another 40% gain. The company is expanding beyond GPUs into the CPU market for agentic AI, targeting a $200 billion opportunity. With $81 billion in recent quarterly revenue and a 74% gross margin, Nvidia",
-     "sentiment": "neutral",
-     "reason": "Positioned as a CPU leader competing with Nvidia in the data center market. No specific negative or positive developments mentioned, but faces competitive pressure from Nvidia's CPU expansion."
-    },
-    {
-     "title": "Data Center Chip Market Size to Hit $56.80 Billion by 2035 | SNS Insider",
-     "url": "https://www.globenewswire.com/news-release/2026/07/14/3326582/0/en/Data-Center-Chip-Market-Size-to-Hit-56-80-Billion-by-2035-SNS-Insider.html",
-     "published": "2026-07-14T06:30:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "The global data center chip market, valued at $22.50 billion in 2025, is expected to reach $56.80 billion by 2035, growing at a CAGR of 9.70%. Growth is driven by generative AI workload demand, hyperscaler capital expenditure commitments of $300 billion in 2025, and enterprise AI adoption. GPUs are ",
-     "sentiment": "positive",
-     "reason": "Identified as a major player in North America's data center chip design capability with significant market presence alongside NVIDIA and Intel."
-    },
-    {
-     "title": "Cboe Global Markets to Launch Extended Hours for Single-Stock Options. Here's Why It Wins When Volatility Spikes.",
-     "url": "https://www.fool.com/investing/2026/07/13/cboe-global-markets-begins-extended-hours-for-sing/?source=iedfolrf0000001",
-     "published": "2026-07-13T21:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "Cboe Global Markets is launching extended trading hours (7:30 a.m. to 4:15 p.m. ET) for single-stock options on approximately 20 mega-cap stocks including the Magnificent Seven. The move is expected to boost revenue through increased trading volume and fees, particularly when market volatility is hi",
-     "sentiment": "neutral",
-     "reason": "AMD is mentioned as one of the mega-cap stocks included in the extended options trading hours program. No specific company analysis is provided in the article."
-    },
-    {
-     "title": "Why SK Hynix’s Crash Should Worry Every AI Investor",
-     "url": "https://www.investing.com/analysis/why-sk-hynixs-crash-should-worry-every-ai-investor-200683822",
-     "published": "2026-07-13T14:20:00Z",
-     "source": "Investing.com",
-     "summary": "SK Hynix surged 13% on its Nasdaq debut Friday but crashed 8.4% by Monday, highlighting how AI-linked stocks are driven by hype rather than fundamentals. The selloff dragged down the broader semiconductor sector, while TSMC bucked the trend with gains based on strong earnings. The article warns inve",
-     "sentiment": "negative",
-     "reason": "Lost 2% alongside broader semiconductor sector selloff triggered by SK Hynix crash, suggesting momentum-driven losses rather than fundamental deterioration."
-    },
-    {
-     "title": "Nvidia's Biggest Risk Isn't Custom AI Chips From Broadcom or AMD -- It's Something That's Hidden in Plain Sight",
-     "url": "https://www.fool.com/investing/2026/07/13/nvda-biggest-risk-isnt-custom-ai-chips-avgo-or-amd/?source=iedfolrf0000001",
-     "published": "2026-07-13T11:06:00Z",
-     "source": "The Motley Fool",
-     "summary": "While Broadcom and AMD are often cited as competitive threats to Nvidia's AI dominance, the article argues that Nvidia's greatest risk comes from its own major customers developing internal AI chips. These in-house solutions are cheaper, more available, and could erode Nvidia's pricing power, gross ",
-     "sentiment": "neutral",
-     "reason": "AMD is mentioned as a potential competitor but dismissed as a major threat. While it can compete on price and availability, it lacks the compute capabilities to significantly challenge Nvidia's dominance."
-    },
-    {
-     "title": "Will Memory Giants Micron, Sandisk, and SK Hynix Continue to Soar? History Is Strikingly Clear About What Happens Next.",
-     "url": "https://www.fool.com/investing/2026/07/13/will-memory-giants-micron-sandisk-and-sk-hynix-con/?source=iedfolrf0000001",
-     "published": "2026-07-13T10:10:00Z",
-     "source": "The Motley Fool",
-     "summary": "Memory chip manufacturers Micron, Sandisk, and SK Hynix have experienced massive stock gains (up 700-4000% in the past year) driven by AI data center demand. However, historical analysis shows memory stocks are cyclical, typically experiencing peaks followed by declines as supply increases. While th",
-     "sentiment": "positive",
-     "reason": "Logic chip designer positioned to benefit from ongoing AI compute demand, though not directly discussed in article details."
-    },
-    {
-     "title": "Does \"The Big Short's\" Michael Burry Know Something Wall Street Doesn't? He Just Placed Bets Against AI and Sees the \"Beginning of the End.\"",
-     "url": "https://www.fool.com/investing/2026/07/13/does-the-big-shorts-michael-burry-know-something-w/?source=iedfolrf0000001",
-     "published": "2026-07-13T08:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "Contrarian investor Michael Burry, famous for predicting the 2008 financial crisis, has placed significant bearish bets against AI stocks and semiconductor companies. He recently shorted Applied Materials, Tesla, Caterpillar, Micron Technology, and the iShares Semiconductor ETF, signaling concerns t",
-     "sentiment": "negative",
-     "reason": "Major holding in the iShares Semiconductor ETF that Burry is shorting, indicating skepticism about the company's valuation."
-    },
-    {
-     "title": "How Low Can SpaceX Stock Go?",
-     "url": "https://www.fool.com/investing/2026/07/13/how-low-can-spacex-stock-go/?source=iedfolrf0000001",
-     "published": "2026-07-13T07:28:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX stock has plummeted 35% from its $225 peak to $145 since its June IPO, losing $1 trillion in market value. While the company has strong growth potential across space transportation, satellite internet, and AI infrastructure segments with forecasted revenue doubling to $38.8B in 2026, its valu",
-     "sentiment": "positive",
-     "reason": "Also mentioned as a supplier of specialized AI chips to SpaceX's data centers, positioning it to benefit from SpaceX's AI infrastructure growth."
-    },
-    {
-     "title": "Did Nvidia's 2028 Rack Delay Under Jensen Huang Open a Door for AMD and Google?",
-     "url": "https://www.fool.com/investing/2026/07/12/did-nvidias-2028-rack-delay-under-jensen-huang-ope/?source=iedfolrf0000001",
-     "published": "2026-07-13T03:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Nvidia's reported delay of its Kyber NVL144 AI rack system until 2028 due to circuit board manufacturing issues could create opportunities for competitors AMD and Alphabet. While Nvidia maintains its market dominance through aggressive technology roadmaps, physical manufacturing constraints may fina",
-     "sentiment": "positive",
-     "reason": "Positioned to gain market share from Nvidia's delay; improved ROCm software platform, chiplet designs for increased memory, and recent Mext acquisition strengthen its competitive position in inference-optimized server solutions."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-14T16:03:28+00:00",
    "ind": {
-    "rsi_m": 28.59,
+    "rsi_m": 45.41,
     "rsi_d": 56.71,
-    "ema9_m": 560.25,
-    "ema21_m": 561.58
+    "ema9_m": 554.57,
+    "ema21_m": 555.38
    },
    "options": {
-    "call_premium": 181661040.68999997,
-    "put_premium": 68617286.108,
-    "call_vol": 114537,
-    "put_vol": 61646,
-    "call_oi": 237796,
-    "put_oi": 149057,
-    "atm_iv": 0.8314261498838221,
-    "pcr_vol": 0.54,
-    "pcr_oi": 0.63,
-    "net_premium": 113043754.58199997,
-    "pcr_prem": 0.38,
+    "call_premium": 188190789.64000008,
+    "put_premium": 73662056.42600001,
+    "call_vol": 119163,
+    "put_vol": 66800,
+    "call_oi": 234210,
+    "put_oi": 151540,
+    "atm_iv": 0.8257817811822865,
+    "pcr_vol": 0.56,
+    "pcr_oi": 0.65,
+    "net_premium": 114528733.21400006,
+    "pcr_prem": 0.39,
     "by_expiry": [
      {
       "exp": "2026-07-15",
-      "call_premium": 39424465.86000001,
-      "put_premium": 17344938.328,
-      "call_vol": 51365,
-      "put_vol": 29261,
-      "call_oi": 9764,
-      "put_oi": 11583,
-      "atm_iv": 0.8314261498838221
+      "call_premium": 40546477.78,
+      "put_premium": 19357804.726,
+      "call_vol": 53580,
+      "put_vol": 31861,
+      "call_oi": 9715,
+      "put_oi": 11802,
+      "atm_iv": 0.8257817811822865
      },
      {
       "exp": "2026-07-17",
-      "call_premium": 52986486.88999998,
-      "put_premium": 18155300.46,
-      "call_vol": 33357,
-      "put_vol": 18744,
-      "call_oi": 113794,
-      "put_oi": 72039,
-      "atm_iv": 0.8568220325343028
+      "call_premium": 55657013.5,
+      "put_premium": 19461563.720000003,
+      "call_vol": 35251,
+      "put_vol": 20371,
+      "call_oi": 112045,
+      "put_oi": 73388,
+      "atm_iv": 0.8575000313316592
      },
      {
       "exp": "2026-07-20",
-      "call_premium": 6935602.359999999,
-      "put_premium": 2910851.7800000003,
-      "call_vol": 3173,
-      "put_vol": 1973,
-      "call_oi": 3595,
-      "put_oi": 2998,
-      "atm_iv": 0.7280307387790357
+      "call_premium": 7339040.479999999,
+      "put_premium": 3317641.02,
+      "call_vol": 3385,
+      "put_vol": 2228,
+      "call_oi": 3601,
+      "put_oi": 3045,
+      "atm_iv": 0.718242730172823
      },
      {
       "exp": "2026-07-22",
-      "call_premium": 4689963.9799999995,
-      "put_premium": 1160556.19,
-      "call_vol": 1955,
-      "put_vol": 1035,
-      "call_oi": 1698,
-      "put_oi": 3908,
-      "atm_iv": 0.7646396139039184
+      "call_premium": 4603623.649999999,
+      "put_premium": 1253135.0499999998,
+      "call_vol": 1888,
+      "put_vol": 1085,
+      "call_oi": 1701,
+      "put_oi": 3923,
+      "atm_iv": 0.7713989927825433
      },
      {
       "exp": "2026-07-24",
-      "call_premium": 32380520.94,
-      "put_premium": 5782139.320000001,
-      "call_vol": 14575,
-      "put_vol": 3405,
-      "call_oi": 29346,
-      "put_oi": 16692,
-      "atm_iv": 0.8567420774782281
+      "call_premium": 33480750.16999999,
+      "put_premium": 6293171.320000002,
+      "call_vol": 14813,
+      "put_vol": 3734,
+      "call_oi": 28750,
+      "put_oi": 17087,
+      "atm_iv": 0.857831862550751
      },
      {
       "exp": "2026-07-27",
-      "call_premium": 1036199.95,
-      "put_premium": 771762.29,
-      "call_vol": 302,
-      "put_vol": 341,
+      "call_premium": 1043271.01,
+      "put_premium": 745379.3300000001,
+      "call_vol": 305,
+      "put_vol": 330,
       "call_oi": 312,
       "put_oi": 143,
-      "atm_iv": 0.8010256058148262
+      "atm_iv": 0.7964220714950966
      }
     ],
     "by_strike": [
+     {
+      "strike": 445,
+      "call_oi": 108,
+      "put_oi": 2545,
+      "call_vol": 32,
+      "put_vol": 480
+     },
      {
       "strike": 447.5,
       "call_oi": 5,
       "put_oi": 555,
       "call_vol": 4,
-      "put_vol": 71
+      "put_vol": 81
      },
      {
       "strike": 450,
       "call_oi": 7497,
       "put_oi": 20668,
-      "call_vol": 60,
-      "put_vol": 2494
+      "call_vol": 62,
+      "put_vol": 2553
      },
      {
       "strike": 452.5,
       "call_oi": 11,
       "put_oi": 229,
       "call_vol": 21,
-      "put_vol": 67
+      "put_vol": 83
      },
      {
       "strike": 455,
       "call_oi": 221,
       "put_oi": 1766,
-      "call_vol": 23,
-      "put_vol": 207
+      "call_vol": 24,
+      "put_vol": 212
      },
      {
       "strike": 457.5,
       "call_oi": 2,
       "put_oi": 1654,
       "call_vol": 6,
-      "put_vol": 72
+      "put_vol": 74
      },
      {
       "strike": 460,
       "call_oi": 3279,
       "put_oi": 8731,
-      "call_vol": 704,
-      "put_vol": 2023
+      "call_vol": 714,
+      "put_vol": 2107
      },
      {
       "strike": 462.5,
       "call_oi": 15,
       "put_oi": 438,
       "call_vol": 157,
-      "put_vol": 144
+      "put_vol": 154
      },
      {
       "strike": 465,
       "call_oi": 104,
       "put_oi": 2765,
       "call_vol": 11,
-      "put_vol": 304
+      "put_vol": 315
      },
      {
       "strike": 467.5,
       "call_oi": 12,
       "put_oi": 660,
       "call_vol": 11,
-      "put_vol": 64
+      "put_vol": 70
      },
      {
       "strike": 470,
       "call_oi": 8707,
       "put_oi": 6489,
       "call_vol": 112,
-      "put_vol": 834
+      "put_vol": 953
      },
      {
       "strike": 472.5,
       "call_oi": 7,
       "put_oi": 338,
       "call_vol": 2,
-      "put_vol": 1360
+      "put_vol": 1372
      },
      {
       "strike": 475,
       "call_oi": 175,
       "put_oi": 5191,
       "call_vol": 21,
-      "put_vol": 2648
+      "put_vol": 2666
      },
      {
       "strike": 477.5,
       "call_oi": 4,
       "put_oi": 346,
       "call_vol": 2,
-      "put_vol": 99
+      "put_vol": 124
      },
      {
       "strike": 480,
       "call_oi": 3172,
       "put_oi": 8000,
-      "call_vol": 102,
-      "put_vol": 915
+      "call_vol": 110,
+      "put_vol": 1066
      },
      {
       "strike": 482.5,
       "call_oi": 7,
       "put_oi": 292,
       "call_vol": 21,
-      "put_vol": 55
+      "put_vol": 59
      },
      {
       "strike": 485,
       "call_oi": 309,
       "put_oi": 1747,
       "call_vol": 46,
-      "put_vol": 673
+      "put_vol": 732
      },
      {
       "strike": 487.5,
       "call_oi": 33,
       "put_oi": 919,
       "call_vol": 3,
-      "put_vol": 202
+      "put_vol": 198
      },
      {
       "strike": 490,
       "call_oi": 2577,
       "put_oi": 6548,
-      "call_vol": 185,
-      "put_vol": 819
+      "call_vol": 188,
+      "put_vol": 913
      },
      {
       "strike": 492.5,
       "call_oi": 26,
       "put_oi": 246,
       "call_vol": 19,
-      "put_vol": 265
+      "put_vol": 294
      },
      {
       "strike": 495,
       "call_oi": 507,
       "put_oi": 2960,
       "call_vol": 55,
-      "put_vol": 712
+      "put_vol": 735
      },
      {
       "strike": 497.5,
       "call_oi": 22,
       "put_oi": 485,
-      "call_vol": 116,
-      "put_vol": 339
+      "call_vol": 128,
+      "put_vol": 363
      },
      {
       "strike": 500,
       "call_oi": 16779,
       "put_oi": 13012,
-      "call_vol": 541,
-      "put_vol": 5083
+      "call_vol": 566,
+      "put_vol": 5372
      },
      {
       "strike": 502.5,
       "call_oi": 111,
       "put_oi": 723,
       "call_vol": 33,
-      "put_vol": 540
+      "put_vol": 548
      },
      {
       "strike": 505,
       "call_oi": 561,
       "put_oi": 3142,
       "call_vol": 37,
-      "put_vol": 1261
+      "put_vol": 1287
      },
      {
       "strike": 507.5,
       "call_oi": 232,
       "put_oi": 1357,
       "call_vol": 36,
-      "put_vol": 284
+      "put_vol": 291
      },
      {
       "strike": 510,
       "call_oi": 4682,
       "put_oi": 6552,
-      "call_vol": 96,
-      "put_vol": 1562
+      "call_vol": 101,
+      "put_vol": 1687
      },
      {
       "strike": 512.5,
       "call_oi": 481,
       "put_oi": 642,
-      "call_vol": 114,
-      "put_vol": 422
+      "call_vol": 115,
+      "put_vol": 466
      },
      {
       "strike": 515,
       "call_oi": 1608,
       "put_oi": 4297,
-      "call_vol": 292,
-      "put_vol": 952
+      "call_vol": 293,
+      "put_vol": 1029
      },
      {
       "strike": 517.5,
       "call_oi": 941,
       "put_oi": 622,
       "call_vol": 81,
-      "put_vol": 354
+      "put_vol": 400
      },
      {
       "strike": 520,
       "call_oi": 8878,
       "put_oi": 7399,
-      "call_vol": 502,
-      "put_vol": 2120
+      "call_vol": 507,
+      "put_vol": 2311
      },
      {
       "strike": 522.5,
       "call_oi": 294,
       "put_oi": 3355,
-      "call_vol": 58,
-      "put_vol": 427
+      "call_vol": 59,
+      "put_vol": 455
      },
      {
       "strike": 525,
       "call_oi": 1538,
       "put_oi": 4132,
-      "call_vol": 407,
-      "put_vol": 4198
+      "call_vol": 455,
+      "put_vol": 4314
      },
      {
       "strike": 527.5,
       "call_oi": 520,
       "put_oi": 751,
-      "call_vol": 130,
-      "put_vol": 287
+      "call_vol": 134,
+      "put_vol": 324
      },
      {
       "strike": 530,
       "call_oi": 4989,
       "put_oi": 6400,
-      "call_vol": 563,
-      "put_vol": 1914
+      "call_vol": 608,
+      "put_vol": 2034
      },
      {
       "strike": 532.5,
       "call_oi": 1160,
       "put_oi": 530,
-      "call_vol": 131,
-      "put_vol": 440
+      "call_vol": 133,
+      "put_vol": 462
      },
      {
       "strike": 535,
       "call_oi": 2848,
       "put_oi": 2613,
-      "call_vol": 1729,
-      "put_vol": 1579
+      "call_vol": 1757,
+      "put_vol": 1674
      },
      {
       "strike": 537.5,
       "call_oi": 1596,
       "put_oi": 340,
-      "call_vol": 455,
-      "put_vol": 295
+      "call_vol": 458,
+      "put_vol": 324
      },
      {
       "strike": 540,
       "call_oi": 6133,
       "put_oi": 3794,
-      "call_vol": 1672,
-      "put_vol": 2214
+      "call_vol": 1661,
+      "put_vol": 2348
      },
      {
       "strike": 542.5,
       "call_oi": 767,
       "put_oi": 276,
-      "call_vol": 522,
-      "put_vol": 914
+      "call_vol": 524,
+      "put_vol": 982
      },
      {
       "strike": 545,
       "call_oi": 1880,
       "put_oi": 1169,
-      "call_vol": 3201,
-      "put_vol": 1602
+      "call_vol": 3215,
+      "put_vol": 1732
      },
      {
       "strike": 547.5,
       "call_oi": 2993,
       "put_oi": 512,
-      "call_vol": 1049,
-      "put_vol": 770
+      "call_vol": 1067,
+      "put_vol": 800
      },
      {
       "strike": 550,
       "call_oi": 13141,
       "put_oi": 4036,
-      "call_vol": 5775,
-      "put_vol": 4959
+      "call_vol": 6375,
+      "put_vol": 5381
      },
      {
       "strike": 552.5,
       "call_oi": 712,
       "put_oi": 333,
-      "call_vol": 1685,
-      "put_vol": 1272
+      "call_vol": 1748,
+      "put_vol": 1498
      },
      {
       "strike": 555,
       "call_oi": 5687,
       "put_oi": 1261,
-      "call_vol": 3031,
-      "put_vol": 2773
+      "call_vol": 3413,
+      "put_vol": 3298
      },
      {
       "strike": 557.5,
       "call_oi": 440,
       "put_oi": 194,
-      "call_vol": 1447,
-      "put_vol": 931
+      "call_vol": 1537,
+      "put_vol": 1389
      },
      {
       "strike": 560,
       "call_oi": 11410,
       "put_oi": 1910,
-      "call_vol": 8386,
-      "put_vol": 3426
+      "call_vol": 8871,
+      "put_vol": 3679
      },
      {
       "strike": 562.5,
       "call_oi": 3041,
       "put_oi": 118,
-      "call_vol": 1942,
-      "put_vol": 1429
+      "call_vol": 2028,
+      "put_vol": 1577
      },
      {
       "strike": 565,
       "call_oi": 2749,
       "put_oi": 539,
-      "call_vol": 4652,
-      "put_vol": 1535
+      "call_vol": 4861,
+      "put_vol": 1681
      },
      {
       "strike": 567.5,
       "call_oi": 1432,
       "put_oi": 49,
-      "call_vol": 1201,
-      "put_vol": 401
+      "call_vol": 1239,
+      "put_vol": 424
      },
      {
       "strike": 570,
       "call_oi": 13298,
       "put_oi": 2883,
-      "call_vol": 7920,
-      "put_vol": 1557
+      "call_vol": 8186,
+      "put_vol": 1636
      },
      {
       "strike": 572.5,
       "call_oi": 168,
       "put_oi": 17,
-      "call_vol": 1483,
-      "put_vol": 88
+      "call_vol": 1615,
+      "put_vol": 91
      },
      {
       "strike": 575,
       "call_oi": 4504,
       "put_oi": 491,
-      "call_vol": 2656,
-      "put_vol": 235
+      "call_vol": 2795,
+      "put_vol": 240
      },
      {
       "strike": 577.5,
       "call_oi": 205,
       "put_oi": 2,
-      "call_vol": 735,
-      "put_vol": 96
+      "call_vol": 788,
+      "put_vol": 97
      },
      {
       "strike": 580,
       "call_oi": 11885,
       "put_oi": 1343,
-      "call_vol": 8282,
-      "put_vol": 195
+      "call_vol": 8718,
+      "put_vol": 197
      },
      {
       "strike": 582.5,
       "call_oi": 1470,
       "put_oi": 5,
-      "call_vol": 917,
+      "call_vol": 952,
       "put_vol": 69
      },
      {
       "strike": 585,
       "call_oi": 1719,
       "put_oi": 190,
-      "call_vol": 2209,
-      "put_vol": 105
+      "call_vol": 2339,
+      "put_vol": 106
      },
      {
       "strike": 587.5,
       "call_oi": 1092,
       "put_oi": 26,
-      "call_vol": 886,
+      "call_vol": 903,
       "put_vol": 23
      },
      {
       "strike": 590,
       "call_oi": 5105,
       "put_oi": 560,
-      "call_vol": 4469,
-      "put_vol": 196
+      "call_vol": 4658,
+      "put_vol": 200
      },
      {
       "strike": 592.5,
       "call_oi": 499,
       "put_oi": 17,
-      "call_vol": 716,
+      "call_vol": 742,
       "put_vol": 6
      },
      {
       "strike": 595,
       "call_oi": 3060,
       "put_oi": 264,
-      "call_vol": 2899,
+      "call_vol": 3032,
       "put_vol": 29
      },
      {
       "strike": 597.5,
       "call_oi": 303,
       "put_oi": 35,
-      "call_vol": 620,
-      "put_vol": 48
+      "call_vol": 633,
+      "put_vol": 49
      },
      {
       "strike": 600,
       "call_oi": 17585,
       "put_oi": 900,
-      "call_vol": 15937,
-      "put_vol": 181
+      "call_vol": 16642,
+      "put_vol": 186
      },
      {
       "strike": 602.5,
       "call_oi": 425,
       "put_oi": 10,
-      "call_vol": 815,
+      "call_vol": 821,
       "put_vol": 2
      },
      {
       "strike": 605,
       "call_oi": 2521,
       "put_oi": 151,
-      "call_vol": 1376,
+      "call_vol": 1435,
       "put_vol": 101
      },
      {
       "strike": 607.5,
       "call_oi": 205,
       "put_oi": 1,
-      "call_vol": 960,
+      "call_vol": 973,
       "put_vol": 1
      },
      {
       "strike": 610,
       "call_oi": 5491,
       "put_oi": 346,
-      "call_vol": 3611,
-      "put_vol": 110
+      "call_vol": 3694,
+      "put_vol": 136
      },
      {
       "strike": 612.5,
       "call_oi": 698,
       "put_oi": 0,
-      "call_vol": 493,
+      "call_vol": 541,
       "put_vol": 18
      },
      {
       "strike": 615,
       "call_oi": 3015,
       "put_oi": 52,
-      "call_vol": 1308,
+      "call_vol": 1350,
       "put_vol": 33
      },
      {
       "strike": 617.5,
       "call_oi": 779,
       "put_oi": 0,
-      "call_vol": 1515,
+      "call_vol": 1549,
       "put_vol": 2
      },
      {
       "strike": 620,
       "call_oi": 8092,
       "put_oi": 232,
-      "call_vol": 2678,
+      "call_vol": 2807,
       "put_vol": 29
      },
      {
       "strike": 622.5,
       "call_oi": 308,
       "put_oi": 2,
-      "call_vol": 152,
+      "call_vol": 187,
       "put_vol": 2
      },
      {
       "strike": 625,
       "call_oi": 1924,
       "put_oi": 48,
-      "call_vol": 734,
+      "call_vol": 805,
       "put_vol": 27
      },
      {
       "strike": 627.5,
       "call_oi": 398,
       "put_oi": 1,
-      "call_vol": 465,
+      "call_vol": 470,
       "put_vol": 1
      },
      {
       "strike": 630,
       "call_oi": 5098,
       "put_oi": 113,
-      "call_vol": 932,
+      "call_vol": 1330,
       "put_vol": 20
      },
      {
       "strike": 632.5,
       "call_oi": 268,
       "put_oi": 0,
-      "call_vol": 680,
+      "call_vol": 683,
       "put_vol": 5
      },
      {
       "strike": 635,
       "call_oi": 321,
       "put_oi": 1,
-      "call_vol": 328,
+      "call_vol": 332,
       "put_vol": 3
      },
      {
       "strike": 637.5,
       "call_oi": 97,
       "put_oi": 1,
-      "call_vol": 283,
+      "call_vol": 285,
       "put_vol": 1
      },
      {
       "strike": 640,
       "call_oi": 4871,
       "put_oi": 78,
-      "call_vol": 654,
+      "call_vol": 668,
       "put_vol": 44
      },
      {
@@ -16503,78 +16510,64 @@
       "strike": 645,
       "call_oi": 305,
       "put_oi": 0,
-      "call_vol": 256,
+      "call_vol": 266,
       "put_vol": 4
      },
      {
       "strike": 647.5,
       "call_oi": 87,
       "put_oi": 0,
-      "call_vol": 87,
+      "call_vol": 89,
       "put_vol": 0
      },
      {
       "strike": 650,
       "call_oi": 9333,
       "put_oi": 101,
-      "call_vol": 2294,
+      "call_vol": 2384,
       "put_vol": 37
      },
      {
       "strike": 652.5,
       "call_oi": 70,
       "put_oi": 0,
-      "call_vol": 107,
+      "call_vol": 109,
       "put_vol": 0
      },
      {
       "strike": 655,
       "call_oi": 364,
       "put_oi": 0,
-      "call_vol": 600,
+      "call_vol": 606,
       "put_vol": 0
      },
      {
       "strike": 657.5,
       "call_oi": 40,
       "put_oi": 0,
-      "call_vol": 164,
+      "call_vol": 165,
       "put_vol": 0
      },
      {
       "strike": 660,
       "call_oi": 3723,
       "put_oi": 40,
-      "call_vol": 909,
+      "call_vol": 960,
       "put_vol": 33
      },
      {
       "strike": 662.5,
       "call_oi": 42,
       "put_oi": 0,
-      "call_vol": 504,
+      "call_vol": 605,
       "put_vol": 0
      },
      {
       "strike": 665,
       "call_oi": 117,
       "put_oi": 0,
-      "call_vol": 172,
+      "call_vol": 215,
       "put_vol": 1
-     },
-     {
-      "strike": 667.5,
-      "call_oi": 56,
-      "put_oi": 0,
-      "call_vol": 214,
-      "put_vol": 2
-     },
-     {
-      "strike": 670,
-      "call_oi": 3638,
-      "put_oi": 62,
-      "call_vol": 898,
-      "put_vol": 31
      }
     ],
     "top_strikes": [
@@ -16582,65 +16575,65 @@
       "exp": "2026-07-15",
       "strike": 600,
       "side": "call",
-      "vol": 7751,
+      "vol": 8053,
       "oi": 414,
-      "premium": 1601356.5999999999
+      "premium": 1620988.37
      },
      {
       "exp": "2026-07-15",
       "strike": 580,
       "side": "call",
-      "vol": 5295,
+      "vol": 5518,
       "oi": 396,
-      "premium": 3354064.8000000003
+      "premium": 3413048.5399999996
      },
      {
       "exp": "2026-07-17",
       "strike": 600,
       "side": "call",
-      "vol": 4460,
+      "vol": 4763,
       "oi": 6656,
-      "premium": 2560485.9999999995
-     },
-     {
-      "exp": "2026-07-15",
-      "strike": 570,
-      "side": "call",
-      "vol": 4097,
-      "oi": 303,
-      "premium": 3338932.09
+      "premium": 2690856.8499999996
      },
      {
       "exp": "2026-07-15",
       "strike": 560,
       "side": "call",
-      "vol": 4092,
+      "vol": 4334,
       "oi": 320,
-      "premium": 4370419.680000001
+      "premium": 4581428.06
+     },
+     {
+      "exp": "2026-07-15",
+      "strike": 570,
+      "side": "call",
+      "vol": 4234,
+      "oi": 303,
+      "premium": 3409047.44
      },
      {
       "exp": "2026-07-15",
       "strike": 525,
       "side": "put",
-      "vol": 2948,
+      "vol": 3005,
       "oi": 2185,
-      "premium": 713121.2000000001
+      "premium": 727720.85
      },
      {
       "exp": "2026-07-15",
       "strike": 565,
       "side": "call",
-      "vol": 2821,
+      "vol": 2890,
       "oi": 745,
-      "premium": 2813242.25
+      "premium": 2860637.6
      },
      {
       "exp": "2026-07-17",
       "strike": 570,
       "side": "call",
-      "vol": 2600,
+      "vol": 2656,
       "oi": 7949,
-      "premium": 3733678.0
+      "premium": 3800815.6799999997
      }
     ],
     "max_pain": 537.5,
@@ -16648,224 +16641,77 @@
     "oi_changes": [
      {
       "exp": "2026-07-17",
-      "strike": 447.5,
+      "strike": 445,
       "side": "put",
       "delta": 266
      },
      {
-      "exp": "2026-07-24",
-      "strike": 447.5,
+      "exp": "2026-07-15",
+      "strike": 445,
       "side": "put",
-      "delta": 43
+      "delta": 169
      },
      {
-      "exp": "2026-07-15",
-      "strike": 447.5,
+      "exp": "2026-08-14",
+      "strike": 445,
       "side": "put",
-      "delta": 17
+      "delta": 40
+     },
+     {
+      "exp": "2026-07-24",
+      "strike": 445,
+      "side": "put",
+      "delta": 32
+     },
+     {
+      "exp": "2026-07-31",
+      "strike": 445,
+      "side": "put",
+      "delta": 20
+     },
+     {
+      "exp": "2026-08-28",
+      "strike": 445,
+      "side": "put",
+      "delta": 7
+     },
+     {
+      "exp": "2026-08-14",
+      "strike": 445,
+      "side": "call",
+      "delta": 6
+     },
+     {
+      "exp": "2026-07-22",
+      "strike": 445,
+      "side": "put",
+      "delta": 3
+     },
+     {
+      "exp": "2026-08-07",
+      "strike": 445,
+      "side": "put",
+      "delta": 3
+     },
+     {
+      "exp": "2026-07-20",
+      "strike": 445,
+      "side": "put",
+      "delta": 1
      }
     ],
-    "contracts": 1476,
+    "contracts": 1464,
     "prem_delta": {
-     "call": 8861462.37499991,
-     "put": 7336117.628000028,
-     "since": "2026-07-14T15:40:47+00:00"
+     "call": 6529748.950000107,
+     "put": 5044770.318000019,
+     "since": "2026-07-14T16:03:28+00:00"
     }
    }
   },
   "TSLA": {
-   "asof": "2026-07-14T16:03:28+00:00",
+   "asof": "2026-07-14T16:25:41+00:00",
    "src_1m": "massive",
    "bars_1m": [
-    [
-     1783963440000,
-     393.97,
-     394.02,
-     393.72,
-     393.7799,
-     25157.719479,
-     393.8288
-    ],
-    [
-     1783963500000,
-     393.745,
-     393.78,
-     393.43,
-     393.655,
-     69412.31277,
-     393.5761
-    ],
-    [
-     1783963560000,
-     393.635,
-     393.65,
-     393.33,
-     393.4,
-     70513.745578,
-     393.4886
-    ],
-    [
-     1783963620000,
-     393.38,
-     393.52,
-     393.23,
-     393.31,
-     57412.022018,
-     393.3526
-    ],
-    [
-     1783963680000,
-     393.355,
-     393.62,
-     393.355,
-     393.615,
-     36068.320941,
-     393.4944
-    ],
-    [
-     1783963740000,
-     393.63,
-     393.63,
-     393.3428,
-     393.409504,
-     39312.586148,
-     393.4426
-    ],
-    [
-     1783963800000,
-     393.41,
-     393.77,
-     393.31,
-     393.71,
-     40024.5728,
-     393.4961
-    ],
-    [
-     1783963860000,
-     393.69,
-     393.83,
-     393.51,
-     393.745,
-     24533.364639,
-     393.663
-    ],
-    [
-     1783963920000,
-     393.7799,
-     393.98,
-     393.64,
-     393.95,
-     44842.436065,
-     393.796
-    ],
-    [
-     1783963980000,
-     393.945,
-     394.0942,
-     393.7,
-     393.755,
-     49725.342027,
-     393.9587
-    ],
-    [
-     1783964040000,
-     393.78,
-     394.11,
-     393.7,
-     394,
-     29925.599639,
-     393.9688
-    ],
-    [
-     1783964100000,
-     393.97,
-     393.97,
-     393.5,
-     393.74,
-     33090.081223,
-     393.675
-    ],
-    [
-     1783964160000,
-     393.7,
-     393.85,
-     393.08,
-     393.25,
-     73002.481632,
-     393.3472
-    ],
-    [
-     1783964220000,
-     393.29,
-     393.3399,
-     393.0219,
-     393.1,
-     36233.825924,
-     393.2004
-    ],
-    [
-     1783964280000,
-     393.16,
-     393.16,
-     392.91,
-     392.965,
-     77871.827533,
-     393.0087
-    ],
-    [
-     1783964340000,
-     392.96,
-     392.9799,
-     392.5,
-     392.92,
-     126120.459669,
-     392.7089
-    ],
-    [
-     1783964400000,
-     392.88,
-     392.8965,
-     392.71,
-     392.8,
-     30655.849691,
-     392.8021
-    ],
-    [
-     1783964460000,
-     392.765,
-     393.4699,
-     392.72,
-     393.39,
-     46421.573428,
-     393.1448
-    ],
-    [
-     1783964520000,
-     393.395,
-     393.66,
-     393.33,
-     393.44,
-     58828.898742,
-     393.5085
-    ],
-    [
-     1783964580000,
-     393.49,
-     394.0999,
-     393.49,
-     394.0477,
-     82268.08083,
-     393.8778
-    ],
-    [
-     1783964640000,
-     394.03,
-     394.19,
-     393.8712,
-     393.915,
-     36898.136882,
-     394.0246
-    ],
     [
      1783964700000,
      393.92,
@@ -23876,46 +23722,199 @@
      396.37,
      50000.51514,
      396.2206
+    ],
+    [
+     1784045160000,
+     396.325,
+     396.75,
+     396.2701,
+     396.725,
+     49707.046385,
+     396.4754
+    ],
+    [
+     1784045220000,
+     396.69,
+     396.735,
+     396.21,
+     396.295,
+     54126.695738,
+     396.4295
+    ],
+    [
+     1784045280000,
+     396.295,
+     396.53,
+     396.2201,
+     396.4301,
+     17774.59673,
+     396.3699
+    ],
+    [
+     1784045340000,
+     396.48,
+     396.71,
+     396.36,
+     396.448,
+     33470.424489,
+     396.537
+    ],
+    [
+     1784045400000,
+     396.53,
+     396.65,
+     395.96,
+     396.03,
+     61528.472484,
+     396.1847
+    ],
+    [
+     1784045460000,
+     395.99,
+     396.17,
+     395.92,
+     396.1,
+     38246.858589,
+     396.0669
+    ],
+    [
+     1784045520000,
+     396.1499,
+     396.33,
+     395.97,
+     396.28,
+     27999.724448,
+     396.1334
+    ],
+    [
+     1784045580000,
+     396.2801,
+     396.6,
+     396.231,
+     396.33,
+     27447.518052,
+     396.4145
+    ],
+    [
+     1784045640000,
+     396.31,
+     396.42,
+     396.11,
+     396.1475,
+     18687.464299,
+     396.2697
+    ],
+    [
+     1784045700000,
+     396.15,
+     396.16,
+     395.6406,
+     395.97,
+     71342.066036,
+     395.8558
+    ],
+    [
+     1784045760000,
+     395.97,
+     396.2,
+     395.94,
+     396.155,
+     31698.568641,
+     396.0393
+    ],
+    [
+     1784045820000,
+     396.16,
+     396.28,
+     395.99,
+     396.14,
+     33476.752405,
+     396.1488
+    ],
+    [
+     1784045880000,
+     396.14,
+     396.4699,
+     396.14,
+     396.38,
+     34084.041327,
+     396.3106
+    ],
+    [
+     1784045940000,
+     396.37,
+     396.58,
+     396.13,
+     396.515,
+     28492.365849,
+     396.3358
+    ],
+    [
+     1784046000000,
+     396.47,
+     396.86,
+     396.45,
+     396.49,
+     54937.058087,
+     396.6777
+    ],
+    [
+     1784046060000,
+     396.53,
+     396.58,
+     396.1,
+     396.355,
+     37391.926343,
+     396.3454
+    ],
+    [
+     1784046120000,
+     396.37,
+     396.41,
+     395.99,
+     396.05,
+     38695.577491,
+     396.1256
+    ],
+    [
+     1784046180000,
+     396.07,
+     396.23,
+     395.87,
+     396.05,
+     34435.009167,
+     396.0788
+    ],
+    [
+     1784046240000,
+     396.03,
+     396.44,
+     395.97,
+     396.305,
+     21436.458323,
+     396.2527
+    ],
+    [
+     1784046300000,
+     396.295,
+     396.58,
+     396.27,
+     396.455,
+     43033.464843,
+     396.4315
+    ],
+    [
+     1784046360000,
+     396.45,
+     396.58,
+     396.25,
+     396.3699,
+     25275.373722,
+     396.4153
     ]
    ],
    "src_5m": "massive",
    "bars_5m": [
-    [
-     1783517400000,
-     399.375,
-     399.63,
-     395.66,
-     397.54,
-     1203198.79745,
-     397.9083
-    ],
-    [
-     1783517700000,
-     397.59,
-     397.8,
-     394.92,
-     397.01,
-     843936.750175,
-     396.1999
-    ],
-    [
-     1783518000000,
-     397.05,
-     398.91,
-     396.9501,
-     398.6999,
-     761030.2384939999,
-     398.1127
-    ],
-    [
-     1783518300000,
-     398.6408,
-     398.79,
-     396.11,
-     396.41,
-     725428.1840880001,
-     397.7593
-    ],
     [
      1783518600000,
      396.41,
@@ -31074,14 +31073,189 @@
     [
      1784045100000,
      396.09,
-     396.4,
+     396.75,
      395.9701,
-     396.37,
-     50000.51514,
-     396.2206
+     396.448,
+     205079.278482,
+     396.4021
+    ],
+    [
+     1784045400000,
+     396.53,
+     396.65,
+     395.92,
+     396.1475,
+     173910.03787200002,
+     396.1959
+    ],
+    [
+     1784045700000,
+     396.15,
+     396.58,
+     395.6406,
+     396.515,
+     199093.79425799998,
+     396.0808
+    ],
+    [
+     1784046000000,
+     396.47,
+     396.86,
+     395.87,
+     396.305,
+     186896.02941099997,
+     396.3378
+    ],
+    [
+     1784046300000,
+     396.295,
+     396.58,
+     396.25,
+     396.3699,
+     68308.838565,
+     396.4255
     ]
    ],
-   "src_d": "massive",
+   "vwap": 398.16,
+   "short": {
+    "short_interest": 79109257,
+    "days_to_cover": 1.72,
+    "avg_daily_volume": 45999264,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-13",
+     "short_volume": 7776415.275657,
+     "total_volume": 15443835.615111,
+     "ratio": 0.504
+    },
+    {
+     "date": "2026-07-10",
+     "short_volume": 8867380.700515,
+     "total_volume": 17175550.335205,
+     "ratio": 0.516
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 8333530.557573,
+     "total_volume": 17985196.089971,
+     "ratio": 0.463
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 7521156.888735,
+     "total_volume": 15807880.624768,
+     "ratio": 0.476
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 9259030.976353,
+     "total_volume": 17907494.786739,
+     "ratio": 0.517
+    }
+   ],
+   "news": [
+    {
+     "title": "Global Electric Vehicle Market to Reach US$2.74 Trillion in 2026 as Charging and Battery Investment Accelerates",
+     "url": "https://www.globenewswire.com/news-release/2026/07/14/3327152/28124/en/Global-Electric-Vehicle-Market-to-Reach-US-2-74-Trillion-in-2026-as-Charging-and-Battery-Investment-Accelerates.html",
+     "published": "2026-07-14T16:00:00Z",
+     "source": "GlobeNewswire Inc.",
+     "summary": "The global EV market is projected to reach US$2.74 trillion in 2026, growing at 9.0% annually, driven by regulatory changes, charging infrastructure investment, and battery supply-chain development. Chinese automakers are intensifying international competition, while battery sourcing and regional ma",
+     "sentiment": "positive",
+     "reason": "Listed among major participants competing on affordable EVs, software capabilities, and battery access, with established charging networks and regional production strategies."
+    },
+    {
+     "title": "How to Spot a Stock Market Bubble 101: Raymond James Just Placed an $800 Price Target on SpaceX, Valuing Elon Musk's Company at $10.5 Trillion",
+     "url": "https://www.fool.com/investing/2026/07/14/stock-market-bubble-101-800-price-target-spcx-musk/?source=iedfolrf0000001",
+     "published": "2026-07-14T11:06:00Z",
+     "source": "The Motley Fool",
+     "summary": "Raymond James analyst Brian Gesuale issued an $800 price target on SpaceX (implying 451% upside and a $10.5 trillion valuation), but the article argues this represents a classic stock market bubble. The author highlights concerns including SpaceX's unsustainable operating model, xAI's cash burn, Elo",
+     "sentiment": "negative",
+     "reason": "Referenced as evidence of Elon Musk's poor track record on promises, including unfulfilled robotaxi commitments and repeated false claims about Level 5 full self-driving capabilities."
+    },
+    {
+     "title": "Prediction: This ETF Will Be the Best Way to Invest in the S&P 500 to Finish 2026",
+     "url": "https://www.fool.com/investing/2026/07/14/prediction-this-etf-will-be-the-best-way-to-invest/?source=iedfolrf0000001",
+     "published": "2026-07-14T10:35:00Z",
+     "source": "The Motley Fool",
+     "summary": "The article argues that the Invesco S&P 500 Equal Weight ETF (RSP) may outperform the standard S&P 500 through the end of 2026 due to overconcentration risk in mega-cap tech stocks. With the top 10 holdings accounting for over 39% of the S&P 500 and tech representing 38.6% of the index, the author e",
+     "sentiment": "negative",
+     "reason": "Included in the top 10 holdings contributing to tech sector concentration in the S&P 500."
+    },
+    {
+     "title": "Cboe Global Markets to Launch Extended Hours for Single-Stock Options. Here's Why It Wins When Volatility Spikes.",
+     "url": "https://www.fool.com/investing/2026/07/13/cboe-global-markets-begins-extended-hours-for-sing/?source=iedfolrf0000001",
+     "published": "2026-07-13T21:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "Cboe Global Markets is launching extended trading hours (7:30 a.m. to 4:15 p.m. ET) for single-stock options on approximately 20 mega-cap stocks including the Magnificent Seven. The move is expected to boost revenue through increased trading volume and fees, particularly when market volatility is hi",
+     "sentiment": "neutral",
+     "reason": "Tesla is mentioned as one of the Magnificent Seven stocks included in the extended options trading hours. No specific company analysis is provided in the article."
+    },
+    {
+     "title": "Software Defined Vehicle Market to Grow from USD 447.55 billion in 2026 to USD 1,707.36 billion by 2035, at a CAGR of 16.0% — MarketsandMarkets™",
+     "url": "https://www.globenewswire.com/news-release/2026/07/13/3326270/0/en/Software-Defined-Vehicle-Market-to-Grow-from-USD-447-55-billion-in-2026-to-USD-1-707-36-billion-by-2035-at-a-CAGR-of-16-0-MarketsandMarkets.html",
+     "published": "2026-07-13T14:00:00Z",
+     "source": "GlobeNewswire Inc.",
+     "summary": "The Software Defined Vehicle (SDV) market is projected to experience significant growth at a CAGR of 16.0% from 2026 to 2035, driven by automakers' transition to software-centric architectures, OTA updates, 5G connectivity, and new recurring revenue models. Europe leads the market, with major player",
+     "sentiment": "positive",
+     "reason": "Listed as a key market player and leader in SDV market. Tesla's early adoption of software-centric vehicle architectures and OTA updates positions it favorably in the rapidly growing market."
+    },
+    {
+     "title": "In 7 Words, Kevin Warsh Just Sent the Clearest Signal Yet About Where Interest Rates Are Headed in 2026",
+     "url": "https://www.fool.com/investing/2026/07/13/in-7-words-kevin-warsh-just-sent-the-clearest-sign/?source=iedfolrf0000001",
+     "published": "2026-07-13T12:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "Federal Reserve Chair Kevin Warsh signaled a hawkish stance on inflation at a recent Central Banking forum, stating 'prices are too high.' This comment has led markets to price in a 52% probability of a quarter-point rate increase in September 2026, with another expected in March 2027. Despite initi",
+     "sentiment": "neutral",
+     "reason": "Listed only in market data ticker section with no contextual analysis in the article."
+    },
+    {
+     "title": "SpaceX's Recent Move Should Have Investors Worried",
+     "url": "https://www.fool.com/investing/2026/07/13/spacexs-recent-move-should-have-investors-worried/?source=iedfolrf0000001",
+     "published": "2026-07-13T09:29:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX raised concerns among investors by issuing $25 billion in bonds shortly after its June IPO and announcing a $60 billion acquisition of Anysphere without prior disclosure. The article criticizes the lack of transparency in these major financial decisions, particularly given that CEO Elon Musk ",
+     "sentiment": "neutral",
+     "reason": "Tesla is mentioned only as a historical reference point regarding Elon Musk's management style and disclosure practices during its growth phase. No direct criticism or praise of Tesla's current operations is provided."
+    },
+    {
+     "title": "Ranking the \"Magnificent 7\" Stocks by Free-Cash-Flow Yield",
+     "url": "https://www.fool.com/investing/2026/07/13/rank-magnificent-7-stocks-free-cash-flow-yield/?source=iedfolrf0000001",
+     "published": "2026-07-13T09:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "The article ranks the Magnificent 7 tech stocks by free cash flow (FCF) yield to assess how AI spending impacts their valuations. Meta Platforms leads despite aggressive AI capex, Apple offers strong value with minimal AI infrastructure spending, Microsoft benefits from enterprise relationships, Nvi",
+     "sentiment": "negative",
+     "reason": "Ranks near bottom with paltry 0.5% FCF yield; pivot toward autonomous vehicles and robotics is exciting but risky given high valuation and continued reliance on EV sales for cash generation."
+    },
+    {
+     "title": "Does \"The Big Short's\" Michael Burry Know Something Wall Street Doesn't? He Just Placed Bets Against AI and Sees the \"Beginning of the End.\"",
+     "url": "https://www.fool.com/investing/2026/07/13/does-the-big-shorts-michael-burry-know-something-w/?source=iedfolrf0000001",
+     "published": "2026-07-13T08:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "Contrarian investor Michael Burry, famous for predicting the 2008 financial crisis, has placed significant bearish bets against AI stocks and semiconductor companies. He recently shorted Applied Materials, Tesla, Caterpillar, Micron Technology, and the iShares Semiconductor ETF, signaling concerns t",
+     "sentiment": "negative",
+     "reason": "Included in Burry's bearish AI-related positions, suggesting concerns about the company's valuation in the current market cycle."
+    },
+    {
+     "title": "J.P. Morgan Called a Potential Elon Musk SpaceX-Tesla Merger \"Strategically Coherent\"",
+     "url": "https://www.fool.com/investing/2026/07/12/jpmorgan-called-a-potential-elon-musk-spacex-tesla/?source=iedfolrf0000001",
+     "published": "2026-07-12T20:30:00Z",
+     "source": "The Motley Fool",
+     "summary": "J.P. Morgan analysts described a potential SpaceX-Tesla merger as 'strategically coherent on paper,' citing shared engineering talent, AI ambitions, and Musk's leadership. However, the bank flagged significant obstacles including regulatory hurdles, control disparities, and the appearance of SpaceX ",
+     "sentiment": "neutral",
+     "reason": "Merger speculation is described as 'coherent on paper' but faces major obstacles. Article advises buying Tesla for its own fundamentals rather than as a SpaceX proxy. Stock shows minimal movement (+0.22%)."
+    },
+    {
+     "title": "2 Beaten-Down Stocks With Massive Upside Potential",
+     "url": "https://www.fool.com/investing/2026/07/12/2-beaten-down-stocks-with-massive-upside-potential/?source=iedfolrf0000001",
+     "published": "2026-07-12T04:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "Tesla and Meta Platforms, despite underperforming this year, offer significant long-term upside potential. Tesla's robotaxi service and humanoid robot (Optimus 3) development could create high-margin revenue streams, while Meta's AI-powered advertising business is already delivering strong results w",
+     "sentiment": "positive",
+     "reason": "Article highlights significant upside potential from robotaxi and humanoid robotics businesses, though acknowledges downside risks from competition and regulatory challenges. The overall tone emphasizes long-term growth opportunities despite current valuation concerns."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -32218,225 +32392,86 @@
      398.255
     ]
    ],
-   "vwap": 398.28,
-   "short": {
-    "short_interest": 79109257,
-    "days_to_cover": 1.72,
-    "avg_daily_volume": 45999264,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-13",
-     "short_volume": 7776415.275657,
-     "total_volume": 15443835.615111,
-     "ratio": 0.504
-    },
-    {
-     "date": "2026-07-10",
-     "short_volume": 8867380.700515,
-     "total_volume": 17175550.335205,
-     "ratio": 0.516
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 8333530.557573,
-     "total_volume": 17985196.089971,
-     "ratio": 0.463
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 7521156.888735,
-     "total_volume": 15807880.624768,
-     "ratio": 0.476
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 9259030.976353,
-     "total_volume": 17907494.786739,
-     "ratio": 0.517
-    }
-   ],
-   "news": [
-    {
-     "title": "Global Electric Vehicle Market to Reach US$2.74 Trillion in 2026 as Charging and Battery Investment Accelerates",
-     "url": "https://www.globenewswire.com/news-release/2026/07/14/3327152/28124/en/Global-Electric-Vehicle-Market-to-Reach-US-2-74-Trillion-in-2026-as-Charging-and-Battery-Investment-Accelerates.html",
-     "published": "2026-07-14T16:00:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "The global EV market is projected to reach US$2.74 trillion in 2026, growing at 9.0% annually, driven by regulatory changes, charging infrastructure investment, and battery supply-chain development. Chinese automakers are intensifying international competition, while battery sourcing and regional ma",
-     "sentiment": "positive",
-     "reason": "Listed among major participants competing on affordable EVs, software capabilities, and battery access, with established charging networks and regional production strategies."
-    },
-    {
-     "title": "How to Spot a Stock Market Bubble 101: Raymond James Just Placed an $800 Price Target on SpaceX, Valuing Elon Musk's Company at $10.5 Trillion",
-     "url": "https://www.fool.com/investing/2026/07/14/stock-market-bubble-101-800-price-target-spcx-musk/?source=iedfolrf0000001",
-     "published": "2026-07-14T11:06:00Z",
-     "source": "The Motley Fool",
-     "summary": "Raymond James analyst Brian Gesuale issued an $800 price target on SpaceX (implying 451% upside and a $10.5 trillion valuation), but the article argues this represents a classic stock market bubble. The author highlights concerns including SpaceX's unsustainable operating model, xAI's cash burn, Elo",
-     "sentiment": "negative",
-     "reason": "Referenced as evidence of Elon Musk's poor track record on promises, including unfulfilled robotaxi commitments and repeated false claims about Level 5 full self-driving capabilities."
-    },
-    {
-     "title": "Prediction: This ETF Will Be the Best Way to Invest in the S&P 500 to Finish 2026",
-     "url": "https://www.fool.com/investing/2026/07/14/prediction-this-etf-will-be-the-best-way-to-invest/?source=iedfolrf0000001",
-     "published": "2026-07-14T10:35:00Z",
-     "source": "The Motley Fool",
-     "summary": "The article argues that the Invesco S&P 500 Equal Weight ETF (RSP) may outperform the standard S&P 500 through the end of 2026 due to overconcentration risk in mega-cap tech stocks. With the top 10 holdings accounting for over 39% of the S&P 500 and tech representing 38.6% of the index, the author e",
-     "sentiment": "negative",
-     "reason": "Included in the top 10 holdings contributing to tech sector concentration in the S&P 500."
-    },
-    {
-     "title": "Cboe Global Markets to Launch Extended Hours for Single-Stock Options. Here's Why It Wins When Volatility Spikes.",
-     "url": "https://www.fool.com/investing/2026/07/13/cboe-global-markets-begins-extended-hours-for-sing/?source=iedfolrf0000001",
-     "published": "2026-07-13T21:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "Cboe Global Markets is launching extended trading hours (7:30 a.m. to 4:15 p.m. ET) for single-stock options on approximately 20 mega-cap stocks including the Magnificent Seven. The move is expected to boost revenue through increased trading volume and fees, particularly when market volatility is hi",
-     "sentiment": "neutral",
-     "reason": "Tesla is mentioned as one of the Magnificent Seven stocks included in the extended options trading hours. No specific company analysis is provided in the article."
-    },
-    {
-     "title": "Software Defined Vehicle Market to Grow from USD 447.55 billion in 2026 to USD 1,707.36 billion by 2035, at a CAGR of 16.0% — MarketsandMarkets™",
-     "url": "https://www.globenewswire.com/news-release/2026/07/13/3326270/0/en/Software-Defined-Vehicle-Market-to-Grow-from-USD-447-55-billion-in-2026-to-USD-1-707-36-billion-by-2035-at-a-CAGR-of-16-0-MarketsandMarkets.html",
-     "published": "2026-07-13T14:00:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "The Software Defined Vehicle (SDV) market is projected to experience significant growth at a CAGR of 16.0% from 2026 to 2035, driven by automakers' transition to software-centric architectures, OTA updates, 5G connectivity, and new recurring revenue models. Europe leads the market, with major player",
-     "sentiment": "positive",
-     "reason": "Listed as a key market player and leader in SDV market. Tesla's early adoption of software-centric vehicle architectures and OTA updates positions it favorably in the rapidly growing market."
-    },
-    {
-     "title": "In 7 Words, Kevin Warsh Just Sent the Clearest Signal Yet About Where Interest Rates Are Headed in 2026",
-     "url": "https://www.fool.com/investing/2026/07/13/in-7-words-kevin-warsh-just-sent-the-clearest-sign/?source=iedfolrf0000001",
-     "published": "2026-07-13T12:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "Federal Reserve Chair Kevin Warsh signaled a hawkish stance on inflation at a recent Central Banking forum, stating 'prices are too high.' This comment has led markets to price in a 52% probability of a quarter-point rate increase in September 2026, with another expected in March 2027. Despite initi",
-     "sentiment": "neutral",
-     "reason": "Listed only in market data ticker section with no contextual analysis in the article."
-    },
-    {
-     "title": "SpaceX's Recent Move Should Have Investors Worried",
-     "url": "https://www.fool.com/investing/2026/07/13/spacexs-recent-move-should-have-investors-worried/?source=iedfolrf0000001",
-     "published": "2026-07-13T09:29:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX raised concerns among investors by issuing $25 billion in bonds shortly after its June IPO and announcing a $60 billion acquisition of Anysphere without prior disclosure. The article criticizes the lack of transparency in these major financial decisions, particularly given that CEO Elon Musk ",
-     "sentiment": "neutral",
-     "reason": "Tesla is mentioned only as a historical reference point regarding Elon Musk's management style and disclosure practices during its growth phase. No direct criticism or praise of Tesla's current operations is provided."
-    },
-    {
-     "title": "Ranking the \"Magnificent 7\" Stocks by Free-Cash-Flow Yield",
-     "url": "https://www.fool.com/investing/2026/07/13/rank-magnificent-7-stocks-free-cash-flow-yield/?source=iedfolrf0000001",
-     "published": "2026-07-13T09:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "The article ranks the Magnificent 7 tech stocks by free cash flow (FCF) yield to assess how AI spending impacts their valuations. Meta Platforms leads despite aggressive AI capex, Apple offers strong value with minimal AI infrastructure spending, Microsoft benefits from enterprise relationships, Nvi",
-     "sentiment": "negative",
-     "reason": "Ranks near bottom with paltry 0.5% FCF yield; pivot toward autonomous vehicles and robotics is exciting but risky given high valuation and continued reliance on EV sales for cash generation."
-    },
-    {
-     "title": "Does \"The Big Short's\" Michael Burry Know Something Wall Street Doesn't? He Just Placed Bets Against AI and Sees the \"Beginning of the End.\"",
-     "url": "https://www.fool.com/investing/2026/07/13/does-the-big-shorts-michael-burry-know-something-w/?source=iedfolrf0000001",
-     "published": "2026-07-13T08:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "Contrarian investor Michael Burry, famous for predicting the 2008 financial crisis, has placed significant bearish bets against AI stocks and semiconductor companies. He recently shorted Applied Materials, Tesla, Caterpillar, Micron Technology, and the iShares Semiconductor ETF, signaling concerns t",
-     "sentiment": "negative",
-     "reason": "Included in Burry's bearish AI-related positions, suggesting concerns about the company's valuation in the current market cycle."
-    },
-    {
-     "title": "J.P. Morgan Called a Potential Elon Musk SpaceX-Tesla Merger \"Strategically Coherent\"",
-     "url": "https://www.fool.com/investing/2026/07/12/jpmorgan-called-a-potential-elon-musk-spacex-tesla/?source=iedfolrf0000001",
-     "published": "2026-07-12T20:30:00Z",
-     "source": "The Motley Fool",
-     "summary": "J.P. Morgan analysts described a potential SpaceX-Tesla merger as 'strategically coherent on paper,' citing shared engineering talent, AI ambitions, and Musk's leadership. However, the bank flagged significant obstacles including regulatory hurdles, control disparities, and the appearance of SpaceX ",
-     "sentiment": "neutral",
-     "reason": "Merger speculation is described as 'coherent on paper' but faces major obstacles. Article advises buying Tesla for its own fundamentals rather than as a SpaceX proxy. Stock shows minimal movement (+0.22%)."
-    },
-    {
-     "title": "2 Beaten-Down Stocks With Massive Upside Potential",
-     "url": "https://www.fool.com/investing/2026/07/12/2-beaten-down-stocks-with-massive-upside-potential/?source=iedfolrf0000001",
-     "published": "2026-07-12T04:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Tesla and Meta Platforms, despite underperforming this year, offer significant long-term upside potential. Tesla's robotaxi service and humanoid robot (Optimus 3) development could create high-margin revenue streams, while Meta's AI-powered advertising business is already delivering strong results w",
-     "sentiment": "positive",
-     "reason": "Article highlights significant upside potential from robotaxi and humanoid robotics businesses, though acknowledges downside risks from competition and regulatory challenges. The overall tone emphasizes long-term growth opportunities despite current valuation concerns."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-14T16:03:28+00:00",
    "ind": {
-    "rsi_m": 42.03,
+    "rsi_m": 49.25,
     "rsi_d": 47.75,
-    "ema9_m": 396.22,
-    "ema21_m": 396.63
+    "ema9_m": 396.3,
+    "ema21_m": 396.33
    },
    "options": {
-    "call_premium": 272752062.64500016,
-    "put_premium": 200771415.6779998,
-    "call_vol": 524814,
-    "put_vol": 317702,
+    "call_premium": 284100494.0980002,
+    "put_premium": 207172940.61099985,
+    "call_vol": 551311,
+    "put_vol": 333271,
     "call_oi": 583459,
     "put_oi": 432721,
-    "atm_iv": 0.44971248714424583,
-    "pcr_vol": 0.61,
+    "atm_iv": 0.4417597078632361,
+    "pcr_vol": 0.6,
     "pcr_oi": 0.74,
-    "net_premium": 71980646.96700037,
-    "pcr_prem": 0.74,
+    "net_premium": 76927553.48700038,
+    "pcr_prem": 0.73,
     "by_expiry": [
      {
       "exp": "2026-07-15",
-      "call_premium": 127502096.061,
-      "put_premium": 98883085.80799998,
-      "call_vol": 343854,
-      "put_vol": 220256,
+      "call_premium": 131429287.70799999,
+      "put_premium": 102346027.17099996,
+      "call_vol": 360772,
+      "put_vol": 231756,
       "call_oi": 63585,
       "put_oi": 43580,
-      "atm_iv": 0.44971248714424583
+      "atm_iv": 0.4417597078632361
      },
      {
       "exp": "2026-07-17",
-      "call_premium": 65965930.96399999,
-      "put_premium": 50771186.52000001,
-      "call_vol": 111822,
-      "put_vol": 62889,
+      "call_premium": 68848517.30000003,
+      "put_premium": 52555530.84000001,
+      "call_vol": 117639,
+      "put_vol": 65325,
       "call_oi": 281174,
       "put_oi": 199479,
-      "atm_iv": 0.4767251163706
+      "atm_iv": 0.46974000613148237
      },
      {
       "exp": "2026-07-20",
-      "call_premium": 16954544.87000001,
-      "put_premium": 5594037.469999999,
-      "call_vol": 22912,
-      "put_vol": 8647,
+      "call_premium": 17419655.790000003,
+      "put_premium": 5872188.41,
+      "call_vol": 23987,
+      "put_vol": 9413,
       "call_oi": 26989,
       "put_oi": 9530,
-      "atm_iv": 0.40318381647820073
+      "atm_iv": 0.39805026349696865
      },
      {
       "exp": "2026-07-24",
-      "call_premium": 28761866.88,
-      "put_premium": 17738585.34,
-      "call_vol": 24750,
-      "put_vol": 12355,
+      "call_premium": 29793431.51,
+      "put_premium": 18013090.259999994,
+      "call_vol": 25763,
+      "put_vol": 12771,
       "call_oi": 58965,
       "put_oi": 41181,
-      "atm_iv": 0.5834200605149986
+      "atm_iv": 0.5788543032376071
      },
      {
       "exp": "2026-07-27",
-      "call_premium": 2769671.7399999998,
-      "put_premium": 2264084.4,
-      "call_vol": 2254,
-      "put_vol": 1305,
+      "call_premium": 2878425.4199999995,
+      "put_premium": 2294200.52,
+      "call_vol": 2360,
+      "put_vol": 1338,
       "call_oi": 1047,
       "put_oi": 955,
-      "atm_iv": 0.5343565892008295
+      "atm_iv": 0.5312722984546572
      },
      {
       "exp": "2026-07-29",
-      "call_premium": 401927.51,
-      "put_premium": 815658.8999999999,
-      "call_vol": 205,
-      "put_vol": 635,
+      "call_premium": 422433.55,
+      "put_premium": 823523.8399999999,
+      "call_vol": 223,
+      "put_vol": 640,
       "call_oi": 0,
       "put_oi": 0,
-      "atm_iv": 0.532720645516559
+      "atm_iv": 0.5286110775352277
      }
     ],
     "by_strike": [
@@ -32452,7 +32487,7 @@
       "call_oi": 878,
       "put_oi": 13579,
       "call_vol": 395,
-      "put_vol": 568
+      "put_vol": 592
      },
      {
       "strike": 322.5,
@@ -32465,8 +32500,8 @@
       "strike": 325,
       "call_oi": 509,
       "put_oi": 5856,
-      "call_vol": 1017,
-      "put_vol": 462
+      "call_vol": 1037,
+      "put_vol": 482
      },
      {
       "strike": 327.5,
@@ -32480,63 +32515,63 @@
       "call_oi": 1322,
       "put_oi": 19171,
       "call_vol": 527,
-      "put_vol": 724
+      "put_vol": 731
      },
      {
       "strike": 332.5,
       "call_oi": 8,
       "put_oi": 174,
       "call_vol": 118,
-      "put_vol": 34
+      "put_vol": 45
      },
      {
       "strike": 335,
       "call_oi": 437,
       "put_oi": 9738,
       "call_vol": 179,
-      "put_vol": 816
+      "put_vol": 862
      },
      {
       "strike": 337.5,
       "call_oi": 22,
       "put_oi": 408,
       "call_vol": 448,
-      "put_vol": 124
+      "put_vol": 125
      },
      {
       "strike": 340,
       "call_oi": 1683,
       "put_oi": 17002,
-      "call_vol": 699,
-      "put_vol": 1199
+      "call_vol": 700,
+      "put_vol": 1275
      },
      {
       "strike": 342.5,
       "call_oi": 23,
       "put_oi": 446,
       "call_vol": 48,
-      "put_vol": 125
+      "put_vol": 118
      },
      {
       "strike": 345,
       "call_oi": 423,
       "put_oi": 8649,
-      "call_vol": 94,
-      "put_vol": 891
+      "call_vol": 19,
+      "put_vol": 910
      },
      {
       "strike": 347.5,
       "call_oi": 37,
       "put_oi": 1066,
       "call_vol": 14,
-      "put_vol": 140
+      "put_vol": 142
      },
      {
       "strike": 350,
       "call_oi": 5355,
       "put_oi": 33351,
-      "call_vol": 570,
-      "put_vol": 1413
+      "call_vol": 615,
+      "put_vol": 1694
      },
      {
       "strike": 352.5,
@@ -32549,315 +32584,315 @@
       "strike": 355,
       "call_oi": 877,
       "put_oi": 7889,
-      "call_vol": 63,
-      "put_vol": 498
+      "call_vol": 65,
+      "put_vol": 517
      },
      {
       "strike": 357.5,
       "call_oi": 68,
       "put_oi": 1600,
-      "call_vol": 205,
-      "put_vol": 510
+      "call_vol": 207,
+      "put_vol": 563
      },
      {
       "strike": 360,
       "call_oi": 5681,
       "put_oi": 21539,
-      "call_vol": 344,
-      "put_vol": 1667
+      "call_vol": 457,
+      "put_vol": 1893
      },
      {
       "strike": 362.5,
       "call_oi": 113,
       "put_oi": 2358,
-      "call_vol": 539,
-      "put_vol": 752
+      "call_vol": 528,
+      "put_vol": 759
      },
      {
       "strike": 365,
       "call_oi": 1580,
       "put_oi": 8833,
-      "call_vol": 132,
-      "put_vol": 1208
+      "call_vol": 222,
+      "put_vol": 1248
      },
      {
       "strike": 367.5,
       "call_oi": 207,
       "put_oi": 2226,
-      "call_vol": 267,
-      "put_vol": 869
+      "call_vol": 269,
+      "put_vol": 985
      },
      {
       "strike": 370,
       "call_oi": 4827,
       "put_oi": 24135,
-      "call_vol": 390,
-      "put_vol": 3884
+      "call_vol": 396,
+      "put_vol": 4016
      },
      {
       "strike": 372.5,
       "call_oi": 341,
       "put_oi": 2307,
-      "call_vol": 287,
-      "put_vol": 1794
+      "call_vol": 289,
+      "put_vol": 1858
      },
      {
       "strike": 375,
       "call_oi": 2586,
       "put_oi": 18161,
       "call_vol": 1013,
-      "put_vol": 4941
+      "put_vol": 5195
      },
      {
       "strike": 377.5,
       "call_oi": 759,
       "put_oi": 4022,
-      "call_vol": 113,
-      "put_vol": 4668
+      "call_vol": 137,
+      "put_vol": 5117
      },
      {
       "strike": 380,
       "call_oi": 7042,
       "put_oi": 26923,
-      "call_vol": 3240,
-      "put_vol": 13736
+      "call_vol": 3307,
+      "put_vol": 14173
      },
      {
       "strike": 382.5,
       "call_oi": 1044,
       "put_oi": 2783,
-      "call_vol": 220,
-      "put_vol": 5190
+      "call_vol": 247,
+      "put_vol": 5422
      },
      {
       "strike": 385,
       "call_oi": 5452,
       "put_oi": 11914,
-      "call_vol": 6516,
-      "put_vol": 11142
+      "call_vol": 6675,
+      "put_vol": 11660
      },
      {
       "strike": 387.5,
       "call_oi": 1624,
       "put_oi": 3029,
-      "call_vol": 1475,
-      "put_vol": 11807
+      "call_vol": 1497,
+      "put_vol": 12586
      },
      {
       "strike": 390,
       "call_oi": 16991,
       "put_oi": 25426,
-      "call_vol": 27446,
-      "put_vol": 35747
+      "call_vol": 28712,
+      "put_vol": 37538
      },
      {
       "strike": 392.5,
       "call_oi": 4953,
       "put_oi": 4343,
-      "call_vol": 11795,
-      "put_vol": 18681
+      "call_vol": 12534,
+      "put_vol": 20577
      },
      {
       "strike": 395,
       "call_oi": 22368,
       "put_oi": 14228,
-      "call_vol": 25906,
-      "put_vol": 48931
+      "call_vol": 27635,
+      "put_vol": 53093
      },
      {
       "strike": 397.5,
       "call_oi": 4010,
       "put_oi": 4170,
-      "call_vol": 35409,
-      "put_vol": 38626
+      "call_vol": 38906,
+      "put_vol": 40106
      },
      {
       "strike": 400,
       "call_oi": 41109,
       "put_oi": 36877,
-      "call_vol": 99050,
-      "put_vol": 39579
+      "call_vol": 103384,
+      "put_vol": 41048
      },
      {
       "strike": 402.5,
       "call_oi": 7210,
       "put_oi": 2000,
-      "call_vol": 37898,
-      "put_vol": 10621
+      "call_vol": 39314,
+      "put_vol": 11120
      },
      {
       "strike": 405,
       "call_oi": 21764,
       "put_oi": 9288,
-      "call_vol": 59728,
-      "put_vol": 13696
+      "call_vol": 62705,
+      "put_vol": 13862
      },
      {
       "strike": 407.5,
       "call_oi": 5239,
       "put_oi": 4578,
-      "call_vol": 24023,
-      "put_vol": 5806
+      "call_vol": 25281,
+      "put_vol": 5879
      },
      {
       "strike": 410,
       "call_oi": 30892,
       "put_oi": 15686,
-      "call_vol": 43440,
-      "put_vol": 24856
+      "call_vol": 45611,
+      "put_vol": 25054
      },
      {
       "strike": 412.5,
       "call_oi": 4225,
       "put_oi": 1167,
-      "call_vol": 11900,
-      "put_vol": 407
+      "call_vol": 12525,
+      "put_vol": 409
      },
      {
       "strike": 415,
       "call_oi": 28116,
       "put_oi": 9200,
-      "call_vol": 18641,
-      "put_vol": 2393
+      "call_vol": 19578,
+      "put_vol": 2437
      },
      {
       "strike": 417.5,
       "call_oi": 6635,
       "put_oi": 501,
-      "call_vol": 5183,
-      "put_vol": 89
+      "call_vol": 5461,
+      "put_vol": 90
      },
      {
       "strike": 420,
       "call_oi": 65213,
       "put_oi": 13564,
-      "call_vol": 30253,
-      "put_vol": 2203
+      "call_vol": 31789,
+      "put_vol": 2227
      },
      {
       "strike": 422.5,
       "call_oi": 6495,
       "put_oi": 410,
-      "call_vol": 3879,
+      "call_vol": 3935,
       "put_vol": 86
      },
      {
       "strike": 425,
       "call_oi": 19656,
       "put_oi": 7495,
-      "call_vol": 16160,
+      "call_vol": 16628,
       "put_vol": 2084
      },
      {
       "strike": 427.5,
       "call_oi": 5430,
       "put_oi": 205,
-      "call_vol": 2759,
+      "call_vol": 2850,
       "put_vol": 42
      },
      {
       "strike": 430,
       "call_oi": 53836,
       "put_oi": 10223,
-      "call_vol": 9678,
-      "put_vol": 1188
+      "call_vol": 10519,
+      "put_vol": 1195
      },
      {
       "strike": 432.5,
       "call_oi": 2455,
       "put_oi": 119,
-      "call_vol": 1918,
-      "put_vol": 94
+      "call_vol": 2088,
+      "put_vol": 100
      },
      {
       "strike": 435,
       "call_oi": 16285,
       "put_oi": 3684,
-      "call_vol": 5151,
-      "put_vol": 673
+      "call_vol": 5525,
+      "put_vol": 676
      },
      {
       "strike": 437.5,
       "call_oi": 4766,
       "put_oi": 14,
-      "call_vol": 1016,
+      "call_vol": 1035,
       "put_vol": 8
      },
      {
       "strike": 440,
       "call_oi": 32236,
       "put_oi": 9744,
-      "call_vol": 11351,
-      "put_vol": 328
+      "call_vol": 11534,
+      "put_vol": 268
      },
      {
       "strike": 442.5,
       "call_oi": 3030,
       "put_oi": 34,
-      "call_vol": 598,
+      "call_vol": 635,
       "put_vol": 20
      },
      {
       "strike": 445,
       "call_oi": 10646,
       "put_oi": 1058,
-      "call_vol": 2184,
+      "call_vol": 2347,
       "put_vol": 68
      },
      {
       "strike": 447.5,
       "call_oi": 1529,
       "put_oi": 6,
-      "call_vol": 1562,
+      "call_vol": 1564,
       "put_vol": 20
      },
      {
       "strike": 450,
       "call_oi": 49537,
       "put_oi": 4664,
-      "call_vol": 9305,
-      "put_vol": 959
+      "call_vol": 9607,
+      "put_vol": 961
      },
      {
       "strike": 452.5,
       "call_oi": 2359,
       "put_oi": 26,
-      "call_vol": 1380,
+      "call_vol": 1408,
       "put_vol": 17
      },
      {
       "strike": 455,
       "call_oi": 9868,
       "put_oi": 881,
-      "call_vol": 1351,
+      "call_vol": 1371,
       "put_vol": 141
      },
      {
       "strike": 457.5,
       "call_oi": 1824,
       "put_oi": 11,
-      "call_vol": 127,
+      "call_vol": 132,
       "put_vol": 20
      },
      {
       "strike": 460,
       "call_oi": 24949,
       "put_oi": 3328,
-      "call_vol": 2104,
+      "call_vol": 2256,
       "put_vol": 355
      },
      {
       "strike": 462.5,
       "call_oi": 448,
       "put_oi": 3,
-      "call_vol": 48,
+      "call_vol": 49,
       "put_vol": 2
      },
      {
       "strike": 465,
       "call_oi": 7742,
       "put_oi": 121,
-      "call_vol": 553,
+      "call_vol": 562,
       "put_vol": 133
      },
      {
@@ -32871,7 +32906,7 @@
       "strike": 470,
       "call_oi": 14917,
       "put_oi": 527,
-      "call_vol": 1183,
+      "call_vol": 1464,
       "put_vol": 106
      },
      {
@@ -32885,7 +32920,7 @@
       "strike": 475,
       "call_oi": 11698,
       "put_oi": 407,
-      "call_vol": 1605,
+      "call_vol": 1641,
       "put_vol": 68
      }
     ],
@@ -32894,248 +32929,82 @@
       "exp": "2026-07-15",
       "strike": 400,
       "side": "call",
-      "vol": 70131,
+      "vol": 73186,
       "oi": 4092,
-      "premium": 27575509.2
+      "premium": 28391044.98
      },
      {
       "exp": "2026-07-15",
       "strike": 405,
       "side": "call",
-      "vol": 49411,
+      "vol": 51916,
       "oi": 5274,
-      "premium": 10611012.25
+      "premium": 10945450.28
      },
      {
       "exp": "2026-07-15",
       "strike": 395,
       "side": "put",
-      "vol": 40805,
+      "vol": 44435,
       "oi": 1901,
-      "premium": 13276722.85
+      "premium": 14548907.7
      },
      {
       "exp": "2026-07-15",
       "strike": 397.5,
       "side": "put",
-      "vol": 32766,
+      "vol": 33895,
       "oi": 798,
-      "premium": 14061201.24
+      "premium": 14602643.900000002
      },
      {
       "exp": "2026-07-15",
       "strike": 402.5,
       "side": "call",
-      "vol": 31490,
+      "vol": 32703,
       "oi": 1250,
-      "premium": 9348121.399999999
+      "premium": 9577400.58
      },
      {
       "exp": "2026-07-15",
       "strike": 410,
       "side": "call",
-      "vol": 30455,
+      "vol": 32027,
       "oi": 3818,
-      "premium": 3462428.9499999997
+      "premium": 3562683.4800000004
      },
      {
       "exp": "2026-07-15",
       "strike": 397.5,
       "side": "call",
-      "vol": 27890,
+      "vol": 31100,
       "oi": 1169,
-      "premium": 14052934.300000003
+      "premium": 15215985.999999998
      },
      {
       "exp": "2026-07-15",
       "strike": 390,
       "side": "put",
-      "vol": 27232,
+      "vol": 28554,
       "oi": 2336,
-      "premium": 4675734.4
+      "premium": 4903292.88
      }
     ],
     "max_pain": 400,
     "max_pain_exp": "2026-07-15",
-    "oi_changes": [
-     {
-      "exp": "2026-07-17",
-      "strike": 317.5,
-      "side": "put",
-      "delta": 101
-     },
-     {
-      "exp": "2026-07-24",
-      "strike": 317.5,
-      "side": "put",
-      "delta": 9
-     }
-    ],
+    "oi_changes": [],
     "contracts": 962,
     "prem_delta": {
-     "call": 22719456.227000356,
-     "put": 28630878.25399995,
-     "since": "2026-07-14T15:40:47+00:00"
+     "call": 11348431.453000069,
+     "put": 6401524.933000058,
+     "since": "2026-07-14T16:03:28+00:00"
     }
    }
   },
   "MU": {
-   "asof": "2026-07-14T16:03:28+00:00",
+   "asof": "2026-07-14T16:25:41+00:00",
    "src_1m": "massive",
    "bars_1m": [
-    [
-     1783968360000,
-     926.01,
-     928.67,
-     925.97,
-     928.63,
-     47096.357984,
-     927.5786
-    ],
-    [
-     1783968420000,
-     928.4032,
-     930.8,
-     928.085,
-     930.05,
-     56424.902771,
-     929.2484
-    ],
-    [
-     1783968480000,
-     930.05,
-     930.71,
-     927.56,
-     928.025,
-     40465.27866,
-     929.468
-    ],
-    [
-     1783968540000,
-     928.025,
-     931.9999,
-     928.025,
-     931.425,
-     69886.252842,
-     930.3856
-    ],
-    [
-     1783968600000,
-     931.425,
-     931.63,
-     930,
-     931.305,
-     49502.127188,
-     930.8033
-    ],
-    [
-     1783968660000,
-     931.49,
-     932.5,
-     930.91,
-     931.74,
-     54995.498701,
-     931.685
-    ],
-    [
-     1783968720000,
-     931.77,
-     932.59,
-     930.58,
-     930.86,
-     52231.168484,
-     931.8122
-    ],
-    [
-     1783968780000,
-     930.81,
-     931.23,
-     930.13,
-     930.36,
-     31001.823107,
-     930.5743
-    ],
-    [
-     1783968840000,
-     930.2,
-     931.2299,
-     929.94,
-     930.11,
-     26812.04348,
-     930.4796
-    ],
-    [
-     1783968900000,
-     930.1747,
-     930.2499,
-     929.13,
-     929.395,
-     30654.789733,
-     929.7559
-    ],
-    [
-     1783968960000,
-     929.395,
-     930.8699,
-     929.15,
-     930.03,
-     30031.044789,
-     930.2322
-    ],
-    [
-     1783969020000,
-     930.4,
-     930.43,
-     928.7,
-     929.515,
-     49217.716341,
-     929.5275
-    ],
-    [
-     1783969080000,
-     929.515,
-     930.2,
-     928.74,
-     928.74,
-     32143.142874,
-     929.4336
-    ],
-    [
-     1783969140000,
-     928.75,
-     930.1,
-     928.7201,
-     929.83,
-     30339.734787,
-     929.5221
-    ],
-    [
-     1783969200000,
-     929.83,
-     930.23,
-     928.94,
-     929.57,
-     30644.328311,
-     929.438
-    ],
-    [
-     1783969260000,
-     929.8,
-     932.5,
-     929.71,
-     932.15,
-     74019.319515,
-     930.9187
-    ],
-    [
-     1783969320000,
-     932.15,
-     932.15,
-     930.73,
-     931.25,
-     32577.495477,
-     931.1607
-    ],
     [
      1783969380000,
      931.17,
@@ -40182,46 +40051,163 @@
      981.68,
      58306.992259,
      981.6657
+    ],
+    [
+     1784045400000,
+     981.82,
+     981.9799,
+     980.16,
+     980.75,
+     34123.547265,
+     981.2376
+    ],
+    [
+     1784045460000,
+     980.5408,
+     982.2,
+     980.5408,
+     981.9407,
+     28357.319989,
+     981.3073
+    ],
+    [
+     1784045520000,
+     981.8,
+     982.877,
+     980.6,
+     980.81,
+     39466.126691,
+     981.928
+    ],
+    [
+     1784045580000,
+     980.7782,
+     981.95,
+     980.13,
+     981.4906,
+     29500.250329,
+     981.1044
+    ],
+    [
+     1784045640000,
+     981.645,
+     982.49,
+     980.56,
+     980.9699,
+     39582.188299,
+     981.3602
+    ],
+    [
+     1784045700000,
+     980.69,
+     981.28,
+     978.08,
+     979.265,
+     58670.226751,
+     979.7483
+    ],
+    [
+     1784045760000,
+     979.17,
+     980.42,
+     978.5201,
+     980.42,
+     43851.392881,
+     979.3189
+    ],
+    [
+     1784045820000,
+     980.06,
+     981.474,
+     979.26,
+     979.52,
+     35140.663858,
+     980.6456
+    ],
+    [
+     1784045880000,
+     979.65,
+     981.07,
+     979.34,
+     980.67,
+     28820.925339,
+     980.3685
+    ],
+    [
+     1784045940000,
+     980.65,
+     983.5,
+     980.65,
+     983.33,
+     54074.289767,
+     982.2431
+    ],
+    [
+     1784046000000,
+     983.29,
+     984.48,
+     982.85,
+     983.9699,
+     71900.67918,
+     983.7375
+    ],
+    [
+     1784046060000,
+     983.735,
+     984.78,
+     983,
+     984.78,
+     56527.986465,
+     983.8546
+    ],
+    [
+     1784046120000,
+     984.61,
+     985.58,
+     983.71,
+     984.7,
+     86118.633048,
+     984.8
+    ],
+    [
+     1784046180000,
+     985.21,
+     985.2299,
+     981.22,
+     982.51,
+     54998.519674,
+     983.0021
+    ],
+    [
+     1784046240000,
+     982.51,
+     984,
+     982,
+     983.8002,
+     33885.659618,
+     983.0873
+    ],
+    [
+     1784046300000,
+     983.725,
+     985.78,
+     983.725,
+     985,
+     50066.412045,
+     985.0362
+    ],
+    [
+     1784046360000,
+     984.805,
+     985.79,
+     984.23,
+     985.6171,
+     33256.473313,
+     984.9044
     ]
    ],
    "src_5m": "massive",
    "bars_5m": [
-    [
-     1783517400000,
-     902.64,
-     942.9199,
-     900.41,
-     938.285,
-     1902566.9490140001,
-     923.384
-    ],
-    [
-     1783517700000,
-     938.285,
-     946,
-     934.24,
-     939.805,
-     1093065.3914100002,
-     940.4422
-    ],
-    [
-     1783518000000,
-     939.78,
-     954.845,
-     939.78,
-     946.25,
-     1267913.837644,
-     948.4716
-    ],
-    [
-     1783518300000,
-     946.305,
-     956.32,
-     942.33,
-     942.33,
-     1008818.0342039999,
-     950.263
-    ],
     [
      1783518600000,
      942.47,
@@ -47385,9 +47371,220 @@
      981.68,
      230204.53335999997,
      980.3076
+    ],
+    [
+     1784045400000,
+     981.82,
+     982.877,
+     980.13,
+     980.9699,
+     171029.432573,
+     981.4139
+    ],
+    [
+     1784045700000,
+     980.69,
+     983.5,
+     978.08,
+     983.33,
+     220557.49859600002,
+     980.4986
+    ],
+    [
+     1784046000000,
+     983.29,
+     985.58,
+     981.22,
+     983.8002,
+     303431.47798499995,
+     983.855
+    ],
+    [
+     1784046300000,
+     983.725,
+     985.79,
+     983.725,
+     985.6171,
+     83322.885358,
+     984.9836
     ]
    ],
-   "src_d": "massive",
+   "vwap": 973.97,
+   "short": {
+    "short_interest": 31669690,
+    "days_to_cover": 1.0,
+    "avg_daily_volume": 60260831,
+    "settlement_date": "2026-06-30"
+   },
+   "short_vol": [
+    {
+     "date": "2026-07-13",
+     "short_volume": 6441476.426947,
+     "total_volume": 15702331.013704,
+     "ratio": 0.41
+    },
+    {
+     "date": "2026-07-10",
+     "short_volume": 5159037.715717,
+     "total_volume": 15765397.796102,
+     "ratio": 0.327
+    },
+    {
+     "date": "2026-07-09",
+     "short_volume": 7672124.143253,
+     "total_volume": 18932644.101771,
+     "ratio": 0.405
+    },
+    {
+     "date": "2026-07-08",
+     "short_volume": 7313933.813953,
+     "total_volume": 19022422.148712,
+     "ratio": 0.384
+    },
+    {
+     "date": "2026-07-07",
+     "short_volume": 9198618.22186,
+     "total_volume": 25029786.947741,
+     "ratio": 0.368
+    }
+   ],
+   "news": [
+    {
+     "title": "Had You Bought This Magnificent Vanguard ETF at the Start of January, You'd Be Crushing the S&P 500 in 2026",
+     "url": "https://www.fool.com/investing/2026/07/14/bought-vanguard-etf-january-crushing-sp-500-2026/?source=iedfolrf0000001",
+     "published": "2026-07-14T15:17:00Z",
+     "source": "The Motley Fool",
+     "summary": "The Vanguard Information Technology ETF (VGT) has returned 23.3% in 2026, significantly outpacing the S&P 500's 10.3% return. The ETF's strong performance is driven by five trillion-dollar tech companies—Nvidia, Apple, Microsoft, Alphabet, and Amazon—which comprise 50.6% of its portfolio. While AI i",
+     "sentiment": "positive",
+     "reason": "Outperforming S&P 500, benefits from strong demand for data center components critical to AI development."
+    },
+    {
+     "title": "Hynix Isn't Selling Shares to Cash Out. It's Funding a $26.5 Billion Factory Bet.",
+     "url": "https://www.fool.com/investing/2026/07/14/hynix-selling-shares-cash-out-fund-factory/?source=iedfolrf0000001",
+     "published": "2026-07-14T14:30:00Z",
+     "source": "The Motley Fool",
+     "summary": "SK Hynix raised $26.5 billion through its first U.S. ADR offering to fund expansion of manufacturing capacity for memory chips, particularly high-bandwidth memory (HBM) used in AI data centers. The company plans to build new foundries and packaging plants while purchasing advanced lithography equipm",
+     "sentiment": "neutral",
+     "reason": "Mentioned as a competitor in HBM market alongside Samsung, but SK Hynix is noted as superior in quality and scale. No specific positive or negative developments mentioned for Micron."
+    },
+    {
+     "title": "The KOSPI Bubble",
+     "url": "https://www.investing.com/analysis/the-kospi-bubble-200683889",
+     "published": "2026-07-14T13:33:00Z",
+     "source": "Investing.com",
+     "summary": "The Korean Composite Stock Price Index (KOSPI) has surged over 88% in 2026 and 200% in two years, driven primarily by semiconductor companies Samsung Electronics and SK Hynix, which now account for nearly 60% of the index. This extreme concentration poses regulatory risks, as Goldman Sachs warns tha",
+     "sentiment": "positive",
+     "reason": "Micron has benefited from strong semiconductor momentum, rising 192% year-to-date, though the article notes recent chip outperformers like Micron have underperformed recently as market breadth improves."
+    },
+    {
+     "title": "Prediction: This ETF Will Be the Best Way to Invest in the S&P 500 to Finish 2026",
+     "url": "https://www.fool.com/investing/2026/07/14/prediction-this-etf-will-be-the-best-way-to-invest/?source=iedfolrf0000001",
+     "published": "2026-07-14T10:35:00Z",
+     "source": "The Motley Fool",
+     "summary": "The article argues that the Invesco S&P 500 Equal Weight ETF (RSP) may outperform the standard S&P 500 through the end of 2026 due to overconcentration risk in mega-cap tech stocks. With the top 10 holdings accounting for over 39% of the S&P 500 and tech representing 38.6% of the index, the author e",
+     "sentiment": "negative",
+     "reason": "Tech sector holding contributing to concentration risk in the standard S&P 500."
+    },
+    {
+     "title": "Got $1,000? 2 Magnificent Artificial Intelligence (AI) Stocks Down Over 15% to Buy Hand Over Fist",
+     "url": "https://www.fool.com/investing/2026/07/14/got-1000-2-magnificent-artificial-intelligence-ai/?source=iedfolrf0000001",
+     "published": "2026-07-14T10:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "The article recommends buying Micron Technology and Broadcom as both AI semiconductor stocks have declined over 15% from their all-time highs. Micron benefits from surging memory chip demand for AI data centers with expected 81% revenue growth in FY2027, while Broadcom is positioned to generate over",
+     "sentiment": "positive",
+     "reason": "Strong tailwinds from AI-driven memory chip demand expected to persist beyond 2027; FY2027 projections show 81% revenue growth and EPS near $150; management confirms market tightness will continue, supporting long-term growth potential."
+    },
+    {
+     "title": "Industrial Semiconductor Market Size to Hit USD 329.73 Billion by 2035 | Research by SNS Insider",
+     "url": "https://www.globenewswire.com/news-release/2026/07/14/3326625/0/en/Industrial-Semiconductor-Market-Size-to-Hit-USD-329-73-Billion-by-2035-Research-by-SNS-Insider.html",
+     "published": "2026-07-14T08:44:00Z",
+     "source": "GlobeNewswire Inc.",
+     "summary": "The global Industrial Semiconductor Market, valued at $98.35 billion in 2025, is expected to grow to $329.73 billion by 2035 at a CAGR of 12.86%. Growth is driven by AI-powered industrial automation, electric vehicles, smart manufacturing, and IoT technologies. Asia Pacific leads with 42% market sha",
+     "sentiment": "neutral",
+     "reason": "Listed as key player in memory devices segment; however, recent tariff-related surcharge implementation suggests near-term margin pressures despite long-term market growth opportunities."
+    },
+    {
+     "title": "President Trump Sells Micron Stock and Buys an AI Stock Up 1,340% Since 2023",
+     "url": "https://www.fool.com/investing/2026/07/14/president-trump-sell-micron-buy-ai-stock-up-1340/?source=iedfolrf0000001",
+     "published": "2026-07-14T08:24:00Z",
+     "source": "The Motley Fool",
+     "summary": "President Trump's investment accounts have been net sellers of Micron Technology while net buyers of Nvidia year-to-date through May 2026. Despite Micron's impressive 345% revenue growth and new multiyear supply contracts, Trump's accounts sold $90K-$116K of the stock. Meanwhile, they purchased $246",
+     "sentiment": "neutral",
+     "reason": "While Micron reported exceptional Q2 results with 345% revenue growth and signed 16 multiyear contracts that improve business stability, the article notes Wall Street expects memory chip prices to drop by 2028 and Trump's accounts were net sellers. The valuation of 22x earnings is described as 'cheap,' but the net selling activity and cyclical industry concerns warrant a neutral stance."
+    },
+    {
+     "title": "SK Hynix Has Traded at a Discount to Micron for Years. That May Be Changing.",
+     "url": "https://www.fool.com/investing/2026/07/14/sk-hynix-has-traded-at-a-discount-to-micron-for-ye/?source=iedfolrf0000001",
+     "published": "2026-07-14T08:02:00Z",
+     "source": "The Motley Fool",
+     "summary": "SK Hynix's U.S. Nasdaq debut on July 10 removes a key accessibility barrier that has historically caused it to trade at a discount to competitor Micron. With easier access for U.S. investors and potential inclusion in major indexes, SK Hynix's valuation gap versus Micron may narrow. However, investo",
+     "sentiment": "neutral",
+     "reason": "Established competitor that has benefited from accessibility premium. While still well-positioned in memory semiconductors, the article suggests SK Hynix's discount to Micron may narrow, implying relative pressure on Micron's valuation advantage."
+    },
+    {
+     "title": "Why Micron Technology Stock Soared 304% in the First Half of 2026 and Why There Might Be More to Come",
+     "url": "https://www.fool.com/investing/2026/07/14/why-micron-technology-stock-soared-304-in-the-firs/?source=iedfolrf0000001",
+     "published": "2026-07-14T07:02:00Z",
+     "source": "The Motley Fool",
+     "summary": "Micron Technology's stock surged 304% in the first half of 2026, driven by exceptional demand for memory and storage chips fueled by AI adoption. The company reported extraordinary financial results with Q2 revenue up 196% YoY and Q3 revenue up 346% YoY, with EPS surging over 13-fold. Management for",
+     "sentiment": "positive",
+     "reason": "Exceptional financial performance with 304% stock gain in H1 2026, triple-digit revenue and earnings growth across all business segments, strong forward guidance for Q4 with 342% revenue growth expected, secured long-term customer contracts through 2030, and attractive valuation at 21x earnings despite massive gains. CEO and analyst both express bullish outlook."
+    },
+    {
+     "title": "SK Hynix IPO Sell-Off Offers AI Memory Buying Opportunity",
+     "url": "https://www.investing.com/analysis/sk-hynix-ipo-selloff-offers-ai-memory-buying-opportunity-200683868",
+     "published": "2026-07-14T06:34:00Z",
+     "source": "Investing.com",
+     "summary": "SK Hynix's U.S. IPO debut raised $28.1 billion but experienced a 7% intraday sell-off, presenting a buying opportunity for investors. Despite short-term macroeconomic headwinds and market friction, the company benefits from a multi-year supply crunch in high-bandwidth memory (HBM) driven by AI hardw",
+     "sentiment": "positive",
+     "reason": "Rapidly advancing competitive position in HBM with mass-produced 48GB HBM4 stacks. Trading at P/E of ~21 (discount to logic peers), fully sold out capacity through 2027, and authorized $250 billion domestic investment. Extreme bearish options positioning presents contrarian opportunity."
+    },
+    {
+     "title": "Why AI Investors Can Finally Buy the World's Top HBM Maker Directly",
+     "url": "https://www.fool.com/investing/2026/07/13/ai-investors-can-finally-buy-worlds-top-hbm-maker/?source=iedfolrf0000001",
+     "published": "2026-07-13T19:30:00Z",
+     "source": "The Motley Fool",
+     "summary": "SK Hynix, the world's leading maker of high-bandwidth memory (HBM) for AI systems, began trading on Nasdaq following a record $26.5 billion IPO. While the listing provides U.S. investors direct access to the AI memory leader for the first time, the article cautions that memory is a cyclical industry",
+     "sentiment": "neutral",
+     "reason": "Identified as one of only two rivals competing at the top tier of HBM production alongside Samsung, representing competitive pressure on SK Hynix's market position."
+    },
+    {
+     "title": "Why SK Hynix’s Crash Should Worry Every AI Investor",
+     "url": "https://www.investing.com/analysis/why-sk-hynixs-crash-should-worry-every-ai-investor-200683822",
+     "published": "2026-07-13T14:20:00Z",
+     "source": "Investing.com",
+     "summary": "SK Hynix surged 13% on its Nasdaq debut Friday but crashed 8.4% by Monday, highlighting how AI-linked stocks are driven by hype rather than fundamentals. The selloff dragged down the broader semiconductor sector, while TSMC bucked the trend with gains based on strong earnings. The article warns inve",
+     "sentiment": "negative",
+     "reason": "Stock fell 4% in sympathy with SK Hynix selloff, indicating the decline was driven by momentum and sector contagion rather than company-specific fundamentals."
+    },
+    {
+     "title": "Market Warp :The AI Trade Enters the Eye of the Storm",
+     "url": "https://www.investing.com/analysis/market-warp-the-ai-trade-enters-the-eye-of-the-storm-200683809",
+     "published": "2026-07-13T12:02:00Z",
+     "source": "Investing.com",
+     "summary": "The AI semiconductor trade faces a sharp correction as markets shift from rewarding AI spending narratives to demanding proof of profitability. While underlying business fundamentals remain intact with strong order books and cash generation, violent selling has hit memory chip makers. China's emergi",
+     "sentiment": "neutral",
+     "reason": "Mentioned as increasing US spending and generating significant free cash flow, but no specific price action noted. Positioned similarly to SK Hynix with exposure to both memory shortage benefits and future oversupply risks from industry-wide capacity expansion."
+    },
+    {
+     "title": "AI Data Center Spending Is Outpacing Every Forecast on Wall Street. These 2 Stocks Are the Best Pick-and-Shovel Plays.",
+     "url": "https://www.fool.com/investing/2026/07/13/ai-data-center-spending-is-outpacing-every-forecas/?source=iedfolrf0000001",
+     "published": "2026-07-13T11:30:00Z",
+     "source": "The Motley Fool",
+     "summary": "AI data center capital expenditures are projected to reach $750 billion in 2026, significantly exceeding Goldman Sachs' revised estimates of $527 billion. Micron Technology and Taiwan Semiconductor Manufacturing (TSMC) are positioned as top pick-and-shovel plays to benefit from the massive hyperscal",
+     "sentiment": "positive",
+     "reason": "Strong financial performance with Q3 sales up 345% and EPS up 1,300%; CEO indicates early innings of AI-driven growth; three analysts raised price target to $1,500 (51% upside); positioned as key memory chip supplier for AI data centers."
+    },
+    {
+     "title": "Will Memory Giants Micron, Sandisk, and SK Hynix Continue to Soar? History Is Strikingly Clear About What Happens Next.",
+     "url": "https://www.fool.com/investing/2026/07/13/will-memory-giants-micron-sandisk-and-sk-hynix-con/?source=iedfolrf0000001",
+     "published": "2026-07-13T10:10:00Z",
+     "source": "The Motley Fool",
+     "summary": "Memory chip manufacturers Micron, Sandisk, and SK Hynix have experienced massive stock gains (up 700-4000% in the past year) driven by AI data center demand. However, historical analysis shows memory stocks are cyclical, typically experiencing peaks followed by declines as supply increases. While th",
+     "sentiment": "neutral",
+     "reason": "Strong current fundamentals with 345% revenue increase and 87% data center gross margin, but historical cyclical patterns suggest potential downside ahead. Stock has already declined from highs, indicating possible peak."
+    }
+   ],
    "bars_d": [
     [
      1768194000000,
@@ -48524,473 +48721,291 @@
      972.7028
     ]
    ],
-   "vwap": 973.58,
-   "short": {
-    "short_interest": 31669690,
-    "days_to_cover": 1.0,
-    "avg_daily_volume": 60260831,
-    "settlement_date": "2026-06-30"
-   },
-   "short_vol": [
-    {
-     "date": "2026-07-13",
-     "short_volume": 6441476.426947,
-     "total_volume": 15702331.013704,
-     "ratio": 0.41
-    },
-    {
-     "date": "2026-07-10",
-     "short_volume": 5159037.715717,
-     "total_volume": 15765397.796102,
-     "ratio": 0.327
-    },
-    {
-     "date": "2026-07-09",
-     "short_volume": 7672124.143253,
-     "total_volume": 18932644.101771,
-     "ratio": 0.405
-    },
-    {
-     "date": "2026-07-08",
-     "short_volume": 7313933.813953,
-     "total_volume": 19022422.148712,
-     "ratio": 0.384
-    },
-    {
-     "date": "2026-07-07",
-     "short_volume": 9198618.22186,
-     "total_volume": 25029786.947741,
-     "ratio": 0.368
-    }
-   ],
-   "news": [
-    {
-     "title": "Had You Bought This Magnificent Vanguard ETF at the Start of January, You'd Be Crushing the S&P 500 in 2026",
-     "url": "https://www.fool.com/investing/2026/07/14/bought-vanguard-etf-january-crushing-sp-500-2026/?source=iedfolrf0000001",
-     "published": "2026-07-14T15:17:00Z",
-     "source": "The Motley Fool",
-     "summary": "The Vanguard Information Technology ETF (VGT) has returned 23.3% in 2026, significantly outpacing the S&P 500's 10.3% return. The ETF's strong performance is driven by five trillion-dollar tech companies—Nvidia, Apple, Microsoft, Alphabet, and Amazon—which comprise 50.6% of its portfolio. While AI i",
-     "sentiment": "positive",
-     "reason": "Outperforming S&P 500, benefits from strong demand for data center components critical to AI development."
-    },
-    {
-     "title": "Hynix Isn't Selling Shares to Cash Out. It's Funding a $26.5 Billion Factory Bet.",
-     "url": "https://www.fool.com/investing/2026/07/14/hynix-selling-shares-cash-out-fund-factory/?source=iedfolrf0000001",
-     "published": "2026-07-14T14:30:00Z",
-     "source": "The Motley Fool",
-     "summary": "SK Hynix raised $26.5 billion through its first U.S. ADR offering to fund expansion of manufacturing capacity for memory chips, particularly high-bandwidth memory (HBM) used in AI data centers. The company plans to build new foundries and packaging plants while purchasing advanced lithography equipm",
-     "sentiment": "neutral",
-     "reason": "Mentioned as a competitor in HBM market alongside Samsung, but SK Hynix is noted as superior in quality and scale. No specific positive or negative developments mentioned for Micron."
-    },
-    {
-     "title": "The KOSPI Bubble",
-     "url": "https://www.investing.com/analysis/the-kospi-bubble-200683889",
-     "published": "2026-07-14T13:33:00Z",
-     "source": "Investing.com",
-     "summary": "The Korean Composite Stock Price Index (KOSPI) has surged over 88% in 2026 and 200% in two years, driven primarily by semiconductor companies Samsung Electronics and SK Hynix, which now account for nearly 60% of the index. This extreme concentration poses regulatory risks, as Goldman Sachs warns tha",
-     "sentiment": "positive",
-     "reason": "Micron has benefited from strong semiconductor momentum, rising 192% year-to-date, though the article notes recent chip outperformers like Micron have underperformed recently as market breadth improves."
-    },
-    {
-     "title": "Prediction: This ETF Will Be the Best Way to Invest in the S&P 500 to Finish 2026",
-     "url": "https://www.fool.com/investing/2026/07/14/prediction-this-etf-will-be-the-best-way-to-invest/?source=iedfolrf0000001",
-     "published": "2026-07-14T10:35:00Z",
-     "source": "The Motley Fool",
-     "summary": "The article argues that the Invesco S&P 500 Equal Weight ETF (RSP) may outperform the standard S&P 500 through the end of 2026 due to overconcentration risk in mega-cap tech stocks. With the top 10 holdings accounting for over 39% of the S&P 500 and tech representing 38.6% of the index, the author e",
-     "sentiment": "negative",
-     "reason": "Tech sector holding contributing to concentration risk in the standard S&P 500."
-    },
-    {
-     "title": "Got $1,000? 2 Magnificent Artificial Intelligence (AI) Stocks Down Over 15% to Buy Hand Over Fist",
-     "url": "https://www.fool.com/investing/2026/07/14/got-1000-2-magnificent-artificial-intelligence-ai/?source=iedfolrf0000001",
-     "published": "2026-07-14T10:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "The article recommends buying Micron Technology and Broadcom as both AI semiconductor stocks have declined over 15% from their all-time highs. Micron benefits from surging memory chip demand for AI data centers with expected 81% revenue growth in FY2027, while Broadcom is positioned to generate over",
-     "sentiment": "positive",
-     "reason": "Strong tailwinds from AI-driven memory chip demand expected to persist beyond 2027; FY2027 projections show 81% revenue growth and EPS near $150; management confirms market tightness will continue, supporting long-term growth potential."
-    },
-    {
-     "title": "Industrial Semiconductor Market Size to Hit USD 329.73 Billion by 2035 | Research by SNS Insider",
-     "url": "https://www.globenewswire.com/news-release/2026/07/14/3326625/0/en/Industrial-Semiconductor-Market-Size-to-Hit-USD-329-73-Billion-by-2035-Research-by-SNS-Insider.html",
-     "published": "2026-07-14T08:44:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "The global Industrial Semiconductor Market, valued at $98.35 billion in 2025, is expected to grow to $329.73 billion by 2035 at a CAGR of 12.86%. Growth is driven by AI-powered industrial automation, electric vehicles, smart manufacturing, and IoT technologies. Asia Pacific leads with 42% market sha",
-     "sentiment": "neutral",
-     "reason": "Listed as key player in memory devices segment; however, recent tariff-related surcharge implementation suggests near-term margin pressures despite long-term market growth opportunities."
-    },
-    {
-     "title": "President Trump Sells Micron Stock and Buys an AI Stock Up 1,340% Since 2023",
-     "url": "https://www.fool.com/investing/2026/07/14/president-trump-sell-micron-buy-ai-stock-up-1340/?source=iedfolrf0000001",
-     "published": "2026-07-14T08:24:00Z",
-     "source": "The Motley Fool",
-     "summary": "President Trump's investment accounts have been net sellers of Micron Technology while net buyers of Nvidia year-to-date through May 2026. Despite Micron's impressive 345% revenue growth and new multiyear supply contracts, Trump's accounts sold $90K-$116K of the stock. Meanwhile, they purchased $246",
-     "sentiment": "neutral",
-     "reason": "While Micron reported exceptional Q2 results with 345% revenue growth and signed 16 multiyear contracts that improve business stability, the article notes Wall Street expects memory chip prices to drop by 2028 and Trump's accounts were net sellers. The valuation of 22x earnings is described as 'cheap,' but the net selling activity and cyclical industry concerns warrant a neutral stance."
-    },
-    {
-     "title": "SK Hynix Has Traded at a Discount to Micron for Years. That May Be Changing.",
-     "url": "https://www.fool.com/investing/2026/07/14/sk-hynix-has-traded-at-a-discount-to-micron-for-ye/?source=iedfolrf0000001",
-     "published": "2026-07-14T08:02:00Z",
-     "source": "The Motley Fool",
-     "summary": "SK Hynix's U.S. Nasdaq debut on July 10 removes a key accessibility barrier that has historically caused it to trade at a discount to competitor Micron. With easier access for U.S. investors and potential inclusion in major indexes, SK Hynix's valuation gap versus Micron may narrow. However, investo",
-     "sentiment": "neutral",
-     "reason": "Established competitor that has benefited from accessibility premium. While still well-positioned in memory semiconductors, the article suggests SK Hynix's discount to Micron may narrow, implying relative pressure on Micron's valuation advantage."
-    },
-    {
-     "title": "Why Micron Technology Stock Soared 304% in the First Half of 2026 and Why There Might Be More to Come",
-     "url": "https://www.fool.com/investing/2026/07/14/why-micron-technology-stock-soared-304-in-the-firs/?source=iedfolrf0000001",
-     "published": "2026-07-14T07:02:00Z",
-     "source": "The Motley Fool",
-     "summary": "Micron Technology's stock surged 304% in the first half of 2026, driven by exceptional demand for memory and storage chips fueled by AI adoption. The company reported extraordinary financial results with Q2 revenue up 196% YoY and Q3 revenue up 346% YoY, with EPS surging over 13-fold. Management for",
-     "sentiment": "positive",
-     "reason": "Exceptional financial performance with 304% stock gain in H1 2026, triple-digit revenue and earnings growth across all business segments, strong forward guidance for Q4 with 342% revenue growth expected, secured long-term customer contracts through 2030, and attractive valuation at 21x earnings despite massive gains. CEO and analyst both express bullish outlook."
-    },
-    {
-     "title": "SK Hynix IPO Sell-Off Offers AI Memory Buying Opportunity",
-     "url": "https://www.investing.com/analysis/sk-hynix-ipo-selloff-offers-ai-memory-buying-opportunity-200683868",
-     "published": "2026-07-14T06:34:00Z",
-     "source": "Investing.com",
-     "summary": "SK Hynix's U.S. IPO debut raised $28.1 billion but experienced a 7% intraday sell-off, presenting a buying opportunity for investors. Despite short-term macroeconomic headwinds and market friction, the company benefits from a multi-year supply crunch in high-bandwidth memory (HBM) driven by AI hardw",
-     "sentiment": "positive",
-     "reason": "Rapidly advancing competitive position in HBM with mass-produced 48GB HBM4 stacks. Trading at P/E of ~21 (discount to logic peers), fully sold out capacity through 2027, and authorized $250 billion domestic investment. Extreme bearish options positioning presents contrarian opportunity."
-    },
-    {
-     "title": "Why AI Investors Can Finally Buy the World's Top HBM Maker Directly",
-     "url": "https://www.fool.com/investing/2026/07/13/ai-investors-can-finally-buy-worlds-top-hbm-maker/?source=iedfolrf0000001",
-     "published": "2026-07-13T19:30:00Z",
-     "source": "The Motley Fool",
-     "summary": "SK Hynix, the world's leading maker of high-bandwidth memory (HBM) for AI systems, began trading on Nasdaq following a record $26.5 billion IPO. While the listing provides U.S. investors direct access to the AI memory leader for the first time, the article cautions that memory is a cyclical industry",
-     "sentiment": "neutral",
-     "reason": "Identified as one of only two rivals competing at the top tier of HBM production alongside Samsung, representing competitive pressure on SK Hynix's market position."
-    },
-    {
-     "title": "Why SK Hynix’s Crash Should Worry Every AI Investor",
-     "url": "https://www.investing.com/analysis/why-sk-hynixs-crash-should-worry-every-ai-investor-200683822",
-     "published": "2026-07-13T14:20:00Z",
-     "source": "Investing.com",
-     "summary": "SK Hynix surged 13% on its Nasdaq debut Friday but crashed 8.4% by Monday, highlighting how AI-linked stocks are driven by hype rather than fundamentals. The selloff dragged down the broader semiconductor sector, while TSMC bucked the trend with gains based on strong earnings. The article warns inve",
-     "sentiment": "negative",
-     "reason": "Stock fell 4% in sympathy with SK Hynix selloff, indicating the decline was driven by momentum and sector contagion rather than company-specific fundamentals."
-    },
-    {
-     "title": "Market Warp :The AI Trade Enters the Eye of the Storm",
-     "url": "https://www.investing.com/analysis/market-warp-the-ai-trade-enters-the-eye-of-the-storm-200683809",
-     "published": "2026-07-13T12:02:00Z",
-     "source": "Investing.com",
-     "summary": "The AI semiconductor trade faces a sharp correction as markets shift from rewarding AI spending narratives to demanding proof of profitability. While underlying business fundamentals remain intact with strong order books and cash generation, violent selling has hit memory chip makers. China's emergi",
-     "sentiment": "neutral",
-     "reason": "Mentioned as increasing US spending and generating significant free cash flow, but no specific price action noted. Positioned similarly to SK Hynix with exposure to both memory shortage benefits and future oversupply risks from industry-wide capacity expansion."
-    },
-    {
-     "title": "AI Data Center Spending Is Outpacing Every Forecast on Wall Street. These 2 Stocks Are the Best Pick-and-Shovel Plays.",
-     "url": "https://www.fool.com/investing/2026/07/13/ai-data-center-spending-is-outpacing-every-forecas/?source=iedfolrf0000001",
-     "published": "2026-07-13T11:30:00Z",
-     "source": "The Motley Fool",
-     "summary": "AI data center capital expenditures are projected to reach $750 billion in 2026, significantly exceeding Goldman Sachs' revised estimates of $527 billion. Micron Technology and Taiwan Semiconductor Manufacturing (TSMC) are positioned as top pick-and-shovel plays to benefit from the massive hyperscal",
-     "sentiment": "positive",
-     "reason": "Strong financial performance with Q3 sales up 345% and EPS up 1,300%; CEO indicates early innings of AI-driven growth; three analysts raised price target to $1,500 (51% upside); positioned as key memory chip supplier for AI data centers."
-    },
-    {
-     "title": "Will Memory Giants Micron, Sandisk, and SK Hynix Continue to Soar? History Is Strikingly Clear About What Happens Next.",
-     "url": "https://www.fool.com/investing/2026/07/13/will-memory-giants-micron-sandisk-and-sk-hynix-con/?source=iedfolrf0000001",
-     "published": "2026-07-13T10:10:00Z",
-     "source": "The Motley Fool",
-     "summary": "Memory chip manufacturers Micron, Sandisk, and SK Hynix have experienced massive stock gains (up 700-4000% in the past year) driven by AI data center demand. However, historical analysis shows memory stocks are cyclical, typically experiencing peaks followed by declines as supply increases. While th",
-     "sentiment": "neutral",
-     "reason": "Strong current fundamentals with 345% revenue increase and 87% data center gross margin, but historical cyclical patterns suggest potential downside ahead. Stock has already declined from highs, indicating possible peak."
-    }
-   ],
+   "src_d": "massive",
    "extras_asof": "2026-07-14T16:03:28+00:00",
    "ind": {
-    "rsi_m": 50.74,
+    "rsi_m": 60.55,
     "rsi_d": 49.62,
-    "ema9_m": 980.5,
-    "ema21_m": 981.28
+    "ema9_m": 983.78,
+    "ema21_m": 982.7
    },
    "options": {
-    "call_premium": 354361652.4000003,
-    "put_premium": 214937696.76000005,
-    "call_vol": 118461,
-    "put_vol": 90337,
-    "call_oi": 201314,
-    "put_oi": 319012,
-    "atm_iv": 1.0267718598021798,
+    "call_premium": 368655548.2000001,
+    "put_premium": 222485312.68,
+    "call_vol": 123457,
+    "put_vol": 93764,
+    "call_oi": 204035,
+    "put_oi": 318400,
+    "atm_iv": 1.011301089575642,
     "pcr_vol": 0.76,
-    "pcr_oi": 1.58,
-    "net_premium": 139423955.64000022,
-    "pcr_prem": 0.61,
+    "pcr_oi": 1.56,
+    "net_premium": 146170235.5200001,
+    "pcr_prem": 0.6,
     "by_expiry": [
      {
       "exp": "2026-07-15",
-      "call_premium": 77382872.69999999,
-      "put_premium": 46590802.77,
-      "call_vol": 50751,
-      "put_vol": 47100,
-      "call_oi": 18971,
-      "put_oi": 22090,
-      "atm_iv": 1.0267718598021798
+      "call_premium": 81479275.81000002,
+      "put_premium": 48863246.53000001,
+      "call_vol": 52947,
+      "put_vol": 49380,
+      "call_oi": 19148,
+      "put_oi": 21916,
+      "atm_iv": 1.011301089575642
      },
      {
       "exp": "2026-07-17",
-      "call_premium": 98674584.70000002,
-      "put_premium": 60262381.79,
-      "call_vol": 38914,
-      "put_vol": 25808,
-      "call_oi": 91371,
-      "put_oi": 135308,
-      "atm_iv": 1.0559964138299838
+      "call_premium": 104548713.17999998,
+      "put_premium": 65752172.85,
+      "call_vol": 40861,
+      "put_vol": 26930,
+      "call_oi": 92449,
+      "put_oi": 135195,
+      "atm_iv": 1.0396997200373714
      },
      {
       "exp": "2026-07-20",
-      "call_premium": 9666997.64,
-      "put_premium": 7139050.8900000015,
-      "call_vol": 3440,
-      "put_vol": 2452,
-      "call_oi": 4158,
-      "put_oi": 4090,
-      "atm_iv": 0.9064758046175702
+      "call_premium": 10192395.039999997,
+      "put_premium": 7385046.500000001,
+      "call_vol": 3582,
+      "put_vol": 2502,
+      "call_oi": 4183,
+      "put_oi": 4021,
+      "atm_iv": 0.9079156314954553
      },
      {
       "exp": "2026-07-22",
-      "call_premium": 7281192.410000003,
-      "put_premium": 3642127.2800000003,
-      "call_vol": 2038,
-      "put_vol": 1582,
-      "call_oi": 1893,
-      "put_oi": 1774,
-      "atm_iv": 0.9677311452260025
+      "call_premium": 7384340.050000001,
+      "put_premium": 3717151.3,
+      "call_vol": 2086,
+      "put_vol": 1591,
+      "call_oi": 1912,
+      "put_oi": 1743,
+      "atm_iv": 0.9679730127839712
      },
      {
       "exp": "2026-07-24",
-      "call_premium": 64768815.14000001,
-      "put_premium": 18665244.53,
-      "call_vol": 11111,
-      "put_vol": 3844,
-      "call_oi": 23177,
-      "put_oi": 52197,
-      "atm_iv": 1.0384748096848448
+      "call_premium": 65601815.32000001,
+      "put_premium": 19104521.070000004,
+      "call_vol": 11333,
+      "put_vol": 3911,
+      "call_oi": 23585,
+      "put_oi": 52081,
+      "atm_iv": 1.0347327705020877
      },
      {
       "exp": "2026-07-27",
-      "call_premium": 3558657.5000000005,
-      "put_premium": 1009135.01,
-      "call_vol": 613,
-      "put_vol": 194,
+      "call_premium": 3753130.37,
+      "put_premium": 1011611.2799999999,
+      "call_vol": 663,
+      "put_vol": 195,
       "call_oi": 338,
       "put_oi": 521,
-      "atm_iv": 0.971183125204082
+      "atm_iv": 0.9699954112119318
      }
     ],
     "by_strike": [
      {
-      "strike": 785,
-      "call_oi": 36,
-      "put_oi": 1254,
-      "call_vol": 25,
-      "put_vol": 334
-     },
-     {
       "strike": 790,
       "call_oi": 482,
       "put_oi": 10007,
-      "call_vol": 41,
-      "put_vol": 1884
+      "call_vol": 38,
+      "put_vol": 1916
      },
      {
       "strike": 795,
       "call_oi": 53,
       "put_oi": 2119,
       "call_vol": 17,
-      "put_vol": 415
+      "put_vol": 522
      },
      {
       "strike": 800,
       "call_oi": 5353,
       "put_oi": 33940,
-      "call_vol": 152,
-      "put_vol": 7177
+      "call_vol": 165,
+      "put_vol": 7537
      },
      {
       "strike": 805,
       "call_oi": 99,
       "put_oi": 2159,
       "call_vol": 65,
-      "put_vol": 418
+      "put_vol": 428
      },
      {
       "strike": 810,
       "call_oi": 925,
       "put_oi": 2708,
       "call_vol": 27,
-      "put_vol": 5585
+      "put_vol": 5596
      },
      {
       "strike": 815,
       "call_oi": 61,
       "put_oi": 23605,
       "call_vol": 56,
-      "put_vol": 1478
+      "put_vol": 1482
      },
      {
       "strike": 820,
       "call_oi": 1151,
       "put_oi": 12148,
       "call_vol": 111,
-      "put_vol": 1011
+      "put_vol": 1018
      },
      {
       "strike": 825,
       "call_oi": 84,
       "put_oi": 7287,
       "call_vol": 71,
-      "put_vol": 729
+      "put_vol": 741
      },
      {
       "strike": 830,
       "call_oi": 679,
       "put_oi": 4634,
       "call_vol": 49,
-      "put_vol": 909
+      "put_vol": 961
      },
      {
       "strike": 835,
       "call_oi": 23,
       "put_oi": 2653,
       "call_vol": 106,
-      "put_vol": 501
+      "put_vol": 624
      },
      {
       "strike": 840,
       "call_oi": 1121,
       "put_oi": 5541,
       "call_vol": 43,
-      "put_vol": 1042
+      "put_vol": 1010
      },
      {
       "strike": 845,
       "call_oi": 65,
       "put_oi": 1628,
       "call_vol": 61,
-      "put_vol": 411
+      "put_vol": 431
      },
      {
       "strike": 850,
       "call_oi": 4027,
       "put_oi": 22691,
-      "call_vol": 141,
-      "put_vol": 8178
+      "call_vol": 143,
+      "put_vol": 8350
      },
      {
       "strike": 855,
       "call_oi": 125,
       "put_oi": 1289,
       "call_vol": 56,
-      "put_vol": 998
+      "put_vol": 1009
      },
      {
       "strike": 860,
       "call_oi": 858,
       "put_oi": 4023,
       "call_vol": 277,
-      "put_vol": 1027
+      "put_vol": 1160
      },
      {
       "strike": 865,
       "call_oi": 46,
       "put_oi": 948,
       "call_vol": 77,
-      "put_vol": 638
+      "put_vol": 657
      },
      {
       "strike": 870,
       "call_oi": 1503,
       "put_oi": 5119,
-      "call_vol": 78,
-      "put_vol": 4975
+      "call_vol": 81,
+      "put_vol": 5057
      },
      {
       "strike": 875,
       "call_oi": 180,
       "put_oi": 2162,
       "call_vol": 89,
-      "put_vol": 787
+      "put_vol": 845
      },
      {
       "strike": 880,
       "call_oi": 1329,
       "put_oi": 11422,
-      "call_vol": 170,
-      "put_vol": 1096
+      "call_vol": 181,
+      "put_vol": 1171
      },
      {
       "strike": 885,
       "call_oi": 236,
       "put_oi": 3019,
       "call_vol": 88,
-      "put_vol": 506
+      "put_vol": 525
      },
      {
       "strike": 890,
       "call_oi": 4053,
       "put_oi": 5138,
       "call_vol": 89,
-      "put_vol": 2131
+      "put_vol": 2260
      },
      {
       "strike": 895,
       "call_oi": 180,
       "put_oi": 2146,
       "call_vol": 110,
-      "put_vol": 692
+      "put_vol": 760
      },
      {
       "strike": 900,
       "call_oi": 7928,
       "put_oi": 25270,
-      "call_vol": 1309,
-      "put_vol": 5090
+      "call_vol": 1318,
+      "put_vol": 5531
      },
      {
       "strike": 905,
       "call_oi": 584,
       "put_oi": 1148,
       "call_vol": 231,
-      "put_vol": 659
+      "put_vol": 690
      },
      {
       "strike": 910,
       "call_oi": 3289,
       "put_oi": 2958,
-      "call_vol": 337,
-      "put_vol": 1080
+      "call_vol": 339,
+      "put_vol": 1088
      },
      {
       "strike": 915,
       "call_oi": 2605,
       "put_oi": 761,
-      "call_vol": 232,
-      "put_vol": 443
+      "call_vol": 233,
+      "put_vol": 452
      },
      {
       "strike": 920,
       "call_oi": 2466,
       "put_oi": 3486,
-      "call_vol": 428,
-      "put_vol": 1382
+      "call_vol": 432,
+      "put_vol": 1485
      },
      {
       "strike": 925,
       "call_oi": 2891,
       "put_oi": 2104,
-      "call_vol": 424,
-      "put_vol": 1458
+      "call_vol": 434,
+      "put_vol": 1532
      },
      {
       "strike": 930,
       "call_oi": 6218,
       "put_oi": 6010,
-      "call_vol": 926,
-      "put_vol": 1722
+      "call_vol": 940,
+      "put_vol": 1786
      },
      {
       "strike": 932.5,
@@ -49003,8 +49018,8 @@
       "strike": 935,
       "call_oi": 1887,
       "put_oi": 2553,
-      "call_vol": 402,
-      "put_vol": 1987
+      "call_vol": 413,
+      "put_vol": 2010
      },
      {
       "strike": 937.5,
@@ -49017,8 +49032,8 @@
       "strike": 940,
       "call_oi": 2620,
       "put_oi": 3262,
-      "call_vol": 854,
-      "put_vol": 1199
+      "call_vol": 863,
+      "put_vol": 1227
      },
      {
       "strike": 942.5,
@@ -49031,8 +49046,8 @@
       "strike": 945,
       "call_oi": 834,
       "put_oi": 1923,
-      "call_vol": 412,
-      "put_vol": 1505
+      "call_vol": 434,
+      "put_vol": 1522
      },
      {
       "strike": 947.5,
@@ -49045,8 +49060,8 @@
       "strike": 950,
       "call_oi": 7435,
       "put_oi": 11830,
-      "call_vol": 3147,
-      "put_vol": 6887
+      "call_vol": 3624,
+      "put_vol": 7100
      },
      {
       "strike": 952.5,
@@ -49059,71 +49074,71 @@
       "strike": 955,
       "call_oi": 655,
       "put_oi": 683,
-      "call_vol": 1037,
-      "put_vol": 1386
+      "call_vol": 1069,
+      "put_vol": 1394
      },
      {
       "strike": 960,
       "call_oi": 2159,
       "put_oi": 2608,
-      "call_vol": 4612,
-      "put_vol": 3163
+      "call_vol": 4759,
+      "put_vol": 3229
      },
      {
       "strike": 965,
       "call_oi": 668,
       "put_oi": 854,
-      "call_vol": 2734,
-      "put_vol": 1776
+      "call_vol": 2777,
+      "put_vol": 1801
      },
      {
       "strike": 970,
       "call_oi": 2253,
       "put_oi": 2933,
-      "call_vol": 7028,
-      "put_vol": 2895
+      "call_vol": 7155,
+      "put_vol": 3023
      },
      {
       "strike": 975,
       "call_oi": 1350,
       "put_oi": 1139,
-      "call_vol": 4725,
-      "put_vol": 2339
+      "call_vol": 4889,
+      "put_vol": 2455
      },
      {
       "strike": 980,
       "call_oi": 3178,
       "put_oi": 7241,
-      "call_vol": 6179,
-      "put_vol": 3918
+      "call_vol": 6800,
+      "put_vol": 4320
      },
      {
       "strike": 985,
       "call_oi": 773,
       "put_oi": 950,
-      "call_vol": 4420,
-      "put_vol": 1505
+      "call_vol": 4688,
+      "put_vol": 1663
      },
      {
       "strike": 990,
       "call_oi": 2316,
       "put_oi": 8797,
-      "call_vol": 4946,
-      "put_vol": 997
+      "call_vol": 5181,
+      "put_vol": 1015
      },
      {
       "strike": 995,
       "call_oi": 1064,
       "put_oi": 1274,
-      "call_vol": 1402,
-      "put_vol": 476
+      "call_vol": 1441,
+      "put_vol": 482
      },
      {
       "strike": 1000,
       "call_oi": 18085,
       "put_oi": 23611,
-      "call_vol": 18686,
-      "put_vol": 1406
+      "call_vol": 19267,
+      "put_vol": 1478
      },
      {
       "strike": 1002.5,
@@ -49136,8 +49151,8 @@
       "strike": 1005,
       "call_oi": 1238,
       "put_oi": 575,
-      "call_vol": 760,
-      "put_vol": 128
+      "call_vol": 766,
+      "put_vol": 138
      },
      {
       "strike": 1007.5,
@@ -49150,8 +49165,8 @@
       "strike": 1010,
       "call_oi": 2664,
       "put_oi": 1583,
-      "call_vol": 1697,
-      "put_vol": 247
+      "call_vol": 1787,
+      "put_vol": 254
      },
      {
       "strike": 1012.5,
@@ -49164,22 +49179,22 @@
       "strike": 1015,
       "call_oi": 1126,
       "put_oi": 716,
-      "call_vol": 707,
-      "put_vol": 137
+      "call_vol": 748,
+      "put_vol": 140
      },
      {
       "strike": 1017.5,
       "call_oi": 25,
       "put_oi": 26,
-      "call_vol": 12,
+      "call_vol": 13,
       "put_vol": 24
      },
      {
       "strike": 1020,
       "call_oi": 5154,
       "put_oi": 2129,
-      "call_vol": 2198,
-      "put_vol": 194
+      "call_vol": 2266,
+      "put_vol": 225
      },
      {
       "strike": 1022.5,
@@ -49192,154 +49207,154 @@
       "strike": 1025,
       "call_oi": 1574,
       "put_oi": 582,
-      "call_vol": 1568,
+      "call_vol": 1629,
       "put_vol": 129
      },
      {
       "strike": 1030,
       "call_oi": 3325,
       "put_oi": 1949,
-      "call_vol": 2134,
-      "put_vol": 143
+      "call_vol": 2195,
+      "put_vol": 147
      },
      {
       "strike": 1035,
       "call_oi": 1268,
       "put_oi": 768,
-      "call_vol": 691,
+      "call_vol": 712,
       "put_vol": 144
      },
      {
       "strike": 1040,
       "call_oi": 4520,
       "put_oi": 1353,
-      "call_vol": 1968,
+      "call_vol": 2021,
       "put_vol": 137
      },
      {
       "strike": 1045,
       "call_oi": 1008,
       "put_oi": 629,
-      "call_vol": 937,
+      "call_vol": 980,
       "put_vol": 114
      },
      {
       "strike": 1050,
       "call_oi": 12668,
       "put_oi": 5614,
-      "call_vol": 7263,
-      "put_vol": 164
+      "call_vol": 7551,
+      "put_vol": 166
      },
      {
       "strike": 1055,
       "call_oi": 1643,
       "put_oi": 293,
-      "call_vol": 782,
-      "put_vol": 61
+      "call_vol": 799,
+      "put_vol": 56
      },
      {
       "strike": 1060,
       "call_oi": 4737,
       "put_oi": 1351,
-      "call_vol": 1172,
+      "call_vol": 1246,
       "put_vol": 88
      },
      {
       "strike": 1065,
       "call_oi": 1578,
       "put_oi": 678,
-      "call_vol": 1067,
-      "put_vol": 84
+      "call_vol": 1087,
+      "put_vol": 85
      },
      {
       "strike": 1070,
       "call_oi": 2080,
       "put_oi": 1252,
-      "call_vol": 1498,
+      "call_vol": 1556,
       "put_vol": 205
      },
      {
       "strike": 1075,
       "call_oi": 1833,
       "put_oi": 539,
-      "call_vol": 1195,
-      "put_vol": 75
+      "call_vol": 1263,
+      "put_vol": 76
      },
      {
       "strike": 1080,
       "call_oi": 3056,
       "put_oi": 874,
-      "call_vol": 1212,
+      "call_vol": 1256,
       "put_vol": 101
      },
      {
       "strike": 1085,
       "call_oi": 1232,
       "put_oi": 479,
-      "call_vol": 776,
-      "put_vol": 135
+      "call_vol": 803,
+      "put_vol": 86
      },
      {
       "strike": 1090,
       "call_oi": 4066,
       "put_oi": 1374,
-      "call_vol": 1314,
+      "call_vol": 1335,
       "put_vol": 28
      },
      {
       "strike": 1095,
       "call_oi": 1336,
       "put_oi": 515,
-      "call_vol": 650,
+      "call_vol": 663,
       "put_vol": 65
      },
      {
       "strike": 1100,
       "call_oi": 18528,
       "put_oi": 5995,
-      "call_vol": 10926,
-      "put_vol": 306
+      "call_vol": 11102,
+      "put_vol": 310
      },
      {
       "strike": 1105,
       "call_oi": 1149,
       "put_oi": 287,
-      "call_vol": 419,
+      "call_vol": 422,
       "put_vol": 205
      },
      {
       "strike": 1110,
       "call_oi": 4988,
       "put_oi": 901,
-      "call_vol": 859,
+      "call_vol": 965,
       "put_vol": 158
      },
      {
       "strike": 1115,
       "call_oi": 578,
       "put_oi": 645,
-      "call_vol": 494,
-      "put_vol": 59
+      "call_vol": 527,
+      "put_vol": 60
      },
      {
       "strike": 1120,
       "call_oi": 2344,
       "put_oi": 1393,
-      "call_vol": 904,
-      "put_vol": 307
+      "call_vol": 976,
+      "put_vol": 432
      },
      {
       "strike": 1125,
       "call_oi": 1085,
       "put_oi": 944,
-      "call_vol": 701,
-      "put_vol": 264
+      "call_vol": 760,
+      "put_vol": 389
      },
      {
       "strike": 1130,
       "call_oi": 2282,
       "put_oi": 947,
-      "call_vol": 930,
+      "call_vol": 937,
       "put_vol": 65
      },
      {
@@ -49353,7 +49368,7 @@
       "strike": 1140,
       "call_oi": 2992,
       "put_oi": 853,
-      "call_vol": 622,
+      "call_vol": 625,
       "put_vol": 78
      },
      {
@@ -49367,36 +49382,50 @@
       "strike": 1150,
       "call_oi": 9455,
       "put_oi": 2787,
-      "call_vol": 3382,
-      "put_vol": 95
+      "call_vol": 3445,
+      "put_vol": 93
      },
      {
       "strike": 1155,
       "call_oi": 1139,
       "put_oi": 39,
-      "call_vol": 250,
-      "put_vol": 17
+      "call_vol": 254,
+      "put_vol": 18
      },
      {
       "strike": 1160,
       "call_oi": 2247,
       "put_oi": 429,
-      "call_vol": 1278,
-      "put_vol": 13
+      "call_vol": 1338,
+      "put_vol": 14
      },
      {
       "strike": 1165,
       "call_oi": 813,
       "put_oi": 44,
-      "call_vol": 182,
-      "put_vol": 6
+      "call_vol": 186,
+      "put_vol": 7
      },
      {
       "strike": 1170,
       "call_oi": 2236,
       "put_oi": 469,
-      "call_vol": 524,
+      "call_vol": 527,
       "put_vol": 55
+     },
+     {
+      "strike": 1175,
+      "call_oi": 215,
+      "put_oi": 1,
+      "call_vol": 129,
+      "put_vol": 1
+     },
+     {
+      "strike": 1180,
+      "call_oi": 2542,
+      "put_oi": 641,
+      "call_vol": 382,
+      "put_vol": 17
      }
     ],
     "top_strikes": [
@@ -49404,75 +49433,75 @@
       "exp": "2026-07-15",
       "strike": 1000,
       "side": "call",
-      "vol": 8987,
+      "vol": 9286,
       "oi": 1815,
-      "premium": 11855021.309999999
+      "premium": 12344529.819999998
      },
      {
       "exp": "2026-07-17",
       "strike": 1000,
       "side": "call",
-      "vol": 7039,
+      "vol": 7147,
       "oi": 6548,
-      "premium": 18935965.849999998
+      "premium": 19273100.49
      },
      {
       "exp": "2026-07-15",
       "strike": 810,
       "side": "put",
-      "vol": 4856,
+      "vol": 4858,
       "oi": 371,
-      "premium": 204243.36
-     },
-     {
-      "exp": "2026-07-17",
-      "strike": 1100,
-      "side": "call",
-      "vol": 3826,
-      "oi": 7902,
-      "premium": 2158973.54
-     },
-     {
-      "exp": "2026-07-15",
-      "strike": 1050,
-      "side": "call",
-      "vol": 3633,
-      "oi": 738,
-      "premium": 1322012.37
-     },
-     {
-      "exp": "2026-07-15",
-      "strike": 870,
-      "side": "put",
-      "vol": 3632,
-      "oi": 394,
-      "premium": 867757.4400000002
-     },
-     {
-      "exp": "2026-07-15",
-      "strike": 850,
-      "side": "put",
-      "vol": 3596,
-      "oi": 2834,
-      "premium": 491393.4
+      "premium": 204376.06
      },
      {
       "exp": "2026-07-15",
       "strike": 980,
       "side": "call",
-      "vol": 3409,
+      "vol": 3946,
       "oi": 266,
-      "premium": 7542378.41
+      "premium": 8905411.72
+     },
+     {
+      "exp": "2026-07-17",
+      "strike": 1100,
+      "side": "call",
+      "vol": 3927,
+      "oi": 7902,
+      "premium": 2223271.0500000003
+     },
+     {
+      "exp": "2026-07-15",
+      "strike": 1050,
+      "side": "call",
+      "vol": 3773,
+      "oi": 738,
+      "premium": 1379559.72
+     },
+     {
+      "exp": "2026-07-15",
+      "strike": 870,
+      "side": "put",
+      "vol": 3699,
+      "oi": 394,
+      "premium": 879992.1
+     },
+     {
+      "exp": "2026-07-15",
+      "strike": 850,
+      "side": "put",
+      "vol": 3670,
+      "oi": 2834,
+      "premium": 501322.0
      }
     ],
     "max_pain": 935,
     "max_pain_exp": "2026-07-15",
     "oi_changes": [],
-    "contracts": 1690,
+    "contracts": 1702,
     "prem_delta": {
-     "call": 32704390.588000298,
-     "put": 18310423.579999894,
-     "since": "2026-07-14T15:40:47+00:00"
+     "call": 14293895.799999833,
+     "put": 7547615.919999957,
+     "since": "2026-07-14T16:03:28+00:00"
     }
    }
   },
