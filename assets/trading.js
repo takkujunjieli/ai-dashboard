@@ -20,12 +20,12 @@ let chart, candles, volume, ema9L, ema21L, vwapL, bbU, bbL, vsU, vsL, avwapL, su
 let overlayOn = JSON.parse(localStorage.getItem("wbOverlays") || "null")
   || { ema9: true, ema21: true, vwap: true, bb: false, vsig: false };  // 默认只开 EMA/VWAP,其余按需勾
 let avwapAnchor = localStorage.getItem("wbAvwapAnchor") || "off";
+let optTab = localStorage.getItem("wbOptTab") || "beginner";  // Options Panel: beginner / advanced
 let hoverLevels = [];       // flip / MaxPain 横线的 {name,color,price},供 hover 识别
 let hoverSeries = [];       // 叠加曲线的 {series,name,color},供 hover 识别
 let priceLines = [];
 let pollTimer = null;
 let ladderRetry = 0;  // 首屏梯子重试计数(坐标系就绪前 priceToCoordinate 返回 null)
-let vpRetry = 0;      // 同上,Volume Profile
 
 /* lightweight-charts 按 UTC 显示,把时间戳平移成本地时间 */
 const tconv = (ms) => Math.floor(ms / 1000) - new Date(ms).getTimezoneOffset() * 60;
@@ -206,12 +206,10 @@ function initCharts() {
 
   // 直接调用(不裹 rAF):后台标签页 rAF 会被节流不触发。
   // subscribeVisibleLogicalRangeChange 在图表坐标就绪后才触发,是最可靠的重画时机。
-  const redrawRight = () => { renderLadder(); renderVolProfile(); };
-  chart.timeScale().subscribeVisibleLogicalRangeChange(redrawRight);
-  const ro = new ResizeObserver(redrawRight);  // 首屏 flex 宽度就绪后重画
+  chart.timeScale().subscribeVisibleLogicalRangeChange(renderLadder);  // VP 已并入 renderLadder
+  const ro = new ResizeObserver(renderLadder);  // 首屏 flex 宽度就绪后重画
   ro.observe($("chart"));
   ro.observe($("ladder-box"));
-  ro.observe($("vp-box"));
 }
 
 /* 可勾选叠加层(K线/量常驻);AVWAP 由锚点选择器单独控制 */
@@ -298,7 +296,7 @@ function renderChart() {
 
   const visible = TF === "1d" ? 130 : TF === "1m" ? 200 : 160;
   chart.timeScale().setVisibleLogicalRange({ from: Math.max(0, bars.length - visible), to: bars.length + 3 });
-  renderLadder(); renderVolProfile();  // setVisibleLogicalRange 也会触发 subscribe 兜底
+  renderLadder();  // 内含 VP 叠加;setVisibleLogicalRange 也会触发 subscribe 兜底
 }
 
 /* ---------- 盘中净 GEX 副图(按所选到期桶) ---------- */
@@ -391,28 +389,22 @@ function renderLadder() {
   };
   mark(spotOf(SYM), "#60a5fa", "Spot");
   if (ladderMode === "gex") mark(gexBucketData(SYM)?.flip, "#fbbf24", "flip");
+  if (placed > 0) parts.push(volProfileFragment(W, H));  // VP 轮廓线叠加(坐标就绪后)
   svg.innerHTML = parts.join("");
   // 首屏图表坐标系未就绪时 priceToCoordinate 全返回 null → 稍后重试(用 setTimeout,后台标签页 rAF 会被节流)
   if (placed === 0 && rows.length && ladderRetry < 40) { ladderRetry++; setTimeout(renderLadder, 80); }
   else if (placed > 0) ladderRetry = 0;
 }
 
-/* Volume Profile:成交量按价格分箱(成本基代理),标 POC / Value Area(70%)。
-   优先用日线(多月成本结构),与 GEX 梯并列、共享价格轴 */
-function renderVolProfile() {
-  const svg = $("vp");
-  if (!svg || !candles) return;
-  const box = $("vp-box").getBoundingClientRect();
-  const W = Math.max(box.width, 40), H = $("chart").getBoundingClientRect().height;
-  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-  svg.setAttribute("width", W); svg.setAttribute("height", H);
+/* Volume Profile 叠加片段:成交量按可见价格区间分箱,画成靠右轴锚定的轮廓线(+POC),
+   叠在 GEX 梯同一 SVG、共享价格轴。返回 SVG 片段字符串,供 renderLadder 拼入。 */
+function volProfileFragment(W, H) {
   const d = researchOf(SYM);
   const bars = (d.bars_d && d.bars_d.length >= 20) ? d.bars_d : barsFor(SYM, TF);
-  if (!bars.length) { svg.innerHTML = ""; return; }
+  if (!bars.length) return "";
   const NB = 60;
-  // 按图表当前可见价格区间分箱 → 任何缩放下都填满、POC 始终在视野内
   const pTop = candles.coordinateToPrice(0), pBot = candles.coordinateToPrice(H);
-  if (pTop == null || pBot == null) { if (vpRetry < 40) { vpRetry++; setTimeout(renderVolProfile, 80); } return; }
+  if (pTop == null || pBot == null) return "";
   const hi = Math.max(pTop, pBot), lo = Math.min(pTop, pBot);
   const binH = (hi - lo) / NB || 1;
   const bins = new Array(NB).fill(0);
@@ -426,35 +418,24 @@ function renderVolProfile() {
     for (let i = i0; i <= i1; i++) bins[i] += per;
   }
   const maxV = Math.max(...bins, 1);
-  const total = bins.reduce((a, x) => a + x, 0) || 1;
   const poc = bins.indexOf(maxV);
-  let loI = poc, hiI = poc, acc = bins[poc];  // Value Area:从 POC 向两侧扩到 70%
-  while (acc < total * 0.7 && (loI > 0 || hiI < NB - 1)) {
-    const down = loI > 0 ? bins[loI - 1] : -1, up = hiI < NB - 1 ? bins[hiI + 1] : -1;
-    if (up >= down) { hiI++; acc += bins[hiI]; } else { loI--; acc += bins[loI]; }
-  }
+  const VPW = Math.min(W * 0.55, 120);
   const price = (i) => lo + (i + 0.5) * binH;
-  const rowH = Math.max(H / NB * 0.85, 1.2);
-  const parts = [];
-  let placed = 0;
+  const pts = [];
   for (let i = 0; i < NB; i++) {
-    if (!bins[i]) continue;
     const y = candles.priceToCoordinate(price(i));
     if (y == null || y < 0 || y > H) continue;
-    placed++;
-    const w = bins[i] / maxV * (W - 4);
-    const fill = i === poc ? "#f59e0b" : (i >= loI && i <= hiI) ? "#3b82f6" : "#3b82f688";
-    parts.push(`<rect x="0" y="${(y - rowH / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${rowH.toFixed(1)}" fill="${fill}" opacity="0.72"><title>${price(i).toFixed(2)}: ${fmtNum(bins[i])}</title></rect>`);
+    pts.push([+(W - bins[i] / maxV * VPW).toFixed(1), +y.toFixed(1)]);
   }
-  const mark = (i, color, label) => {
-    const y = candles.priceToCoordinate(price(i));
-    if (y == null || y < 0 || y > H) return;
-    parts.push(`<line x1="0" y1="${y.toFixed(1)}" x2="${W}" y2="${y.toFixed(1)}" stroke="${color}" stroke-dasharray="3 3" stroke-width="1"/><text x="2" y="${(y - 2).toFixed(1)}" fill="${color}" font-size="9">${label} ${price(i).toFixed(1)}</text>`);
-  };
-  mark(poc, "#f59e0b", "POC"); mark(hiI, "#60a5fa", "VAH"); mark(loI, "#60a5fa", "VAL");
-  svg.innerHTML = parts.join("");
-  if (placed === 0 && bars.length && vpRetry < 40) { vpRetry++; setTimeout(renderVolProfile, 80); }
-  else if (placed > 0) vpRetry = 0;
+  if (pts.length < 2) return "";
+  const poly = pts.map((p, i) => `${i ? "L" : "M"}${p[0]},${p[1]}`).join("");
+  const area = `M${W},${pts[0][1]} ` + pts.map((p) => `L${p[0]},${p[1]}`).join("") + ` L${W},${pts[pts.length - 1][1]} Z`;
+  let out = `<path d="${area}" fill="#a78bfa22"/><path d="${poly}" fill="none" stroke="#a78bfa" stroke-width="1.2"/>`;
+  const yp = candles.priceToCoordinate(price(poc));
+  if (yp != null && yp >= 0 && yp <= H) {
+    out += `<line x1="${(W - VPW).toFixed(1)}" y1="${yp.toFixed(1)}" x2="${W}" y2="${yp.toFixed(1)}" stroke="#f59e0b" stroke-dasharray="3 3" stroke-width="1"/><text x="${W}" y="${(yp - 2).toFixed(1)}" fill="#f59e0b" font-size="9" text-anchor="end">POC ${price(poc).toFixed(1)}</text>`;
+  }
+  return out;
 }
 
 /* ---------- 迷你行情卡(切票器 + 分组开关 + 增删) ---------- */
@@ -521,92 +502,120 @@ function renderStats() {
     : null, (g.net_gex ?? 0) >= 0 ? "up" : "down");
   if (g.flowMiss) add("", "Flow N/A (computed 2×/day, single-names only; ETFs excluded)", "muted");
   add("flip", g.flip);
-  add("MaxPain", o.max_pain);
-  add("ATM IV", o.atm_iv != null ? (o.atm_iv * 100).toFixed(1) + "%" : null);
-  // PCR 绝对值意义有限 → 补自身历史百分位 + watchlist 内横向排名(低 PCR=偏 call)
-  if (o.pcr_vol != null) {
-    const allV = Object.values(RESEARCH?.tickers || {}).map((d) => d.options?.pcr_vol).filter((v) => v != null);
-    const rank = allV.filter((x) => x < o.pcr_vol).length + 1;  // 升序,1=最偏 call
-    const self = o.pcr_vol_pct != null ? `self ${o.pcr_vol_pct}%ile` : "self n/a";
-    add("PCR Vol", `${o.pcr_vol} (${self} · WL ${rank}/${allV.length})`);
-  }
-  add("Net Prem", o.net_premium != null ? fmtMoney(o.net_premium) : null, (o.net_premium ?? 0) >= 0 ? "up" : "down");
   add("Short%", sv?.ratio != null ? (sv.ratio * 100).toFixed(1) + "%" : null);
+  // 顶栏只留正股路径/风险类;IV/PCR/MaxPain/Premium 等期权交易指标已移到下方 Options Panel
   $("wb-stats").innerHTML = chips.join("");
 }
 
-/* ---------- 期权面板 ---------- */
+/* 已实现波动率(20 日收盘对数收益年化),用于 VRP */
+function realizedVol(bars, n = 20) {
+  if (!bars || bars.length < n + 1) return null;
+  const cl = bars.slice(-(n + 1)).map((b) => b[4]);
+  const r = [];
+  for (let i = 1; i < cl.length; i++) if (cl[i - 1] > 0) r.push(Math.log(cl[i] / cl[i - 1]));
+  if (r.length < 2) return null;
+  const m = r.reduce((a, x) => a + x, 0) / r.length;
+  const v = r.reduce((a, x) => a + (x - m) ** 2, 0) / (r.length - 1);
+  return Math.sqrt(v) * Math.sqrt(252);
+}
+
+/* ---------- 期权面板:Beginner / Advanced 两 Tab(纯期权交易指标,不含图表) ---------- */
 function renderOptPanel() {
   const d = researchOf(SYM);
   const o = d.options;
   $("opt-src").textContent = RESEARCH?.options_source ? `(source ${RESEARCH.options_source === "massive" ? "Massive" : "Yahoo"} · ${o?.contracts ?? 0} contracts)` : "";
-  if (!o) { $("opt-panel").innerHTML = `<div class="card empty">No options data — start a collection</div>`; return; }
-  const premTotal = (o.call_premium + o.put_premium) || 1;
-  const cw = (o.call_premium / premTotal * 100).toFixed(1);
-  const expRows = (o.by_expiry || []).map((e) => `<tr>
-    <td>${esc(e.exp)}</td>
-    <td><span class="up">${fmtMoney(e.call_premium)}</span> / <span class="down">${fmtMoney(e.put_premium)}</span></td>
-    <td>${fmtNum(e.call_vol)} / ${fmtNum(e.put_vol)}</td>
-    <td>${fmtNum(e.call_oi)} / ${fmtNum(e.put_oi)}</td>
-    <td>${e.atm_iv != null ? (e.atm_iv * 100).toFixed(1) + "%" : "—"}</td>
-  </tr>`).join("");
-  const hotRows = (o.top_strikes || []).map((t) => `<tr>
-    <td>${esc(t.exp)}</td><td>${t.strike}</td>
-    <td class="${t.side === "call" ? "up" : "down"}">${t.side === "call" ? "Call" : "Put"}</td>
-    <td>${fmtNum(t.vol)}</td><td>${fmtNum(t.oi)}</td><td>${fmtMoney(t.premium)}</td>
-  </tr>`).join("");
-  const oiRows = (o.oi_changes || []).map((c) => `<tr>
-    <td>${esc(c.exp)}</td><td>${c.strike}</td>
-    <td class="${c.side === "call" ? "up" : "down"}">${c.side === "call" ? "Call" : "Put"}</td>
-    <td class="${c.delta >= 0 ? "up" : "down"}">${c.delta >= 0 ? "+" : ""}${fmtNum(c.delta)}</td>
-  </tr>`).join("");
-  const npCls = (o.net_premium ?? 0) >= 0 ? "up" : "down";
-  const pd = o.prem_delta;
-  const deltaHtml = pd ? (() => {
-    const dc = (pd.call >= 0 ? "+" : "") + fmtMoney(pd.call);
-    const dp = (pd.put >= 0 ? "+" : "") + fmtMoney(pd.put);
-    const t = pd.since ? new Date(pd.since).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : "";
-    return `<span title="Increment of session-cumulative premium since ${esc(t)}">Δ vs last C <b class="${pd.call >= 0 ? "up" : "down"}">${dc}</b> / P <b class="${pd.put >= 0 ? "up" : "down"}">${dp}</b></span>`;
-  })() : "";
-  // 隐含波动区间(由最近到期的 ATM IV 换算)
+  const tabBar = `<div id="opt-tabs" class="chips">
+    <button data-opttab="beginner" class="${optTab === "beginner" ? "active" : ""}">Beginner</button>
+    <button data-opttab="advanced" class="${optTab === "advanced" ? "active" : ""}">Advanced</button>
+  </div>`;
+  if (!o) { $("opt-panel").innerHTML = tabBar + `<div class="card empty">No options data — start a collection</div>`; return; }
+
   const spot = spotOf(SYM);
   const ne = o.by_expiry?.[0]?.exp;
+
   let implHtml = "";
   if (o.atm_iv && ne && spot) {
     const days = Math.max((Date.parse(ne) - Date.now()) / 86400000 + 1, 0.5);
-    const sig = o.atm_iv * Math.sqrt(days / 365);
-    const sig1 = o.atm_iv * Math.sqrt(1 / 365);
-    implHtml = `<span title="From nearest-expiry ATM IV">Implied move →${esc(ne)} (${Math.round(days)}d): <b>±${(sig * 100).toFixed(1)}%</b> ($${(spot * (1 - sig)).toFixed(2)}–$${(spot * (1 + sig)).toFixed(2)}) · 1d ±${(sig1 * 100).toFixed(1)}%</span>`;
+    const sig = o.atm_iv * Math.sqrt(days / 365), sig1 = o.atm_iv * Math.sqrt(1 / 365);
+    implHtml = `<span title="From nearest-expiry ATM IV">Expected move &rarr;${esc(ne)} (${Math.round(days)}d): <b>&plusmn;${(sig * 100).toFixed(1)}%</b> ($${(spot * (1 - sig)).toFixed(2)}&ndash;$${(spot * (1 + sig)).toFixed(2)}) &middot; 1d &plusmn;${(sig1 * 100).toFixed(1)}%</span>`;
   }
-  // IV skew(~7% OTM put IV − call IV):RR>0=看跌偏斜(下行保护贵),RR<0=看涨偏斜
+  const ivPct = o.atm_iv_pct;
+  const ivTag = ivPct != null ? `${ivPct}%ile ${ivPct >= 70 ? "(rich)" : ivPct <= 30 ? "(cheap)" : ""}` : "hist n/a";
+  const ivHtml = `<span title="ATM IV + own-history percentile">ATM IV <b>${o.atm_iv != null ? (o.atm_iv * 100).toFixed(1) + "%" : "&mdash;"}</b> <span class="muted">${ivTag}</span></span>`;
+  const allV = Object.values(RESEARCH?.tickers || {}).map((x) => x.options?.pcr_vol).filter((v) => v != null);
+  const rank = o.pcr_vol != null ? allV.filter((x) => x < o.pcr_vol).length + 1 : null;
+  const pcrHtml = o.pcr_vol != null
+    ? `<span title="Put/Call volume ratio (low = call-heavy)">PCR <b>${o.pcr_vol}</b> <span class="muted">${o.pcr_vol_pct != null ? "self " + o.pcr_vol_pct + "%ile &middot; " : ""}WL ${rank}/${allV.length}</span></span>` : "";
+  const mpHtml = o.max_pain != null
+    ? `<span title="Pin magnet (nearest expiry)">Max Pain <b>${o.max_pain}</b>${spot ? ` <span class="muted">spot ${spot >= o.max_pain ? "+" : ""}${((spot / o.max_pain - 1) * 100).toFixed(1)}%</span>` : ""}</span>` : "";
+  const ed = d.earnings_days;
+  const earnHtml = ed != null
+    ? `<span class="${ed <= 10 ? "down" : ""}" title="Options into earnings usually IV-crush after the print">Earnings in <b>${ed}d</b>${ed <= 10 ? " &#9888; IV-crush risk" : ""} <span class="muted">${esc(d.earnings_date || "")}</span></span>` : "";
+  const hotRows = (o.top_strikes || []).map((t) => `<tr>
+    <td>${esc(t.exp)}</td><td>${t.strike}</td>
+    <td class="${t.side === "call" ? "up" : "down"}">${t.side === "call" ? "Call" : "Put"}</td>
+    <td>${fmtNum(t.vol)}</td><td>${fmtNum(t.oi)}</td><td>${fmtMoney(t.premium)}</td></tr>`).join("");
+
   const sk = o.iv_skew;
-  let skewHtml = "";
-  if (sk) {
-    const lean = sk.rr > 0.01 ? "put skew" : sk.rr < -0.01 ? "call skew" : "flat";
-    skewHtml = `<span title="~7% OTM put IV − call IV, nearest expiry (${sk.put_k}P / ${sk.call_k}C)">Skew P <b>${(sk.put_iv * 100).toFixed(0)}%</b> / C <b>${(sk.call_iv * 100).toFixed(0)}%</b> · RR <b class="${sk.rr >= 0 ? "down" : "up"}">${sk.rr >= 0 ? "+" : ""}${(sk.rr * 100).toFixed(1)}%</b> ${lean}</span>`;
+  const skewHtml = sk
+    ? `<span title="~7% OTM put IV minus call IV (${sk.put_k}P/${sk.call_k}C)">Skew P <b>${(sk.put_iv * 100).toFixed(0)}%</b>/C <b>${(sk.call_iv * 100).toFixed(0)}%</b> &middot; RR <b class="${sk.rr >= 0 ? "down" : "up"}">${sk.rr >= 0 ? "+" : ""}${(sk.rr * 100).toFixed(1)}%</b> ${sk.rr > 0.01 ? "put skew" : sk.rr < -0.01 ? "call skew" : "flat"}</span>` : "";
+  const be = o.by_expiry || [];
+  let termHtml = "";
+  if (be.length >= 2 && be[0].atm_iv && be[be.length - 1].atm_iv) {
+    const f = be[0].atm_iv, b = be[be.length - 1].atm_iv;
+    termHtml = `<span title="Front vs back ATM IV">Term <b>${(f * 100).toFixed(0)}%</b>&rarr;<b>${(b * 100).toFixed(0)}%</b> &middot; ${f > b ? "backwardation (event/stress)" : "contango (normal)"}</span>`;
   }
-  $("opt-panel").innerHTML = `<div class="card">
+  const rv = realizedVol(d.bars_d, 20);
+  let vrpHtml = "";
+  if (o.atm_iv && rv) {
+    const vrp = o.atm_iv - rv;
+    vrpHtml = `<span title="ATM IV minus 20d realized vol">VRP IV <b>${(o.atm_iv * 100).toFixed(0)}%</b>&minus;RV <b>${(rv * 100).toFixed(0)}%</b>=<b class="${vrp >= 0 ? "down" : "up"}">${vrp >= 0 ? "+" : ""}${(vrp * 100).toFixed(0)}pt</b> ${vrp > 0 ? "(rich)" : "(cheap)"}</span>`;
+  }
+  const premTotal = (o.call_premium + o.put_premium) || 1;
+  const cw = (o.call_premium / premTotal * 100).toFixed(1);
+  const npCls = (o.net_premium ?? 0) >= 0 ? "up" : "down";
+  const pd = o.prem_delta;
+  const deltaHtml = pd ? (() => {
+    const t = pd.since ? new Date(pd.since).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : "";
+    return `<span title="Increment of session-cumulative premium since ${esc(t)}">&Delta; vs last C <b class="${pd.call >= 0 ? "up" : "down"}">${(pd.call >= 0 ? "+" : "") + fmtMoney(pd.call)}</b> / P <b class="${pd.put >= 0 ? "up" : "down"}">${(pd.put >= 0 ? "+" : "") + fmtMoney(pd.put)}</b></span>`;
+  })() : "";
+  const expRows = be.map((e) => `<tr>
+    <td>${esc(e.exp)}</td>
+    <td><span class="up">${fmtMoney(e.call_premium)}</span>/<span class="down">${fmtMoney(e.put_premium)}</span></td>
+    <td>${fmtNum(e.call_vol)}/${fmtNum(e.put_vol)}</td>
+    <td>${fmtNum(e.call_oi)}/${fmtNum(e.put_oi)}</td>
+    <td>${e.atm_iv != null ? (e.atm_iv * 100).toFixed(1) + "%" : "&mdash;"}</td></tr>`).join("");
+  const oiRows = (o.oi_changes || []).map((c) => `<tr>
+    <td>${esc(c.exp)}</td><td>${c.strike}</td>
+    <td class="${c.side === "call" ? "up" : "down"}">${c.side === "call" ? "Call" : "Put"}</td>
+    <td class="${c.delta >= 0 ? "up" : "down"}">${c.delta >= 0 ? "+" : ""}${fmtNum(c.delta)}</td></tr>`).join("");
+
+  const beginner = `
+    ${implHtml ? `<div class="stat-row">${implHtml}</div>` : ""}
+    <div class="stat-row">${ivHtml}${pcrHtml}</div>
+    <div class="stat-row">${mpHtml}${earnHtml}</div>
+    ${hotRows ? `<details open><summary class="muted small">Most active strikes today (liquidity)</summary>
+      <table><tr><th>Expiry</th><th>Strike</th><th>Side</th><th>Vol</th><th>OI</th><th>Premium</th></tr>${hotRows}</table></details>` : ""}`;
+  const advanced = `
+    ${skewHtml || termHtml || vrpHtml ? `<div class="stat-row">${skewHtml}${termHtml}</div><div class="stat-row">${vrpHtml}</div>` : ""}
     <div class="prem-bar"><div class="prem-call" style="width:${cw}%"></div></div>
-    ${(implHtml || skewHtml) ? `<div class="stat-row">${implHtml}${skewHtml}</div>` : ""}
     <div class="stat-row">
-      <span>Premium C <b class="up">${fmtMoney(o.call_premium)}</b> / P <b class="down">${fmtMoney(o.put_premium)}</b></span>
-      <span>Vol C <b>${fmtNum(o.call_vol)}</b> / P <b>${fmtNum(o.put_vol)}</b>${o.pcr_vol != null ? ` <span class="muted">PCR ${o.pcr_vol}</span>` : ""}</span>
-      <span>OI C <b>${fmtNum(o.call_oi)}</b> / P <b>${fmtNum(o.put_oi)}</b>${o.pcr_oi != null ? ` <span class="muted">PCR ${o.pcr_oi}</span>` : ""}</span>
+      <span>Prem C <b class="up">${fmtMoney(o.call_premium)}</b>/P <b class="down">${fmtMoney(o.put_premium)}</b></span>
+      <span>Vol C <b>${fmtNum(o.call_vol)}</b>/P <b>${fmtNum(o.put_vol)}</b>${o.pcr_vol != null ? ` <span class="muted">PCR ${o.pcr_vol}</span>` : ""}</span>
+      <span>OI C <b>${fmtNum(o.call_oi)}</b>/P <b>${fmtNum(o.put_oi)}</b>${o.pcr_oi != null ? ` <span class="muted">PCR ${o.pcr_oi}</span>` : ""}</span>
     </div>
     <div class="stat-row">
-      <span title="Call premium − Put premium; an activity metric (does not distinguish buy/sell side)">Net Prem <b class="${npCls}">${fmtMoney(o.net_premium)}</b></span>
-      ${o.pcr_prem != null ? `<span title="Put premium / Call premium">PCR(prem) <b>${o.pcr_prem}</b></span>` : ""}
-      ${deltaHtml}
+      <span title="Call minus Put premium; activity, not direction">Net Prem <b class="${npCls}">${fmtMoney(o.net_premium)}</b></span>
+      ${o.pcr_prem != null ? `<span>PCR(prem) <b>${o.pcr_prem}</b></span>` : ""}${deltaHtml}
     </div>
-    <div class="muted small">Premium is total traded value, not split by aggressor buy/sell; the above are activity metrics — judge direction alongside price and OI change.</div>
-    ${expRows ? `<details open><summary class="muted small">By expiry</summary>
+    <div class="muted small">Premium/Net Prem are activity (not split by buy/sell) &mdash; read direction with OI change + Flow-GEX.</div>
+    ${expRows ? `<details open><summary class="muted small">By expiry (term detail)</summary>
       <table><tr><th>Expiry</th><th>Prem C/P</th><th>Vol C/P</th><th>OI C/P</th><th>ATM IV</th></tr>${expRows}</table></details>` : ""}
-    ${hotRows ? `<details><summary class="muted small">Most active strikes today</summary>
-      <table><tr><th>Expiry</th><th>Strike</th><th>Side</th><th>Vol</th><th>OI</th><th>Premium</th></tr>${hotRows}</table></details>` : ""}
-    ${oiRows ? `<details><summary class="muted small">OI change (vs last collection)</summary>
-      <table><tr><th>Expiry</th><th>Strike</th><th>Side</th><th>ΔOI</th></tr>${oiRows}</table></details>`
-      : `<div class="muted small">OI change shows after two collections</div>`}
-  </div>`;
+    ${oiRows ? `<details><summary class="muted small">OI change &mdash; new positioning (vs last collection)</summary>
+      <table><tr><th>Expiry</th><th>Strike</th><th>Side</th><th>&Delta;OI</th></tr>${oiRows}</table></details>`
+      : `<div class="muted small">OI change shows after two collections</div>`}`;
+
+  $("opt-panel").innerHTML = tabBar + `<div class="card">${optTab === "beginner" ? beginner : advanced}</div>`;
 }
 
 /* ---------- 错误 ---------- */
@@ -861,6 +870,13 @@ function initToolbar() {
     localStorage.setItem("wbAvwapAnchor", avwapAnchor);
     [...$("avwap-anchor").children].forEach((b) => b.classList.toggle("active", b === btn));
     renderChart();
+  });
+  $("opt-panel").addEventListener("click", (ev) => {
+    const btn = ev.target.closest("[data-opttab]");
+    if (!btn) return;
+    optTab = btn.dataset.opttab;
+    localStorage.setItem("wbOptTab", optTab);
+    renderOptPanel();
   });
   $("refresh-btn").addEventListener("click", refreshData);
   renderOverlayChips();
