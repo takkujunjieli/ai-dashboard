@@ -475,6 +475,19 @@ def summarize_options(sym: str, contracts: list, spot: float | None,
         nearest = min(e for e, _ in ivs)
         vals = [v for e, v in ivs if e == nearest]
         s["atm_iv"] = sum(vals) / len(vals)
+        # IV skew(最近到期):~7% OTM put 与 call 的 IV 之差(risk reversal 代理)
+        # rr>0 = 看跌保护更贵 = 恐慌/看跌倾向;rr<0 = call 更贵 = 投机/看涨
+        if spot:
+            ne_c = [c for c in contracts if c["exp"] == nearest and c.get("iv")]
+            def _iv_near(target, typ):
+                cs = [c for c in ne_c if c["type"] == typ]
+                return min(cs, key=lambda c: abs(c["strike"] - target)) if cs else None
+            pk = _iv_near(spot * 0.93, "put")
+            ck = _iv_near(spot * 1.07, "call")
+            if pk and ck:
+                s["iv_skew"] = {"exp": nearest, "put_iv": round(pk["iv"], 4), "put_k": pk["strike"],
+                                "call_iv": round(ck["iv"], 4), "call_k": ck["strike"],
+                                "rr": round(pk["iv"] - ck["iv"], 4)}
     s["pcr_vol"] = round(s["put_vol"] / s["call_vol"], 2) if s["call_vol"] else None
     s["pcr_oi"] = round(s["put_oi"] / s["call_oi"], 2) if s["call_oi"] else None
     # 注意:premium 为成交总额(不分买卖方向),净额是"活跃度"指标而非方向指标
