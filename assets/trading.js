@@ -15,7 +15,7 @@ let ladderMode = "gex";
 let gexBucket = localStorage.getItem("wbGexBucket") || "0dte";  // GEX 到期范围,默认 0DTE
 let gexCaliber = localStorage.getItem("wbGexCaliber") || "nominal";  // 名义 / 流量
 const GEX_BUCKET_ORDER = ["0dte", "week", "2wk", "all"];
-const GEX_BUCKET_LABEL = { "0dte": "0DTE", week: "本周", "2wk": "≤14天", all: "全部" };
+const GEX_BUCKET_LABEL = { "0dte": "0DTE", week: "This Week", "2wk": "≤14d", all: "All" };
 let chart, candles, volume, ema9L, ema21L, vwapL, bbU, bbL, vsU, vsL, subChart, gexLine;
 let hoverLevels = [];       // flip / MaxPain 横线的 {name,color,price},供 hover 识别
 let hoverSeries = [];       // 叠加曲线的 {series,name,color},供 hover 识别
@@ -169,8 +169,8 @@ function initCharts() {
     { series: ema9L, name: "EMA9", color: "#60a5fa" },
     { series: ema21L, name: "EMA21", color: "#c084fc" },
     { series: vwapL, name: "VWAP", color: "#fbbf24" },
-    { series: bbU, name: "BB 上轨(+2σ)", color: "#2dd4bf" },
-    { series: bbL, name: "BB 下轨(−2σ)", color: "#2dd4bf" },
+    { series: bbU, name: "BB Upper (+2σ)", color: "#2dd4bf" },
+    { series: bbL, name: "BB Lower (−2σ)", color: "#2dd4bf" },
     { series: vsU, name: "VWAP +σ", color: "#fcd34d" },
     { series: vsL, name: "VWAP −σ", color: "#fcd34d" },
   ];
@@ -273,16 +273,16 @@ function ladderRows() {
 }
 
 function updateLadderTitle() {
-  const m = { gex: "GEX", oi: "OI", vol: "成交量" }[ladderMode];
+  const m = { gex: "GEX", oi: "OI", vol: "Volume" }[ladderMode];
   let suffix;
   if (ladderMode === "gex") {
     const b = gexBucketData(SYM);
-    const cal = b?.caliber === "flow" ? "·流量" : gexCaliber === "flow" ? "·流量缺失退名义" : "";
-    suffix = ` (${GEX_BUCKET_LABEL[b?.bucket] || GEX_BUCKET_LABEL[gexBucket]}${b?.fallback ? "·回退到最近" : ""}${cal})`;
+    const cal = b?.caliber === "flow" ? "·Flow" : gexCaliber === "flow" ? "·Flow N/A→Nominal" : "";
+    suffix = ` (${GEX_BUCKET_LABEL[b?.bucket] || GEX_BUCKET_LABEL[gexBucket]}${b?.fallback ? "·nearest" : ""}${cal})`;
   } else {
-    suffix = " · 全部到期";
+    suffix = " · all expiries";
   }
-  $("ladder-title").textContent = `行权价梯 · ${m}${suffix}`;
+  $("ladder-title").textContent = `Strike Ladder · ${m}${suffix}`;
   $("gex-exp").style.opacity = ladderMode === "gex" ? "1" : "0.4";
   $("gex-caliber").style.opacity = ladderMode === "gex" ? "1" : "0.4";
 }
@@ -299,7 +299,7 @@ function renderLadder() {
   const W = Math.max(box.width, 60);
   svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   svg.setAttribute("width", W); svg.setAttribute("height", H);
-  if (!rows.length) { svg.innerHTML = `<text x="8" y="20" fill="#8b96ad" font-size="11">暂无数据(先采集一次)</text>`; return; }
+  if (!rows.length) { svg.innerHTML = `<text x="8" y="20" fill="#8b96ad" font-size="11">No data (collect once)</text>`; return; }
   // 中间零轴发散:正(绿)向右、负(红)向左;OI/量 模式 call 向右、put 向左
   const cx = W / 2, half = cx - 3;
   const magOf = (r) => r.net ? Math.abs(r.a) : Math.max(r.a, r.b);
@@ -339,7 +339,7 @@ function renderLadder() {
     parts.push(`<line x1="0" y1="${y.toFixed(1)}" x2="${W}" y2="${y.toFixed(1)}" stroke="${color}" stroke-dasharray="4 3" stroke-width="1"/>`);
     parts.push(`<text x="2" y="${(y - 3).toFixed(1)}" fill="${color}" font-size="10">${label}</text>`);
   };
-  mark(spotOf(SYM), "#60a5fa", "现价");
+  mark(spotOf(SYM), "#60a5fa", "Spot");
   if (ladderMode === "gex") mark(gexBucketData(SYM)?.flip, "#fbbf24", "flip");
   svg.innerHTML = parts.join("");
   // 首屏图表坐标系未就绪时 priceToCoordinate 全返回 null → 稍后重试(用 setTimeout,后台标签页 rAF 会被节流)
@@ -367,15 +367,15 @@ function renderMiniCards() {
       </div>
       <div class="mc-side">
         <div class="mc-grp">
-          <button class="${deep ? "on" : ""}" data-act="deep" data-sym="${esc(s)}" title="深度组:K线/期权/GEX/指标">深</button>
-          <button class="${deep ? "" : "on"}" data-act="wl" data-sym="${esc(s)}" title="仅行情/新闻">行</button>
+          <button class="${deep ? "on" : ""}" data-act="deep" data-sym="${esc(s)}" title="Deep: candles/options/GEX/indicators">D</button>
+          <button class="${deep ? "" : "on"}" data-act="wl" data-sym="${esc(s)}" title="Quotes/news only">Q</button>
         </div>
-        <button class="mc-del" data-act="del" data-sym="${esc(s)}" title="从列表移除">✕</button>
+        <button class="mc-del" data-act="del" data-sym="${esc(s)}" title="Remove from list">✕</button>
       </div>
     </div>`;
   }).join("");
   const adder = `<div class="quote-card mini-card mc-add">
-    <input id="mc-add-input" placeholder="+ 代码" maxlength="6" autocomplete="off">
+    <input id="mc-add-input" placeholder="+ ticker" maxlength="6" autocomplete="off">
   </div>`;
   $("mini-cards").innerHTML = syms.length ? cards + adder : adder;
   updateCfgStatus();
@@ -384,7 +384,7 @@ function renderMiniCards() {
 /* ---------- 指标栏 ---------- */
 function renderStats() {
   if (SYM && CFG.watchlist.length && !isDeep(SYM)) {
-    $("wb-stats").innerHTML = `<span class="muted">${esc(SYM)} 在「仅行情」组,无深度数据 — 点卡片上的「深」加入深度组</span>`;
+    $("wb-stats").innerHTML = `<span class="muted">${esc(SYM)} is in the "Quotes only" group — no deep data. Click "D" on its card to add to Deep.</span>`;
     return;
   }
   const d = researchOf(SYM);
@@ -393,25 +393,25 @@ function renderStats() {
   const sv = (d.short_vol || [])[0];
   const chips = [];
   const add = (k, v, cls = "") => v != null && chips.push(`<span>${k} <b class="${cls}">${v}</b></span>`);
-  add("数据", d.asof ? new Date(d.asof).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }) : null);
+  add("Data", d.asof ? new Date(d.asof).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : null);
   add("RSI(1m)", d.ind?.rsi_m);
-  add("RSI(日)", d.ind?.rsi_d);
+  add("RSI(D)", d.ind?.rsi_d);
   add("VWAP", d.vwap);
   // GEX 相对日均成交额:1% 变动的对冲量 ≈ 一天成交量的百分之几(跨标的可比的强度)
   const adv = d.short?.avg_daily_volume;
   const gexPct = (g.net_gex != null && adv && g.spot) ? g.net_gex / (adv * g.spot) * 100 : null;
   const bLabel = GEX_BUCKET_LABEL[g.bucket] || "";
-  const calTag = g.caliber === "flow" ? `·流量${g.classified ? "/" + g.classified + "合约" : ""}` : "";
-  add(`净GEX(${bLabel}${g.fallback ? "·回退" : ""}${calTag})`, g.net_gex != null
+  const calTag = g.caliber === "flow" ? `·Flow${g.classified ? "/" + g.classified + " ctr" : ""}` : "";
+  add(`Net GEX(${bLabel}${g.fallback ? "·nearest" : ""}${calTag})`, g.net_gex != null
     ? fmtMoney(g.net_gex) + "/1%" + (gexPct != null ? ` (${gexPct >= 0 ? "+" : ""}${gexPct.toFixed(1)}% ADV)` : "")
     : null, (g.net_gex ?? 0) >= 0 ? "up" : "down");
-  if (g.flowMiss) add("", "流量版暂无(需每小时低频层跑出,或该票被排除)", "muted");
+  if (g.flowMiss) add("", "Flow version N/A (runs hourly in low-freq layer, or ticker excluded)", "muted");
   add("flip", g.flip);
   add("MaxPain", o.max_pain);
   add("ATM IV", o.atm_iv != null ? (o.atm_iv * 100).toFixed(1) + "%" : null);
-  add("PCR量", o.pcr_vol);
+  add("PCR Vol", o.pcr_vol);
   add("Net Prem", o.net_premium != null ? fmtMoney(o.net_premium) : null, (o.net_premium ?? 0) >= 0 ? "up" : "down");
-  add("空头占比", sv?.ratio != null ? (sv.ratio * 100).toFixed(1) + "%" : null);
+  add("Short%", sv?.ratio != null ? (sv.ratio * 100).toFixed(1) + "%" : null);
   $("wb-stats").innerHTML = chips.join("");
 }
 
@@ -419,8 +419,8 @@ function renderStats() {
 function renderOptPanel() {
   const d = researchOf(SYM);
   const o = d.options;
-  $("opt-src").textContent = RESEARCH?.options_source ? `(源 ${RESEARCH.options_source === "massive" ? "Massive" : "雅虎"} · ${o?.contracts ?? 0} 合约)` : "";
-  if (!o) { $("opt-panel").innerHTML = `<div class="card empty">暂无期权数据 — 启动一次采集</div>`; return; }
+  $("opt-src").textContent = RESEARCH?.options_source ? `(source ${RESEARCH.options_source === "massive" ? "Massive" : "Yahoo"} · ${o?.contracts ?? 0} contracts)` : "";
+  if (!o) { $("opt-panel").innerHTML = `<div class="card empty">No options data — start a collection</div>`; return; }
   const premTotal = (o.call_premium + o.put_premium) || 1;
   const cw = (o.call_premium / premTotal * 100).toFixed(1);
   const expRows = (o.by_expiry || []).map((e) => `<tr>
@@ -445,29 +445,29 @@ function renderOptPanel() {
   const deltaHtml = pd ? (() => {
     const dc = (pd.call >= 0 ? "+" : "") + fmtMoney(pd.call);
     const dp = (pd.put >= 0 ? "+" : "") + fmtMoney(pd.put);
-    const t = pd.since ? new Date(pd.since).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }) : "";
-    return `<span title="自 ${esc(t)} 起本交易日累计成交额的增量">较上批 C <b class="${pd.call >= 0 ? "up" : "down"}">${dc}</b> / P <b class="${pd.put >= 0 ? "up" : "down"}">${dp}</b></span>`;
+    const t = pd.since ? new Date(pd.since).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : "";
+    return `<span title="Increment of session-cumulative premium since ${esc(t)}">Δ vs last C <b class="${pd.call >= 0 ? "up" : "down"}">${dc}</b> / P <b class="${pd.put >= 0 ? "up" : "down"}">${dp}</b></span>`;
   })() : "";
   $("opt-panel").innerHTML = `<div class="card">
     <div class="prem-bar"><div class="prem-call" style="width:${cw}%"></div></div>
     <div class="stat-row">
       <span>Premium C <b class="up">${fmtMoney(o.call_premium)}</b> / P <b class="down">${fmtMoney(o.put_premium)}</b></span>
-      <span>量 C <b>${fmtNum(o.call_vol)}</b> / P <b>${fmtNum(o.put_vol)}</b>${o.pcr_vol != null ? ` <span class="muted">PCR ${o.pcr_vol}</span>` : ""}</span>
+      <span>Vol C <b>${fmtNum(o.call_vol)}</b> / P <b>${fmtNum(o.put_vol)}</b>${o.pcr_vol != null ? ` <span class="muted">PCR ${o.pcr_vol}</span>` : ""}</span>
       <span>OI C <b>${fmtNum(o.call_oi)}</b> / P <b>${fmtNum(o.put_oi)}</b>${o.pcr_oi != null ? ` <span class="muted">PCR ${o.pcr_oi}</span>` : ""}</span>
     </div>
     <div class="stat-row">
-      <span title="Call 成交额 − Put 成交额,活跃度指标(不区分买卖方向)">Net Prem <b class="${npCls}">${fmtMoney(o.net_premium)}</b></span>
-      ${o.pcr_prem != null ? `<span title="Put 成交额 / Call 成交额">PCR(额) <b>${o.pcr_prem}</b></span>` : ""}
+      <span title="Call premium − Put premium; an activity metric (does not distinguish buy/sell side)">Net Prem <b class="${npCls}">${fmtMoney(o.net_premium)}</b></span>
+      ${o.pcr_prem != null ? `<span title="Put premium / Call premium">PCR(prem) <b>${o.pcr_prem}</b></span>` : ""}
       ${deltaHtml}
     </div>
-    <div class="muted small">Premium 为成交总额,不区分主动买/卖;以上为活跃度指标,方向判断请结合价格与 OI 变化</div>
-    ${expRows ? `<details open><summary class="muted small">按到期日分解</summary>
-      <table><tr><th>到期</th><th>Prem C/P</th><th>量 C/P</th><th>OI C/P</th><th>ATM IV</th></tr>${expRows}</table></details>` : ""}
-    ${hotRows ? `<details><summary class="muted small">当日最活跃行权价</summary>
-      <table><tr><th>到期</th><th>行权价</th><th>方向</th><th>成交量</th><th>OI</th><th>Premium</th></tr>${hotRows}</table></details>` : ""}
-    ${oiRows ? `<details><summary class="muted small">OI 变化(vs 上次采集)</summary>
-      <table><tr><th>到期</th><th>行权价</th><th>方向</th><th>ΔOI</th></tr>${oiRows}</table></details>`
-      : `<div class="muted small">OI 变化需要两次采集后显示</div>`}
+    <div class="muted small">Premium is total traded value, not split by aggressor buy/sell; the above are activity metrics — judge direction alongside price and OI change.</div>
+    ${expRows ? `<details open><summary class="muted small">By expiry</summary>
+      <table><tr><th>Expiry</th><th>Prem C/P</th><th>Vol C/P</th><th>OI C/P</th><th>ATM IV</th></tr>${expRows}</table></details>` : ""}
+    ${hotRows ? `<details><summary class="muted small">Most active strikes today</summary>
+      <table><tr><th>Expiry</th><th>Strike</th><th>Side</th><th>Vol</th><th>OI</th><th>Premium</th></tr>${hotRows}</table></details>` : ""}
+    ${oiRows ? `<details><summary class="muted small">OI change (vs last collection)</summary>
+      <table><tr><th>Expiry</th><th>Strike</th><th>Side</th><th>ΔOI</th></tr>${oiRows}</table></details>`
+      : `<div class="muted small">OI change shows after two collections</div>`}
   </div>`;
 }
 
@@ -475,7 +475,7 @@ function renderOptPanel() {
 function renderErrors() {
   const msgs = [...(RESEARCH?.errors || []), ...(GEX?.errors || [])];
   $("errors").innerHTML = msgs.length
-    ? `<details><summary>⚠️ ${msgs.length} 条数据源提示</summary><ul>${msgs.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></details>` : "";
+    ? `<details><summary>⚠️ ${msgs.length} data-source notice(s)</summary><ul>${msgs.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></details>` : "";
 }
 
 /* ---------- 标的分组(卡片开关直接改 CFG,防抖写回仓库) ---------- */
@@ -494,7 +494,7 @@ async function loadCfg() {
 }
 
 function scheduleSave() {
-  cfgStatus = "待保存…"; updateCfgStatus();
+  cfgStatus = "Pending save…"; updateCfgStatus();
   if (saveTimer) clearTimeout(saveTimer);
   saveTimer = setTimeout(saveCfg, 1500);  // 防抖:连续切换合并成一次提交
 }
@@ -503,21 +503,21 @@ async function saveCfg() {
   const pat = getPat() || $("gex-pat").value.trim();
   const watchlist = [...new Set(CFG.watchlist)];
   const deep = [...new Set(CFG.deep)].filter((t) => watchlist.includes(t));
-  if (!pat) { cfgStatus = "⚠️ 分组改动未保存 — 到采集控制处填 PAT(需含 Contents 读写)"; updateCfgStatus(); return; }
-  const body = { "_说明": "标的配置的唯一来源,由交易台迷你卡片上的 深/行 开关与增删编辑。", watchlist, deep };
+  if (!pat) { cfgStatus = "⚠️ Group change not saved — enter PAT in Collection (needs Contents read/write)"; updateCfgStatus(); return; }
+  const body = { "_note": "Single source of truth for tickers; edited via the D/Q toggles and add/remove on the trading-desk mini cards.", watchlist, deep };
   const content = btoa(unescape(encodeURIComponent(JSON.stringify(body, null, 2) + "\n")));
-  cfgStatus = "保存中…"; updateCfgStatus();
+  cfgStatus = "Saving…"; updateCfgStatus();
   try {
     const meta = await fetch(`https://api.github.com/repos/${REPO}/contents/config/tickers.json`, { headers: ghHeaders(pat) });
     const sha = meta.ok ? (await meta.json()).sha : undefined;
     const r = await fetch(`https://api.github.com/repos/${REPO}/contents/config/tickers.json`, {
       method: "PUT", headers: ghHeaders(pat),
-      body: JSON.stringify({ message: "chore: UI 更新标的分组", content, sha, branch: "main" }),
+      body: JSON.stringify({ message: "chore: update ticker groups via UI", content, sha, branch: "main" }),
     });
     if (!r.ok) throw new Error(`HTTP ${r.status}: ${(await r.json())?.message || ""}`);
-    cfgStatus = `✅ 已保存(全集 ${watchlist.length} · 深度 ${deep.length})`;
+    cfgStatus = `✅ Saved (watchlist ${watchlist.length} · deep ${deep.length})`;
   } catch (e) {
-    cfgStatus = `❌ 保存失败: ${esc(e.message)}(PAT 需含 Contents 读写)`;
+    cfgStatus = `❌ Save failed: ${esc(e.message)} (PAT needs Contents read/write)`;
   }
   updateCfgStatus();
 }
@@ -530,27 +530,27 @@ async function refreshRunStatus() {
     const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/gex.yml/runs?per_page=1&t=${Date.now()}`);
     if (!r.ok) throw new Error(r.status);
     const run = (await r.json()).workflow_runs?.[0];
-    if (!run) { setGexStatus("采集状态: 还没有运行记录"); return; }
+    if (!run) { setGexStatus("Collection: no run yet"); return; }
     const state = run.status === "completed"
-      ? (run.conclusion === "success" ? "✅ 已完成" : run.conclusion === "cancelled" ? "⏹ 已停止" : "❌ " + run.conclusion)
-      : "🟢 运行中";
-    setGexStatus(`采集状态: ${state} · 启动于 ${fmtDT(run.created_at)} · <a href="${run.html_url}" target="_blank" rel="noopener">日志</a>`);
-  } catch { setGexStatus("采集状态: 查询失败(可能限流,稍后再试)"); }
+      ? (run.conclusion === "success" ? "✅ done" : run.conclusion === "cancelled" ? "⏹ stopped" : "❌ " + run.conclusion)
+      : "🟢 running";
+    setGexStatus(`Collection: ${state} · started ${fmtDT(run.created_at)} · <a href="${run.html_url}" target="_blank" rel="noopener">logs</a>`);
+  } catch { setGexStatus("Collection: query failed (rate-limited, try later)"); }
 }
 
 async function dispatchSession(inputs, label) {
   const pat = $("gex-pat").value.trim();
-  if (!pat) { setGexStatus("⚠️ 需要 GitHub PAT(fine-grained,只授权本仓库 Actions 读写)"); return; }
+  if (!pat) { setGexStatus("⚠️ GitHub PAT required (fine-grained, repo Actions read/write only)"); return; }
   setPat(pat); startPolling();
-  setGexStatus(`正在启动${label}…`);
+  setGexStatus(`Starting ${label}…`);
   try {
     const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/gex.yml/dispatches`, {
       method: "POST", headers: ghHeaders(pat), body: JSON.stringify({ ref: "main", inputs }),
     });
     if (r.status !== 204) throw new Error(`HTTP ${r.status}: ${(await r.json())?.message || ""}`);
-    setGexStatus(`✅ ${label}已启动,几秒后刷新状态…`);
+    setGexStatus(`✅ ${label} started, refreshing status shortly…`);
     setTimeout(refreshRunStatus, 5000);
-  } catch (e) { setGexStatus(`❌ 启动失败: ${esc(e.message)}(检查 PAT 权限)`); }
+  } catch (e) { setGexStatus(`❌ Start failed: ${esc(e.message)} (check PAT permissions)`); }
 }
 
 function initControls() {
@@ -561,22 +561,22 @@ function initControls() {
     startPolling();
     refreshData();
   });
-  $("gex-start-btn").addEventListener("click", () => dispatchSession({}, "滚动会话"));
-  $("gex-once-btn").addEventListener("click", () => dispatchSession({ once: "true" }, "单轮采集"));
+  $("gex-start-btn").addEventListener("click", () => dispatchSession({}, "rolling session"));
+  $("gex-once-btn").addEventListener("click", () => dispatchSession({ once: "true" }, "single round"));
   $("gex-stop-btn").addEventListener("click", async () => {
     const pat = $("gex-pat").value.trim();
-    if (!pat) { setGexStatus("⚠️ 停止需要 PAT"); return; }
-    setGexStatus("正在停止…");
+    if (!pat) { setGexStatus("⚠️ Stop requires PAT"); return; }
+    setGexStatus("Stopping…");
     try {
       const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/gex.yml/runs?status=in_progress&t=${Date.now()}`);
       const runs = (await r.json()).workflow_runs || [];
-      if (!runs.length) { setGexStatus("当前没有运行中的采集"); return; }
+      if (!runs.length) { setGexStatus("No collection running"); return; }
       for (const run of runs) {
         await fetch(`https://api.github.com/repos/${REPO}/actions/runs/${run.id}/cancel`, { method: "POST", headers: ghHeaders(pat) });
       }
-      setGexStatus(`✅ 已请求停止 ${runs.length} 个运行`);
+      setGexStatus(`✅ Requested stop of ${runs.length} run(s)`);
       setTimeout(refreshRunStatus, 5000);
-    } catch (e) { setGexStatus(`❌ 停止失败: ${esc(e.message)}`); }
+    } catch (e) { setGexStatus(`❌ Stop failed: ${esc(e.message)}`); }
   });
 }
 
@@ -599,8 +599,8 @@ function renderAll(keepRange = false) {
   renderErrors();
   if (lr) chart.timeScale().setVisibleLogicalRange(lr);
   const upd = RESEARCH?.updated_at || GEX?.updated_at;
-  $("poll-status").textContent = (upd ? `数据 ${fmtDT(upd)}` : "暂无数据")
-    + ` · 自动刷新(${marketWindow() ? (getPat() ? "60秒" : "5分钟,填 PAT 提速") : "盘外30分钟"})`;
+  $("poll-status").textContent = (upd ? `Data ${fmtDT(upd)}` : "No data")
+    + ` · auto-refresh (${marketWindow() ? (getPat() ? "60s" : "5m, add PAT to speed up") : "off-hours 30m"})`;
 }
 
 async function refreshData() {

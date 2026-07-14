@@ -17,7 +17,7 @@ const isSel = (sym) => selected.size === 0 || selected.has(sym);
 function renderTickerFilter() {
   const syms = MARKET?.watchlist || [];
   $("ticker-filter").innerHTML = [
-    `<button data-sym="__all" class="${selected.size === 0 ? "active" : ""}">全部</button>`,
+    `<button data-sym="__all" class="${selected.size === 0 ? "active" : ""}">All</button>`,
     ...syms.map((s) => `<button data-sym="${esc(s)}" class="${selected.has(s) ? "active" : ""}">${esc(s)}</button>`),
   ].join("");
 }
@@ -63,7 +63,7 @@ function renderQuotes(m) {
       <div class="price">${q.c.toFixed(2)}</div>
       <div class="chg ${cls}">${sign}${q.d?.toFixed(2) ?? "—"} (${sign}${q.dp?.toFixed(2) ?? "—"}%)</div>
     </div>`;
-  }).join("") || `<div class="empty">暂无行情数据(检查 FINNHUB_API_KEY)</div>`;
+  }).join("") || `<div class="empty">No quote data (check FINNHUB_API_KEY)</div>`;
 }
 
 /* ---------- 主页: 最近财报 EPS ---------- */
@@ -83,10 +83,10 @@ function renderSurprises(m) {
         </tr>`;
       }).join("");
       return `<div class="card"><b>${esc(sym)}</b>
-        <table><tr><th>季度</th><th>实际</th><th>预期</th><th>Surprise</th></tr>${rows}</table>
+        <table><tr><th>Quarter</th><th>Actual</th><th>Est.</th><th>Surprise</th></tr>${rows}</table>
       </div>`;
     });
-  $("earnings-surprises").innerHTML = cards.join("") || `<div class="card empty">暂无数据</div>`;
+  $("earnings-surprises").innerHTML = cards.join("") || `<div class="card empty">No data</div>`;
 }
 
 /* ---------- 主页: 分析师评级 ---------- */
@@ -103,21 +103,21 @@ function renderRecommendations(m) {
         <div class="rec-bar">
           ${seg(r.strongBuy, "rb-sbuy")}${seg(r.buy, "rb-buy")}${seg(r.hold, "rb-hold")}${seg(r.sell, "rb-sell")}${seg(r.strongSell, "rb-ssell")}
         </div>
-        <div class="rec-nums">强买 ${r.strongBuy} · 买 ${r.buy} · 持有 ${r.hold} · 卖 ${r.sell} · 强卖 ${r.strongSell}</div>
+        <div class="rec-nums">Str.Buy ${r.strongBuy} · Buy ${r.buy} · Hold ${r.hold} · Sell ${r.sell} · Str.Sell ${r.strongSell}</div>
       </div>`;
     });
-  $("recommendations").innerHTML = rows.join("") || `<div class="empty">暂无数据</div>`;
+  $("recommendations").innerHTML = rows.join("") || `<div class="empty">No data</div>`;
 }
 
 /* ---------- 新闻页: 财报日历 ---------- */
 function renderCalendar(m) {
   const rows = (m.earnings_calendar || []).filter((e) => isSel(e.symbol));
-  const hourLabel = { bmo: "盘前", amc: "盘后", dmh: "盘中" };
+  const hourLabel = { bmo: "Pre", amc: "Post", dmh: "Intraday" };
   const today = new Date().toISOString().slice(0, 10);
   const fmtRev = (v) => v == null ? "—" : (v / 1e9).toFixed(2) + "B";
   const fmtEps = (v) => v == null ? "—" : Number(v).toFixed(2);
   $("earnings-calendar").innerHTML = rows.length ? `<table>
-    <tr><th>日期</th><th>代码</th><th>时段</th><th>EPS 预期</th><th>EPS 实际</th><th>营收预期</th><th>营收实际</th></tr>
+    <tr><th>Date</th><th>Sym</th><th>Time</th><th>EPS Est.</th><th>EPS Actual</th><th>Rev Est.</th><th>Rev Actual</th></tr>
     ${rows.map((e) => `<tr class="${e.date === today ? "today-row" : ""}">
       <td>${esc(e.date)}${e.date === today ? " ⭐" : ""}</td>
       <td><b>${esc(e.symbol)}</b></td>
@@ -127,7 +127,7 @@ function renderCalendar(m) {
       <td>${fmtRev(e.revenueEstimate)}</td>
       <td>${fmtRev(e.revenueActual)}</td>
     </tr>`).join("")}
-  </table>` : `<div class="empty">窗口期内没有财报安排</div>`;
+  </table>` : `<div class="empty">No earnings scheduled in window</div>`;
 }
 
 /* ---------- 信息流条目渲染 ---------- */
@@ -141,7 +141,7 @@ const feedItem = (i) => `<div class="item">
 function renderNewsFeeds() {
   const items = (FEEDS?.items || []).filter((i) => i.category === "news" && feedMatches(i)).slice(0, 60);
   $("news-feeds").innerHTML = items.map(feedItem).join("")
-    || `<div class="empty">${selected.size ? "选中的股票没有匹配的新闻(按标题/摘要里的代码匹配)" : "暂无内容"}</div>`;
+    || `<div class="empty">${selected.size ? "No news matching selected tickers (matched by symbol in title/summary)" : "No content"}</div>`;
 }
 
 /* ---------- 公司新闻(Massive 带情绪 + Finnhub,合并去重) ---------- */
@@ -179,7 +179,7 @@ function renderCompanyNews(m) {
       <div class="title"><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)}</a></div>
       ${n.summary ? `<div class="summary">${esc(n.summary)}</div>` : ""}
     </div>`;
-  }).join("") || `<div class="empty">暂无数据</div>`;
+  }).join("") || `<div class="empty">No data</div>`;
 }
 
 /* ---------- 社区页 ---------- */
@@ -187,7 +187,7 @@ function renderSocialFilters() {
   const present = new Set((FEEDS?.items || []).map((i) => i.category));
   const cats = ["all", ...SOCIAL_CATS.filter((c) => present.has(c))];
   $("social-filters").innerHTML = cats.map((c) =>
-    `<button data-cat="${esc(c)}" class="${c === socialCat ? "active" : ""}">${c === "all" ? "全部" : (CAT_LABEL[c] || esc(c))}</button>`
+    `<button data-cat="${esc(c)}" class="${c === socialCat ? "active" : ""}">${c === "all" ? "All" : (CAT_LABEL[c] || esc(c))}</button>`
   ).join("");
 }
 
@@ -212,7 +212,7 @@ function renderSocial() {
     || (a.rank ?? 999) - (b.rank ?? 999)
     || (b.published || "").localeCompare(a.published || "")).slice(0, 120);
   $("social-feeds").innerHTML = shown.map(feedItem).join("")
-    || `<div class="empty">${selected.size ? "选中的股票没有匹配的内容(按标题/摘要里的代码匹配)" : "暂无内容"}</div>`;
+    || `<div class="empty">${selected.size ? "No content matching selected tickers (matched by symbol in title/summary)" : "No content"}</div>`;
 }
 
 /* ---------- 错误汇总 ---------- */
@@ -222,7 +222,7 @@ function renderErrors() {
     ...((FEEDS?.errors || []).map((e) => `${e.source}: ${e.error}`)),
   ];
   $("errors").innerHTML = msgs.length
-    ? `<details><summary>⚠️ ${msgs.length} 条数据源提示(点开查看)</summary><ul>${msgs.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></details>`
+    ? `<details><summary>⚠️ ${msgs.length} data-source notice(s) (click to view)</summary><ul>${msgs.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></details>`
     : "";
 }
 
@@ -279,8 +279,8 @@ function renderAll() {
 
   const times = [MARKET?.updated_at, FEEDS?.updated_at].filter(Boolean);
   $("updated").textContent = times.length
-    ? "最后更新: " + fmtDT(times.sort().at(-1))
-    : "还没有数据 — 先运行一次抓取脚本或 GitHub Actions";
+    ? "Last update: " + fmtDT(times.sort().at(-1))
+    : "No data yet — run a fetch script or GitHub Actions first";
 
   renderSocialFilters();
   renderAll();
