@@ -459,8 +459,26 @@ function renderOptPanel() {
     const t = pd.since ? new Date(pd.since).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : "";
     return `<span title="Increment of session-cumulative premium since ${esc(t)}">Δ vs last C <b class="${pd.call >= 0 ? "up" : "down"}">${dc}</b> / P <b class="${pd.put >= 0 ? "up" : "down"}">${dp}</b></span>`;
   })() : "";
+  // 隐含波动区间(由最近到期的 ATM IV 换算)
+  const spot = spotOf(SYM);
+  const ne = o.by_expiry?.[0]?.exp;
+  let implHtml = "";
+  if (o.atm_iv && ne && spot) {
+    const days = Math.max((Date.parse(ne) - Date.now()) / 86400000 + 1, 0.5);
+    const sig = o.atm_iv * Math.sqrt(days / 365);
+    const sig1 = o.atm_iv * Math.sqrt(1 / 365);
+    implHtml = `<span title="From nearest-expiry ATM IV">Implied move →${esc(ne)} (${Math.round(days)}d): <b>±${(sig * 100).toFixed(1)}%</b> ($${(spot * (1 - sig)).toFixed(2)}–$${(spot * (1 + sig)).toFixed(2)}) · 1d ±${(sig1 * 100).toFixed(1)}%</span>`;
+  }
+  // IV skew(~7% OTM put IV − call IV):RR>0=看跌偏斜(下行保护贵),RR<0=看涨偏斜
+  const sk = o.iv_skew;
+  let skewHtml = "";
+  if (sk) {
+    const lean = sk.rr > 0.01 ? "put skew" : sk.rr < -0.01 ? "call skew" : "flat";
+    skewHtml = `<span title="~7% OTM put IV − call IV, nearest expiry (${sk.put_k}P / ${sk.call_k}C)">Skew P <b>${(sk.put_iv * 100).toFixed(0)}%</b> / C <b>${(sk.call_iv * 100).toFixed(0)}%</b> · RR <b class="${sk.rr >= 0 ? "down" : "up"}">${sk.rr >= 0 ? "+" : ""}${(sk.rr * 100).toFixed(1)}%</b> ${lean}</span>`;
+  }
   $("opt-panel").innerHTML = `<div class="card">
     <div class="prem-bar"><div class="prem-call" style="width:${cw}%"></div></div>
+    ${(implHtml || skewHtml) ? `<div class="stat-row">${implHtml}${skewHtml}</div>` : ""}
     <div class="stat-row">
       <span>Premium C <b class="up">${fmtMoney(o.call_premium)}</b> / P <b class="down">${fmtMoney(o.put_premium)}</b></span>
       <span>Vol C <b>${fmtNum(o.call_vol)}</b> / P <b>${fmtNum(o.put_vol)}</b>${o.pcr_vol != null ? ` <span class="muted">PCR ${o.pcr_vol}</span>` : ""}</span>
