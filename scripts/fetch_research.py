@@ -44,6 +44,14 @@ def redact(exc) -> str:
     return str(exc).replace(KEY, "***") if KEY else str(exc)
 
 
+def pct_rank(hist: list, val, minn: int = 10) -> int | None:
+    """val 在历史 hist 中的百分位(0-100);样本 <minn 返回 None(不足以判断)。"""
+    h = [x for x in hist if x is not None]
+    if val is None or len(h) < minn:
+        return None
+    return round(100 * sum(1 for x in h if x <= val) / len(h))
+
+
 def mget(path: str, **params):
     url = path if path.startswith("http") else f"{BASE}{path}"
     if KEY:
@@ -693,6 +701,19 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
     if not KEY:
         out["errors"].append("未设置 MASSIVE_API_KEY:快照/指标/short 未抓取,K线与期权走雅虎回退")
 
+    # PCR 自身历史百分位:今日 PCR 在该票日志中的排位(<10 天样本不给,标 None)
+    daily_path = ROOT / "data" / "gex_daily.json"
+    daily = load_json(daily_path, {})
+    today_str = now.date().isoformat()
+    for sym in targets:
+        opt = (out["tickers"].get(sym) or {}).get("options")
+        if not opt:
+            continue
+        for key in ("pcr_vol", "pcr_oi"):
+            hist = [daily[d][sym][key] for d in daily
+                    if sym in daily[d] and daily[d][sym].get(key) is not None and d != today_str][-60:]
+            opt[f"{key}_pct"] = pct_rank(hist, opt.get(key))
+
     (ROOT / "data" / "research.json").write_text(json.dumps(out, ensure_ascii=False, indent=1))
     if oi_next:
         oi_all.update(oi_next)  # 只更新本批标的的合约,保留其他标的的存档
@@ -714,20 +735,19 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                                    "nets": {k: v["net_gex"] for k, v in g.get("buckets", {}).items()}})
     hist_path.write_text(json.dumps(hist, ensure_ascii=False, indent=1))
 
-    # 累积日志(供回测):每 (日期,标的) 一条,当日多次运行则更新为最后一次读数;留最近 250 天
-    daily_path = ROOT / "data" / "gex_daily.json"
-    daily = load_json(daily_path, {})
-    today_str = now.date().isoformat()
+    # 累积日志(供回测 + PCR 历史百分位):每 (日期,标的) 一条,当日多次运行更新为最后读数;留 250 天
     day = daily.setdefault(today_str, {})
     for sym in targets:
         g = gex_out["tickers"].get(sym)
         if not g:
             continue
         fl = g.get("flow") or {}
+        opt = (out["tickers"].get(sym) or {}).get("options") or {}
         day[sym] = {"t": now_iso, "spot": g["spot"],
                     "flip_nom": g["flip"], "net_nom": g["net_gex"],
                     "flip_flow": fl.get("flip"), "net_flow": fl.get("net_gex"),
-                    "coverage": fl.get("coverage"), "ambiguity": fl.get("ambiguity")}
+                    "coverage": fl.get("coverage"), "ambiguity": fl.get("ambiguity"),
+                    "pcr_vol": opt.get("pcr_vol"), "pcr_oi": opt.get("pcr_oi")}
     for k in sorted(daily)[:-250]:  # 只留最近 250 天
         del daily[k]
     daily_path.write_text(json.dumps(daily, ensure_ascii=False, indent=1))
