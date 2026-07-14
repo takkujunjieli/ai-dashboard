@@ -163,7 +163,7 @@ function gexBucketData(sym) {
 
 /* ---------- 图表初始化 ---------- */
 const chartTheme = {
-  layout: { background: { color: "transparent" }, textColor: "#8b96ad", fontSize: 11 },
+  layout: { background: { color: "transparent" }, textColor: "#8b96ad", fontSize: 11, attributionLogo: false },
   grid: { vertLines: { color: "#1c2539" }, horzLines: { color: "#1c2539" } },
   crosshair: { mode: LWC.CrosshairMode.Normal },
   timeScale: { timeVisible: true, secondsVisible: false, borderColor: "#2a3550" },
