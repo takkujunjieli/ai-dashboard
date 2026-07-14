@@ -722,10 +722,22 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
         opt = (out["tickers"].get(sym) or {}).get("options")
         if not opt:
             continue
-        for key in ("pcr_vol", "pcr_oi"):
+        for key in ("pcr_vol", "pcr_oi", "atm_iv"):
             hist = [daily[d][sym][key] for d in daily
                     if sym in daily[d] and daily[d][sym].get(key) is not None and d != today_str][-60:]
             opt[f"{key}_pct"] = pct_rank(hist, opt.get(key))
+
+    # 财报临近(IV crush 风险):跨读 market.json 的财报日历,算到下一次财报的天数
+    mkt = load_json(ROOT / "data" / "market.json", {})
+    ecal = {}
+    for e in (mkt.get("earnings_calendar") or []):
+        if e.get("symbol") and e.get("date") and e["date"] >= today_str:
+            ecal.setdefault(e["symbol"], e["date"])  # 日历已按日期升序,取最近的未来一场
+    for sym in targets:
+        entry = out["tickers"].get(sym)
+        if entry and ecal.get(sym):
+            entry["earnings_date"] = ecal[sym]
+            entry["earnings_days"] = (date.fromisoformat(ecal[sym]) - now.date()).days
 
     (ROOT / "data" / "research.json").write_text(json.dumps(out, ensure_ascii=False, indent=1))
     if oi_next:
@@ -760,7 +772,7 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                     "flip_nom": g["flip"], "net_nom": g["net_gex"],
                     "flip_flow": fl.get("flip"), "net_flow": fl.get("net_gex"),
                     "coverage": fl.get("coverage"), "ambiguity": fl.get("ambiguity"),
-                    "pcr_vol": opt.get("pcr_vol"), "pcr_oi": opt.get("pcr_oi")}
+                    "pcr_vol": opt.get("pcr_vol"), "pcr_oi": opt.get("pcr_oi"), "atm_iv": opt.get("atm_iv")}
     for k in sorted(daily)[:-250]:  # 只留最近 250 天
         del daily[k]
     daily_path.write_text(json.dumps(daily, ensure_ascii=False, indent=1))
