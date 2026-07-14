@@ -18,8 +18,11 @@
 **若要盘中 flow**:需把它拆成独立的低频并行任务(单独 workflow 或并发预取),只更新 `gex.json` 的 `.flow` 字段,不阻塞主循环。
 
 ## 4. git 体积 【运维,长期观察】
-每轮提交一次 `data/*.json`(research.json 较大),盘中 ~100s/轮 → 一天数百次提交,`.git` 会持续增长。
-**备选**:数据文件改用 orphan 分支 + force-push 只留最新(无历史);或定期 `git gc` / 重写历史裁剪 data 提交。暂不处理,先观察增速。
+每轮提交一次 `data/*.json`,盘中 ~100s/轮 → 一天上百次提交,`.git` 持续增长。
+**实测(2026-07-14)**:.git 共 34MB / 8 天 / 271 次提交 ≈ 每次提交打包后仅 +~125KB(delta 压缩有效);
+但提速后频率涨到 ~150-200 次/交易日 → 预计 **~20-25 MB/天(~0.6 GB/月)**。快照(data/ 目录)≈ 6.2MB 恒定,大头 research.json 4.2MB(K线为主)、oi_prev 1.2MB、gex 0.64MB。
+**最便宜的缓解(优先做这个)**:裁剪 `research.json` 的 K线历史——`fetch_research.py` 里 `BAR_KEEP=800`、bars_1m 取 2 天/bars_5m 取 5-7 天;可降到 bars_1m 1 天、bars_5m 2-3 天。文件小了每次 delta 也小。
+**更彻底**:data 改 orphan 分支 + force-push 只留最新(无历史);或定期 `git gc`/重写历史。注意 `gex_daily.json` 自身已含 250 天历史(不靠 git 历史),裁 git 历史不影响回测。
 
 ## 5. 真·秒级实时(可选,大改) 【架构】
 要秒级而非"每轮一跳",需用 **Massive 期权/股票 websocket 流**(订阅制,非 calls/min)。与当前"GitHub Actions 批量 → 静态 JSON → 前端轮询"架构不兼容,需常驻进程(自建小服务/Vercel 等)。仅在对实时性有强需求时评估。
