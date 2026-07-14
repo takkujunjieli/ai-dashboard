@@ -45,6 +45,19 @@
   <div id="wb-stats" class="stat-row"></div>
 </div>
 
+<!-- Overlay toggles (candles & volume always on) + anchored-VWAP anchor -->
+<div class="wb-toolbar wb-overlays">
+  <span class="muted small">Overlays:</span>
+  <div id="overlay-chips" class="chips"></div>
+  <span class="muted small">AVWAP anchor:</span>
+  <div id="avwap-anchor" class="chips">
+    <button data-a="off" class="active">Off</button>
+    <button data-a="low">Swing Low</button>
+    <button data-a="high">Swing High</button>
+    <button data-a="start">Range Start</button>
+  </div>
+</div>
+
 <!-- Main: candles + strike ladder -->
 <div class="wb-main">
   <div class="wb-chart">
@@ -58,6 +71,10 @@
   <div class="wb-ladder">
     <div class="sub-title muted small" id="ladder-title">Strike Ladder · GEX</div>
     <div id="ladder-box"><svg id="ladder" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  </div>
+  <div class="wb-vp">
+    <div class="sub-title muted small" id="vp-title">Volume Profile</div>
+    <div id="vp-box"><svg id="vp" xmlns="http://www.w3.org/2000/svg"></svg></div>
   </div>
 </div>
 

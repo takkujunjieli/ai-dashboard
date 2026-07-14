@@ -16,12 +16,16 @@ let gexBucket = localStorage.getItem("wbGexBucket") || "0dte";  // GEX 到期范
 let gexCaliber = localStorage.getItem("wbGexCaliber") || "nominal";  // 名义 / 流量
 const GEX_BUCKET_ORDER = ["0dte", "week", "2wk", "all"];
 const GEX_BUCKET_LABEL = { "0dte": "0DTE", week: "This Week", "2wk": "≤14d", all: "All" };
-let chart, candles, volume, ema9L, ema21L, vwapL, bbU, bbL, vsU, vsL, subChart, gexLine;
+let chart, candles, volume, ema9L, ema21L, vwapL, bbU, bbL, vsU, vsL, avwapL, subChart, gexLine;
+let overlayOn = JSON.parse(localStorage.getItem("wbOverlays") || "null")
+  || { ema9: true, ema21: true, vwap: true, bb: false, vsig: false };  // 默认只开 EMA/VWAP,其余按需勾
+let avwapAnchor = localStorage.getItem("wbAvwapAnchor") || "off";
 let hoverLevels = [];       // flip / MaxPain 横线的 {name,color,price},供 hover 识别
 let hoverSeries = [];       // 叠加曲线的 {series,name,color},供 hover 识别
 let priceLines = [];
 let pollTimer = null;
 let ladderRetry = 0;  // 首屏梯子重试计数(坐标系就绪前 priceToCoordinate 返回 null)
+let vpRetry = 0;      // 同上,Volume Profile
 
 /* lightweight-charts 按 UTC 显示,把时间戳平移成本地时间 */
 const tconv = (ms) => Math.floor(ms / 1000) - new Date(ms).getTimezoneOffset() * 60;
@@ -114,6 +118,23 @@ function vwapBands(bars, k = 1) {
   return { up, lo };
 }
 
+/* Anchored VWAP:从锚点(swing 低/高/区间起点)起的成交量加权均价 = 成本基代理 */
+function computeAVWAP(bars, t) {
+  if (avwapAnchor === "off" || !bars.length) return [];
+  let ai = 0;
+  if (avwapAnchor === "low") ai = bars.reduce((m, b, i, a) => b[3] < a[m][3] ? i : m, 0);
+  else if (avwapAnchor === "high") ai = bars.reduce((m, b, i, a) => b[2] > a[m][2] ? i : m, 0);
+  const out = [];
+  let pv = 0, vol = 0;
+  for (let i = ai; i < bars.length; i++) {
+    const b = bars[i];
+    const p = b[6] || (b[2] + b[3] + b[4]) / 3;
+    pv += p * b[5]; vol += b[5];
+    out.push({ time: t(b), value: vol ? pv / vol : p });
+  }
+  return out;
+}
+
 const lastClose = (sym) => {
   const b = researchOf(sym).bars_1m || researchOf(sym).bars_5m || [];
   return b.length ? b[b.length - 1][4] : null;
@@ -166,6 +187,7 @@ function initCharts() {
   bbL = chart.addLineSeries({ color: "#2dd4bf", lineWidth: 1, lineStyle: LWC.LineStyle.Dashed, priceLineVisible: false, lastValueVisible: false });
   vsU = chart.addLineSeries({ color: "#fcd34d", lineWidth: 1, lineStyle: LWC.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false });
   vsL = chart.addLineSeries({ color: "#fcd34d", lineWidth: 1, lineStyle: LWC.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false });
+  avwapL = chart.addLineSeries({ color: "#fb923c", lineWidth: 2, priceLineVisible: false, lastValueVisible: false });
   hoverSeries = [
     { series: ema9L, name: "EMA9", color: "#60a5fa" },
     { series: ema21L, name: "EMA21", color: "#c084fc" },
@@ -174,18 +196,43 @@ function initCharts() {
     { series: bbL, name: "BB Lower (−2σ)", color: "#2dd4bf" },
     { series: vsU, name: "VWAP +σ", color: "#fcd34d" },
     { series: vsL, name: "VWAP −σ", color: "#fcd34d" },
+    { series: avwapL, name: "Anchored VWAP", color: "#fb923c" },
   ];
   initHoverLegend();
+  applyOverlayVis();  // 按 overlayOn 设置各叠加层可见性
 
   subChart = LWC.createChart($("gex-sub"), { ...chartTheme, timeScale: { ...chartTheme.timeScale, timeVisible: true } });
   gexLine = subChart.addLineSeries({ color: "#60a5fa", lineWidth: 2, priceFormat: { type: "custom", formatter: (v) => (v / 1e6).toFixed(0) + "M" } });
 
   // 直接调用(不裹 rAF):后台标签页 rAF 会被节流不触发。
   // subscribeVisibleLogicalRangeChange 在图表坐标就绪后才触发,是最可靠的重画时机。
-  chart.timeScale().subscribeVisibleLogicalRangeChange(renderLadder);
-  const ro = new ResizeObserver(renderLadder);  // 首屏 flex 宽度就绪后重画
+  const redrawRight = () => { renderLadder(); renderVolProfile(); };
+  chart.timeScale().subscribeVisibleLogicalRangeChange(redrawRight);
+  const ro = new ResizeObserver(redrawRight);  // 首屏 flex 宽度就绪后重画
   ro.observe($("chart"));
   ro.observe($("ladder-box"));
+  ro.observe($("vp-box"));
+}
+
+/* 可勾选叠加层(K线/量常驻);AVWAP 由锚点选择器单独控制 */
+const OVERLAYS = [
+  { key: "ema9", label: "EMA9", get: () => [ema9L] },
+  { key: "ema21", label: "EMA21", get: () => [ema21L] },
+  { key: "vwap", label: "VWAP", get: () => [vwapL] },
+  { key: "bb", label: "BB(20,2)", get: () => [bbU, bbL] },
+  { key: "vsig", label: "VWAP±σ", get: () => [vsU, vsL] },
+];
+
+function applyOverlayVis() {
+  for (const o of OVERLAYS) {
+    const on = overlayOn[o.key] !== false;
+    o.get().forEach((s) => s && s.applyOptions({ visible: on }));
+  }
+}
+
+function renderOverlayChips() {
+  $("overlay-chips").innerHTML = OVERLAYS.map((o) =>
+    `<button data-ov="${o.key}" class="${overlayOn[o.key] !== false ? "active" : ""}">${o.label}</button>`).join("");
 }
 
 /* hover 到某条线附近(纵向 ≤7px)才浮出它的名称+数值;不占右轴、默认隐藏 */
@@ -235,6 +282,8 @@ function renderChart() {
   // VWAP ±1σ 带(仅盘中)
   if (daily) { vsU.setData([]); vsL.setData([]); }
   else { const vb = vwapBands(bars, 1); vsU.setData(line(vb.up)); vsL.setData(line(vb.lo)); }
+  // Anchored VWAP(锚点:swing low/high/range start;成本基代理)
+  avwapL.setData(computeAVWAP(bars, t));
 
   // 关键价位线: gamma flip / Max Pain(名称也走 hover,不常驻)
   priceLines.forEach((l) => candles.removePriceLine(l));
@@ -249,7 +298,7 @@ function renderChart() {
 
   const visible = TF === "1d" ? 130 : TF === "1m" ? 200 : 160;
   chart.timeScale().setVisibleLogicalRange({ from: Math.max(0, bars.length - visible), to: bars.length + 3 });
-  renderLadder();  // setVisibleLogicalRange 也会触发上面的 subscribe 兜底
+  renderLadder(); renderVolProfile();  // setVisibleLogicalRange 也会触发 subscribe 兜底
 }
 
 /* ---------- 盘中净 GEX 副图(按所选到期桶) ---------- */
@@ -346,6 +395,66 @@ function renderLadder() {
   // 首屏图表坐标系未就绪时 priceToCoordinate 全返回 null → 稍后重试(用 setTimeout,后台标签页 rAF 会被节流)
   if (placed === 0 && rows.length && ladderRetry < 40) { ladderRetry++; setTimeout(renderLadder, 80); }
   else if (placed > 0) ladderRetry = 0;
+}
+
+/* Volume Profile:成交量按价格分箱(成本基代理),标 POC / Value Area(70%)。
+   优先用日线(多月成本结构),与 GEX 梯并列、共享价格轴 */
+function renderVolProfile() {
+  const svg = $("vp");
+  if (!svg || !candles) return;
+  const box = $("vp-box").getBoundingClientRect();
+  const W = Math.max(box.width, 40), H = $("chart").getBoundingClientRect().height;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("width", W); svg.setAttribute("height", H);
+  const d = researchOf(SYM);
+  const bars = (d.bars_d && d.bars_d.length >= 20) ? d.bars_d : barsFor(SYM, TF);
+  if (!bars.length) { svg.innerHTML = ""; return; }
+  const NB = 60;
+  // 按图表当前可见价格区间分箱 → 任何缩放下都填满、POC 始终在视野内
+  const pTop = candles.coordinateToPrice(0), pBot = candles.coordinateToPrice(H);
+  if (pTop == null || pBot == null) { if (vpRetry < 40) { vpRetry++; setTimeout(renderVolProfile, 80); } return; }
+  const hi = Math.max(pTop, pBot), lo = Math.min(pTop, pBot);
+  const binH = (hi - lo) / NB || 1;
+  const bins = new Array(NB).fill(0);
+  for (const b of bars) {  // 成交量在其 [low,high] 与可见区间的重叠部分内均摊
+    const bl = Math.max(b[3], lo), bh = Math.min(b[2], hi);
+    if (bh < bl) continue;
+    const span = Math.max(b[2] - b[3], binH);
+    const i0 = Math.max(Math.floor((bl - lo) / binH), 0);
+    const i1 = Math.min(Math.floor((bh - lo) / binH), NB - 1);
+    const per = b[5] * ((bh - bl) / span) / Math.max(i1 - i0 + 1, 1);
+    for (let i = i0; i <= i1; i++) bins[i] += per;
+  }
+  const maxV = Math.max(...bins, 1);
+  const total = bins.reduce((a, x) => a + x, 0) || 1;
+  const poc = bins.indexOf(maxV);
+  let loI = poc, hiI = poc, acc = bins[poc];  // Value Area:从 POC 向两侧扩到 70%
+  while (acc < total * 0.7 && (loI > 0 || hiI < NB - 1)) {
+    const down = loI > 0 ? bins[loI - 1] : -1, up = hiI < NB - 1 ? bins[hiI + 1] : -1;
+    if (up >= down) { hiI++; acc += bins[hiI]; } else { loI--; acc += bins[loI]; }
+  }
+  const price = (i) => lo + (i + 0.5) * binH;
+  const rowH = Math.max(H / NB * 0.85, 1.2);
+  const parts = [];
+  let placed = 0;
+  for (let i = 0; i < NB; i++) {
+    if (!bins[i]) continue;
+    const y = candles.priceToCoordinate(price(i));
+    if (y == null || y < 0 || y > H) continue;
+    placed++;
+    const w = bins[i] / maxV * (W - 4);
+    const fill = i === poc ? "#f59e0b" : (i >= loI && i <= hiI) ? "#3b82f6" : "#3b82f688";
+    parts.push(`<rect x="0" y="${(y - rowH / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${rowH.toFixed(1)}" fill="${fill}" opacity="0.72"><title>${price(i).toFixed(2)}: ${fmtNum(bins[i])}</title></rect>`);
+  }
+  const mark = (i, color, label) => {
+    const y = candles.priceToCoordinate(price(i));
+    if (y == null || y < 0 || y > H) return;
+    parts.push(`<line x1="0" y1="${y.toFixed(1)}" x2="${W}" y2="${y.toFixed(1)}" stroke="${color}" stroke-dasharray="3 3" stroke-width="1"/><text x="2" y="${(y - 2).toFixed(1)}" fill="${color}" font-size="9">${label} ${price(i).toFixed(1)}</text>`);
+  };
+  mark(poc, "#f59e0b", "POC"); mark(hiI, "#60a5fa", "VAH"); mark(loI, "#60a5fa", "VAL");
+  svg.innerHTML = parts.join("");
+  if (placed === 0 && bars.length && vpRetry < 40) { vpRetry++; setTimeout(renderVolProfile, 80); }
+  else if (placed > 0) vpRetry = 0;
 }
 
 /* ---------- 迷你行情卡(切票器 + 分组开关 + 增删) ---------- */
@@ -734,9 +843,30 @@ function initToolbar() {
     renderGexSub();
     renderLadder();
   });
+  // 叠加层勾选:切某条线可见性
+  $("overlay-chips").addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button");
+    if (!btn) return;
+    const k = btn.dataset.ov;
+    overlayOn[k] = overlayOn[k] === false;  // toggle(默认 true)
+    localStorage.setItem("wbOverlays", JSON.stringify(overlayOn));
+    btn.classList.toggle("active", overlayOn[k] !== false);
+    applyOverlayVis();
+  });
+  // Anchored VWAP 锚点
+  $("avwap-anchor").addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button");
+    if (!btn) return;
+    avwapAnchor = btn.dataset.a;
+    localStorage.setItem("wbAvwapAnchor", avwapAnchor);
+    [...$("avwap-anchor").children].forEach((b) => b.classList.toggle("active", b === btn));
+    renderChart();
+  });
   $("refresh-btn").addEventListener("click", refreshData);
+  renderOverlayChips();
   [...$("gex-exp").children].forEach((b) => b.classList.toggle("active", b.dataset.b === gexBucket));
   [...$("gex-caliber").children].forEach((b) => b.classList.toggle("active", b.dataset.c === gexCaliber));
+  [...$("avwap-anchor").children].forEach((b) => b.classList.toggle("active", b.dataset.a === avwapAnchor));
 }
 
 /* ---------- 入口 ---------- */
