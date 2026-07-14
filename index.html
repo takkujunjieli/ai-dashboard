@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>短线研究台 · 信息页</title>
+<title>Short-Term Research Desk · Info</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <header>
-  <h1>📈 短线研究台</h1>
-  <div id="updated" class="muted">加载中…</div>
+  <h1>📈 Research Desk</h1>
+  <div id="updated" class="muted">Loading…</div>
 </header>
 
 <section id="quotes-strip" class="quotes-strip"></section>
@@ -17,48 +17,48 @@
 <div id="ticker-filter" class="chips ticker-filter"></div>
 
 <nav id="nav">
-  <button class="tab active" data-tab="home">🏠 主页</button>
-  <button class="tab" data-tab="news">📰 新闻</button>
-  <button class="tab" data-tab="social">💬 社区</button>
-  <a class="tab tab-link" href="trading.html">⚡ 交易台 ↗</a>
+  <button class="tab active" data-tab="home">🏠 Home</button>
+  <button class="tab" data-tab="news">📰 News</button>
+  <button class="tab" data-tab="social">💬 Social</button>
+  <a class="tab tab-link" href="trading.html">⚡ Trading Desk ↗</a>
 </nav>
 
 <main>
-  <!-- ================= 主页: 概览 ================= -->
+  <!-- ================= Home: overview ================= -->
   <div id="tab-home" class="tab-panel active">
     <section>
-      <h2>💰 最近财报 EPS <span class="muted">(实际 vs 预期)</span></h2>
+      <h2>💰 Recent Earnings EPS <span class="muted">(actual vs estimate)</span></h2>
       <div id="earnings-surprises" class="grid"></div>
     </section>
 
     <section>
-      <h2>🎯 分析师评级</h2>
+      <h2>🎯 Analyst Ratings</h2>
       <div id="recommendations" class="card"></div>
     </section>
   </div>
 
-  <!-- ================= 新闻: 财报日历 + 宏观 + 公司 ================= -->
+  <!-- ================= News: earnings calendar + macro + company ================= -->
   <div id="tab-news" class="tab-panel">
     <section>
-      <h2>📅 财报日历 <span class="muted">(过去 7 天 ~ 未来 21 天)</span></h2>
+      <h2>📅 Earnings Calendar <span class="muted">(past 7 days ~ next 21 days)</span></h2>
       <div id="earnings-calendar" class="card"></div>
     </section>
 
     <section>
-      <h2>🌍 宏观 / 市场新闻 <span class="muted">(RSS 源)</span></h2>
+      <h2>🌍 Macro / Market News <span class="muted">(RSS)</span></h2>
       <div id="news-feeds" class="card list"></div>
     </section>
 
     <section>
-      <h2>🏢 公司新闻 <span class="muted">(近 3 天,Massive 带情绪标签 + Finnhub,跟随顶部筛选)</span></h2>
+      <h2>🏢 Company News <span class="muted">(last 3 days, Massive with sentiment + Finnhub, follows top filter)</span></h2>
       <div id="company-news" class="card list"></div>
     </section>
   </div>
 
-  <!-- ================= 社区: Reddit / X / 视频 ================= -->
+  <!-- ================= Social: Reddit / X / video ================= -->
   <div id="tab-social" class="tab-panel">
     <section>
-      <h2>💬 社区 / 大V <span class="muted">(Reddit 按热度 · X · YouTube)</span></h2>
+      <h2>💬 Social / KOL <span class="muted">(Reddit by heat · X · YouTube)</span></h2>
       <div id="social-filters" class="chips"></div>
       <div id="social-feeds" class="card list"></div>
     </section>
@@ -70,7 +70,7 @@
 </main>
 
 <footer class="muted small">
-  数据来源: Massive · Finnhub · 公开 RSS — 仅供个人研究参考,不构成投资建议
+  Sources: Massive · Finnhub · public RSS — personal research only, not investment advice
 </footer>
 
 <script type="module" src="assets/app.js"></script>

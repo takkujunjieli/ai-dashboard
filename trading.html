@@ -1,81 +1,81 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>短线研究台 · 交易台</title>
+<title>Short-Term Research Desk · Trading</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body class="trading">
 <header>
-  <h1>⚡ 交易台 <a class="muted small" href="index.html">← 信息页</a></h1>
+  <h1>⚡ Trading Desk <a class="muted small" href="index.html">← Info</a></h1>
   <div class="hdr-right">
     <span id="poll-status" class="muted small"></span>
-    <button id="refresh-btn" class="mini-btn">🔄 刷新</button>
+    <button id="refresh-btn" class="mini-btn">🔄 Refresh</button>
   </div>
 </header>
 
-<!-- 全 watchlist 迷你行情卡:切票器 + 每卡右侧 深/行 分组开关 + 末尾添加框 -->
+<!-- Full-watchlist mini quote cards: ticker switcher + per-card Deep/Watch group toggle + add box -->
 <div id="mini-cards" class="quotes-strip mini-strip"></div>
 <div id="cfg-status" class="muted small"></div>
 
-<!-- 工具栏: 周期 / 行权价梯模式 / 关键指标 -->
+<!-- Toolbar: timeframe / ladder mode / key stats -->
 <div class="wb-toolbar">
   <div id="tf-chips" class="chips">
-    <button data-tf="1m">1分</button>
-    <button data-tf="5m" class="active">5分</button>
-    <button data-tf="15m">15分</button>
-    <button data-tf="1d">日线</button>
+    <button data-tf="1m">1m</button>
+    <button data-tf="5m" class="active">5m</button>
+    <button data-tf="15m">15m</button>
+    <button data-tf="1d">1D</button>
   </div>
   <div id="ladder-mode" class="chips">
-    <button data-m="gex" class="active">梯:GEX</button>
-    <button data-m="oi">梯:OI</button>
-    <button data-m="vol">梯:量</button>
+    <button data-m="gex" class="active">Ladder: GEX</button>
+    <button data-m="oi">Ladder: OI</button>
+    <button data-m="vol">Ladder: Vol</button>
   </div>
-  <div id="gex-exp" class="chips" title="GEX 到期范围(累计),仅作用于 GEX 梯与净GEX/flip">
+  <div id="gex-exp" class="chips" title="GEX expiry range (cumulative); applies to GEX ladder & net GEX/flip">
     <button data-b="0dte" class="active">0DTE</button>
-    <button data-b="week">本周</button>
-    <button data-b="2wk">≤14天</button>
-    <button data-b="all">全部</button>
+    <button data-b="week">This Week</button>
+    <button data-b="2wk">≤14d</button>
+    <button data-b="all">All</button>
   </div>
-  <div id="gex-caliber" class="chips" title="名义:call正put负 / 流量:top活跃合约按真实买卖方向定符号">
-    <button data-c="nominal" class="active">名义</button>
-    <button data-c="flow">流量</button>
+  <div id="gex-caliber" class="chips" title="Nominal: call +, put −  /  Flow: top active contracts signed by real buy/sell direction">
+    <button data-c="nominal" class="active">Nominal</button>
+    <button data-c="flow">Flow</button>
   </div>
   <div id="wb-stats" class="stat-row"></div>
 </div>
 
-<!-- 主区: K线 + 行权价梯 -->
+<!-- Main: candles + strike ladder -->
 <div class="wb-main">
   <div class="wb-chart">
     <div class="chart-wrap">
       <div id="chart"></div>
       <div id="chart-legend"></div>
     </div>
-    <div class="sub-title muted small">盘中净 GEX 走势(随采集累积)</div>
+    <div class="sub-title muted small">Intraday net GEX trend (accumulates per collection)</div>
     <div id="gex-sub"></div>
   </div>
   <div class="wb-ladder">
-    <div class="sub-title muted small" id="ladder-title">行权价梯 · GEX</div>
+    <div class="sub-title muted small" id="ladder-title">Strike Ladder · GEX</div>
     <div id="ladder-box"><svg id="ladder" xmlns="http://www.w3.org/2000/svg"></svg></div>
   </div>
 </div>
 
-<!-- 期权详细面板 -->
+<!-- Options panel -->
 <section>
-  <h2>🎯 期权面板 <span class="muted" id="opt-src"></span></h2>
+  <h2>🎯 Options Panel <span class="muted" id="opt-src"></span></h2>
   <div id="opt-panel"></div>
 </section>
 
-<!-- 采集控制 -->
+<!-- Collection control -->
 <section>
-  <h2>🎛️ 采集控制 <span class="muted">(交易日 ET 9:30-16:00 自动滚动采集,此处仅手动补充)</span></h2>
+  <h2>🎛️ Collection <span class="muted">(auto rolling collection on trading days ET 9:30-16:00; manual trigger here)</span></h2>
   <div class="card gex-controls">
     <div class="ctl-row">
-      <input type="password" id="gex-pat" placeholder="GitHub PAT(只授权本仓库 Actions,仅存本机浏览器;填了自动刷新提速到 60 秒)">
-      <button id="gex-start-btn">▶ 启动至收盘</button>
-      <button id="gex-once-btn">🔁 单轮采集</button>
-      <button id="gex-stop-btn">⏹ 停止</button>
+      <input type="password" id="gex-pat" placeholder="GitHub PAT (repo Actions scope only, stored in this browser; enables 60s auto-refresh)">
+      <button id="gex-start-btn">▶ Run to Close</button>
+      <button id="gex-once-btn">🔁 Single Round</button>
+      <button id="gex-stop-btn">⏹ Stop</button>
     </div>
     <div id="gex-status" class="muted small"></div>
   </div>
@@ -84,7 +84,7 @@
 <div id="errors" class="muted small"></div>
 
 <footer class="muted small">
-  K线/指标: Massive(实时,回退雅虎) · 期权: Massive/雅虎(15分钟延迟) · GEX/OI 为最近采集快照 — 仅供个人研究参考
+  Candles/indicators: Massive (real-time, Yahoo fallback) · Options: Massive/Yahoo (15-min delayed) · GEX/OI is latest collected snapshot — personal research only
 </footer>
 
 <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>

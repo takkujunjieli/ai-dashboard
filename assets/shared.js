@@ -6,19 +6,19 @@ export const $ = (id) => document.getElementById(id);
 export const esc = (t) => { const d = document.createElement("div"); d.textContent = t ?? ""; return d.innerHTML; };
 export const fmtDT = (iso) => iso ? new Date(iso).toLocaleString("zh-CN", { hour12: false }) : "—";
 
-export const CAT_LABEL = { news: "新闻", kol: "大V", youtube: "视频", community: "社区" };
+export const CAT_LABEL = { news: "News", kol: "KOL", youtube: "Video", community: "Community" };
 export const SENTI = {
-  positive: { label: "看多", cls: "senti-pos" },
-  negative: { label: "看空", cls: "senti-neg" },
-  neutral: { label: "中性", cls: "senti-neu" },
+  positive: { label: "Bullish", cls: "senti-pos" },
+  negative: { label: "Bearish", cls: "senti-neg" },
+  neutral: { label: "Neutral", cls: "senti-neu" },
 };
 
 export function timeAgo(iso) {
   if (!iso) return "";
   const s = (Date.now() - new Date(iso).getTime()) / 1000;
-  if (s < 3600) return Math.max(1, Math.floor(s / 60)) + " 分钟前";
-  if (s < 86400) return Math.floor(s / 3600) + " 小时前";
-  return Math.floor(s / 86400) + " 天前";
+  if (s < 3600) return Math.max(1, Math.floor(s / 60)) + "m ago";
+  if (s < 86400) return Math.floor(s / 3600) + "h ago";
+  return Math.floor(s / 86400) + "d ago";
 }
 
 export const fmtMoney = (v) => {
