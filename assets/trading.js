@@ -414,7 +414,13 @@ function renderStats() {
   add("flip", g.flip);
   add("MaxPain", o.max_pain);
   add("ATM IV", o.atm_iv != null ? (o.atm_iv * 100).toFixed(1) + "%" : null);
-  add("PCR Vol", o.pcr_vol);
+  // PCR 绝对值意义有限 → 补自身历史百分位 + watchlist 内横向排名(低 PCR=偏 call)
+  if (o.pcr_vol != null) {
+    const allV = Object.values(RESEARCH?.tickers || {}).map((d) => d.options?.pcr_vol).filter((v) => v != null);
+    const rank = allV.filter((x) => x < o.pcr_vol).length + 1;  // 升序,1=最偏 call
+    const self = o.pcr_vol_pct != null ? `self ${o.pcr_vol_pct}%ile` : "self n/a";
+    add("PCR Vol", `${o.pcr_vol} (${self} · WL ${rank}/${allV.length})`);
+  }
   add("Net Prem", o.net_premium != null ? fmtMoney(o.net_premium) : null, (o.net_premium ?? 0) >= 0 ? "up" : "down");
   add("Short%", sv?.ratio != null ? (sv.ratio * 100).toFixed(1) + "%" : null);
   $("wb-stats").innerHTML = chips.join("");
