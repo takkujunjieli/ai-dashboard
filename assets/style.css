@@ -164,7 +164,13 @@ footer { margin-top: 50px; text-align: center; }
 
 .wb-main { display: flex; gap: 10px; margin-top: 12px; }
 .wb-chart { flex: 1; min-width: 0; }
+.chart-wrap { position: relative; }
 #chart { height: 520px; }
+#chart-legend {
+  position: absolute; display: none; z-index: 6; pointer-events: none;
+  background: rgba(15, 20, 32, .92); border: 1px solid var(--border); border-radius: 6px;
+  padding: 4px 8px; font-size: 12px; line-height: 1.5; white-space: nowrap;
+}
 #gex-sub { height: 110px; }
 .sub-title { padding: 6px 0 2px; }
 .wb-ladder { width: 250px; flex: 0 0 250px; }
