@@ -494,14 +494,9 @@ function renderStats() {
   // GEX 相对日均成交额:1% 变动的对冲量 ≈ 一天成交量的百分之几(跨标的可比的强度)
   const adv = d.short?.avg_daily_volume;
   const gexPct = (g.net_gex != null && adv && g.spot) ? g.net_gex / (adv * g.spot) * 100 : null;
-  const bLabel = GEX_BUCKET_LABEL[g.bucket] || "";
-  const calTag = g.caliber === "flow"
-    ? `·Flow${g.classified ? "/" + g.classified + " ctr" : ""}`
-      + (g.coverage != null ? ` cov${Math.round(g.coverage * 100)}%` : "")
-      + (g.ambiguity != null ? ` amb${Math.round(g.ambiguity * 100)}%` : "")
-    : "";
-  add(`Net GEX(${bLabel}${g.fallback ? "·nearest" : ""}${calTag})`, g.net_gex != null
-    ? fmtMoney(g.net_gex) + "/1%" + (gexPct != null ? ` (${gexPct >= 0 ? "+" : ""}${gexPct.toFixed(1)}% ADV)` : "")
+  // 桶/口径由上方按钮显示,标签不再重复;/1% 为默认口径,省略。仅回退时提示 nearest。
+  add(`Net GEX${g.fallback ? " (nearest)" : ""}`, g.net_gex != null
+    ? fmtMoney(g.net_gex) + (gexPct != null ? ` (${gexPct >= 0 ? "+" : ""}${gexPct.toFixed(1)}% ADV)` : "")
     : null, (g.net_gex ?? 0) >= 0 ? "up" : "down");
   if (g.flowMiss) add("", "Flow N/A (computed 2×/day, single-names only; ETFs excluded)", "muted");
   add("flip", g.flip);
