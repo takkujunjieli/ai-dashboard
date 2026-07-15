@@ -30,6 +30,7 @@ MAX_SECONDS = 18600  # 5h10m,留出续派与收尾余量(job 上限 6h)
 
 sys.path.insert(0, str(ROOT / "scripts"))
 import fetch_research  # noqa: E402
+from push_data import push_data  # noqa: E402  盘中高频只推 data 分支
 
 import yaml  # noqa: E402
 
@@ -47,14 +48,9 @@ def et_at(t: dtime) -> datetime:
 
 
 def commit_push(msg: str) -> None:
-    sh("git", "add", "data")
-    if subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=ROOT).returncode == 0:
-        return
-    sh("git", "commit", "-q", "-m", msg)
-    sh("git", "pull", "--rebase", "-X", "theirs", "-q", "origin", "main")
-    if sh("git", "push", "-q") != 0:
-        sh("git", "pull", "--rebase", "-X", "theirs", "-q", "origin", "main")
-        sh("git", "push", "-q")
+    # 盘中高频数据只推 data 分支(不动 main),让 main 几乎不涨、体积由压平任务控制。
+    # main 上的 EOD 基线由 update.yml 维护,仅作前端限流兜底。
+    push_data("data", msg)
 
 
 def main() -> None:
