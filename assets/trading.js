@@ -475,34 +475,41 @@ function renderMiniCards() {
   updateCfgStatus();
 }
 
-/* ---------- 指标栏 ---------- */
+/* 共享 grid 磁贴(Price & GEX 指标行与 Options Panel 同款布局);v/sub 为空则不渲染 */
+function tile(k, v, sub = "", cls = "", title = "") {
+  return (v == null || v === "") ? "" :
+    `<div class="opt-tile"${title ? ` title="${esc(title)}"` : ""}><div class="opt-k">${k}</div><div class="opt-v ${cls}">${v}${sub ? ` <span class="opt-sub">${sub}</span>` : ""}</div></div>`;
+}
+
+/* ---------- 指标栏(与 Options Panel 同款 grid 磁贴) ---------- */
 function renderStats() {
   if (SYM && CFG.watchlist.length && !isDeep(SYM)) {
     $("wb-stats").innerHTML = `<span class="muted">${esc(SYM)} is in the "Quotes only" group — no deep data. Click "D" on its card to add to Deep.</span>`;
     return;
   }
   const d = researchOf(SYM);
-  const o = d.options || {};
   const g = gexBucketData(SYM) || {};
   const sv = (d.short_vol || [])[0];
-  const chips = [];
-  const add = (k, v, cls = "") => v != null && chips.push(`<span>${k} <b class="${cls}">${v}</b></span>`);
-  add("Data", d.asof ? new Date(d.asof).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : null);
-  add("RSI(1m)", d.ind?.rsi_m);
-  add("RSI(D)", d.ind?.rsi_d);
-  add("VWAP", d.vwap);
+  const time = d.asof ? new Date(d.asof).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : null;
   // GEX 相对日均成交额:1% 变动的对冲量 ≈ 一天成交量的百分之几(跨标的可比的强度)
   const adv = d.short?.avg_daily_volume;
   const gexPct = (g.net_gex != null && adv && g.spot) ? g.net_gex / (adv * g.spot) * 100 : null;
   // 桶/口径由上方按钮显示,标签不再重复;/1% 为默认口径,省略。仅回退时提示 nearest。
-  add(`Net GEX${g.fallback ? " (nearest)" : ""}`, g.net_gex != null
-    ? fmtMoney(g.net_gex) + (gexPct != null ? ` (${gexPct >= 0 ? "+" : ""}${gexPct.toFixed(1)}% ADV)` : "")
-    : null, (g.net_gex ?? 0) >= 0 ? "up" : "down");
-  if (g.flowMiss) add("", "Flow N/A (computed 2×/day, single-names only; ETFs excluded)", "muted");
-  add("flip", g.flip);
-  add("Short%", sv?.ratio != null ? (sv.ratio * 100).toFixed(1) + "%" : null);
+  const tiles = [
+    tile("Data", time),
+    tile("RSI 1m", d.ind?.rsi_m != null ? d.ind.rsi_m : null),
+    tile("RSI D", d.ind?.rsi_d != null ? d.ind.rsi_d : null),
+    tile("VWAP", d.vwap != null ? d.vwap : null),
+    tile(`Net GEX${g.fallback ? " (nearest)" : ""}`,
+      g.net_gex != null ? fmtMoney(g.net_gex) : null,
+      gexPct != null ? `${gexPct >= 0 ? "+" : ""}${gexPct.toFixed(1)}% ADV` : "",
+      (g.net_gex ?? 0) >= 0 ? "up" : "down", "1% underlying move → dealer hedge, % of ADV"),
+    tile("Flip", g.flip != null ? g.flip : null, "", "", "Gamma flip strike"),
+    tile("Short%", sv?.ratio != null ? (sv.ratio * 100).toFixed(1) + "%" : null),
+  ].join("");
   // 顶栏只留正股路径/风险类;IV/PCR/MaxPain/Premium 等期权交易指标已移到下方 Options Panel
-  $("wb-stats").innerHTML = chips.join("");
+  const note = g.flowMiss ? `<div class="muted small">Flow N/A (computed 2×/day, single-names only; ETFs excluded)</div>` : "";
+  $("wb-stats").innerHTML = `<div class="opt-grid">${tiles}</div>${note}`;
 }
 
 /* 已实现波动率(20 日收盘对数收益年化),用于 VRP */
@@ -532,9 +539,6 @@ function renderOptPanel() {
   const be = o.by_expiry || [];
   const ne = be[0]?.exp;
   const mmdd = (iso) => iso ? iso.slice(5).replace("-", "/") : "";
-  const tile = (k, v, sub = "", cls = "", title = "") =>
-    (v == null || v === "") ? "" :
-      `<div class="opt-tile"${title ? ` title="${esc(title)}"` : ""}><div class="opt-k">${k}</div><div class="opt-v ${cls}">${v}${sub ? ` <span class="opt-sub">${sub}</span>` : ""}</div></div>`;
 
   const ivPct = o.atm_iv_pct;
   const allV = Object.values(RESEARCH?.tickers || {}).map((x) => x.options?.pcr_vol).filter((v) => v != null);
