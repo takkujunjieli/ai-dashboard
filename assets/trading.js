@@ -517,11 +517,11 @@ function realizedVol(bars, n = 20) {
   return Math.sqrt(v) * Math.sqrt(252);
 }
 
-/* ---------- 期权面板:Beginner / Advanced 两 Tab(纯期权交易指标,不含图表) ---------- */
+/* ---------- 期权面板:Beginner / Advanced 两 Tab(grid 磁贴,命名精简) ---------- */
 function renderOptPanel() {
   const d = researchOf(SYM);
   const o = d.options;
-  $("opt-src").textContent = RESEARCH?.options_source ? `(source ${RESEARCH.options_source === "massive" ? "Massive" : "Yahoo"} · ${o?.contracts ?? 0} contracts)` : "";
+  $("opt-src").textContent = RESEARCH?.options_source ? `(${RESEARCH.options_source === "massive" ? "Massive" : "Yahoo"} · ${o?.contracts ?? 0} ctr)` : "";
   const tabBar = `<div id="opt-tabs" class="chips">
     <button data-opttab="beginner" class="${optTab === "beginner" ? "active" : ""}">Beginner</button>
     <button data-opttab="advanced" class="${optTab === "advanced" ? "active" : ""}">Advanced</button>
@@ -529,88 +529,78 @@ function renderOptPanel() {
   if (!o) { $("opt-panel").innerHTML = tabBar + `<div class="card empty">No options data — start a collection</div>`; return; }
 
   const spot = spotOf(SYM);
-  const ne = o.by_expiry?.[0]?.exp;
+  const be = o.by_expiry || [];
+  const ne = be[0]?.exp;
+  const mmdd = (iso) => iso ? iso.slice(5).replace("-", "/") : "";
+  const tile = (k, v, sub = "", cls = "", title = "") =>
+    (v == null || v === "") ? "" :
+      `<div class="opt-tile"${title ? ` title="${esc(title)}"` : ""}><div class="opt-k">${k}</div><div class="opt-v ${cls}">${v}${sub ? ` <span class="opt-sub">${sub}</span>` : ""}</div></div>`;
 
-  let implHtml = "";
+  const ivPct = o.atm_iv_pct;
+  const allV = Object.values(RESEARCH?.tickers || {}).map((x) => x.options?.pcr_vol).filter((v) => v != null);
+  const rank = o.pcr_vol != null ? allV.filter((x) => x < o.pcr_vol).length + 1 : null;
+
+  // ---- Beginner ----
+  let emTiles = "";
   if (o.atm_iv && ne && spot) {
     const days = Math.max((Date.parse(ne) - Date.now()) / 86400000 + 1, 0.5);
     const sig = o.atm_iv * Math.sqrt(days / 365), sig1 = o.atm_iv * Math.sqrt(1 / 365);
-    implHtml = `<span title="From nearest-expiry ATM IV">Expected move &rarr;${esc(ne)} (${Math.round(days)}d): <b>&plusmn;${(sig * 100).toFixed(1)}%</b> ($${(spot * (1 - sig)).toFixed(2)}&ndash;$${(spot * (1 + sig)).toFixed(2)}) &middot; 1d &plusmn;${(sig1 * 100).toFixed(1)}%</span>`;
+    emTiles = tile(`Exp move (${mmdd(ne)})`, `&plusmn;${(sig * 100).toFixed(1)}%`, `$${(spot * (1 - sig)).toFixed(0)}–${(spot * (1 + sig)).toFixed(0)}`, "", "Implied move to nearest expiry, from ATM IV")
+      + tile("1D move", `&plusmn;${(sig1 * 100).toFixed(1)}%`);
   }
-  const ivPct = o.atm_iv_pct;
-  const ivTag = ivPct != null ? `${ivPct}%ile ${ivPct >= 70 ? "(rich)" : ivPct <= 30 ? "(cheap)" : ""}` : "hist n/a";
-  const ivHtml = `<span title="ATM IV + own-history percentile">ATM IV <b>${o.atm_iv != null ? (o.atm_iv * 100).toFixed(1) + "%" : "&mdash;"}</b> <span class="muted">${ivTag}</span></span>`;
-  const allV = Object.values(RESEARCH?.tickers || {}).map((x) => x.options?.pcr_vol).filter((v) => v != null);
-  const rank = o.pcr_vol != null ? allV.filter((x) => x < o.pcr_vol).length + 1 : null;
-  const pcrHtml = o.pcr_vol != null
-    ? `<span title="Put/Call volume ratio (low = call-heavy)">PCR <b>${o.pcr_vol}</b> <span class="muted">${o.pcr_vol_pct != null ? "self " + o.pcr_vol_pct + "%ile &middot; " : ""}WL ${rank}/${allV.length}</span></span>` : "";
-  const mpHtml = o.max_pain != null
-    ? `<span title="Pin magnet (nearest expiry)">Max Pain <b>${o.max_pain}</b>${spot ? ` <span class="muted">spot ${spot >= o.max_pain ? "+" : ""}${((spot / o.max_pain - 1) * 100).toFixed(1)}%</span>` : ""}</span>` : "";
-  const ed = d.earnings_days;
-  const earnHtml = ed != null
-    ? `<span class="${ed <= 10 ? "down" : ""}" title="Options into earnings usually IV-crush after the print">Earnings in <b>${ed}d</b>${ed <= 10 ? " &#9888; IV-crush risk" : ""} <span class="muted">${esc(d.earnings_date || "")}</span></span>` : "";
-  const hotRows = (o.top_strikes || []).map((t) => `<tr>
-    <td>${esc(t.exp)}</td><td>${t.strike}</td>
-    <td class="${t.side === "call" ? "up" : "down"}">${t.side === "call" ? "Call" : "Put"}</td>
-    <td>${fmtNum(t.vol)}</td><td>${fmtNum(t.oi)}</td><td>${fmtMoney(t.premium)}</td></tr>`).join("");
+  const beginner = `<div class="opt-grid">
+    ${emTiles}
+    ${tile("ATM IV", o.atm_iv != null ? (o.atm_iv * 100).toFixed(0) + "%" : "&mdash;", ivPct != null ? `${ivPct}%ile` : "hist n/a", ivPct != null && ivPct >= 70 ? "down" : ivPct != null && ivPct <= 30 ? "up" : "", "ATM IV + own-history percentile (>=70 rich, <=30 cheap)")}
+    ${o.pcr_vol != null ? tile("PCR", o.pcr_vol, `WL ${rank}/${allV.length}`, "", "Put/Call vol ratio (low=call-heavy) + watchlist rank") : ""}
+    ${o.max_pain != null ? tile("Max Pain", o.max_pain, spot ? `${spot >= o.max_pain ? "+" : ""}${((spot / o.max_pain - 1) * 100).toFixed(1)}%` : "", "", "Pin magnet (nearest expiry)") : ""}
+    ${d.earnings_days != null ? tile("Earnings", d.earnings_days + "d", mmdd(d.earnings_date), d.earnings_days <= 10 ? "down" : "", "IV-crush risk into earnings") : ""}
+  </div>
+    ${(o.top_strikes || []).length ? `<details open><summary class="muted small">Most active strikes today</summary>
+      <table><tr><th>Exp</th><th>Strike</th><th>Side</th><th>Vol</th><th>OI</th><th>Prem</th></tr>${(o.top_strikes || []).map((t) => `<tr>
+        <td>${mmdd(t.exp)}</td><td>${t.strike}</td><td class="${t.side === "call" ? "up" : "down"}">${t.side === "call" ? "C" : "P"}</td>
+        <td>${fmtNum(t.vol)}</td><td>${fmtNum(t.oi)}</td><td>${fmtMoney(t.premium)}</td></tr>`).join("")}</table></details>` : ""}`;
 
+  // ---- Advanced ----
   const sk = o.iv_skew;
-  const skewHtml = sk
-    ? `<span title="~7% OTM put IV minus call IV (${sk.put_k}P/${sk.call_k}C)">Skew P <b>${(sk.put_iv * 100).toFixed(0)}%</b>/C <b>${(sk.call_iv * 100).toFixed(0)}%</b> &middot; RR <b class="${sk.rr >= 0 ? "down" : "up"}">${sk.rr >= 0 ? "+" : ""}${(sk.rr * 100).toFixed(1)}%</b> ${sk.rr > 0.01 ? "put skew" : sk.rr < -0.01 ? "call skew" : "flat"}</span>` : "";
-  const be = o.by_expiry || [];
-  let termHtml = "";
+  const skewTile = sk ? tile("IV skew", `${sk.rr >= 0 ? "+" : ""}${(sk.rr * 100).toFixed(1)}%`, sk.rr > 0.01 ? "put skew" : sk.rr < -0.01 ? "call skew" : "flat", sk.rr >= 0 ? "down" : "up", `RR = ~7% OTM put IV − call IV (P${(sk.put_iv * 100).toFixed(0)}/C${(sk.call_iv * 100).toFixed(0)})`) : "";
+  let termTile = "";
   if (be.length >= 2 && be[0].atm_iv && be[be.length - 1].atm_iv) {
     const f = be[0].atm_iv, b = be[be.length - 1].atm_iv;
-    termHtml = `<span title="Front vs back ATM IV">Term <b>${(f * 100).toFixed(0)}%</b>&rarr;<b>${(b * 100).toFixed(0)}%</b> &middot; ${f > b ? "backwardation (event/stress)" : "contango (normal)"}</span>`;
+    termTile = tile("IV term", `${(f * 100).toFixed(0)}→${(b * 100).toFixed(0)}%`, f > b ? "backwrd" : "contango", "", "Front vs back ATM IV");
   }
   const rv = realizedVol(d.bars_d, 20);
-  let vrpHtml = "";
-  if (o.atm_iv && rv) {
-    const vrp = o.atm_iv - rv;
-    vrpHtml = `<span title="ATM IV minus 20d realized vol">VRP IV <b>${(o.atm_iv * 100).toFixed(0)}%</b>&minus;RV <b>${(rv * 100).toFixed(0)}%</b>=<b class="${vrp >= 0 ? "down" : "up"}">${vrp >= 0 ? "+" : ""}${(vrp * 100).toFixed(0)}pt</b> ${vrp > 0 ? "(rich)" : "(cheap)"}</span>`;
-  }
-  const premTotal = (o.call_premium + o.put_premium) || 1;
-  const cw = (o.call_premium / premTotal * 100).toFixed(1);
+  let vrpTile = "";
+  if (o.atm_iv && rv) { const vrp = o.atm_iv - rv; vrpTile = tile("VRP", `${vrp >= 0 ? "+" : ""}${(vrp * 100).toFixed(0)}pt`, vrp > 0 ? "rich" : "cheap", vrp >= 0 ? "down" : "up", `ATM IV ${(o.atm_iv * 100).toFixed(0)}% − 20d RV ${(rv * 100).toFixed(0)}%`); }
   const npCls = (o.net_premium ?? 0) >= 0 ? "up" : "down";
   const pd = o.prem_delta;
-  const deltaHtml = pd ? (() => {
-    const t = pd.since ? new Date(pd.since).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : "";
-    return `<span title="Increment of session-cumulative premium since ${esc(t)}">&Delta; vs last C <b class="${pd.call >= 0 ? "up" : "down"}">${(pd.call >= 0 ? "+" : "") + fmtMoney(pd.call)}</b> / P <b class="${pd.put >= 0 ? "up" : "down"}">${(pd.put >= 0 ? "+" : "") + fmtMoney(pd.put)}</b></span>`;
-  })() : "";
+  const dTile = pd ? tile("Δ prem", `<span class="${pd.call >= 0 ? "up" : "down"}">C ${(pd.call >= 0 ? "+" : "") + fmtMoney(pd.call)}</span> / <span class="${pd.put >= 0 ? "up" : "down"}">P ${(pd.put >= 0 ? "+" : "") + fmtMoney(pd.put)}</span>`, "", "", "Premium increment since last collection") : "";
+  const premTotal = (o.call_premium + o.put_premium) || 1, cw = (o.call_premium / premTotal * 100).toFixed(1);
   const expRows = be.map((e) => `<tr>
-    <td>${esc(e.exp)}</td>
+    <td>${mmdd(e.exp)}</td>
     <td><span class="up">${fmtMoney(e.call_premium)}</span>/<span class="down">${fmtMoney(e.put_premium)}</span></td>
     <td>${fmtNum(e.call_vol)}/${fmtNum(e.put_vol)}</td>
     <td>${fmtNum(e.call_oi)}/${fmtNum(e.put_oi)}</td>
-    <td>${e.atm_iv != null ? (e.atm_iv * 100).toFixed(1) + "%" : "&mdash;"}</td></tr>`).join("");
+    <td>${e.atm_iv != null ? (e.atm_iv * 100).toFixed(0) + "%" : "&mdash;"}</td></tr>`).join("");
   const oiRows = (o.oi_changes || []).map((c) => `<tr>
-    <td>${esc(c.exp)}</td><td>${c.strike}</td>
-    <td class="${c.side === "call" ? "up" : "down"}">${c.side === "call" ? "Call" : "Put"}</td>
+    <td>${mmdd(c.exp)}</td><td>${c.strike}</td>
+    <td class="${c.side === "call" ? "up" : "down"}">${c.side === "call" ? "C" : "P"}</td>
     <td class="${c.delta >= 0 ? "up" : "down"}">${c.delta >= 0 ? "+" : ""}${fmtNum(c.delta)}</td></tr>`).join("");
-
-  const beginner = `
-    ${implHtml ? `<div class="stat-row">${implHtml}</div>` : ""}
-    <div class="stat-row">${ivHtml}${pcrHtml}</div>
-    <div class="stat-row">${mpHtml}${earnHtml}</div>
-    ${hotRows ? `<details open><summary class="muted small">Most active strikes today (liquidity)</summary>
-      <table><tr><th>Expiry</th><th>Strike</th><th>Side</th><th>Vol</th><th>OI</th><th>Premium</th></tr>${hotRows}</table></details>` : ""}`;
-  const advanced = `
-    ${skewHtml || termHtml || vrpHtml ? `<div class="stat-row">${skewHtml}${termHtml}</div><div class="stat-row">${vrpHtml}</div>` : ""}
-    <div class="prem-bar"><div class="prem-call" style="width:${cw}%"></div></div>
-    <div class="stat-row">
-      <span>Prem C <b class="up">${fmtMoney(o.call_premium)}</b>/P <b class="down">${fmtMoney(o.put_premium)}</b></span>
-      <span>Vol C <b>${fmtNum(o.call_vol)}</b>/P <b>${fmtNum(o.put_vol)}</b>${o.pcr_vol != null ? ` <span class="muted">PCR ${o.pcr_vol}</span>` : ""}</span>
-      <span>OI C <b>${fmtNum(o.call_oi)}</b>/P <b>${fmtNum(o.put_oi)}</b>${o.pcr_oi != null ? ` <span class="muted">PCR ${o.pcr_oi}</span>` : ""}</span>
-    </div>
-    <div class="stat-row">
-      <span title="Call minus Put premium; activity, not direction">Net Prem <b class="${npCls}">${fmtMoney(o.net_premium)}</b></span>
-      ${o.pcr_prem != null ? `<span>PCR(prem) <b>${o.pcr_prem}</b></span>` : ""}${deltaHtml}
-    </div>
-    <div class="muted small">Premium/Net Prem are activity (not split by buy/sell) &mdash; read direction with OI change + Flow-GEX.</div>
+  const advanced = `<div class="opt-grid">
+    ${skewTile}${termTile}${vrpTile}
+    ${tile("Net Prem", fmtMoney(o.net_premium), "", npCls, "Call − Put premium (activity, not direction)")}
+    ${tile("Call prem", fmtMoney(o.call_premium), "", "up")}
+    ${tile("Put prem", fmtMoney(o.put_premium), "", "down")}
+    ${o.pcr_vol != null ? tile("PCR vol", o.pcr_vol) : ""}
+    ${o.pcr_oi != null ? tile("PCR OI", o.pcr_oi) : ""}
+    ${o.pcr_prem != null ? tile("PCR prem", o.pcr_prem) : ""}
+    ${dTile}
+  </div>
+    <div class="prem-bar" title="Call premium share"><div class="prem-call" style="width:${cw}%"></div></div>
+    <div class="muted small">Premium = activity (not buy/sell) — read direction with OI change + Flow-GEX.</div>
     ${expRows ? `<details open><summary class="muted small">By expiry (term detail)</summary>
-      <table><tr><th>Expiry</th><th>Prem C/P</th><th>Vol C/P</th><th>OI C/P</th><th>ATM IV</th></tr>${expRows}</table></details>` : ""}
-    ${oiRows ? `<details><summary class="muted small">OI change &mdash; new positioning (vs last collection)</summary>
-      <table><tr><th>Expiry</th><th>Strike</th><th>Side</th><th>&Delta;OI</th></tr>${oiRows}</table></details>`
+      <table><tr><th>Exp</th><th>Prem C/P</th><th>Vol C/P</th><th>OI C/P</th><th>ATM IV</th></tr>${expRows}</table></details>` : ""}
+    ${oiRows ? `<details><summary class="muted small">OI change — new positioning</summary>
+      <table><tr><th>Exp</th><th>Strike</th><th>Side</th><th>&Delta;OI</th></tr>${oiRows}</table></details>`
       : `<div class="muted small">OI change shows after two collections</div>`}`;
 
   $("opt-panel").innerHTML = tabBar + `<div class="card">${optTab === "beginner" ? beginner : advanced}</div>`;
