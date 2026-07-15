@@ -20,7 +20,6 @@ let chart, candles, volume, ema9L, ema21L, vwapL, bbU, bbL, vsU, vsL, avwapL, su
 let overlayOn = JSON.parse(localStorage.getItem("wbOverlays") || "null")
   || { ema9: true, ema21: true, vwap: true, bb: false, vsig: false };  // 默认只开 EMA/VWAP,其余按需勾
 let avwapAnchor = localStorage.getItem("wbAvwapAnchor") || "off";
-let optTab = localStorage.getItem("wbOptTab") || "beginner";  // Options Panel: beginner / advanced
 let hoverLevels = [];       // flip / MaxPain 横线的 {name,color,price},供 hover 识别
 let hoverSeries = [];       // 叠加曲线的 {series,name,color},供 hover 识别
 let priceLines = [];
@@ -524,61 +523,79 @@ function realizedVol(bars, n = 20) {
   return Math.sqrt(v) * Math.sqrt(252);
 }
 
-/* ---------- 期权面板:Beginner / Advanced 两 Tab(grid 磁贴,命名精简) ---------- */
+/* ---------- 期权面板:单一视图(grid 磁贴,同类指标合并到一行) ---------- */
 function renderOptPanel() {
   const d = researchOf(SYM);
   const o = d.options;
   $("opt-src").textContent = RESEARCH?.options_source ? `(${RESEARCH.options_source === "massive" ? "Massive" : "Yahoo"} · ${o?.contracts ?? 0} ctr)` : "";
-  const tabBar = `<div id="opt-tabs" class="chips">
-    <button data-opttab="beginner" class="${optTab === "beginner" ? "active" : ""}">Beginner</button>
-    <button data-opttab="advanced" class="${optTab === "advanced" ? "active" : ""}">Advanced</button>
-  </div>`;
-  if (!o) { $("opt-panel").innerHTML = tabBar + `<div class="card empty">No options data — start a collection</div>`; return; }
+  if (!o) { $("opt-panel").innerHTML = `<div class="card empty">No options data — start a collection</div>`; return; }
 
   const spot = spotOf(SYM);
   const be = o.by_expiry || [];
   const ne = be[0]?.exp;
   const mmdd = (iso) => iso ? iso.slice(5).replace("-", "/") : "";
 
-  const ivPct = o.atm_iv_pct;
-  const allV = Object.values(RESEARCH?.tickers || {}).map((x) => x.options?.pcr_vol).filter((v) => v != null);
-  const rank = o.pcr_vol != null ? allV.filter((x) => x < o.pcr_vol).length + 1 : null;
-
-  // ---- Beginner ----
-  let emTiles = "";
+  // 预期波动(近月 + 1 日合并到一格)
+  let emTile = "";
   if (o.atm_iv && ne && spot) {
     const days = Math.max((Date.parse(ne) - Date.now()) / 86400000 + 1, 0.5);
     const sig = o.atm_iv * Math.sqrt(days / 365), sig1 = o.atm_iv * Math.sqrt(1 / 365);
-    emTiles = tile(`Exp move (${mmdd(ne)})`, `&plusmn;${(sig * 100).toFixed(1)}%`, `$${(spot * (1 - sig)).toFixed(0)}–${(spot * (1 + sig)).toFixed(0)}`, "", "Implied move to nearest expiry, from ATM IV")
-      + tile("1D move", `&plusmn;${(sig1 * 100).toFixed(1)}%`);
+    emTile = tile(`Exp move (${mmdd(ne)})`, `&plusmn;${(sig * 100).toFixed(1)}%`,
+      `$${(spot * (1 - sig)).toFixed(0)}–${(spot * (1 + sig)).toFixed(0)} · 1d &plusmn;${(sig1 * 100).toFixed(1)}%`,
+      "", "Implied move to nearest expiry (and 1-day), from ATM IV");
   }
-  const beginner = `<div class="opt-grid">
-    ${emTiles}
-    ${tile("ATM IV", o.atm_iv != null ? (o.atm_iv * 100).toFixed(0) + "%" : "&mdash;", ivPct != null ? `${ivPct}%ile` : "hist n/a", ivPct != null && ivPct >= 70 ? "down" : ivPct != null && ivPct <= 30 ? "up" : "", "ATM IV + own-history percentile (>=70 rich, <=30 cheap)")}
-    ${o.pcr_vol != null ? tile("PCR", o.pcr_vol, `WL ${rank}/${allV.length}`, "", "Put/Call vol ratio (low=call-heavy) + watchlist rank") : ""}
-    ${o.max_pain != null ? tile("Max Pain", o.max_pain, spot ? `${spot >= o.max_pain ? "+" : ""}${((spot / o.max_pain - 1) * 100).toFixed(1)}%` : "", "", "Pin magnet (nearest expiry)") : ""}
-    ${d.earnings_days != null ? tile("Earnings", d.earnings_days + "d", mmdd(d.earnings_date), d.earnings_days <= 10 ? "down" : "", "IV-crush risk into earnings") : ""}
-  </div>
-    ${(o.top_strikes || []).length ? `<details open><summary class="muted small">Most active strikes today</summary>
-      <table><tr><th>Exp</th><th>Strike</th><th>Side</th><th>Vol</th><th>OI</th><th>Prem</th></tr>${(o.top_strikes || []).map((t) => `<tr>
-        <td>${mmdd(t.exp)}</td><td>${t.strike}</td><td class="${t.side === "call" ? "up" : "down"}">${t.side === "call" ? "C" : "P"}</td>
-        <td>${fmtNum(t.vol)}</td><td>${fmtNum(t.oi)}</td><td>${fmtMoney(t.premium)}</td></tr>`).join("")}</table></details>` : ""}`;
 
-  // ---- Advanced ----
+  // ATM IV(带自身历史分位)
+  const ivPct = o.atm_iv_pct;
+  const ivTile = tile("ATM IV", o.atm_iv != null ? (o.atm_iv * 100).toFixed(0) + "%" : "&mdash;",
+    ivPct != null ? `${ivPct}%ile` : "hist n/a",
+    ivPct != null && ivPct >= 70 ? "down" : ivPct != null && ivPct <= 30 ? "up" : "",
+    "ATM IV + own-history percentile (>=70 rich, <=30 cheap)");
+
+  // IV skew
   const sk = o.iv_skew;
   const skewTile = sk ? tile("IV skew", `${sk.rr >= 0 ? "+" : ""}${(sk.rr * 100).toFixed(1)}%`, sk.rr > 0.01 ? "put skew" : sk.rr < -0.01 ? "call skew" : "flat", sk.rr >= 0 ? "down" : "up", `RR = ~7% OTM put IV − call IV (P${(sk.put_iv * 100).toFixed(0)}/C${(sk.call_iv * 100).toFixed(0)})`) : "";
+
+  // IV term
   let termTile = "";
   if (be.length >= 2 && be[0].atm_iv && be[be.length - 1].atm_iv) {
     const f = be[0].atm_iv, b = be[be.length - 1].atm_iv;
     termTile = tile("IV term", `${(f * 100).toFixed(0)}→${(b * 100).toFixed(0)}%`, f > b ? "backwrd" : "contango", "", "Front vs back ATM IV");
   }
+
+  // VRP(IV − 20d 已实现波动)
   const rv = realizedVol(d.bars_d, 20);
   let vrpTile = "";
   if (o.atm_iv && rv) { const vrp = o.atm_iv - rv; vrpTile = tile("VRP", `${vrp >= 0 ? "+" : ""}${(vrp * 100).toFixed(0)}pt`, vrp > 0 ? "rich" : "cheap", vrp >= 0 ? "down" : "up", `ATM IV ${(o.atm_iv * 100).toFixed(0)}% − 20d RV ${(rv * 100).toFixed(0)}%`); }
+
+  // PCR:vol / OI / prem 三种口径合并到一格
+  const allV = Object.values(RESEARCH?.tickers || {}).map((x) => x.options?.pcr_vol).filter((v) => v != null);
+  const rank = o.pcr_vol != null ? allV.filter((x) => x < o.pcr_vol).length + 1 : null;
+  const pcrParts = [
+    o.pcr_vol != null ? o.pcr_vol : null,
+    o.pcr_oi != null ? o.pcr_oi : null,
+    o.pcr_prem != null ? o.pcr_prem : null,
+  ];
+  const pcrTile = pcrParts.some((x) => x != null)
+    ? tile("PCR", pcrParts.map((x) => x != null ? x : "—").join(" / "),
+        `vol/OI/prem${rank != null ? ` · WL ${rank}/${allV.length}` : ""}`, "",
+        "Put/Call ratio by volume / open interest / premium (low = call-heavy)")
+    : "";
+
+  // Max Pain / Earnings
+  const mpTile = o.max_pain != null ? tile("Max Pain", o.max_pain, spot ? `${spot >= o.max_pain ? "+" : ""}${((spot / o.max_pain - 1) * 100).toFixed(1)}%` : "", "", "Pin magnet (nearest expiry)") : "";
+  const earnTile = d.earnings_days != null ? tile("Earnings", d.earnings_days + "d", mmdd(d.earnings_date), d.earnings_days <= 10 ? "down" : "", "IV-crush risk into earnings") : "";
+
+  // 权利金:Call / Put / Net 合并到一格;Δ(自上次采集增量)单独一格
   const npCls = (o.net_premium ?? 0) >= 0 ? "up" : "down";
+  const premTile = tile("Premium C/P",
+    `<span class="up">${fmtMoney(o.call_premium)}</span> / <span class="down">${fmtMoney(o.put_premium)}</span>`,
+    `net <span class="${npCls}">${fmtMoney(o.net_premium)}</span>`, "",
+    "Call / Put premium and net (activity, not buy/sell direction)");
   const pd = o.prem_delta;
   const dTile = pd ? tile("Δ prem", `<span class="${pd.call >= 0 ? "up" : "down"}">C ${(pd.call >= 0 ? "+" : "") + fmtMoney(pd.call)}</span> / <span class="${pd.put >= 0 ? "up" : "down"}">P ${(pd.put >= 0 ? "+" : "") + fmtMoney(pd.put)}</span>`, "", "", "Premium increment since last collection") : "";
   const premTotal = (o.call_premium + o.put_premium) || 1, cw = (o.call_premium / premTotal * 100).toFixed(1);
+
   const expRows = be.map((e) => `<tr>
     <td>${mmdd(e.exp)}</td>
     <td><span class="up">${fmtMoney(e.call_premium)}</span>/<span class="down">${fmtMoney(e.put_premium)}</span></td>
@@ -589,25 +606,23 @@ function renderOptPanel() {
     <td>${mmdd(c.exp)}</td><td>${c.strike}</td>
     <td class="${c.side === "call" ? "up" : "down"}">${c.side === "call" ? "C" : "P"}</td>
     <td class="${c.delta >= 0 ? "up" : "down"}">${c.delta >= 0 ? "+" : ""}${fmtNum(c.delta)}</td></tr>`).join("");
-  const advanced = `<div class="opt-grid">
-    ${skewTile}${termTile}${vrpTile}
-    ${tile("Net Prem", fmtMoney(o.net_premium), "", npCls, "Call − Put premium (activity, not direction)")}
-    ${tile("Call prem", fmtMoney(o.call_premium), "", "up")}
-    ${tile("Put prem", fmtMoney(o.put_premium), "", "down")}
-    ${o.pcr_vol != null ? tile("PCR vol", o.pcr_vol) : ""}
-    ${o.pcr_oi != null ? tile("PCR OI", o.pcr_oi) : ""}
-    ${o.pcr_prem != null ? tile("PCR prem", o.pcr_prem) : ""}
-    ${dTile}
+
+  const body = `<div class="opt-grid">
+    ${emTile}${ivTile}${skewTile}${termTile}${vrpTile}${pcrTile}${mpTile}${earnTile}${premTile}${dTile}
   </div>
     <div class="prem-bar" title="Call premium share"><div class="prem-call" style="width:${cw}%"></div></div>
     <div class="muted small">Premium = activity (not buy/sell) — read direction with OI change + Flow-GEX.</div>
-    ${expRows ? `<details open><summary class="muted small">By expiry (term detail)</summary>
+    ${(o.top_strikes || []).length ? `<details open><summary class="muted small">Most active strikes today</summary>
+      <table><tr><th>Exp</th><th>Strike</th><th>Side</th><th>Vol</th><th>OI</th><th>Prem</th></tr>${(o.top_strikes || []).map((t) => `<tr>
+        <td>${mmdd(t.exp)}</td><td>${t.strike}</td><td class="${t.side === "call" ? "up" : "down"}">${t.side === "call" ? "C" : "P"}</td>
+        <td>${fmtNum(t.vol)}</td><td>${fmtNum(t.oi)}</td><td>${fmtMoney(t.premium)}</td></tr>`).join("")}</table></details>` : ""}
+    ${expRows ? `<details><summary class="muted small">By expiry (term detail)</summary>
       <table><tr><th>Exp</th><th>Prem C/P</th><th>Vol C/P</th><th>OI C/P</th><th>ATM IV</th></tr>${expRows}</table></details>` : ""}
     ${oiRows ? `<details><summary class="muted small">OI change — new positioning</summary>
       <table><tr><th>Exp</th><th>Strike</th><th>Side</th><th>&Delta;OI</th></tr>${oiRows}</table></details>`
       : `<div class="muted small">OI change shows after two collections</div>`}`;
 
-  $("opt-panel").innerHTML = tabBar + `<div class="card">${optTab === "beginner" ? beginner : advanced}</div>`;
+  $("opt-panel").innerHTML = `<div class="card">${body}</div>`;
 }
 
 /* ---------- 错误 ---------- */
@@ -862,13 +877,6 @@ function initToolbar() {
     localStorage.setItem("wbAvwapAnchor", avwapAnchor);
     [...$("avwap-anchor").children].forEach((b) => b.classList.toggle("active", b === btn));
     renderChart();
-  });
-  $("opt-panel").addEventListener("click", (ev) => {
-    const btn = ev.target.closest("[data-opttab]");
-    if (!btn) return;
-    optTab = btn.dataset.opttab;
-    localStorage.setItem("wbOptTab", optTab);
-    renderOptPanel();
   });
   $("refresh-btn").addEventListener("click", refreshData);
   renderOverlayChips();
