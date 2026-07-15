@@ -176,6 +176,7 @@ function initCharts() {
   candles = chart.addCandlestickSeries({
     upColor: "#34d399", downColor: "#f87171", borderVisible: false,
     wickUpColor: "#34d399", wickDownColor: "#f87171",
+    priceLineVisible: false,  // 关掉自带的当前价虚线(梯上已有 Spot;右轴仍显示末值)
   });
   volume = chart.addHistogramSeries({ priceFormat: { type: "volume" }, priceScaleId: "vol" });
   chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
