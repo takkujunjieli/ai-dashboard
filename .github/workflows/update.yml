@@ -39,7 +39,7 @@ jobs:
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
           MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
 
-      - name: 提交数据
+      - name: 提交数据到 main(EOD 基线 + Pages 兜底)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -50,6 +50,10 @@ jobs:
             git pull --rebase -X theirs origin main
             git push || { git pull --rebase -X theirs origin main && git push; }
           fi
+
+      - name: 镜像数据到 data 分支(前端主数据源)
+        run: |
+          python scripts/push_data.py data "chore: EOD baseline $(date -u +%F\ %R)"
 
   # 机器人提交不会触发分支式 Pages 构建,所以在这里直接用工作流部署 Pages
   deploy:

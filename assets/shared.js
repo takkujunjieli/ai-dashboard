@@ -46,13 +46,16 @@ export async function loadJSON(path) {
 }
 
 /* 走 GitHub contents API 拿最新提交(采集期间 Pages 不重新部署);
-   带 PAT 时认证(5000次/小时),匿名限流 60次/小时;失败退回 Pages 相对路径 */
+   带 PAT 时认证(5000次/小时),匿名限流 60次/小时;失败退回 Pages 相对路径。
+   data/ 高频数据只提交在 data 分支(main 只留 EOD 基线),故用 ?ref=data 取最新;
+   限流兜底退回 Pages(=main 的 EOD 基线,略旧但不空)。 */
 export async function loadFreshJSON(path) {
   try {
     const headers = { Accept: "application/vnd.github.raw+json" };
     const pat = getPat();
     if (pat) headers.Authorization = `Bearer ${pat}`;
-    const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}?t=${Date.now()}`, { headers });
+    const ref = path.startsWith("data/") ? "&ref=data" : "";
+    const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}?t=${Date.now()}${ref}`, { headers });
     if (r.ok) return await r.json();
   } catch { /* 限流或离线时退回 Pages */ }
   return loadJSON(path);
