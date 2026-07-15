@@ -1,0 +1,37 @@
+name: 压平 data 分支
+
+# data 分支承载盘中高频快照(每天十几次提交),历史会累积。
+# 每周把它压成单条提交并 force-push,丢弃旧版本历史,长期控住仓库体积。
+# 选在周六(无采集、无并发推送)执行,避免和滚动采集撞车。
+on:
+  schedule:
+    - cron: "0 7 * * 6"   # 周六 UTC 07:00
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+# 避免与手动触发/上一轮重叠
+concurrency:
+  group: squash-data
+  cancel-in-progress: false
+
+jobs:
+  squash:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: data
+          fetch-depth: 1
+
+      - name: 压平历史为单条提交并 force-push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config http.postBuffer 524288000
+          git checkout --orphan _squashed
+          git add -A
+          git commit -q -m "chore: squash data 分支 $(date -u +%F)"
+          git branch -M data
+          git push -f origin data
