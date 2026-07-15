@@ -7,7 +7,7 @@ import {
 const LWC = window.LightweightCharts;
 const ET = "America/New_York";
 
-let RESEARCH = null, GEX = null, GEXH = null;
+let RESEARCH = null, GEX = null, GEXH = null, BARS = null;
 let CFG = { watchlist: [], deep: [] };  // 标的分组,来自 config/tickers.json,卡片开关就地编辑
 let SYM = localStorage.getItem("wbSym") || null;
 let TF = localStorage.getItem("wbTf") || "5m";
@@ -32,6 +32,7 @@ const etDay = (ms) => new Date(ms).toLocaleDateString("en-CA", { timeZone: ET })
 
 /* ---------- 数据变换 ---------- */
 function researchOf(sym) { return RESEARCH?.tickers?.[sym] || {}; }
+function barsOf(sym) { return BARS?.tickers?.[sym] || {}; }  // 高频K线在独立文件
 
 function aggregate(bars, n) {
   // 按 n 根合并,跨交易日断开
@@ -53,11 +54,11 @@ function aggregate(bars, n) {
 }
 
 function barsFor(sym, tf) {
-  const d = researchOf(sym);
-  if (tf === "1m") return d.bars_1m || [];
-  if (tf === "5m") return d.bars_5m || [];
-  if (tf === "15m") return aggregate(d.bars_5m || [], 3);
-  return d.bars_d || [];
+  const b = barsOf(sym);
+  if (tf === "1m") return b.bars_1m || [];
+  if (tf === "5m") return b.bars_5m || [];
+  if (tf === "15m") return b.bars_15m || aggregate(b.bars_5m || [], 3);  // 后端原生15m,缺失时回退5m聚合
+  return researchOf(sym).bars_d || [];
 }
 
 function ema(closes, n) {
@@ -135,7 +136,7 @@ function computeAVWAP(bars, t) {
 }
 
 const lastClose = (sym) => {
-  const b = researchOf(sym).bars_1m || researchOf(sym).bars_5m || [];
+  const b = barsOf(sym).bars_1m || barsOf(sym).bars_5m || [];
   return b.length ? b[b.length - 1][4] : null;
 };
 const spotOf = (sym) => (RESEARCH?.snapshots?.[sym]?.price) ?? lastClose(sym) ?? GEX?.tickers?.[sym]?.spot;
@@ -744,10 +745,11 @@ function initControls() {
 
 /* ---------- 数据加载与轮询 ---------- */
 async function loadData() {
-  [RESEARCH, GEX, GEXH] = await Promise.all([
+  [RESEARCH, GEX, GEXH, BARS] = await Promise.all([
     loadFreshJSON("data/research.json"),
     loadFreshJSON("data/gex.json"),
     loadFreshJSON("data/gex_history.json"),
+    loadFreshJSON("data/bars_intraday.json"),
   ]);
 }
 
