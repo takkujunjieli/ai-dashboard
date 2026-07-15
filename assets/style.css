@@ -163,7 +163,7 @@ footer { margin-top: 50px; text-align: center; }
   padding: 8px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
   position: sticky; top: 0; background: var(--bg); z-index: 5; }
 .wb-toolbar .chips { margin: 0; }
-.wb-toolbar .stat-row { padding: 0; margin-left: auto; }
+.wb-statbar { padding: 6px 0; }  /* 关键指标独占一行,左对齐(stat-row 默认 justify-content: flex-start) */
 
 .wb-main { display: flex; gap: 10px; margin-top: 12px; }
 .wb-chart { flex: 1; min-width: 0; }
