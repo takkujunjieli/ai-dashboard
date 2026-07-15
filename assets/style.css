@@ -97,6 +97,15 @@ tr:last-child td { border-bottom: none; }
 .stock-card, #opt-cards .card { margin-bottom: 14px; }
 .stat-row { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; padding: 5px 0; color: var(--muted); }
 .stat-row b { color: var(--text); }
+
+/* 期权面板 grid 磁贴 */
+.opt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 8px; margin: 4px 0 10px; }
+.opt-tile { background: var(--card-hover); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; }
+.opt-k { font-size: 11px; color: var(--muted); margin-bottom: 2px; }
+.opt-v { font-size: 15px; font-weight: 700; color: var(--text); }
+.opt-v.up { color: var(--up); }
+.opt-v.down { color: var(--down); }
+.opt-sub { font-size: 11px; font-weight: 400; color: var(--muted); }
 .prem-bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: var(--down); margin: 8px 0 2px; }
 .prem-bar .prem-call { background: var(--up); height: 100%; }
 details summary { cursor: pointer; padding: 4px 0; }
