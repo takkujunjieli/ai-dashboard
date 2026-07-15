@@ -546,28 +546,44 @@ function renderOptPanel() {
       "", "Implied move to nearest expiry (and 1-day), from ATM IV");
   }
 
-  // ATM IV(带自身历史分位)
+  const pv = (p) => (p != null ? `P${p}` : "");  // 自身历史分位标签
+
+  // ATM IV(自身分位 + 相对 QQQ 倍数及其分位)
   const ivPct = o.atm_iv_pct;
+  const ivSub = [
+    ivPct != null ? `P${ivPct}` : "hist n/a",
+    o.iv_vs_qqq != null ? `vs QQQ ${o.iv_vs_qqq}×${o.iv_vs_qqq_pct != null ? " " + pv(o.iv_vs_qqq_pct) : ""}` : "",
+  ].filter(Boolean).join(" · ");
   const ivTile = tile("ATM IV", o.atm_iv != null ? (o.atm_iv * 100).toFixed(0) + "%" : "&mdash;",
-    ivPct != null ? `${ivPct}%ile` : "hist n/a",
+    ivSub,
     ivPct != null && ivPct >= 70 ? "down" : ivPct != null && ivPct <= 30 ? "up" : "",
-    "ATM IV + own-history percentile (>=70 rich, <=30 cheap)");
+    "ATM IV · 自身历史分位(P≥70 贵/≤30 便宜)· 相对 QQQ IV 的倍数及其分位");
 
-  // IV skew
+  // IV skew(自身分位 + 相对 QQQ 的 skew 价差)
   const sk = o.iv_skew;
-  const skewTile = sk ? tile("IV skew", `${sk.rr >= 0 ? "+" : ""}${(sk.rr * 100).toFixed(1)}%`, sk.rr > 0.01 ? "put skew" : sk.rr < -0.01 ? "call skew" : "flat", sk.rr >= 0 ? "down" : "up", `RR = ~7% OTM put IV − call IV (P${(sk.put_iv * 100).toFixed(0)}/C${(sk.call_iv * 100).toFixed(0)})`) : "";
+  const skewSub = sk ? [
+    sk.rr > 0.01 ? "put skew" : sk.rr < -0.01 ? "call skew" : "flat",
+    pv(o.skew_rr_pct),
+    o.skew_vs_qqq != null ? `${o.skew_vs_qqq >= 0 ? "+" : ""}${(o.skew_vs_qqq * 100).toFixed(0)}pt vs QQQ` : "",
+  ].filter(Boolean).join(" · ") : "";
+  const skewTile = sk ? tile("IV skew", `${sk.rr >= 0 ? "+" : ""}${(sk.rr * 100).toFixed(1)}%`, skewSub, sk.rr >= 0 ? "down" : "up", `RR = ~7% OTM put IV − call IV (P${(sk.put_iv * 100).toFixed(0)}/C${(sk.call_iv * 100).toFixed(0)}) · 自身分位 · 相对 QQQ 价差`) : "";
 
-  // IV term
+  // IV term(自身分位)
   let termTile = "";
   if (be.length >= 2 && be[0].atm_iv && be[be.length - 1].atm_iv) {
     const f = be[0].atm_iv, b = be[be.length - 1].atm_iv;
-    termTile = tile("IV term", `${(f * 100).toFixed(0)}→${(b * 100).toFixed(0)}%`, f > b ? "backwrd" : "contango", "", "Front vs back ATM IV");
+    const termSub = [f > b ? "backwrd" : "contango", pv(o.iv_term_pct)].filter(Boolean).join(" · ");
+    termTile = tile("IV term", `${(f * 100).toFixed(0)}→${(b * 100).toFixed(0)}%`, termSub, "", "Front vs back ATM IV · 自身分位");
   }
 
-  // VRP(IV − 20d 已实现波动)
+  // VRP(IV − 20d 已实现波动,自身分位)
   const rv = realizedVol(d.bars_d, 20);
   let vrpTile = "";
-  if (o.atm_iv && rv) { const vrp = o.atm_iv - rv; vrpTile = tile("VRP", `${vrp >= 0 ? "+" : ""}${(vrp * 100).toFixed(0)}pt`, vrp > 0 ? "rich" : "cheap", vrp >= 0 ? "down" : "up", `ATM IV ${(o.atm_iv * 100).toFixed(0)}% − 20d RV ${(rv * 100).toFixed(0)}%`); }
+  if (o.atm_iv && rv) {
+    const vrp = o.atm_iv - rv;
+    const vrpSub = [vrp > 0 ? "rich" : "cheap", pv(o.vrp_pct)].filter(Boolean).join(" · ");
+    vrpTile = tile("VRP", `${vrp >= 0 ? "+" : ""}${(vrp * 100).toFixed(0)}pt`, vrpSub, vrp >= 0 ? "down" : "up", `ATM IV ${(o.atm_iv * 100).toFixed(0)}% − 20d RV ${(rv * 100).toFixed(0)}% · 自身分位`);
+  }
 
   // PCR:vol / OI / prem 三种口径合并到一格
   const allV = Object.values(RESEARCH?.tickers || {}).map((x) => x.options?.pcr_vol).filter((v) => v != null);
@@ -579,8 +595,8 @@ function renderOptPanel() {
   ];
   const pcrTile = pcrParts.some((x) => x != null)
     ? tile("PCR", pcrParts.map((x) => x != null ? x : "—").join(" / "),
-        `vol/OI/prem${rank != null ? ` · WL ${rank}/${allV.length}` : ""}`, "",
-        "Put/Call ratio by volume / open interest / premium (low = call-heavy)")
+        `vol/OI/prem${o.pcr_vol_pct != null ? ` · ${pv(o.pcr_vol_pct)}` : ""}${rank != null ? ` · WL ${rank}/${allV.length}` : ""}`, "",
+        "Put/Call ratio by volume / open interest / premium (low = call-heavy) · vol 自身分位 · watchlist 排名")
     : "";
 
   // Max Pain / Earnings

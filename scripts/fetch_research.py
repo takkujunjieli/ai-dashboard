@@ -12,6 +12,7 @@
 输出: data/research.json;OI 存档 data/oi_prev.json(算跨日 OI 变化)
 """
 import json
+import math
 import os
 import time
 from datetime import date, datetime, timedelta, timezone
@@ -50,6 +51,19 @@ def pct_rank(hist: list, val, minn: int = 10) -> int | None:
     if val is None or len(h) < minn:
         return None
     return round(100 * sum(1 for x in h if x <= val) / len(h))
+
+
+def realized_vol(bars: list, n: int = 20) -> float | None:
+    """已实现波动率(n 日收盘对数收益年化),用于 VRP。bars: [t,o,h,l,c,v,vw]。"""
+    if not bars or len(bars) < n + 1:
+        return None
+    cl = [b[4] for b in bars[-(n + 1):]]
+    r = [math.log(cl[i] / cl[i - 1]) for i in range(1, len(cl)) if cl[i - 1] > 0]
+    if len(r) < 2:
+        return None
+    m = sum(r) / len(r)
+    v = sum((x - m) ** 2 for x in r) / (len(r) - 1)
+    return math.sqrt(v) * math.sqrt(252)
 
 
 def mget(path: str, **params):
@@ -740,15 +754,35 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
     if not KEY:
         out["errors"].append("未设置 MASSIVE_API_KEY:快照/指标/short 未抓取,K线与期权走雅虎回退")
 
-    # PCR 自身历史百分位:今日 PCR 在该票日志中的排位(<10 天样本不给,标 None)
+    # 先算派生标量(skew/term/VRP + 相对 QQQ),再统一算自身历史百分位
     daily_path = ROOT / "data" / "gex_daily.json"
     daily = load_json(daily_path, {})
     today_str = now.date().isoformat()
+    # 基准一律 QQQ(其期权本轮/上轮已采,合并在 out["tickers"] 中)
+    qopt = (out["tickers"].get("QQQ") or {}).get("options") or {}
+    qiv = qopt.get("atm_iv")
+    qrr = (qopt.get("iv_skew") or {}).get("rr")
     for sym in targets:
         opt = (out["tickers"].get(sym) or {}).get("options")
         if not opt:
             continue
-        for key in ("pcr_vol", "pcr_oi", "atm_iv"):
+        # 派生标量:供百分位与前端展示
+        opt["skew_rr"] = (opt.get("iv_skew") or {}).get("rr")
+        be = opt.get("by_expiry") or []
+        if len(be) >= 2 and be[0].get("atm_iv") and be[-1].get("atm_iv"):
+            opt["iv_term"] = round(be[0]["atm_iv"] - be[-1]["atm_iv"], 4)  # >0 = backwardation
+        rv = realized_vol((out["tickers"].get(sym) or {}).get("bars_d"), 20)
+        if opt.get("atm_iv") is not None and rv is not None:
+            opt["vrp"] = round(opt["atm_iv"] - rv, 4)
+            opt["rv20"] = round(rv, 4)
+        # 相对 QQQ(基准自身不与自身比)
+        if sym != "QQQ":
+            if opt.get("atm_iv") and qiv:
+                opt["iv_vs_qqq"] = round(opt["atm_iv"] / qiv, 2)
+            if opt.get("skew_rr") is not None and qrr is not None:
+                opt["skew_vs_qqq"] = round(opt["skew_rr"] - qrr, 4)
+        # 自身历史百分位(样本 <10 天返回 None)
+        for key in ("pcr_vol", "pcr_oi", "atm_iv", "skew_rr", "iv_term", "vrp", "iv_vs_qqq"):
             hist = [daily[d][sym][key] for d in daily
                     if sym in daily[d] and daily[d][sym].get(key) is not None and d != today_str][-60:]
             opt[f"{key}_pct"] = pct_rank(hist, opt.get(key))
@@ -801,7 +835,9 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                     "flip_nom": g["flip"], "net_nom": g["net_gex"],
                     "flip_flow": fl.get("flip"), "net_flow": fl.get("net_gex"),
                     "coverage": fl.get("coverage"), "ambiguity": fl.get("ambiguity"),
-                    "pcr_vol": opt.get("pcr_vol"), "pcr_oi": opt.get("pcr_oi"), "atm_iv": opt.get("atm_iv")}
+                    "pcr_vol": opt.get("pcr_vol"), "pcr_oi": opt.get("pcr_oi"), "atm_iv": opt.get("atm_iv"),
+                    "skew_rr": opt.get("skew_rr"), "iv_term": opt.get("iv_term"),
+                    "vrp": opt.get("vrp"), "iv_vs_qqq": opt.get("iv_vs_qqq")}
     for k in sorted(daily)[:-250]:  # 只留最近 250 天
         del daily[k]
     daily_path.write_text(json.dumps(daily, ensure_ascii=False, indent=1))
