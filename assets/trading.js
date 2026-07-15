@@ -595,6 +595,7 @@ function renderOptPanel() {
   const pd = o.prem_delta;
   const dTile = pd ? tile("Δ prem", `<span class="${pd.call >= 0 ? "up" : "down"}">C ${(pd.call >= 0 ? "+" : "") + fmtMoney(pd.call)}</span> / <span class="${pd.put >= 0 ? "up" : "down"}">P ${(pd.put >= 0 ? "+" : "") + fmtMoney(pd.put)}</span>`, "", "", "Premium increment since last collection") : "";
   const premTotal = (o.call_premium + o.put_premium) || 1, cw = (o.call_premium / premTotal * 100).toFixed(1);
+  const cwInt = Math.round(o.call_premium / premTotal * 100);
 
   const expRows = be.map((e) => `<tr>
     <td>${mmdd(e.exp)}</td>
@@ -610,7 +611,7 @@ function renderOptPanel() {
   const body = `<div class="opt-grid">
     ${emTile}${ivTile}${skewTile}${termTile}${vrpTile}${pcrTile}${mpTile}${earnTile}${premTile}${dTile}
   </div>
-    <div class="prem-bar" title="Call premium share"><div class="prem-call" style="width:${cw}%"></div></div>
+    <div class="prem-bar" title="Call premium share: ${cwInt}% (Put ${100 - cwInt}%)"><div class="prem-call" style="width:${cw}%"></div></div>
     <div class="muted small">Premium = activity (not buy/sell) — read direction with OI change + Flow-GEX.</div>
     ${(o.top_strikes || []).length ? `<details open><summary class="muted small">Most active strikes today</summary>
       <table><tr><th>Exp</th><th>Strike</th><th>Side</th><th>Vol</th><th>OI</th><th>Prem</th></tr>${(o.top_strikes || []).map((t) => `<tr>
