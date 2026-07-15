@@ -19,7 +19,11 @@
 <div id="mini-cards" class="quotes-strip mini-strip"></div>
 <div id="cfg-status" class="muted small"></div>
 
-<!-- Toolbar: timeframe / ladder mode / key stats -->
+<!-- ================= Price & GEX panel (underlying trading + risk) ================= -->
+<section>
+  <h2>📈 Price &amp; GEX <span class="muted small">underlying + dealer gamma / risk</span></h2>
+
+<!-- Toolbar: timeframe / ladder mode -->
 <div class="wb-toolbar">
   <div id="tf-chips" class="chips">
     <button data-tf="1m">1m</button>
@@ -42,8 +46,10 @@
     <button data-c="nominal" class="active">Nominal</button>
     <button data-c="flow">Flow</button>
   </div>
-  <div id="wb-stats" class="stat-row"></div>
 </div>
+
+<!-- Key stats (left-aligned row) -->
+<div id="wb-stats" class="stat-row wb-statbar"></div>
 
 <!-- Overlay toggles (candles & volume always on) + anchored-VWAP anchor -->
 <div class="wb-toolbar wb-overlays">
@@ -73,6 +79,7 @@
     <div id="ladder-box"><svg id="ladder" xmlns="http://www.w3.org/2000/svg"></svg></div>
   </div>
 </div>
+</section>
 
 <!-- Options panel -->
 <section>
