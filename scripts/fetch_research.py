@@ -36,7 +36,7 @@ SLEEP = float(os.environ.get("MASSIVE_SLEEP", "0.08"))
 OPT_SLEEP = float(os.environ.get("MASSIVE_SLEEP_OPTIONS", "0.08"))
 MAX_DTE = 45
 MAX_EXPIRATIONS = 6
-BAR_KEEP = 800  # 每个粒度最多保留的 bar 数
+BAR_KEEP = 800  # 每粒度保留 bar 数的默认上限(各粒度在 specs 里单独指定)
 
 
 def redact(exc) -> str:
@@ -91,17 +91,17 @@ def fetch_snapshots(symbols: list) -> dict:
     return out
 
 
-def fetch_bars(sym: str, mult: int, timespan: str, days: int) -> list:
-    """K 线 [t(ms), o, h, l, c, v, vw]。"""
+def fetch_bars(sym: str, mult: int, timespan: str, days: int, keep: int = BAR_KEEP) -> list:
+    """K 线 [t(ms), o, h, l, c, v, vw];keep 为该粒度最多保留的 bar 数。"""
     to = date.today()
     frm = to - timedelta(days=days)
     data = mget(f"/v2/aggs/ticker/{sym}/range/{mult}/{timespan}/{frm}/{to}",
                 adjusted="true", sort="asc", limit=50000)
     return [[r["t"], r["o"], r["h"], r["l"], r["c"], r["v"], r.get("vw")]
-            for r in (data.get("results") or [])][-BAR_KEEP:]
+            for r in (data.get("results") or [])][-keep:]
 
 
-def bars_yahoo(sym: str, interval: str, period: str) -> list:
+def bars_yahoo(sym: str, interval: str, period: str, keep: int = BAR_KEEP) -> list:
     """雅虎 K 线回退(免费,盘中约 15 分钟内延迟)。"""
     import yfinance as yf
     df = yf.Ticker(sym).history(period=period, interval=interval)
@@ -109,7 +109,7 @@ def bars_yahoo(sym: str, interval: str, period: str) -> list:
              round(float(r["Open"]), 4), round(float(r["High"]), 4),
              round(float(r["Low"]), 4), round(float(r["Close"]), 4),
              int(r["Volume"]), None]
-            for ts, r in df.iterrows()][-BAR_KEEP:]
+            for ts, r in df.iterrows()][-keep:]
 
 
 def fetch_short(sym: str) -> dict:
@@ -590,6 +590,10 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
     gex_prev = load_json(ROOT / "data" / "gex.json", {}) if merge else {}
     gex_out = {"updated_at": now_iso,
                "tickers": dict(gex_prev.get("tickers") or {}), "errors": []}
+    # 高频 K 线拆到独立文件(控制 research.json 体积/diff)
+    bars_prev = load_json(ROOT / "data" / "bars_intraday.json", {}) if merge else {}
+    bars_out = {"updated_at": now_iso,
+                "tickers": dict(bars_prev.get("tickers") or {}), "errors": []}
 
     oi_path = ROOT / "data" / "oi_prev.json"
     oi_all = load_json(oi_path, {}).get("oi", {})
@@ -607,31 +611,52 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
     use_massive_options = bool(KEY)
     for sym in targets:
         old = (prev.get("tickers") or {}).get(sym, {}) if merge else {}
+        old_bars = (bars_prev.get("tickers") or {}).get(sym, {}) if merge else {}
         entry = {"asof": now_iso}
+        bar_entry = dict(old_bars)  # 高频K线:抓取失败时沿用旧值
         skip_extras = extras_fresh(old, now)
 
-        # K线: 1分钟/5分钟每批都刷;日线属于低频层
-        specs = [("bars_1m", 1, "minute", 2, "1m", "2d"),
-                 ("bars_5m", 5, "minute", 7, "5m", "5d")]
-        if not skip_extras:
-            specs.append(("bars_d", 1, "day", 183, "1d", "6mo"))
-        for key_name, mult, timespan, days, y_iv, y_pd in specs:
-            bars = None
+        # 高频 K 线(每批都刷,写入 bars_intraday.json):1m 3天 / 5m 20天 / 15m 60天
+        # (days, keep) 双约束;keep 按每日约 1m~694、5m~175、15m~58 根(含盘前盘后)估算
+        intraday_specs = [("bars_1m", 1, "minute", 3, "1m", "3d", 2200),
+                          ("bars_5m", 5, "minute", 20, "5m", "1mo", 3600),
+                          ("bars_15m", 15, "minute", 60, "15m", "60d", 3600)]
+        for key_name, mult, timespan, days, y_iv, y_pd, keep in intraday_specs:
+            bars, suf = None, key_name.split("_")[1]
             if KEY:
                 try:
-                    bars = fetch_bars(sym, mult, timespan, days)
-                    entry[f"src_{key_name.split('_')[1]}"] = "massive"
+                    bars = fetch_bars(sym, mult, timespan, days, keep)
+                    bar_entry[f"src_{suf}"] = "massive"
                 except Exception as exc:  # noqa: BLE001
                     out["errors"].append(f"{sym} {key_name}(massive): {redact(exc)}")
             if not bars:
                 try:
-                    bars = bars_yahoo(sym, y_iv, y_pd)
-                    entry[f"src_{key_name.split('_')[1]}"] = "yahoo"
+                    bars = bars_yahoo(sym, y_iv, y_pd, keep)
+                    bar_entry[f"src_{suf}"] = "yahoo"
                 except Exception as exc:  # noqa: BLE001
                     out["errors"].append(f"{sym} {key_name}(yahoo): {redact(exc)}")
             if bars:
-                entry[key_name] = bars
-        entry["vwap"] = session_vwap(entry.get("bars_1m") or [])
+                bar_entry[key_name] = bars
+        bars_out["tickers"][sym] = bar_entry
+
+        # 日线(低频层,存 research.json;保留半年;skip_extras 时由 EXTRAS_KEYS 沿用旧值)
+        if not skip_extras:
+            bars = None
+            if KEY:
+                try:
+                    bars = fetch_bars(sym, 1, "day", 183, 200)
+                    entry["src_d"] = "massive"
+                except Exception as exc:  # noqa: BLE001
+                    out["errors"].append(f"{sym} bars_d(massive): {redact(exc)}")
+            if not bars:
+                try:
+                    bars = bars_yahoo(sym, "1d", "6mo", 200)
+                    entry["src_d"] = "yahoo"
+                except Exception as exc:  # noqa: BLE001
+                    out["errors"].append(f"{sym} bars_d(yahoo): {redact(exc)}")
+            if bars:
+                entry["bars_d"] = bars
+        entry["vwap"] = session_vwap(bar_entry.get("bars_1m") or [])
 
         # 低频层: 指标/short/新闻/日线,每 EXTRAS_TTL 秒刷一次,批模式下沿用旧值
         if skip_extras:
@@ -654,14 +679,14 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
             entry["extras_asof"] = now_iso
 
         # 技术指标:本地从 K 线算(零 API 成本),每批刷新
-        closes_m = [b[4] for b in entry.get("bars_1m", [])]
+        closes_m = [b[4] for b in bar_entry.get("bars_1m", [])]
         closes_d = [b[4] for b in entry.get("bars_d", [])]
         if closes_m or closes_d:
             entry["ind"] = {"rsi_m": rsi(closes_m), "rsi_d": rsi(closes_d),
                             "ema9_m": ema_last(closes_m, 9), "ema21_m": ema_last(closes_m, 21)}
 
         spot = (out["snapshots"].get(sym) or {}).get("price") \
-            or (entry.get("bars_1m") or entry.get("bars_5m") or [[0] * 5])[-1][4] or None
+            or (bar_entry.get("bars_1m") or bar_entry.get("bars_5m") or [[0] * 5])[-1][4] or None
 
         # 期权(每批都刷,GEX 由链上 gamma 一并算出)
         contracts = None
@@ -708,7 +733,8 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                 gex_out["tickers"][sym] = gex
 
         out["tickers"][sym] = entry
-        done = [k for k in ("bars_1m", "bars_5m", "ind", "short", "short_vol", "news", "options") if entry.get(k)]
+        done = [k for k in ("bars_1m", "bars_5m", "bars_15m") if bar_entry.get(k)] \
+            + [k for k in ("ind", "short", "short_vol", "news", "options") if entry.get(k)]
         print(f"✓ {sym}: {'/'.join(done) or '无数据'}{'(低频层沿用)' if skip_extras else ''}")
 
     if not KEY:
@@ -740,6 +766,9 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
             entry["earnings_days"] = (date.fromisoformat(ecal[sym]) - now.date()).days
 
     (ROOT / "data" / "research.json").write_text(json.dumps(out, ensure_ascii=False, indent=1))
+    # 高频 K 线独立文件,紧凑写(无缩进)以压小体积/diff
+    (ROOT / "data" / "bars_intraday.json").write_text(
+        json.dumps(bars_out, ensure_ascii=False, separators=(",", ":")))
     if oi_next:
         oi_all.update(oi_next)  # 只更新本批标的的合约,保留其他标的的存档
         oi_path.write_text(json.dumps(
@@ -777,7 +806,7 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
         del daily[k]
     daily_path.write_text(json.dumps(daily, ensure_ascii=False, indent=1))
 
-    print(f"已写入 research/gex/gex_history/gex_daily(期权源: {out['options_source']}, "
+    print(f"已写入 research/bars_intraday/gex/gex_history/gex_daily(期权源: {out['options_source']}, "
           f"本批 {len(targets)} 只, 错误 {len(out['errors'])} 条)")
 
 
