@@ -600,7 +600,11 @@ function renderOptPanel() {
     : "";
 
   // Max Pain / Earnings
-  const mpTile = o.max_pain != null ? tile("Max Pain", o.max_pain, spot ? `${spot >= o.max_pain ? "+" : ""}${((spot / o.max_pain - 1) * 100).toFixed(1)}%` : "", "", "Pin magnet (nearest expiry)") : "";
+  const mpSub = [
+    spot ? `${spot >= o.max_pain ? "+" : ""}${((spot / o.max_pain - 1) * 100).toFixed(1)}%` : "",
+    o.maxpain_pin != null ? `pin ${o.maxpain_pin}` : "",
+  ].filter(Boolean).join(" · ");
+  const mpTile = o.max_pain != null ? tile("Max Pain", o.max_pain, mpSub, "", "Pin 磁吸可信度 0-100(gamma门×距离×到期×波动×OI)· <20 当噪声 / >45 才当目标") : "";
   const earnTile = d.earnings_days != null ? tile("Earnings", d.earnings_days + "d", mmdd(d.earnings_date), d.earnings_days <= 10 ? "down" : "", "IV-crush risk into earnings") : "";
 
   // 权利金:Call / Put / Net 合并到一格;Δ(自上次采集增量)单独一格

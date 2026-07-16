@@ -66,6 +66,29 @@ def realized_vol(bars: list, n: int = 20) -> float | None:
     return math.sqrt(v) * math.sqrt(252)
 
 
+def maxpain_pin_score(spot, flip, net_gex, max_pain, iv, dte, rv, adv) -> int | None:
+    """Max Pain 作为"价格磁吸目标"的可信度 0-100(启发式,权重/阈值待回测校准,见 TODO#7)。
+    结构:gamma 门(乘法)× 加权几何平均(距离/到期/波动/OI),weakest-link。
+    <20 当噪声 · 20-45 弱参考 · >45 才当目标看。"""
+    if not (spot and max_pain and iv and dte is not None):
+        return None
+    sig = iv * math.sqrt(max(dte, 0.5) / 365)                 # 到期前期望振幅(比例)
+    sig_abs = spot * sig
+    d_sigma = abs(math.log(max_pain / spot)) / sig if sig else 9.0
+    f_dist = math.exp(-0.5 * d_sigma ** 2)                    # max pain 距现价(σ 归一)
+    f_time = math.exp(-dte / 5)                               # 越近到期越强
+    f_vol = 1 / (1 + (rv / 0.6) ** 2) if rv else 0.5          # 越平静越强(RV 60%≈半分)
+    gex_adv = abs(net_gex) / (adv * spot) * 100 if (net_gex and adv) else None
+    f_oi = min(max(gex_adv / 1.5, 0.05), 1.0) if gex_adv is not None else 0.5  # 期权尾巴能否摇动股票
+    if flip is not None and sig_abs:                          # gamma 门:正 gamma 才有钉
+        z = (spot - flip) / sig_abs
+    else:
+        z = 1.0 if (net_gex or 0) > 0 else -1.0               # flip 越界时退化用 net 符号(粗,见 TODO#7b)
+    gate = 1 / (1 + math.exp(-1.5 * z))
+    core = (f_dist ** 0.35) * (f_time ** 0.25) * (f_vol ** 0.25) * (f_oi ** 0.15)
+    return round(100 * gate * core)
+
+
 def mget(path: str, **params):
     url = path if path.startswith("http") else f"{BASE}{path}"
     if KEY:
@@ -775,6 +798,13 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
         if opt.get("atm_iv") is not None and rv is not None:
             opt["vrp"] = round(opt["atm_iv"] - rv, 4)
             opt["rv20"] = round(rv, 4)
+        # Max Pain 可信度分(0-100):需 GEX(flip/net)+ ADV + RV,故在此后处理算(见 maxpain_pin_score)
+        gx = gex_out["tickers"].get(sym) or {}
+        adv = ((out["tickers"].get(sym) or {}).get("short") or {}).get("avg_daily_volume")
+        mp_dte = (date.fromisoformat(opt["max_pain_exp"]) - now.date()).days if opt.get("max_pain_exp") else None
+        opt["maxpain_pin"] = maxpain_pin_score(
+            gx.get("spot"), gx.get("flip"), gx.get("net_gex"),
+            opt.get("max_pain"), opt.get("atm_iv"), mp_dte, rv, adv)
         # 相对 QQQ(基准自身不与自身比)
         if sym != "QQQ":
             if opt.get("atm_iv") and qiv:
@@ -837,7 +867,8 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                     "coverage": fl.get("coverage"), "ambiguity": fl.get("ambiguity"),
                     "pcr_vol": opt.get("pcr_vol"), "pcr_oi": opt.get("pcr_oi"), "atm_iv": opt.get("atm_iv"),
                     "skew_rr": opt.get("skew_rr"), "iv_term": opt.get("iv_term"),
-                    "vrp": opt.get("vrp"), "iv_vs_qqq": opt.get("iv_vs_qqq")}
+                    "vrp": opt.get("vrp"), "iv_vs_qqq": opt.get("iv_vs_qqq"),
+                    "max_pain": opt.get("max_pain"), "maxpain_pin": opt.get("maxpain_pin")}
     for k in sorted(daily)[:-250]:  # 只留最近 250 天
         del daily[k]
     daily_path.write_text(json.dumps(daily, ensure_ascii=False, indent=1))
