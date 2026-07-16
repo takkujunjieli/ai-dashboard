@@ -26,3 +26,33 @@
 
 ## 5. 真·秒级实时(可选,大改) 【架构】
 要秒级而非"每轮一跳",需用 **Massive 期权/股票 websocket 流**(订阅制,非 calls/min)。与当前"GitHub Actions 批量 → 静态 JSON → 前端轮询"架构不兼容,需常驻进程(自建小服务/Vercel 等)。仅在对实时性有强需求时评估。
+
+## 6. ATM IV 口径去偏:改用 ≥20 DTE 常数期限 + OI 加权 + 脏报价过滤 【数据质量 / 估计量去偏(estimator debiasing)】
+**工作类型**:数据质量修复 · 估计量去偏(不是新功能,是给现有指标做**偏差校正**)。
+**根因(为何"脏")**:`summarize_options` 的 `atm_iv` 建在**最近到期**上,叠加三重偏差 —
+- **近月 vega 塌缩**:σ≈price/(0.4·S·√T),T→0 时分母趋零,报价噪声被 ~1/√T 放大(1DTE 比 30DTE 噪声 ~5.5×);
+- **市场微观结构噪声(microstructure noise)**:近月/清淡合约 bid-ask 宽,且用 `day.vwap/close`(陈旧成交价,非实时 mid);
+- **薄样本聚合偏差**:ATM ±3% 内**简单平均**,临期常只剩 1–2 张,单张薄合约主导。
+**症状(实测 2026-07-15)**:AMD 盘后 ATM IV **96%** → 盘中 **43%**;`iv_vs_qqq` 从虚高 **3.56×** 回落到合理 **1.42×**。skew/term/vrp/expected-move 全建在这个 IV 上,一并被污染。
+**做法**:
+1. 主 `atm_iv` 改选 **DTE ≥ 20 的最近一档**(或在夹住 20/30 DTE 的两档间插值到常数期限),取 ATM ±3% 内合约的 **OI 加权** IV(`iv=None` 剔除、`oi=0` 自然零权重);
+2. `iv_skew` / `iv_term` 切到同一更稳的到期基准;
+3. **保留最近到期的 IV 单列**(如 `atm_iv_front`),供对比近月溢价/失真;
+4. 视需要调大 `MAX_EXPIRATIONS`,让 20 DTE 那档也进 `by_expiry` 表(否则算得到、表里看不到)。
+**数据可用性(已确认)**:`MAX_DTE=45` 已抓到 20 DTE,每合约带 `open_interest`+`implied_volatility`;周期权密集票(AMD/TSLA/MU)的 20 DTE **在原始 `contracts` 里**(`by_expiry` 被 `MAX_EXPIRATIONS=6` 截断只是不展示,`summarize_options` 计算不受影响);CRWD 类月度密集票直接可见 16/23/30 DTE 带 OI。
+**影响面**:`atm_iv` / `atm_iv_pct` / `iv_skew` / `iv_term` / `vrp` / `iv_vs_qqq` 及前端预期振幅 —— 改口径后历史分位是**新口径的序列**(旧 `gex_daily` 里的近月 IV 与新值不可直接比,分位需重新从改动日起累积)。
+
+## 7. Max Pain pin score 的回测校准 + gamma 门质量优化 【模型校准 / 数据质量】
+**背景**:已上线 `maxpain_pin`(0–100,判断某个 max pain 该不该当"价格磁吸目标";乘法门=gamma,余=f_dist/f_time/f_vol/f_oi 加权几何平均)。权重(0.35/0.25/0.25/0.15)与阈值(RV 0.6、%ADV 1.5、门 logistic 斜率 1.5)目前是**拍的合理值,未拟合**。两个后续问题:
+
+**7a. 回测校准(把启发式变成有据分数)**
+- `gex_daily` 每日存了 `maxpain_pin` + `spot` + `max_pain`(及 flip/net/iv 等)。攒够跨越若干到期日后,回测:**到期日实际收盘 vs 当时 max pain 的距离**,按分数分桶看命中率(高分组是否真的更贴近 max pain)。
+- 用命中率反推/拟合权重与阈值(如逻辑回归:P(|结算−maxpain|<x%) ~ 各因子),把主观权重换成数据权重。
+- 产出:校准后的权重表 + 分档阈值(现在暂用 <20 噪声 / 20–45 弱 / >45 目标)。
+
+**7b. gamma 门的质量问题(当前最大误差源)**
+- 门几乎主导总分,但它依赖 `flip` / `net_gex` 的**符号质量**:
+  - **ETF 的 `flip=None`**(SPY/QQQ/SOXX 无 flow,且 flip 常越界)→ 现在退化成用 `net_gex` 符号(±1),很粗。实测 QQQ 明明 max pain 贴现价、0DTE、低波动,却因快照期 `net_gex` 为负被门摁到 17 —— 疑似**假门**。
+  - `net_gex` 单快照有噪声,符号可能翻。
+- 优化方向:(1) 门改用**近价窗口的净 gamma**(spot ±1–2% 累计),而非全链 `net_gex` 符号;(2) 对 `flip=None` 用**平滑的近价 gamma 斜率**替代 ±1 硬兜底;(3) 门值做**多快照平滑**(近 N 轮均值)降噪。
+- 验证:重跑 QQQ/SPY 这类"应高分却被门压低"的样本,确认修正后落回合理档。
