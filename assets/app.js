@@ -38,6 +38,7 @@ function initTickerFilter() {
    单字母代码(如 U)只认 $U,避免误匹配普通单词 */
 function feedMatches(i) {
   if (selected.size === 0) return true;
+  if (Array.isArray(i.tickers) && i.tickers.some((t) => selected.has(t))) return true;  // Massive 结构化票代码,最精确
   const text = `${i.title || ""} ${i.summary || ""}`;
   return [...selected].some((sym) => {
     const re = sym.length >= 2 ? new RegExp(`\\b\\$?${sym}\\b`) : new RegExp(`\\$${sym}\\b`);

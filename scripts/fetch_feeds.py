@@ -18,6 +18,10 @@ import yaml
 ROOT = Path(__file__).resolve().parent.parent
 UA = "stock-dashboard/1.0 (personal RSS reader)"  # Reddit 等站点会拦截默认 python UA
 
+# Massive 市场新闻(/v2/reference/news):有 key 才抓,只保留提及 watchlist 股票的文章
+MASSIVE_KEY = os.environ.get("MASSIVE_API_KEY", "").strip()
+MASSIVE_BASE = os.environ.get("MASSIVE_BASE_URL", "https://api.massive.com").rstrip("/")
+
 # Reddit 已封锁匿名 JSON API,拿点赞/评论数需要免费的 OAuth 凭证
 # 注册: https://www.reddit.com/prefs/apps → create app → 类型选 script
 REDDIT_ID = os.environ.get("REDDIT_CLIENT_ID", "").strip()
@@ -92,10 +96,47 @@ def parse_reddit(src: dict, payload: dict, cutoff: datetime) -> list[dict]:
     return items
 
 
+def fetch_massive_news(watchlist: list[str], cutoff: datetime) -> list[dict]:
+    """Massive 市场新闻(免费档可用),一次调用取市场最新新闻,只留提及 watchlist 股票的文章。
+    每篇带命中的票 + Massive 情绪分析(insights)。"""
+    wl = set(watchlist)
+    since = cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")
+    params = {"apiKey": MASSIVE_KEY, "limit": 100, "sort": "published_utc",
+              "order": "desc", "published_utc.gte": since}
+    resp = requests.get(f"{MASSIVE_BASE}/v2/reference/news", params=params,
+                        headers={"Authorization": f"Bearer {MASSIVE_KEY}", "User-Agent": UA}, timeout=30)
+    resp.raise_for_status()
+    out = []
+    for r in resp.json().get("results") or []:
+        tks = [t for t in (r.get("tickers") or []) if t in wl]
+        if not tks:
+            continue  # 只保留提及 watchlist 股票的新闻
+        senti = next((i for i in (r.get("insights") or []) if i.get("ticker") in wl), {})
+        out.append({
+            "source": "Massive · " + ((r.get("publisher") or {}).get("name") or "News"),
+            "category": "news",
+            "title": (r.get("title") or "").strip(),
+            "link": r.get("article_url"),
+            "published": (r.get("published_utc") or "")[:19] or None,
+            "summary": clean_text(r.get("description") or ""),
+            "tickers": tks,
+            "sentiment": senti.get("sentiment"),
+        })
+        if len(out) >= MAX_PER_SOURCE:
+            break
+    return out
+
+
 def main() -> None:
     sources = yaml.safe_load((ROOT / "config" / "sources.yml").read_text())["sources"]
     cutoff = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
     items, errors = [], []
+
+    # 带 filter_watchlist: true 的源(如 SA 财报电话会全文)只保留 watchlist 里的股票。
+    # SA transcript 标题形如 "Company Name (TICKER) ... Transcript",按 (TICKER) 精确匹配,
+    # 括号包裹可避免裸票代码误命中(如 U、AA 出现在普通词里)。
+    watchlist = (json.loads((ROOT / "config" / "tickers.json").read_text()).get("watchlist") or [])
+    wl_pat = re.compile(r"\((" + "|".join(re.escape(t) for t in watchlist) + r")\)") if watchlist else None
 
     reddit_degraded = False
     for idx, src in enumerate(sources):
@@ -140,10 +181,13 @@ def main() -> None:
                 ts = entry_time(entry)
                 if ts and ts < cutoff:
                     continue
+                title = (getattr(entry, "title", "") or "").strip()
+                if src.get("filter_watchlist") and wl_pat and not wl_pat.search(title):
+                    continue  # 只保留 watchlist 里股票的条目
                 item = {
                     "source": src["name"],
                     "category": src.get("category", "news"),
-                    "title": (getattr(entry, "title", "") or "").strip(),
+                    "title": title,
                     "link": getattr(entry, "link", ""),
                     "published": ts.isoformat(timespec="seconds") if ts else None,
                     "summary": clean_summary(entry),
@@ -164,6 +208,16 @@ def main() -> None:
             "source": "Reddit",
             "error": "匿名 JSON 被拒,已回退 RSS — 社区帖按 hot 榜排名排序但无点赞/评论数;配置 OAuth 可显示数值,见 README",
         })
+
+    # Massive 市场新闻(仅 watchlist 相关),有 key 才抓
+    if MASSIVE_KEY and watchlist:
+        try:
+            mn = fetch_massive_news(watchlist, cutoff)
+            items.extend(mn)
+            print(f"✓ Massive 新闻: {len(mn)} 条(watchlist 相关)")
+        except Exception as exc:  # noqa: BLE001
+            errors.append({"source": "Massive News", "error": str(exc)})
+            print(f"✗ Massive 新闻: {exc}")
 
     items.sort(key=lambda i: i["published"] or "", reverse=True)
     dest = ROOT / "data" / "feeds.json"
