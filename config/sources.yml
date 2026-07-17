@@ -1,28 +1,28 @@
-# 信息流来源配置。每个来源三个字段:
+# 信息流来源配置。每个来源字段:
 #   name:     显示名称
 #   category: news(新闻) | kol(大V观点) | youtube(视频) | community(社区)
 #   url:      RSS/Atom 地址
+#   filter_watchlist: true(可选)  只保留标题里含 watchlist 股票代码 (TICKER) 的条目
 #
 # 某个源抓取失败不影响其他源,失败信息会显示在 dashboard 底部。
 
 sources:
   # ---------- 新闻网站 ----------
-  # - name: CNBC Markets
-  #   category: news
-  #   url: https://www.cnbc.com/id/100003114/device/rss/rss.html
-
-  - name: MarketWatch Top Stories
+  # 纯股市/宏观新闻(免费版 Bloomberg 定位)。CNBC 的 Markets 频道 id=20910258;
+  # 注意 id=100003114 是综合新闻(政治等),非纯股市,勿用。
+  - name: CNBC Markets
     category: news
-    url: https://feeds.content.dowjones.io/public/rss/mw_topstories
+    url: https://www.cnbc.com/id/20910258/device/rss/rss.html
 
   # - name: Yahoo Finance
   #   category: news
   #   url: https://finance.yahoo.com/news/rssindex
 
-  # 财报电话会议全文(Seeking Alpha transcripts,若被限流可注释掉)
+  # 财报电话会议全文(Seeking Alpha transcripts):全行业 firehose,只保留 watchlist 里的股票
   - name: Seeking Alpha Transcripts
     category: news
     url: https://seekingalpha.com/sector/transcripts.xml
+    filter_watchlist: true
 
   # ---------- YouTube 频道 ----------
   # 固定格式: https://www.youtube.com/feeds/videos.xml?channel_id=<频道ID>
