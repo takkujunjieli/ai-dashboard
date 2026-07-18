@@ -24,6 +24,12 @@ GEX 梯/净GEX/flip 按到期日分桶,**累计**口径(0dte ⊂ week ⊂ 2wk �
 - **流量**:±15%/≤14天里**当日成交量 top-40** 的合约,逐笔成交经 conditions 过滤(只留单腿常规 209/219/231)+ 零档 tick rule + size 加权,得净客户方向 → 反推 dealer 符号(客户净多→dealer空→负);其余合约仍用名义符号。修正 covered-call 等"名义符号反了"的情形。
 - 流量版**重**(每合约一次 `/v3/trades` 调用,占 50/min 期权额度),只对**单名股**(`FLOW_SKIP` 排除 ETF/指数)、在**低频层每小时**跑一次,批间沿用;存于 gex.json 的 `tickers[sym].flow`。交易页「口径」开关切换,流量数据缺失时自动退回名义并标注。是**估计**(tick rule ~75-80%、仅当日流量、存量 OI 用名义种子)。
 
+### 净签名期权流 (Net Signed Options Flow) — 区别于 flow-GEX
+Lee-Ready(成交价对成交时刻 NBBO)判每笔主动买卖,size 加权,汇总近价 ≤14DTE 的**客户净买卖方向**。
+- 它是 **flow-GEX 的方向内核,但不是 flow-GEX**:flow-GEX = Σ(dealer符号 × **gamma×OI**),而历史 gamma/OI 快照专属、**无法回溯重建**,故历史回测只能用这个"去掉 gamma 权重"的版本。
+- **符号语义看用途**:预测 **gamma 区制/波动延续**时,客户买 call 或 put **都**→dealer 空 gamma(不分多空);预测**涨跌方向**时才需 call/put 多空极性(买call+/卖call−/买put−/卖put+)。两者不可混用同一净值。
+- **已知误差**:①丢 gamma 权重→被高量低 gamma 的便宜虚值合约带偏;②开仓 vs 平仓无法区分(历史无每日 OI delta);③Lee-Ready 残差 ~10-20%;④size≠金额。回测结论只能推"期权流方向/gamma 区制"的预测力,**不能直接当 flow-GEX 的结论**。
+
 ### 周期集合
 K 线周期固定四档:1m / 5m / 15m / 日线。15m 由 1m 客户端聚合;日线单独抓取(6 个月)。
 
