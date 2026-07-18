@@ -15,6 +15,7 @@ import bisect
 import json
 import math
 import os
+from concurrent.futures import ThreadPoolExecutor
 import time
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -39,6 +40,14 @@ OPT_SLEEP = float(os.environ.get("MASSIVE_SLEEP_OPTIONS", "0.08"))
 MAX_DTE = 45
 MAX_EXPIRATIONS = 6
 BAR_KEEP = 800  # 每粒度保留 bar 数的默认上限(各粒度在 specs 里单独指定)
+PREFETCH_WORKERS = int(os.environ.get("PREFETCH_WORKERS", "10"))  # 阶段1 每票并发抓取(I/O bound)
+PRECISE_WORKERS = int(os.environ.get("PRECISE_WORKERS", "8"))     # 精确层 top-N 合约并发逐笔
+
+# 高频 K 线规格 (key, mult, timespan, days, yahoo_interval, yahoo_period, keep)
+# keep 上限按每日约 1m~694 / 5m~175 / 15m~58 根(含盘前盘后)估算
+INTRADAY_SPECS = [("bars_1m", 1, "minute", 3, "1m", "3d", 2200),
+                  ("bars_5m", 5, "minute", 20, "5m", "1mo", 3600),
+                  ("bars_15m", 15, "minute", 60, "15m", "60d", 3600)]
 
 
 def redact(exc) -> str:
@@ -555,15 +564,22 @@ def compute_flow_precise(sym: str, spot: float, contracts: list, today, errors: 
     cand = [c for c in contracts if c.get("ticker") and c["vol"] and lo <= c["strike"] <= hi
             and 0 <= (date.fromisoformat(c["exp"]) - today).days <= FLOW_MAX_DTE]
     ranked = sorted(cand, key=lambda c: -(_contract_gamma_oi(c, spot, today) or 0))[:FLOW_TOPN]
-    out = {}
-    for c in ranked:
+
+    def _one(c):  # 单合约逐笔:拉 trades+quotes 归并判向。返回 (ticker, net|None, err|None)
         try:
             net, sz, _flat = classify_lee_ready(fetch_option_trades(c["ticker"]),
                                                 fetch_option_quotes(c["ticker"]))
-            if sz > 0:
-                out[c["ticker"]] = net
+            return (c["ticker"], net if sz > 0 else None, None)
         except Exception as exc:  # noqa: BLE001 单合约失败不影响整体
-            errors.append(f"{sym} 精确流量 {c['ticker']}: {redact(exc)}")
+            return (c["ticker"], None, f"{sym} 精确流量 {c['ticker']}: {redact(exc)}")
+
+    out = {}
+    with ThreadPoolExecutor(max_workers=PRECISE_WORKERS) as ex:  # top-N 合约并发抓取
+        for tk, net, err in ex.map(_one, ranked):
+            if err:
+                errors.append(err)
+            elif net is not None:
+                out[tk] = net
     return out
 
 
@@ -779,6 +795,70 @@ def extras_fresh(old: dict, now: datetime) -> bool:
         return False
 
 
+def _prefetch_ticker(sym: str, snapshots: dict, old_bars: dict, skip_extras: bool) -> dict:
+    """阶段1(线程池并发):纯网络抓取,只读、建局部数据,不碰任何全局。
+    抓 K线×3(+ 非skip 时日线/short/vol/news)+ 期权链;错误收进本票列表返回。"""
+    errs, bar_entry = [], dict(old_bars)
+    for key_name, mult, timespan, days, y_iv, y_pd, keep in INTRADAY_SPECS:
+        bars, suf = None, key_name.split("_")[1]
+        if KEY:
+            try:
+                bars = fetch_bars(sym, mult, timespan, days, keep); bar_entry[f"src_{suf}"] = "massive"
+            except Exception as exc:  # noqa: BLE001
+                errs.append(f"{sym} {key_name}(massive): {redact(exc)}")
+        if not bars:
+            try:
+                bars = bars_yahoo(sym, y_iv, y_pd, keep); bar_entry[f"src_{suf}"] = "yahoo"
+            except Exception as exc:  # noqa: BLE001
+                errs.append(f"{sym} {key_name}(yahoo): {redact(exc)}")
+        if bars:
+            bar_entry[key_name] = bars
+
+    bars_d = src_d = None
+    extras = {}
+    if not skip_extras:
+        if KEY:
+            try:
+                bars_d = fetch_bars(sym, 1, "day", 183, 200); src_d = "massive"
+            except Exception as exc:  # noqa: BLE001
+                errs.append(f"{sym} bars_d(massive): {redact(exc)}")
+        if not bars_d:
+            try:
+                bars_d = bars_yahoo(sym, "1d", "6mo", 200); src_d = "yahoo"
+            except Exception as exc:  # noqa: BLE001
+                errs.append(f"{sym} bars_d(yahoo): {redact(exc)}")
+        if KEY:
+            for fn, k, label in ((fetch_short, "short", "short interest"),
+                                 (fetch_short_volume, "short_vol", "short volume"),
+                                 (fetch_news, "news", "新闻(massive)")):
+                try:
+                    extras[k] = fn(sym)
+                except Exception as exc:  # noqa: BLE001
+                    errs.append(f"{sym} {label}: {redact(exc)}")
+
+    spot = (snapshots.get(sym) or {}).get("price") \
+        or (bar_entry.get("bars_1m") or bar_entry.get("bars_5m") or [[0] * 5])[-1][4] or None
+
+    contracts, osrc = None, None
+    if KEY:
+        try:
+            contracts = options_massive(sym, spot); osrc = "massive"
+        except requests.HTTPError as exc:
+            if not (exc.response is not None and exc.response.status_code in (401, 403)):
+                errs.append(f"{sym} 期权(massive): {redact(exc)}")  # 401/403=无套餐,静默回退
+        except Exception as exc:  # noqa: BLE001
+            errs.append(f"{sym} 期权(massive): {redact(exc)}")
+    if contracts is None:
+        try:
+            contracts = options_yahoo(sym); osrc = osrc or "yahoo"
+        except Exception as exc:  # noqa: BLE001
+            errs.append(f"{sym} 期权(yahoo): {redact(exc)}")
+
+    return {"sym": sym, "bar_entry": bar_entry, "bars_d": bars_d, "src_d": src_d,
+            "extras": extras, "spot": spot, "contracts": contracts,
+            "options_source": osrc, "errors": errs}
+
+
 def main(tickers: list | None = None, merge: bool = False) -> None:
     """tickers=None 抓全 watchlist(普通组=全量深度待遇);merge=True 增量合并。
     注:deep 字段暂不作门槛(含义待定),全量给 K线/期权/GEX/指标。"""
@@ -823,103 +903,60 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
     if merge and not out["snapshots"]:
         out["snapshots"] = prev.get("snapshots") or {}
 
-    use_massive_options = bool(KEY)
+    # ---- 阶段1:并发预取每票网络数据(K线/日线/extras/期权链),不碰全局 ----
+    t_pf = time.time()
+    prefetched = {}
+    with ThreadPoolExecutor(max_workers=PREFETCH_WORKERS) as ex:
+        futs = {ex.submit(_prefetch_ticker, sym, out["snapshots"],
+                          (bars_prev.get("tickers") or {}).get(sym, {}) if merge else {},
+                          extras_fresh((prev.get("tickers") or {}).get(sym, {}) if merge else {}, now)): sym
+                for sym in targets}
+        for fut in futs:
+            sym = futs[fut]
+            try:
+                prefetched[sym] = fut.result()
+            except Exception as exc:  # noqa: BLE001
+                out["errors"].append(f"{sym} 预取: {redact(exc)}")
+    print(f"阶段1 并发预取 {len(prefetched)}/{len(targets)} 票用时 {time.time() - t_pf:.0f}s")
+
+    # ---- 阶段2:串行处理(改共享状态,CPU 为主),按 targets 顺序保证确定性 ----
     for sym in targets:
+        r = prefetched.get(sym)
+        if not r:
+            continue
+        out["errors"].extend(r["errors"])
         old = (prev.get("tickers") or {}).get(sym, {}) if merge else {}
-        old_bars = (bars_prev.get("tickers") or {}).get(sym, {}) if merge else {}
-        entry = {"asof": now_iso}
-        bar_entry = dict(old_bars)  # 高频K线:抓取失败时沿用旧值
         skip_extras = extras_fresh(old, now)
-
-        # 高频 K 线(每批都刷,写入 bars_intraday.json):1m 3天 / 5m 20天 / 15m 60天
-        # (days, keep) 双约束;keep 按每日约 1m~694、5m~175、15m~58 根(含盘前盘后)估算
-        intraday_specs = [("bars_1m", 1, "minute", 3, "1m", "3d", 2200),
-                          ("bars_5m", 5, "minute", 20, "5m", "1mo", 3600),
-                          ("bars_15m", 15, "minute", 60, "15m", "60d", 3600)]
-        for key_name, mult, timespan, days, y_iv, y_pd, keep in intraday_specs:
-            bars, suf = None, key_name.split("_")[1]
-            if KEY:
-                try:
-                    bars = fetch_bars(sym, mult, timespan, days, keep)
-                    bar_entry[f"src_{suf}"] = "massive"
-                except Exception as exc:  # noqa: BLE001
-                    out["errors"].append(f"{sym} {key_name}(massive): {redact(exc)}")
-            if not bars:
-                try:
-                    bars = bars_yahoo(sym, y_iv, y_pd, keep)
-                    bar_entry[f"src_{suf}"] = "yahoo"
-                except Exception as exc:  # noqa: BLE001
-                    out["errors"].append(f"{sym} {key_name}(yahoo): {redact(exc)}")
-            if bars:
-                bar_entry[key_name] = bars
+        bar_entry = r["bar_entry"]
         bars_out["tickers"][sym] = bar_entry
-
-        # 日线(低频层,存 research.json;保留半年;skip_extras 时由 EXTRAS_KEYS 沿用旧值)
-        if not skip_extras:
-            bars = None
-            if KEY:
-                try:
-                    bars = fetch_bars(sym, 1, "day", 183, 200)
-                    entry["src_d"] = "massive"
-                except Exception as exc:  # noqa: BLE001
-                    out["errors"].append(f"{sym} bars_d(massive): {redact(exc)}")
-            if not bars:
-                try:
-                    bars = bars_yahoo(sym, "1d", "6mo", 200)
-                    entry["src_d"] = "yahoo"
-                except Exception as exc:  # noqa: BLE001
-                    out["errors"].append(f"{sym} bars_d(yahoo): {redact(exc)}")
-            if bars:
-                entry["bars_d"] = bars
+        entry = {"asof": now_iso}
+        if r["bars_d"]:
+            entry["bars_d"] = r["bars_d"]; entry["src_d"] = r["src_d"]
         entry["vwap"] = session_vwap(bar_entry.get("bars_1m") or [])
 
-        # 低频层: 指标/short/新闻/日线,每 EXTRAS_TTL 秒刷一次,批模式下沿用旧值
+        # 低频层:skip 时沿用旧值,否则用阶段1 抓到的 extras
         if skip_extras:
             for k in EXTRAS_KEYS:
                 if k in old:
                     entry[k] = old[k]
-        elif KEY:
-            try:
-                entry["short"] = fetch_short(sym)
-            except Exception as exc:  # noqa: BLE001
-                out["errors"].append(f"{sym} short interest: {redact(exc)}")
-            try:
-                entry["short_vol"] = fetch_short_volume(sym)
-            except Exception as exc:  # noqa: BLE001
-                out["errors"].append(f"{sym} short volume: {redact(exc)}")
-            try:
-                entry["news"] = fetch_news(sym)
-            except Exception as exc:  # noqa: BLE001
-                out["errors"].append(f"{sym} 新闻(massive): {redact(exc)}")
+        else:
+            entry.update(r["extras"])
             entry["extras_asof"] = now_iso
 
-        # 技术指标:本地从 K 线算(零 API 成本),每批刷新
+        # 技术指标:本地从 K 线算(零 API 成本)
         closes_m = [b[4] for b in bar_entry.get("bars_1m", [])]
         closes_d = [b[4] for b in entry.get("bars_d", [])]
         if closes_m or closes_d:
             entry["ind"] = {"rsi_m": rsi(closes_m), "rsi_d": rsi(closes_d),
                             "ema9_m": ema_last(closes_m, 9), "ema21_m": ema_last(closes_m, 21)}
 
-        spot = (out["snapshots"].get(sym) or {}).get("price") \
-            or (bar_entry.get("bars_1m") or bar_entry.get("bars_5m") or [[0] * 5])[-1][4] or None
+        if r["options_source"] == "massive":
+            out["options_source"] = "massive"
+        elif r["options_source"] and not out["options_source"]:
+            out["options_source"] = r["options_source"]
 
-        # 期权(每批都刷,GEX 由链上 gamma 一并算出)
-        contracts = None
-        if use_massive_options:
-            try:
-                contracts = options_massive(sym, spot)
-                out["options_source"] = "massive"
-            except requests.HTTPError as exc:
-                if exc.response is not None and exc.response.status_code in (401, 403):
-                    use_massive_options = False  # 没开 Options 套餐,后续都走雅虎
-                else:
-                    out["errors"].append(f"{sym} 期权(massive): {redact(exc)}")
-        if contracts is None:
-            try:
-                contracts = options_yahoo(sym)
-                out["options_source"] = out["options_source"] or "yahoo"
-            except Exception as exc:  # noqa: BLE001
-                out["errors"].append(f"{sym} 期权(yahoo): {redact(exc)}")
+        spot = r["spot"]
+        contracts = r["contracts"]
         if contracts:
             entry["options"] = summarize_options(sym, contracts, spot, oi_all, oi_next)
             entry["options"]["contracts"] = len(contracts)
@@ -934,10 +971,9 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                 }
             gex = compute_gex(contracts, spot)
             if gex:
-                # 流量版改用「快照采样」:每轮用已抓到的 last_trade/last_quote 判向、按成交量增量累积,
-                # 零额外 API、每轮都更新、免疫 tick rule 的 delta 污染(逐笔精确版待 top-N 补充)。
+                # 流量版=快照采样(每轮,零额外 API,免 delta 污染);FLOW_PRECISE 时叠 top-N 逐笔精确层
                 update_flow_accum(contracts, flow_acc, now.date().isoformat(), spot, now.date())
-                if do_precise:  # 贵:top-N 逐笔 Lee-Ready,当日复用
+                if do_precise:
                     flow_precise["net"].update(compute_flow_precise(sym, spot, contracts, now.date(), out["errors"]))
                 flow = compute_gex_flow_sampled(sym, spot, contracts, flow_acc, now.date(),
                                                 precise=flow_precise.get("net"))
