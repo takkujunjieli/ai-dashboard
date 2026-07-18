@@ -1,0 +1,26 @@
+name: Flow 方法对比
+on:
+  workflow_dispatch:
+    inputs:
+      sym:
+        description: "股票代码"
+        required: false
+        default: "MU"
+      day:
+        description: "交易日 YYYY-MM-DD"
+        required: false
+        default: "2026-07-17"
+jobs:
+  cmp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install requests
+      - run: python scripts/compare_flow_methods.py
+        env:
+          MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+          MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
+          CMP_SYM: ${{ inputs.sym }}
+          CMP_DAY: ${{ inputs.day }}
