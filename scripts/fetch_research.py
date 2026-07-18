@@ -326,6 +326,89 @@ FLOW_SKIP = {"SPY", "QQQ", "SOXX", "IWM", "DIA", "IVV", "VOO", "SMH", "XLK"}  # 
 FLOW_TOPN = int(os.environ.get("FLOW_TOPN", "40"))
 FLOW_STRIKE_BAND = 0.15
 FLOW_MAX_DTE = 14
+SPREAD_MAX = float(os.environ.get("FLOW_SPREAD_MAX", "0.25"))  # 价差/中价 > 此值视为脏,不信其判向
+
+
+def snapshot_side(c: dict) -> str | None:
+    """用 snapshot 的 last_trade 对 last_quote(NBBO)判主动买卖方向(quote rule)。
+    价差过宽 / 无买卖盘 → None(脏,不信);成交价在买卖盘中间 → None(歧义)。
+    免疫 tick rule 的 delta 污染:比的是"有没有越过当前买卖盘",与标的涨跌无关。"""
+    bid, ask, lt = c.get("bid"), c.get("ask"), c.get("lt")
+    if not bid or not ask or bid <= 0 or ask <= 0 or lt is None:
+        return None
+    mid = (bid + ask) / 2
+    if mid <= 0 or (ask - bid) / mid > SPREAD_MAX:  # 价差过滤
+        return None
+    if lt >= ask:
+        return "buy"
+    if lt <= bid:
+        return "sell"
+    return None  # 中价:无法判向(计入歧义)
+
+
+def update_flow_accum(contracts: list, acc: dict, today_str: str, spot: float, today) -> None:
+    """快照采样版流量累积(每轮调,零额外 API):对近价合约,把本轮成交量增量按
+    last_trade vs NBBO 的方向累加到当日 buy/sell。acc 结构 {date, c:{ticker:[vol,buy,sell,flat]}}。
+    误差:一段增量按"最后一笔"的方向记账(采样噪声,随机偏多),但免疫 delta 系统偏差。"""
+    if acc.get("date") != today_str:
+        acc.clear(); acc["date"] = today_str; acc["c"] = {}
+    C = acc["c"]
+    lo, hi = spot * (1 - FLOW_STRIKE_BAND), spot * (1 + FLOW_STRIKE_BAND)
+    for c in contracts:
+        tk = c.get("ticker")
+        if not tk or not (lo <= c["strike"] <= hi):
+            continue
+        if not 0 <= (date.fromisoformat(c["exp"]) - today).days <= FLOW_MAX_DTE:
+            continue
+        vol = c.get("vol") or 0
+        prev = C.get(tk)
+        pv, b, s, f = (prev if prev else [0, 0.0, 0.0, 0.0])
+        dvol = vol - pv
+        if dvol < 0:  # 数据重置/回退,重新以当前累计量计
+            dvol = vol
+        if dvol > 0:
+            side = snapshot_side(c)
+            if side == "buy":
+                b += dvol
+            elif side == "sell":
+                s += dvol
+            else:
+                f += dvol  # 中价 / 脏价差 → 未判向
+        C[tk] = [vol, b, s, f]
+
+
+def compute_gex_flow_sampled(sym: str, spot: float, contracts: list, acc: dict, today) -> dict | None:
+    """用累积的 buy/sell 定 dealer 符号,产出流量版 GEX(结构同 compute_gex_flow)。
+    客户净买 → dealer 净空 → 空 gamma → 符号 -1;未判向合约退回名义符号。"""
+    if not spot or sym in FLOW_SKIP:
+        return None
+    C = acc.get("c", {})
+    flow_sign = {}
+    for tk, (v, b, s, f) in C.items():
+        if b + s > 0 and b != s:
+            flow_sign[tk] = -1 if b > s else 1
+    if not flow_sign:
+        return None
+    lo, hi = spot * (1 - FLOW_STRIKE_BAND), spot * (1 + FLOW_STRIKE_BAND)
+    enriched = []
+    for c in contracts:
+        go = _contract_gamma_oi(c, spot, today)
+        if go is None:
+            continue
+        sign = flow_sign.get(c.get("ticker"), 1 if c["type"] == "call" else -1)
+        enriched.append(((date.fromisoformat(c["exp"]) - today).days, c["strike"], sign * go))
+    out = _bucketize(enriched, spot)
+    if out:
+        out["classified"] = len(flow_sign)
+        out["method"] = "sampled"
+        cand = [c for c in contracts if lo <= c["strike"] <= hi
+                and 0 <= (date.fromisoformat(c["exp"]) - today).days <= FLOW_MAX_DTE]
+        g_cand = sum((_contract_gamma_oi(c, spot, today) or 0) for c in cand)
+        g_clf = sum((_contract_gamma_oi(c, spot, today) or 0) for c in cand if c.get("ticker") in flow_sign)
+        out["coverage"] = round(g_clf / g_cand, 3) if g_cand else None
+        tb = sum(v[1] for v in C.values()); ts = sum(v[2] for v in C.values()); tf = sum(v[3] for v in C.values())
+        out["ambiguity"] = round(tf / (tb + ts + tf), 3) if (tb + ts + tf) else None
+    return out
 
 
 def fetch_option_trades(contract_ticker: str) -> list:
@@ -434,6 +517,8 @@ def options_massive(sym: str, spot: float | None = None) -> list:
             if not exp or not 0 <= (date.fromisoformat(exp) - today).days <= MAX_DTE:
                 continue
             day = o.get("day") or {}
+            lq = o.get("last_quote") or {}   # 实时 NBBO,用于快照采样判向 + 价差过滤
+            lt = o.get("last_trade") or {}   # 最近一笔成交
             contracts.append({
                 "ticker": det.get("ticker"),  # OCC 代码,拉逐笔成交用
                 "type": det.get("contract_type"),
@@ -444,6 +529,9 @@ def options_massive(sym: str, spot: float | None = None) -> list:
                 "oi": o.get("open_interest") or 0,
                 "vol": day.get("volume") or 0,
                 "price": day.get("vwap") or day.get("close") or 0,
+                "bid": lq.get("bid"),
+                "ask": lq.get("ask"),
+                "lt": lt.get("price"),        # 最近成交价(对 bid/ask 判主动买卖)
             })
         url = rebase_url(data.get("next_url"))
     return contracts
@@ -636,6 +724,10 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
     oi_all = load_json(oi_path, {}).get("oi", {})
     oi_next: dict = {}
 
+    # 快照采样版流量累积器(每轮更新,当日累计;隔日自动重置)
+    flow_path = ROOT / "data" / "flow_accum.json"
+    flow_acc = load_json(flow_path, {})
+
     # 全 watchlist 实时快照(1 次调用,批模式下也整表刷新)
     if KEY:
         try:
@@ -756,17 +848,12 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                 }
             gex = compute_gex(contracts, spot)
             if gex:
-                # 流量分类版很重(每合约一次逐笔成交调用),会阻塞轮次几分钟。
-                # 盘中滚动循环设 SKIP_FLOW=1 跳过、沿用上次;由每天 2 次的 update.yml 计算。
-                skip_flow = skip_extras or os.environ.get("SKIP_FLOW", "").lower() in ("1", "true")
-                if skip_flow:
-                    prevf = ((gex_prev.get("tickers") or {}).get(sym) or {}).get("flow")
-                    if prevf:
-                        gex["flow"] = prevf
-                else:
-                    flow = compute_gex_flow(sym, spot, contracts, out["errors"])
-                    if flow:
-                        gex["flow"] = flow
+                # 流量版改用「快照采样」:每轮用已抓到的 last_trade/last_quote 判向、按成交量增量累积,
+                # 零额外 API、每轮都更新、免疫 tick rule 的 delta 污染(逐笔精确版待 top-N 补充)。
+                update_flow_accum(contracts, flow_acc, now.date().isoformat(), spot, now.date())
+                flow = compute_gex_flow_sampled(sym, spot, contracts, flow_acc, now.date())
+                if flow:
+                    gex["flow"] = flow
                 gex_out["tickers"][sym] = gex
 
         out["tickers"][sym] = entry
@@ -837,6 +924,8 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
         oi_all.update(oi_next)  # 只更新本批标的的合约,保留其他标的的存档
         oi_path.write_text(json.dumps(
             {"date": now.date().isoformat(), "oi": oi_all}, ensure_ascii=False))
+    if flow_acc.get("c"):  # 快照采样流量累积器,紧凑写
+        flow_path.write_text(json.dumps(flow_acc, ensure_ascii=False, separators=(",", ":")))
 
     # GEX 快照 + 当日盘中净 GEX 序列(隔日清空)
     (ROOT / "data" / "gex.json").write_text(json.dumps(gex_out, ensure_ascii=False, indent=1))
