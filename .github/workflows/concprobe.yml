@@ -1,0 +1,21 @@
+name: 并发探针
+on:
+  workflow_dispatch:
+    inputs:
+      syms:
+        description: "逗号分隔股票代码"
+        required: false
+        default: "AMD,MU,TSLA,COIN,HOOD,CRWD,INTC,KLAR"
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install requests
+      - run: python scripts/probe_concurrency.py
+        env:
+          MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+          MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
+          PROBE_SYMS: ${{ inputs.syms }}
