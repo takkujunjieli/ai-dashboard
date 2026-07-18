@@ -11,6 +11,7 @@
 
 输出: data/research.json;OI 存档 data/oi_prev.json(算跨日 OI 变化)
 """
+import bisect
 import json
 import math
 import os
@@ -327,6 +328,7 @@ FLOW_TOPN = int(os.environ.get("FLOW_TOPN", "40"))
 FLOW_STRIKE_BAND = 0.15
 FLOW_MAX_DTE = 14
 SPREAD_MAX = float(os.environ.get("FLOW_SPREAD_MAX", "0.25"))  # 价差/中价 > 此值视为脏,不信其判向
+QUOTE_PAGE_CAP = int(os.environ.get("FLOW_QUOTE_PAGES", "4"))  # 逐条 NBBO 分页上限(limit=5万,一天通常 1 页)
 
 
 def snapshot_side(c: dict) -> str | None:
@@ -377,16 +379,24 @@ def update_flow_accum(contracts: list, acc: dict, today_str: str, spot: float, t
         C[tk] = [vol, b, s, f]
 
 
-def compute_gex_flow_sampled(sym: str, spot: float, contracts: list, acc: dict, today) -> dict | None:
+def compute_gex_flow_sampled(sym: str, spot: float, contracts: list, acc: dict, today,
+                             precise: dict | None = None) -> dict | None:
     """用累积的 buy/sell 定 dealer 符号,产出流量版 GEX(结构同 compute_gex_flow)。
-    客户净买 → dealer 净空 → 空 gamma → 符号 -1;未判向合约退回名义符号。"""
+    客户净买 → dealer 净空 → 空 gamma → 符号 -1;未判向合约退回名义符号。
+    precise:top-N 逐笔 Lee-Ready 的净签名 {ticker: net},在这些高权重合约上覆盖采样判向。"""
     if not spot or sym in FLOW_SKIP:
         return None
     C = acc.get("c", {})
     flow_sign = {}
-    for tk, (v, b, s, f) in C.items():
+    for tk, (v, b, s, f) in C.items():           # 采样版判向(全链)
         if b + s > 0 and b != s:
             flow_sign[tk] = -1 if b > s else 1
+    precise = precise or {}
+    prec_used = set()
+    for tk, net in precise.items():              # 精确层覆盖(top-N 高权重合约)
+        if net != 0:
+            flow_sign[tk] = -1 if net > 0 else 1
+            prec_used.add(tk)
     if not flow_sign:
         return None
     lo, hi = spot * (1 - FLOW_STRIKE_BAND), spot * (1 + FLOW_STRIKE_BAND)
@@ -400,24 +410,38 @@ def compute_gex_flow_sampled(sym: str, spot: float, contracts: list, acc: dict, 
     out = _bucketize(enriched, spot)
     if out:
         out["classified"] = len(flow_sign)
-        out["method"] = "sampled"
+        out["method"] = "sampled+precise" if prec_used else "sampled"
         cand = [c for c in contracts if lo <= c["strike"] <= hi
                 and 0 <= (date.fromisoformat(c["exp"]) - today).days <= FLOW_MAX_DTE]
         g_cand = sum((_contract_gamma_oi(c, spot, today) or 0) for c in cand)
         g_clf = sum((_contract_gamma_oi(c, spot, today) or 0) for c in cand if c.get("ticker") in flow_sign)
         out["coverage"] = round(g_clf / g_cand, 3) if g_cand else None
+        out["precise_n"] = len([t for t in prec_used if any(c.get("ticker") == t for c in cand)])
         tb = sum(v[1] for v in C.values()); ts = sum(v[2] for v in C.values()); tf = sum(v[3] for v in C.values())
         out["ambiguity"] = round(tf / (tb + ts + tf), 3) if (tb + ts + tf) else None
     return out
 
 
 def fetch_option_trades(contract_ticker: str) -> list:
-    """单合约当日逐笔成交(时间升序),返回 [(price, size, conditions)]。"""
+    """单合约当日逐笔成交(时间升序),返回 [(sip_ts, price, size, conditions)]。"""
     out, url, pages = [], f"/v3/trades/{contract_ticker}?limit=50000&order=asc&sort=timestamp", 0
     while url and pages < 3:
         d = mget(url)
         for t in d.get("results") or []:
-            out.append((t.get("price"), t.get("size") or 0, t.get("conditions") or []))
+            out.append((t.get("sip_timestamp"), t.get("price"), t.get("size") or 0, t.get("conditions") or []))
+        url = rebase_url(d.get("next_url"))
+        pages += 1
+    return out
+
+
+def fetch_option_quotes(contract_ticker: str) -> list:
+    """单合约当日逐条 NBBO(时间升序),返回 [(sip_ts, bid, ask)]。
+    limit=50000 时一天(~1万条)通常一页装下,故 QUOTE_PAGE_CAP 很小即可。"""
+    out, url, pages = [], f"/v3/quotes/{contract_ticker}?limit=50000&order=asc&sort=timestamp", 0
+    while url and pages < QUOTE_PAGE_CAP:
+        d = mget(url)
+        for q in d.get("results") or []:
+            out.append((q.get("sip_timestamp"), q.get("bid_price"), q.get("ask_price")))
         url = rebase_url(d.get("next_url"))
         pages += 1
     return out
@@ -429,7 +453,7 @@ def classify_net_flow(trades: list) -> tuple[float, float, float]:
     buy = sell = flat = 0.0
     prev = None
     last_dir = 0
-    for price, size, conds in trades:
+    for _ts, price, size, conds in trades:
         if price is None or not size or any(c in FLOW_BAD_CONDITIONS for c in conds):
             continue
         if prev is None:
@@ -484,6 +508,62 @@ def compute_gex_flow(sym: str, spot: float, contracts: list, errors: list) -> di
                     for c in cand if c.get("ticker") in flow_sign)
         out["coverage"] = round(g_clf / g_cand, 3) if g_cand else None
         out["ambiguity"] = round(tot_flat / (tot_dir + tot_flat), 3) if (tot_dir + tot_flat) else None
+    return out
+
+
+def classify_lee_ready(trades: list, quotes: list) -> tuple[float, float, float]:
+    """逐笔 Lee-Ready:对每笔成交,用其成交时刻(sip_ts)前最近的 NBBO 判向 —
+    成交价 ≥ ask → 主动买;≤ bid → 主动卖;中价/无报价 → tick rule 回退。size 加权。
+    比 tick rule 精确:比的是与同时刻买卖盘的关系,免疫标的涨跌带来的价格漂移。
+    → (净=买size−卖size, 已判向size, 平价size)。"""
+    q = sorted([x for x in quotes if x[0] and x[1] and x[2]], key=lambda x: x[0])
+    qts = [x[0] for x in q]
+    buy = sell = flat = 0.0
+    prev = None
+    last_dir = 0
+    for ts, price, size, conds in sorted(trades, key=lambda t: t[0] or 0):
+        if price is None or not size or any(c in FLOW_BAD_CONDITIONS for c in conds):
+            continue
+        side = 0
+        if ts is not None and qts:
+            i = bisect.bisect_right(qts, ts) - 1  # 成交时刻前最近的一条 NBBO
+            if i >= 0:
+                _, bid, ask = q[i]
+                if price >= ask:
+                    side = 1
+                elif price <= bid:
+                    side = -1
+        if side == 0:  # 无报价 / 中价 → tick rule 回退
+            side = 1 if (prev is not None and price > prev) else -1 if (prev is not None and price < prev) else last_dir
+        prev = price
+        if side > 0:
+            buy += size; last_dir = 1
+        elif side < 0:
+            sell += size; last_dir = -1
+        else:
+            flat += size
+    return buy - sell, buy + sell, flat
+
+
+def compute_flow_precise(sym: str, spot: float, contracts: list, today, errors: list) -> dict:
+    """对 top-N(按 gamma×OI 权重,而非成交量)高权重合约做逐笔 Lee-Ready,
+    返回 {ticker: 净签名size}。贵(每合约拉 trades+quotes),故低频跑(FLOW_PRECISE)。
+    结果作为「精确层」覆盖采样版在这些高权重合约上的判向。"""
+    if not spot or sym in FLOW_SKIP:
+        return {}
+    lo, hi = spot * (1 - FLOW_STRIKE_BAND), spot * (1 + FLOW_STRIKE_BAND)
+    cand = [c for c in contracts if c.get("ticker") and c["vol"] and lo <= c["strike"] <= hi
+            and 0 <= (date.fromisoformat(c["exp"]) - today).days <= FLOW_MAX_DTE]
+    ranked = sorted(cand, key=lambda c: -(_contract_gamma_oi(c, spot, today) or 0))[:FLOW_TOPN]
+    out = {}
+    for c in ranked:
+        try:
+            net, sz, _flat = classify_lee_ready(fetch_option_trades(c["ticker"]),
+                                                fetch_option_quotes(c["ticker"]))
+            if sz > 0:
+                out[c["ticker"]] = net
+        except Exception as exc:  # noqa: BLE001 单合约失败不影响整体
+            errors.append(f"{sym} 精确流量 {c['ticker']}: {redact(exc)}")
     return out
 
 
@@ -727,6 +807,12 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
     # 快照采样版流量累积器(每轮更新,当日累计;隔日自动重置)
     flow_path = ROOT / "data" / "flow_accum.json"
     flow_acc = load_json(flow_path, {})
+    # 逐笔精确层(top-N,贵,低频跑 FLOW_PRECISE=1;结果当日复用,每轮覆盖采样判向)
+    flow_precise_path = ROOT / "data" / "flow_precise.json"
+    flow_precise = load_json(flow_precise_path, {})
+    if flow_precise.get("date") != now.date().isoformat():
+        flow_precise = {"date": now.date().isoformat(), "net": {}}
+    do_precise = os.environ.get("FLOW_PRECISE", "").lower() in ("1", "true")
 
     # 全 watchlist 实时快照(1 次调用,批模式下也整表刷新)
     if KEY:
@@ -851,7 +937,10 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                 # 流量版改用「快照采样」:每轮用已抓到的 last_trade/last_quote 判向、按成交量增量累积,
                 # 零额外 API、每轮都更新、免疫 tick rule 的 delta 污染(逐笔精确版待 top-N 补充)。
                 update_flow_accum(contracts, flow_acc, now.date().isoformat(), spot, now.date())
-                flow = compute_gex_flow_sampled(sym, spot, contracts, flow_acc, now.date())
+                if do_precise:  # 贵:top-N 逐笔 Lee-Ready,当日复用
+                    flow_precise["net"].update(compute_flow_precise(sym, spot, contracts, now.date(), out["errors"]))
+                flow = compute_gex_flow_sampled(sym, spot, contracts, flow_acc, now.date(),
+                                                precise=flow_precise.get("net"))
                 if flow:
                     gex["flow"] = flow
                 gex_out["tickers"][sym] = gex
@@ -926,6 +1015,8 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
             {"date": now.date().isoformat(), "oi": oi_all}, ensure_ascii=False))
     if flow_acc.get("c"):  # 快照采样流量累积器,紧凑写
         flow_path.write_text(json.dumps(flow_acc, ensure_ascii=False, separators=(",", ":")))
+    if flow_precise.get("net"):  # 逐笔精确层(当日复用)
+        flow_precise_path.write_text(json.dumps(flow_precise, ensure_ascii=False, separators=(",", ":")))
 
     # GEX 快照 + 当日盘中净 GEX 序列(隔日清空)
     (ROOT / "data" / "gex.json").write_text(json.dumps(gex_out, ensure_ascii=False, indent=1))
