@@ -1,0 +1,31 @@
+name: flow-gamma 回测
+on:
+  workflow_dispatch:
+    inputs:
+      small:
+        description: "1 = 只跑首票首日验证管道"
+        required: false
+        default: "1"
+      days:
+        description: "逗号分隔 YYYY-MM-DD(留空=最近5工作日)"
+        required: false
+        default: ""
+      syms:
+        description: "逗号分隔股票(留空=watchlist去ETF)"
+        required: false
+        default: ""
+jobs:
+  bt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install requests
+      - run: python scripts/backtest_flow_gamma.py
+        env:
+          MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+          MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
+          BT_SMALL: ${{ inputs.small }}
+          BT_DAYS: ${{ inputs.days }}
+          BT_SYMS: ${{ inputs.syms }}
