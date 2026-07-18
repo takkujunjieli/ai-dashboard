@@ -7,6 +7,7 @@
 """
 import json
 import os
+from urllib.parse import urlparse
 
 import requests
 
@@ -14,6 +15,14 @@ KEY = os.environ.get("MASSIVE_API_KEY", "").strip()
 BASE = os.environ.get("MASSIVE_BASE_URL", "https://api.massive.com").rstrip("/")
 HEADERS = {"Authorization": f"Bearer {KEY}"}
 SYM = os.environ.get("PROBE_SYM", "AMD").upper()
+
+
+def rebase(url):
+    """next_url 返回的是公网域名,分页要把 host 改回私有网关(同 fetch_research.rebase_url)。"""
+    if not url:
+        return None
+    p = urlparse(url)
+    return f"{BASE}{p.path}" + (f"?{p.query}" if p.query else "")
 
 
 def get(path, **params):
@@ -87,19 +96,32 @@ def main():
     except Exception as exc:
         print("✗ quotes 失败(可能套餐不含 quotes):", exc)
 
-    # 4) 密度对比:同一合约当日 trades vs quotes 大致条数(各多翻几页看量级)
-    section("4) 密度粗估(trades vs quotes,各翻至多 5 页 ×1000)")
+    # 4) 密度 + 全天量外推(修好 rebase 分页;翻至多 40 页,并按时间跨度外推整日)
+    PAGES = 40
+    section(f"4) 密度 + 全天外推(trades vs quotes,各翻至多 {PAGES} 页 ×1000)")
     for name, path in [("trades", f"/v3/trades/{contract_ticker}"),
                        ("quotes", f"/v3/quotes/{contract_ticker}")]:
         try:
-            total, url, pages = 0, None, 0
-            nxt = None
-            first = get(path, limit=1000, order="asc", sort="timestamp")
-            total += len(first.get("results") or []); nxt = first.get("next_url"); pages = 1
-            while nxt and pages < 5:
+            total, pages = 0, 0
+            first_ts = last_ts = None
+            d = get(path, limit=1000, order="asc", sort="timestamp")
+            while True:
+                rows = d.get("results") or []
+                total += len(rows); pages += 1
+                for r in rows:
+                    ts = r.get("sip_timestamp")
+                    if ts:
+                        first_ts = ts if first_ts is None else first_ts
+                        last_ts = ts
+                nxt = rebase(d.get("next_url"))
+                if not nxt or pages >= PAGES:
+                    break
                 d = get(nxt)
-                total += len(d.get("results") or []); nxt = d.get("next_url"); pages += 1
-            print(f"  {name}: ≥{total} 条(翻了 {pages} 页{',仍有更多' if nxt else ',已到底'})")
+            span_min = (last_ts - first_ts) / 1e9 / 60 if (first_ts and last_ts) else 0
+            rate = total / span_min if span_min else 0
+            full_day = rate * 390  # RTH 6.5h = 390 分钟
+            print(f"  {name}: 抓到 {total} 条 / {pages} 页{' (仍有更多)' if nxt else ' (已到底)'}"
+                  f"  | 覆盖 {span_min:.1f} 分钟  | ≈{rate:.0f} 条/分钟  | 整日外推 ≈{full_day:,.0f} 条")
         except Exception as exc:
             print(f"  {name}: 失败 {exc}")
 
