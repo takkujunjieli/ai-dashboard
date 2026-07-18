@@ -40,6 +40,7 @@ jobs:
         env:
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
           MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
+          FLOW_PRECISE: "1"   # EOD/盘前跑逐笔 Lee-Ready 精确层(贵,~10min);盘中滚动不跑
 
       - name: 提交数据到 main(EOD 基线 + Pages 兜底)
         run: |
