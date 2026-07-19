@@ -1,6 +1,8 @@
 # TODO(待办,按优先级)
 
-## 1. 并发预取,把采集轮次从 ~100s 砍到 ~15-25s 【性能,主杠杆】
+## 1. 并发预取,把采集轮次从 ~100s 砍到 ~15-25s 【性能,主杠杆】✅ 已做(2026-07-18)
+**已完成**:`_prefetch_ticker` 线程池两阶段(并发抓 → 串行处理),`compute_flow_precise` top-N 也并发。实测并发对期权链 5.5×;盘中 live 延迟下预计稳态轮 ~20-40s(周末高延迟测得 ~64-190s,不可比)。真实提速待盘中确认。以下为原始记录:
+
 **背景**:盘中滚动一轮 ~100s(20 只票),大头是**期权链分页**——20 只 × ~6 页 ≈ 120 次带载荷请求,目前**顺序**打(`fetch_research.py` 里 `mget` 逐次 + 0.08s 间隔)。
 **已验证前提**:网关对并发无限流(`rate_probe` 测过 200 并发 / 240 混合,零 429;50/min 是期权 websocket 上限,与纯 REST 无关)。
 **做法**:在 `fetch_research.main()` 里,循环前用线程池(`ThreadPoolExecutor`, ~10 workers)**并发预取**每只票的 option chain(`options_massive`)和 K 线(`fetch_bars`/雅虎),存进 dict;主循环改为从 dict 读,不再逐个网络调用。注意:
@@ -56,3 +58,17 @@
   - `net_gex` 单快照有噪声,符号可能翻。
 - 优化方向:(1) 门改用**近价窗口的净 gamma**(spot ±1–2% 累计),而非全链 `net_gex` 符号;(2) 对 `flip=None` 用**平滑的近价 gamma 斜率**替代 ±1 硬兜底;(3) 门值做**多快照平滑**(近 N 轮均值)降噪。
 - 验证:重跑 QQQ/SPY 这类"应高分却被门压低"的样本,确认修正后落回合理档。
+
+## 8. flow-GEX 预测力 pilot(预注册)+ 前向累积 【signal research;累积中】
+**目标**:验证 flow-GEX(期权流的 gamma 区制)对短周期收益的预测力,再决定是否策略化。协议见 [docs/backtest-flow-gamma-pilot.md](docs/backtest-flow-gamma-pilot.md)(**预注册**:假设/口径先于结果冻结)。
+
+**已完成**:
+- **历史重建回测**([scripts/backtest_flow_gamma.py](scripts/backtest_flow_gamma.py) + `flowbt.yml`):一周数据只能测"净签名期权流方向"(历史 gamma/OI 无法回溯)。首轮 **H1 未通过且方向相反**(判定量裸流 −0.124/−0.250、gamma 加权 −0.149/−0.270,逐日 0-1/5)。gamma 加权诊断**排除了"丢 gamma"病因** → 反向对 gamma 加权稳健。
+- **前向记录器**([fetch_research.py](scripts/fetch_research.py) 写 `data/flow_history.json`,跨天累积不清零留 60 天):每轮每票记**真实 flow-GEX 净值(带 gamma×OI)+ 名义 net + call/put OI + spot**。评测 [scripts/eval_flow_history.py](scripts/eval_flow_history.py) 用真 flow-GEX 跑同一套预注册检验。
+
+**待办(这条的"完成"取决于时间累积)**:
+1. **攒样本**:让 `flow_history.json` 累积 **≥30-40 交易日**(≈6-8 周)、跨不同 regime。
+2. **区分开/平仓**(裸流反向的头号嫌疑):用记录的 `co/po` 日间差判断净流是**开仓**(OI 增)还是**平仓**(OI 减),只保留开仓流做 dealer gamma 推断。
+3. **下结论**:跑 `eval_flow_history.py` + **block-bootstrap-by-day 显著性 + 多重检验校正**,给"可信/丢弃"。
+4. **只有信号通过**才进入策略化。
+**方法论可复用**:预注册 + 前视纪律 + 分层对照 + 诚实功效声明,套到任何后续指标。
