@@ -36,6 +36,16 @@ BAD_CONDITIONS = {201, 202, 203, 204, 205, 206, 207, 208, 210, 227, 228, 229, 23
                   245, 246, 247, 248}
 WORKERS = int(os.environ.get("BT_WORKERS", "5"))          # 组合内:每合约并发
 OUTER_WORKERS = int(os.environ.get("BT_OUTER", "6"))       # 组合间:(票×天) 并发
+GAMMA_W = os.environ.get("BT_GAMMA", "").lower() in ("1", "true")  # 诊断:按 BS 近似 gamma 加权
+SIGMA = float(os.environ.get("BT_SIGMA", "0.6"))          # 无历史 IV,gamma 用假设 σ(形状对 σ 不敏感)
+
+
+def bs_gamma(S, K, T, sigma):
+    """BS gamma(r=0):φ(d1)/(S·σ·√T)。用于诊断'裸流反向是否因丢了 gamma 权重'。"""
+    if S <= 0 or K <= 0 or T <= 0 or sigma <= 0:
+        return 0.0
+    d1 = (math.log(S / K) + 0.5 * sigma * sigma * T) / (sigma * math.sqrt(T))
+    return math.exp(-0.5 * d1 * d1) / math.sqrt(2 * math.pi) / (S * sigma * math.sqrt(T))
 # pilot 窗口为夏令时(EDT=UTC-4):RTH 9:30-16:00 ET = 13:30-20:00 UTC
 RTH_OPEN_UTC_H, RTH_CLOSE_UTC_H = 13.5, 20.0
 
@@ -142,11 +152,18 @@ def reconstruct(sym, day, verbose=False):
     contracts = list_contracts(sym, day, spot)
     if verbose:
         print(f"  {sym} {day}: spot≈{spot:.2f}, 近价≤14DTE 合约取 {len(contracts)} 张")
-    # 并发抓每合约签名成交,合并
-    flows = []
+    # 并发抓每合约签名成交,合并(可选按 BS 近似 gamma 加权 → 诊断病因)
     with ThreadPoolExecutor(max_workers=WORKERS) as ex:
-        for r in ex.map(lambda c: signed_trades(c["ticker"], day), contracts):
-            flows += r
+        results = list(ex.map(lambda c: signed_trades(c["ticker"], day), contracts))
+    flows = []
+    for c, r in zip(contracts, results):
+        if GAMMA_W:
+            T = max((date.fromisoformat(c["exp"]) - date.fromisoformat(day)).days, 0.5) / 365
+            w = bs_gamma(spot, c["strike"], T, SIGMA)
+        else:
+            w = 1.0
+        for ts, sz in r:
+            flows.append((ts, sz * w))
     flows.sort()
     fts = [f[0] for f in flows]
     fcum = []
@@ -251,7 +268,8 @@ def main():
     if small:
         syms, days = syms[:1], days[-1:]
     print(f"BASE={BASE} key={'set' if KEY else 'MISSING'}  SYMS={syms}  DAYS={days}  "
-          f"TOPN={TOPN}  SMALL={small}  OUTER={OUTER_WORKERS}×INNER={WORKERS}", flush=True)
+          f"TOPN={TOPN}  SMALL={small}  OUTER={OUTER_WORKERS}×INNER={WORKERS}  "
+          f"WEIGHT={'BS-gamma(σ=' + str(SIGMA) + ')' if GAMMA_W else 'size(裸流)'}", flush=True)
 
     combos = [(day, sym) for day in days for sym in syms]
 
