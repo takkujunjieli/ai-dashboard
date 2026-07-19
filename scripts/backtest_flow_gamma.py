@@ -13,6 +13,7 @@ import bisect
 import json
 import math
 import os
+import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -34,8 +35,8 @@ ETF_SKIP = {"SPY", "QQQ", "SOXX", "IWM", "DIA", "IVV", "VOO", "SMH", "XLK"}
 BAD_CONDITIONS = {201, 202, 203, 204, 205, 206, 207, 208, 210, 227, 228, 229, 230,
                   232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244,
                   245, 246, 247, 248}
-WORKERS = int(os.environ.get("BT_WORKERS", "5"))          # 组合内:每合约并发
-OUTER_WORKERS = int(os.environ.get("BT_OUTER", "6"))       # 组合间:(票×天) 并发
+WORKERS = int(os.environ.get("BT_WORKERS", "4"))          # 组合内:每合约并发(×OUTER 不宜 >~16,否则网关 429)
+OUTER_WORKERS = int(os.environ.get("BT_OUTER", "4"))       # 组合间:(票×天) 并发
 GAMMA_W = os.environ.get("BT_GAMMA", "").lower() in ("1", "true")  # 诊断:按 BS 近似 gamma 加权
 SIGMA = float(os.environ.get("BT_SIGMA", "0.6"))          # 无历史 IV,gamma 用假设 σ(形状对 σ 不敏感)
 
@@ -60,9 +61,16 @@ def rebase(u):
 def get(path):
     url = path if path.startswith("http") else f"{BASE}{path}"
     sep = "&" if "?" in url else "?"
-    r = requests.get(url + f"{sep}apiKey={KEY}", headers=HEADERS, timeout=45)
+    full = url + f"{sep}apiKey={KEY}"
+    r = None
+    for attempt in range(5):                 # 429 退避重试(网关并发限流)
+        r = requests.get(full, headers=HEADERS, timeout=45)
+        if r.status_code == 429:
+            time.sleep(3 * (attempt + 1))
+            continue
+        r.raise_for_status()
+        return r.json()
     r.raise_for_status()
-    return r.json()
 
 
 def paged(path, cap=6):
