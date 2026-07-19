@@ -34,7 +34,8 @@ ETF_SKIP = {"SPY", "QQQ", "SOXX", "IWM", "DIA", "IVV", "VOO", "SMH", "XLK"}
 BAD_CONDITIONS = {201, 202, 203, 204, 205, 206, 207, 208, 210, 227, 228, 229, 230,
                   232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244,
                   245, 246, 247, 248}
-WORKERS = int(os.environ.get("BT_WORKERS", "8"))
+WORKERS = int(os.environ.get("BT_WORKERS", "5"))          # 组合内:每合约并发
+OUTER_WORKERS = int(os.environ.get("BT_OUTER", "6"))       # 组合间:(票×天) 并发
 # pilot 窗口为夏令时(EDT=UTC-4):RTH 9:30-16:00 ET = 13:30-20:00 UTC
 RTH_OPEN_UTC_H, RTH_CLOSE_UTC_H = 13.5, 20.0
 
@@ -249,16 +250,25 @@ def main():
         days = sorted(days)
     if small:
         syms, days = syms[:1], days[-1:]
-    print(f"BASE={BASE} key={'set' if KEY else 'MISSING'}  SYMS={syms}  DAYS={days}  TOPN={TOPN}  SMALL={small}")
+    print(f"BASE={BASE} key={'set' if KEY else 'MISSING'}  SYMS={syms}  DAYS={days}  "
+          f"TOPN={TOPN}  SMALL={small}  OUTER={OUTER_WORKERS}×INNER={WORKERS}", flush=True)
 
-    allobs = []   # (T_iso, S_info, S_trade, r_past, r_fwd, sym, day)
-    for day in days:
-        for sym in syms:
-            try:
-                for o in reconstruct(sym, day, verbose=small):
-                    allobs.append((*o, sym, day))
-            except Exception as exc:  # noqa: BLE001
-                print(f"  ✗ {sym} {day}: {str(exc)[:120]}")
+    combos = [(day, sym) for day in days for sym in syms]
+
+    def work(dsy):
+        day, sym = dsy
+        try:
+            return [(*o, sym, day) for o in reconstruct(sym, day, verbose=small)]
+        except Exception as exc:  # noqa: BLE001
+            print(f"  ✗ {sym} {day}: {str(exc)[:120]}", flush=True)
+            return []
+
+    allobs, done = [], 0    # (T_iso, S_info, S_trade, r_past, r_fwd, sym, day)
+    with ThreadPoolExecutor(max_workers=OUTER_WORKERS) as ex:
+        for (day, sym), res in zip(combos, ex.map(work, combos)):
+            allobs += res
+            done += 1
+            print(f"  [{done}/{len(combos)}] {sym} {day}: {len(res)} obs", flush=True)
     if not allobs:
         print("\n无观测,退出(检查 as_of 合约端点 / 数据可用性)"); return
 
