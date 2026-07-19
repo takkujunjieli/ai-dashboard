@@ -1069,6 +1069,29 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                                    "nets": {k: v["net_gex"] for k, v in g.get("buckets", {}).items()}})
     hist_path.write_text(json.dumps(hist, ensure_ascii=False, indent=1))
 
+    # 前向记录器(flow-GEX 预测力 pilot):每轮每票一条,**跨天累积不清零**,留 60 天。
+    # 记真实 flow-GEX 净值(带 gamma×OI,采样+精确)+ 名义 net + OI + spot;
+    # 前向收益后续由 spot 序列推,OI 日变化由 co/po 日间差推(区分开/平仓)。见 scripts/eval_flow_history.py。
+    fh_path = ROOT / "data" / "flow_history.json"
+    fh = load_json(fh_path, {"points": []})
+    for sym in targets:
+        g = gex_out["tickers"].get(sym) or {}
+        opt = (out["tickers"].get(sym) or {}).get("options") or {}
+        spot = g.get("spot") or (out["snapshots"].get(sym) or {}).get("price")
+        if spot is None:
+            continue
+        fl = g.get("flow") or {}
+        fh["points"].append({
+            "t": now_iso, "s": sym, "p": round(spot, 4),
+            "fn": round(fl["net_gex"]) if fl.get("net_gex") is not None else None,   # flow-GEX 净(带 gamma)
+            "cov": fl.get("coverage"), "meth": fl.get("method"),
+            "nn": round(g["net_gex"]) if g.get("net_gex") is not None else None,      # 名义 net(对照)
+            "co": opt.get("call_oi"), "po": opt.get("put_oi"),                        # OI(日间差=开/平仓)
+        })
+    cutoff = (now.date() - timedelta(days=60)).isoformat()
+    fh["points"] = [p for p in fh["points"] if (p.get("t") or "")[:10] >= cutoff]
+    fh_path.write_text(json.dumps(fh, ensure_ascii=False, separators=(",", ":")))
+
     # 累积日志(供回测 + PCR 历史百分位):每 (日期,标的) 一条,当日多次运行更新为最后读数;留 250 天
     day = daily.setdefault(today_str, {})
     for sym in targets:
