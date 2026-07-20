@@ -333,7 +333,7 @@ function updateLadderTitle() {
     suffix = " · 主动买卖(当日,calls+puts)";
   } else if (ladderMode === "gex") {
     const b = gexBucketData(SYM);
-    const cal = b?.caliber === "flow" ? "·Real" : gexCaliber === "flow" ? "·Real N/A→Nominal" : "";
+    const cal = b?.caliber === "flow" ? "·Real" : gexCaliber === "flow" ? "·Real N/A→Raw" : "";
     suffix = ` (${GEX_BUCKET_LABEL[b?.bucket] || GEX_BUCKET_LABEL[gexBucket]}${b?.fallback ? "·nearest" : ""}${cal})`;
   } else {
     suffix = " · all expiries";
@@ -526,7 +526,7 @@ function renderStats() {
     tile("Short%", sv?.ratio != null ? (sv.ratio * 100).toFixed(1) + "%" : null),
   ].join("");
   // 顶栏只留正股路径/风险类;IV/PCR/MaxPain/Premium 等期权交易指标已移到下方 Options Panel
-  const note = g.flowMiss ? `<div class="muted small">Real (sampled) N/A(仅单名股;ETF 无实测符号,已退回 Nominal)</div>` : "";
+  const note = g.flowMiss ? `<div class="muted small">Real (sampled) N/A(仅单名股;ETF 无实测符号,已退回 Raw)</div>` : "";
   $("wb-stats").innerHTML = `<div class="opt-grid">${tiles}</div>${note}`;
 }
 
