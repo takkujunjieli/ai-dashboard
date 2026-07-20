@@ -23,29 +23,41 @@
 <section>
   <h2>📈 Price &amp; GEX</h2>
 
-<!-- Toolbar: timeframe / ladder mode -->
+<!-- Toolbar: each group is a labeled segmented toggle -->
 <div class="wb-toolbar">
-  <div id="tf-chips" class="chips">
-    <button data-tf="1m">1m</button>
-    <button data-tf="5m" class="active">5m</button>
-    <button data-tf="15m">15m</button>
-    <button data-tf="1d">1D</button>
+  <div class="tb-group">
+    <span class="tb-label">周期</span>
+    <div id="tf-chips" class="chips seg">
+      <button data-tf="1m">1m</button>
+      <button data-tf="5m" class="active">5m</button>
+      <button data-tf="15m">15m</button>
+      <button data-tf="1d">1D</button>
+    </div>
   </div>
-  <div id="ladder-mode" class="chips">
-    <button data-m="gex" class="active">Ladder: GEX</button>
-    <button data-m="oi">Ladder: OI</button>
-    <button data-m="vol">Ladder: Vol</button>
-    <button data-m="netflow" title="每档 Lee-Ready 净主动买卖(calls+puts 合计,buy−sell);绿=净主动买、红=净主动卖。当日流量、单名股才有。">Ladder: Net Flow</button>
+  <div class="tb-group">
+    <span class="tb-label">阶梯</span>
+    <div id="ladder-mode" class="chips seg">
+      <button data-m="gex" class="active">GEX</button>
+      <button data-m="oi">OI</button>
+      <button data-m="vol">Vol</button>
+      <button data-m="netflow" title="每档 Lee-Ready 净主动买卖(calls+puts 合计,buy−sell);绿=净主动买、红=净主动卖。当日流量、单名股才有。">Net Flow</button>
+    </div>
   </div>
-  <div id="gex-exp" class="chips" title="GEX expiry range (cumulative); applies to GEX ladder & net GEX/flip">
-    <button data-b="0dte" class="active">0DTE</button>
-    <button data-b="week">This Week</button>
-    <button data-b="2wk">≤14d</button>
-    <button data-b="all">All</button>
+  <div class="tb-group">
+    <span class="tb-label" title="仅作用于 GEX 阶梯 / 净GEX / flip">到期</span>
+    <div id="gex-exp" class="chips seg" title="GEX expiry range (cumulative); applies to GEX ladder & net GEX/flip">
+      <button data-b="0dte" class="active">0DTE</button>
+      <button data-b="week">This Week</button>
+      <button data-b="2wk">≤14d</button>
+      <button data-b="all">All</button>
+    </div>
   </div>
-  <div id="gex-caliber" class="chips" title="Raw (index):按 call +/put − 假设 dealer 符号——该假设对指数(SPX/SPY)校准合理,对单名股(散户买 call)常错。Real (sampled):用真实成交方向(Lee-Ready)实测 dealer 符号——仍是存量 GEX(gamma×OI),只是符号来自实测而非假设。">
-    <button data-c="nominal" class="active">Raw (index)</button>
-    <button data-c="flow">Real (sampled)</button>
+  <div class="tb-group">
+    <span class="tb-label" title="GEX dealer 符号口径(仅作用于 GEX)">口径</span>
+    <div id="gex-caliber" class="chips seg" title="Raw (index):按 call +/put − 假设 dealer 符号——该假设对指数(SPX/SPY)校准合理,对单名股(散户买 call)常错。Real (sampled):用真实成交方向(Lee-Ready)实测 dealer 符号——仍是存量 GEX(gamma×OI),只是符号来自实测而非假设。">
+      <button data-c="nominal" class="active">Raw (index)</button>
+      <button data-c="flow">Real (sampled)</button>
+    </div>
   </div>
 </div>
 
