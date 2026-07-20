@@ -9,30 +9,10 @@ let MARKET = null;   // Finnhub: 行情/财报/评级/公司新闻
 let FEEDS = null;    // RSS: 新闻/社区/大V
 let RESEARCH = null; // 只用它的 snapshots(实时行情)和 news(情绪新闻)
 let socialCat = "all";
-// 全局股票筛选(多选),空集 = 全部;记住上次的选择
-let selected = new Set(JSON.parse(localStorage.getItem("tickerFilter") || "[]"));
-const isSel = (sym) => selected.size === 0 || selected.has(sym);
-
-/* ---------- 单票筛选(多选) ---------- */
-function renderTickerFilter() {
-  const syms = MARKET?.watchlist || [];
-  $("ticker-filter").innerHTML = [
-    `<button data-sym="__all" class="${selected.size === 0 ? "active" : ""}">All</button>`,
-    ...syms.map((s) => `<button data-sym="${esc(s)}" class="${selected.has(s) ? "active" : ""}">${esc(s)}</button>`),
-  ].join("");
-}
-
-function initTickerFilter() {
-  $("ticker-filter").addEventListener("click", (ev) => {
-    const btn = ev.target.closest("button");
-    if (!btn) return;
-    if (btn.dataset.sym === "__all") selected.clear();
-    else if (selected.has(btn.dataset.sym)) selected.delete(btn.dataset.sym);
-    else selected.add(btn.dataset.sym);
-    localStorage.setItem("tickerFilter", JSON.stringify([...selected]));
-    renderAll();
-  });
-}
+// 信息页不再单独筛选票:始终展示全 watchlist(增减票在交易台「标的配置」操作)。
+// selected 恒为空集(=全部),isSel/feedMatches 据此放行所有内容。
+const selected = new Set();
+const isSel = () => true;
 
 /* 信息流条目按选中股票匹配:标题/摘要里出现 $TSLA 或独立的 TSLA(区分大小写);
    单字母代码(如 U)只认 $U,避免误匹配普通单词 */
@@ -250,7 +230,6 @@ function initTabs() {
 }
 
 function renderAll() {
-  renderTickerFilter();
   if (MARKET) {
     renderQuotes(MARKET);
     renderCalendar(MARKET);
@@ -265,7 +244,6 @@ function renderAll() {
 /* ---------- 入口 ---------- */
 (async function main() {
   initTabs();
-  initTickerFilter();
   initSocialFilters();
 
   [MARKET, FEEDS, RESEARCH] = await Promise.all([
@@ -273,10 +251,6 @@ function renderAll() {
     loadJSON("data/feeds.json"),
     loadFreshJSON("data/research.json"),
   ]);
-
-  // watchlist 变动后清掉已失效的选择
-  const watch = new Set(MARKET?.watchlist || []);
-  selected = new Set([...selected].filter((s) => watch.has(s)));
 
   const times = [MARKET?.updated_at, FEEDS?.updated_at].filter(Boolean);
   $("updated").textContent = times.length
