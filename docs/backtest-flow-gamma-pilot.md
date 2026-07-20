@@ -66,8 +66,27 @@
 
 ## 9. 前向累积(walk-forward)
 
-- 盘中采集每轮追加一条 `(t, sym, flow_net_sign, spot)` 到历史日志(扩展 `gex_history` 或新 `flow_history.json`),供本检验**每日自动重跑**、样本随时间增长。
+- 盘中采集每轮追加一条 `(t, sym, flow_net_sign, spot, co, po)` 到 `flow_history.json`,供本检验**每日自动重跑**、样本随时间增长。
 - 协议脚本固化后,新数据进来**不改口径**,只是 N 变大。
+
+### 9a. 客户持仓四象限(开/平仓)—— 修 pilot 的头号病因
+
+首轮病因:`S = sign(当日净主动流)` **分不清开仓 vs 平仓**,且**存量 OI 主导 gamma**,故 S ≠ 真实做市商 gamma 库存符号。Massive API **无开/平仓标记、无历史 OI 序列**(已查文档确认),只能**前向自估**。
+
+**记录器**(`data/oi_flow_daily.json`,已上线):每交易日(当日最后一轮=全天累计主动流)存单名股近价 ≤14DTE 合约:
+```
+days[date][sym] = [[exp, strike, "C"/"P", OI, 当日主动净(buy−sell,Lee-Ready), gamma], ...]   # 留 45 天
+```
+
+**离线估算(eval 做,不进实时管线——OI 结算 T+1,时序对齐留给离线)**:对相邻两日 D−1、D,按 (exp,strike,type) 配对:
+- `ΔOI = OI_D − OI_{D−1}`;主动方向取**造成该变化那一天**的 `aggr`(近似取 D 的当日主动净)。
+- **四象限(客户当日开仓)**——仅 `ΔOI > 0`:
+  - call + 主动买(aggr>0)→ **long-call**(客户看涨,dealer −γ)
+  - call + 主动卖(aggr<0)→ **short-call**(备兑,dealer +γ)
+  - put + 主动买 → **long-put**(看跌/对冲,dealer −γ)
+  - put + 主动卖 → **short-put**(看涨,dealer +γ)
+- **做市商 gamma 库存(增量)**:`Σ −sign(aggr)·gamma·ΔOI`(开仓侧);>0 = dealer 净多 gamma(抑制),<0 = 净空(放大)。
+- 用这个**库存 gamma 符号**(而非当日 flow 符号)重跑第 4 节的条件自相关检验。若仍无预测力 → 病因是**机制对单名股太弱**(转 SPY/QQQ/0DTE),而非测量。
 
 ## 10. 已知误差(结论必须带的限定)
 
