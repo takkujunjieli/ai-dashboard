@@ -30,17 +30,14 @@ h2 { font-size: 17px; margin: 34px 0 12px; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* 顶部行情条 */
+/* 切票卡横排容器(交易台迷你卡沿用) */
 .quotes-strip { display: flex; gap: 10px; overflow-x: auto; padding: 14px 0 4px; }
-.quote-card {
-  flex: 0 0 auto; min-width: 118px; padding: 10px 14px;
-  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-}
-.quote-card .sym { font-weight: 700; font-size: 14px; }
-.quote-card .price { font-size: 18px; font-variant-numeric: tabular-nums; }
-.quote-card .chg { font-size: 13px; font-variant-numeric: tabular-nums; }
 .up { color: var(--up); }
 .down { color: var(--down); }
+
+/* 全局股票筛选 */
+.ticker-filter { padding: 8px 0 10px; border-bottom: 1px solid var(--border); }
+.ticker-filter button { font-size: 12px; padding: 4px 11px; }
 
 /* Tab 导航 */
 nav { position: sticky; top: 0; z-index: 5; display: flex; gap: 6px; flex-wrap: wrap;
