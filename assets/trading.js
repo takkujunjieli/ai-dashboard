@@ -334,6 +334,16 @@ function updateLadderTitle() {
   $("ladder-title").textContent = `Strike Ladder · ${m}${suffix}`;
   $("gex-exp").style.opacity = ladderMode === "gex" ? "1" : "0.4";
   $("gex-caliber").style.opacity = ladderMode === "gex" ? "1" : "0.4";
+
+  // 到期桶按钮:当前票+口径下该桶无合约时置灰划掉,一眼看出(如周末/单名股无 0DTE)
+  const t0 = GEX?.tickers?.[SYM];
+  const bsrc = (gexCaliber === "flow" && t0?.flow) ? t0.flow : t0;
+  const bk = ladderMode === "gex" ? bsrc?.buckets : null;
+  [...$("gex-exp").children].forEach((btn) => {
+    const empty = !!(bk && !(bk[btn.dataset.b]?.by_strike?.length));
+    btn.classList.toggle("bucket-empty", empty);
+    btn.title = empty ? "该到期桶当前无合约(点击会回退到最近的非空桶)" : "";
+  });
 }
 
 function renderLadder() {
