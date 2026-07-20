@@ -315,6 +315,11 @@ function ladderRows() {
   if (ladderMode === "gex") {
     return (gexBucketData(SYM)?.by_strike || []).map((r) => ({ strike: r.strike, a: r.net, b: 0, net: true }));
   }
+  if (ladderMode === "netflow") {  // 每档净主动买卖(buy−sell),单条净值:绿=净买/红=净卖
+    return (researchOf(SYM).options?.by_strike || [])
+      .filter((r) => r.netflow != null)
+      .map((r) => ({ strike: r.strike, a: r.netflow, b: 0, net: true }));
+  }
   const key = ladderMode === "oi" ? "oi" : "vol";
   return (researchOf(SYM).options?.by_strike || []).map((r) => ({
     strike: r.strike, a: r[`call_${key}`] || 0, b: r[`put_${key}`] || 0, net: false,
@@ -322,9 +327,11 @@ function ladderRows() {
 }
 
 function updateLadderTitle() {
-  const m = { gex: "GEX", oi: "OI", vol: "Volume" }[ladderMode];
+  const m = { gex: "GEX", oi: "OI", vol: "Volume", netflow: "Net Flow" }[ladderMode];
   let suffix;
-  if (ladderMode === "gex") {
+  if (ladderMode === "netflow") {
+    suffix = " · 主动买卖(当日,calls+puts)";
+  } else if (ladderMode === "gex") {
     const b = gexBucketData(SYM);
     const cal = b?.caliber === "flow" ? "·Real" : gexCaliber === "flow" ? "·Real N/A→Nominal" : "";
     suffix = ` (${GEX_BUCKET_LABEL[b?.bucket] || GEX_BUCKET_LABEL[gexBucket]}${b?.fallback ? "·nearest" : ""}${cal})`;
