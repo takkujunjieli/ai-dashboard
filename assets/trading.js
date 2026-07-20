@@ -326,7 +326,7 @@ function updateLadderTitle() {
   let suffix;
   if (ladderMode === "gex") {
     const b = gexBucketData(SYM);
-    const cal = b?.caliber === "flow" ? "·Flow" : gexCaliber === "flow" ? "·Flow N/A→Nominal" : "";
+    const cal = b?.caliber === "flow" ? "·Real" : gexCaliber === "flow" ? "·Real N/A→Nominal" : "";
     suffix = ` (${GEX_BUCKET_LABEL[b?.bucket] || GEX_BUCKET_LABEL[gexBucket]}${b?.fallback ? "·nearest" : ""}${cal})`;
   } else {
     suffix = " · all expiries";
@@ -519,7 +519,7 @@ function renderStats() {
     tile("Short%", sv?.ratio != null ? (sv.ratio * 100).toFixed(1) + "%" : null),
   ].join("");
   // 顶栏只留正股路径/风险类;IV/PCR/MaxPain/Premium 等期权交易指标已移到下方 Options Panel
-  const note = g.flowMiss ? `<div class="muted small">Flow N/A (computed 2×/day, single-names only; ETFs excluded)</div>` : "";
+  const note = g.flowMiss ? `<div class="muted small">Real (sampled) N/A(仅单名股;ETF 无实测符号,已退回 Nominal)</div>` : "";
   $("wb-stats").innerHTML = `<div class="opt-grid">${tiles}</div>${note}`;
 }
 
@@ -644,7 +644,7 @@ function renderOptPanel() {
     ${emTile}${ivTile}${skewTile}${termTile}${vrpTile}${pcrTile}${mpTile}${earnTile}${premTile}${dTile}
   </div>
     <div class="prem-bar" title="Call premium share: ${cwInt}% (Put ${100 - cwInt}%)"><div class="prem-call" style="width:${cw}%"></div></div>
-    <div class="muted small">Premium = activity (not buy/sell) — read direction with OI change + Flow-GEX.</div>
+    <div class="muted small">Premium = activity (not buy/sell) — read direction with OI change + Real(sampled) GEX.</div>
     ${(o.top_strikes || []).length ? `<details open><summary class="muted small">Most active strikes today</summary>
       <table><tr><th>Exp</th><th>Strike</th><th>Side</th><th>Vol</th><th>OI</th><th>Prem</th></tr>${(o.top_strikes || []).map((t) => `<tr>
         <td>${mmdd(t.exp)}</td><td>${t.strike}</td><td class="${t.side === "call" ? "up" : "down"}">${t.side === "call" ? "C" : "P"}</td>
