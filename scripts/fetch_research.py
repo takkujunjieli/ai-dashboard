@@ -450,6 +450,28 @@ def compute_gex_flow_sampled(sym: str, spot: float, contracts: list, acc: dict, 
     return out
 
 
+def oi_flow_rows(sym: str, contracts: list, flow_c: dict, spot: float, today) -> list:
+    """前向记录:近价 ≤14DTE 合约的 [exp, strike, C/P, 当前OI, 当日主动净(buy−sell), gamma]。
+    供离线 eval 用「跨日 ΔOI × 当日主动方向」估客户开/平仓四象限(long/short × call/put)→ pilot 真持仓输入。
+    API 无开平仓/历史OI,只能这样前向攒;时序对齐(OI 结算 T+1)留给离线处理。"""
+    if not spot or sym in FLOW_SKIP:
+        return []
+    lo, hi = spot * (1 - FLOW_STRIKE_BAND), spot * (1 + FLOW_STRIKE_BAND)
+    rows = []
+    for c in contracts:
+        if not (lo <= c["strike"] <= hi):
+            continue
+        if not 0 <= (date.fromisoformat(c["exp"]) - today).days <= FLOW_MAX_DTE:
+            continue
+        acc = flow_c.get(c.get("ticker"))
+        aggr = (acc[1] - acc[2]) if acc else 0.0        # 当日 Lee-Ready 主动净(买−卖)
+        g = c.get("gamma") or bs_gamma(spot, c["strike"],
+              ((date.fromisoformat(c["exp"]) - today).days + 0.5) / 365, c.get("iv") or 0)
+        rows.append([c["exp"], c["strike"], "C" if c["type"] == "call" else "P",
+                     c.get("oi") or 0, round(aggr, 1), round(g or 0, 6)])
+    return rows
+
+
 def fetch_option_trades(contract_ticker: str) -> list:
     """单合约当日逐笔成交(时间升序),返回 [(sip_ts, price, size, conditions)]。"""
     out, url, pages = [], f"/v3/trades/{contract_ticker}?limit=50000&order=asc&sort=timestamp", 0
@@ -912,6 +934,7 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
     if flow_precise.get("date") != now.date().isoformat():
         flow_precise = {"date": now.date().isoformat(), "net": {}}
     do_precise = os.environ.get("FLOW_PRECISE", "").lower() in ("1", "true")
+    oiflow_today: dict = {}  # 本轮各票近价合约的 OI+主动净+gamma,供开/平仓四象限离线估算
 
     # 全 watchlist 实时快照(1 次调用,批模式下也整表刷新)
     if KEY:
@@ -1002,6 +1025,9 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                 if flow:
                     gex["flow"] = flow
                 gex_out["tickers"][sym] = gex
+                rows = oi_flow_rows(sym, contracts, flow_acc.get("c", {}), spot, now.date())
+                if rows:
+                    oiflow_today[sym] = rows
 
         out["tickers"][sym] = entry
         done = [k for k in ("bars_1m", "bars_5m", "bars_15m") if bar_entry.get(k)] \
@@ -1076,6 +1102,14 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
         flow_path.write_text(json.dumps(flow_acc, ensure_ascii=False, separators=(",", ":")))
     if flow_precise.get("net"):  # 逐笔精确层(当日复用)
         flow_precise_path.write_text(json.dumps(flow_precise, ensure_ascii=False, separators=(",", ":")))
+    if oiflow_today:  # 每日 per-contract OI+主动净+gamma(开/平仓四象限的离线原料),留 45 天
+        oif_path = ROOT / "data" / "oi_flow_daily.json"
+        oif = load_json(oif_path, {})
+        days = oif.get("days") or {}
+        days.setdefault(now.date().isoformat(), {}).update(oiflow_today)  # 当日最后一轮=全天累计主动流
+        for d in sorted(days)[:-45]:
+            del days[d]
+        oif_path.write_text(json.dumps({"days": days}, ensure_ascii=False, separators=(",", ":")))
 
     # GEX 快照 + 当日盘中净 GEX 序列(隔日清空)
     (ROOT / "data" / "gex.json").write_text(json.dumps(gex_out, ensure_ascii=False, indent=1))
