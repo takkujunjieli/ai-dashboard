@@ -19,10 +19,10 @@
 ### GEX 到期桶 (GEX Expiry Bucket)
 GEX 梯/净GEX/flip 按到期日分桶,**累计**口径(0dte ⊂ week ⊂ 2wk ⊂ all,对应 ≤0/7/14/45 天)。交易页默认 **0DTE**——决定当日盘中钉价的是近月 gamma,远月汇总会稀释信号。当选中桶为空(如周末无当日到期合约)时前端自动回退到最近的非空桶并标注。后端 `compute_gex` 产出全部桶,`gex_history` 每点存各桶净值供 sparkline 联动。
 
-### GEX 口径 (GEX Caliber):Nominal(名义)vs Real(实测,sampled)
-两者**底层都是 gamma×OI(存量),唯一区别是每张合约的 dealer 符号怎么定**。UI 显示 **Nominal / Real (sampled)**(内部字段/开关仍叫 `flow`,未改以免动数据格式)。
+### GEX 口径 (GEX Caliber):Nominal (index) vs Real (实测,sampled)
+两者**底层都是 gamma×OI(存量),唯一区别是每张合约的 dealer 符号怎么定**。UI 显示 **Nominal (index) / Real (sampled)**(内部字段/开关仍叫 `flow`,未改以免动数据格式)。
 - **为什么不叫「Flow」**:"flow" 有二义——(A) 流量(成交量),(B) 用成交流向给存量定号。此处是 (B),GEX **仍是存量、不是流量**,故用 "Real(实测符号)" 对 "Nominal(假设符号)",避免误解成"成交量 GEX"。
-- **Nominal**:假设 call 记正、put 记负(dealer 多 call 空 put)。每轮算、覆盖全链、零额外 API;假设对指数合理,对单名股(散户买 call)常错。
+- **Nominal (index)**:假设 call 记正、put 记负(dealer 多 call 空 put)。每轮算、覆盖全链、零额外 API。标 **(index)** 是因为这套假设**对指数(SPX/SPY)校准合理**(机构买 put/备兑 call 主导),**对单名股常错**(散户买 call → dealer 反而空 call)。
 - **Real (sampled)**:用真实成交方向反推 dealer 符号(客户净买→dealer 空→负)。两层:①**采样版**(每轮用 snapshot 的 last_trade vs NBBO 判向、按成交量增量累积,零额外 API、全链)②**精确层**(top-N 高 gamma 合约逐笔 Lee-Ready,`FLOW_PRECISE` 2×/天)覆盖采样符号。存于 gex.json 的 `tickers[sym].flow`(`method`=sampled/sampled+precise、`coverage`、`ambiguity`)。只对**单名股**(`FLOW_SKIP` 排除 ETF);缺失时退回 Nominal 并标注。是**估计**(Lee-Ready ~80%、开/平仓不分、coverage<100%)。
 
 ### 净签名期权流 (Net Signed Options Flow) — 区别于 flow-GEX
