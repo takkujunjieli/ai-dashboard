@@ -76,6 +76,25 @@ def realized_vol(bars: list, n: int = 20) -> float | None:
     return math.sqrt(v) * math.sqrt(252)
 
 
+def ewma_adv(bars: list, span: int = 20, today=None) -> float | None:
+    """近期日均量(指数加权,α=2/(span+1))。剔除当天未收盘的 partial 日线,避免分母偏低。
+    比双周 short 报告的 avg_daily_volume 新鲜、且无 SMA 的'暴量离窗跳变'。bars: [t,o,h,l,c,v,vw]。"""
+    if not bars:
+        return None
+    vols = [(b[0], b[5]) for b in bars if b[5]]
+    if today is not None and vols:
+        last_d = datetime.fromtimestamp(vols[-1][0] / 1000, tz=timezone.utc).date()
+        if last_d >= today:              # 当天(partial)→ 剔除,只用已收盘日
+            vols = vols[:-1]
+    if not vols:
+        return None
+    a = 2 / (span + 1)
+    ewma = None
+    for _ts, v in vols:
+        ewma = v if ewma is None else a * v + (1 - a) * ewma
+    return ewma
+
+
 def maxpain_pin_score(spot, flip, net_gex, max_pain, iv, dte, rv, adv) -> int | None:
     """Max Pain 作为"价格磁吸目标"的可信度 0-100(启发式,权重/阈值待回测校准,见 TODO#7)。
     结构:gamma 门(乘法)× 加权几何平均(距离/到期/波动/OI),weakest-link。
@@ -950,6 +969,9 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
             entry["ind"] = {"rsi_m": rsi(closes_m), "rsi_d": rsi(closes_d),
                             "ema9_m": ema_last(closes_m, 9), "ema21_m": ema_last(closes_m, 21)}
 
+        # 近期日均量(EWMA span=20),%ADV/maxpain 用它替代滞后 3 周的 short.avg_daily_volume
+        entry["adv20"] = ewma_adv(entry.get("bars_d"), 20, now.date())
+
         if r["options_source"] == "massive":
             out["options_source"] = "massive"
         elif r["options_source"] and not out["options_source"]:
@@ -1012,7 +1034,8 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
             opt["rv20"] = round(rv, 4)
         # Max Pain 可信度分(0-100):需 GEX(flip/net)+ ADV + RV,故在此后处理算(见 maxpain_pin_score)
         gx = gex_out["tickers"].get(sym) or {}
-        adv = ((out["tickers"].get(sym) or {}).get("short") or {}).get("avg_daily_volume")
+        entry_sym = out["tickers"].get(sym) or {}
+        adv = entry_sym.get("adv20") or ((entry_sym.get("short") or {}).get("avg_daily_volume"))  # 优先 EWMA,回退旧值
         mp_dte = (date.fromisoformat(opt["max_pain_exp"]) - now.date()).days if opt.get("max_pain_exp") else None
         opt["maxpain_pin"] = maxpain_pin_score(
             gx.get("spot"), gx.get("flip"), gx.get("net_gex"),

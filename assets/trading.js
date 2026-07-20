@@ -502,7 +502,8 @@ function renderStats() {
   const sv = (d.short_vol || [])[0];
   const time = d.asof ? new Date(d.asof).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : null;
   // GEX 相对日均成交额:1% 变动的对冲量 ≈ 一天成交量的百分之几(跨标的可比的强度)
-  const adv = d.short?.avg_daily_volume;
+  // ADV 用 EWMA(span=20,新鲜)优先,回退旧的 short.avg_daily_volume
+  const adv = d.adv20 ?? d.short?.avg_daily_volume;
   const gexPct = (g.net_gex != null && adv && g.spot) ? g.net_gex / (adv * g.spot) * 100 : null;
   // 桶/口径由上方按钮显示,标签不再重复;/1% 为默认口径,省略。仅回退时提示 nearest。
   const tiles = [
