@@ -94,7 +94,7 @@ python scripts/gen_report.py --afterhours    # 头部标注盘后采集
 - **无 IV 历史分位**：只要 `O.*_pct` 为 None（gex_daily 历史不足）→ 恒标 "无 IV 历史分位"。
 - **IV 疑失真**：`atm_iv` 明显偏高（经验 >~100%）**且** 本周无财报（`R.earnings_days` 为空或 >~7）→ 标 "ATM IV X% 偏高但本周无财报(earn Nd)→ 疑近月失真,预期振幅需核对原始 IV"。汇总表的"关键提示"列记 `IV疑失真`。
 - **flow 覆盖弱**：`G.flow.coverage < ~40%` → 标 "flow 覆盖仅 X% → 方向读数偏弱"，汇总列记 `flow弱`。
-- **nominal flip 越界**：flip 缺失/现价远离 gamma 密集区 → 标 "nominal flip 越界(现价远离 gamma 密集区)"。
+- **raw flip 越界**：flip 缺失/现价远离 gamma 密集区 → 标 "raw flip 越界(现价远离 gamma 密集区)"。
 - **ETF**：SPY/QQQ/SOXX 无 flow-GEX → 标 "ETF 无 flow-GEX"，汇总列记 `ETF`。
 
 ---
