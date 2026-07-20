@@ -89,10 +89,6 @@ tr:last-child td { border-bottom: none; }
 .tag.senti-neg { background: #7f1d1d; color: #fca5a5; }
 .tag.senti-neu { background: #374151; color: #cbd5e1; }
 
-/* 全局股票筛选 */
-.ticker-filter { padding: 8px 0 10px; border-bottom: 1px solid var(--border); }
-.ticker-filter button { font-size: 12px; padding: 4px 11px; }
-
 /* 个股 / 期权卡片 */
 .stock-card, #opt-cards .card { margin-bottom: 14px; }
 .stat-row { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; padding: 5px 0; color: var(--muted); }
