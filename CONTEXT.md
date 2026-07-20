@@ -19,10 +19,11 @@
 ### GEX 到期桶 (GEX Expiry Bucket)
 GEX 梯/净GEX/flip 按到期日分桶,**累计**口径(0dte ⊂ week ⊂ 2wk ⊂ all,对应 ≤0/7/14/45 天)。交易页默认 **0DTE**——决定当日盘中钉价的是近月 gamma,远月汇总会稀释信号。当选中桶为空(如周末无当日到期合约)时前端自动回退到最近的非空桶并标注。后端 `compute_gex` 产出全部桶,`gex_history` 每点存各桶净值供 sparkline 联动。
 
-### GEX 口径 (GEX Caliber):名义 vs 流量
-- **名义**:call 记正、put 记负(假设 dealer 多 call 空 put)。每批算,覆盖全 watchlist。
-- **流量**:±15%/≤14天里**当日成交量 top-40** 的合约,逐笔成交经 conditions 过滤(只留单腿常规 209/219/231)+ 零档 tick rule + size 加权,得净客户方向 → 反推 dealer 符号(客户净多→dealer空→负);其余合约仍用名义符号。修正 covered-call 等"名义符号反了"的情形。
-- 流量版**重**(每合约一次 `/v3/trades` 调用,占 50/min 期权额度),只对**单名股**(`FLOW_SKIP` 排除 ETF/指数)、在**低频层每小时**跑一次,批间沿用;存于 gex.json 的 `tickers[sym].flow`。交易页「口径」开关切换,流量数据缺失时自动退回名义并标注。是**估计**(tick rule ~75-80%、仅当日流量、存量 OI 用名义种子)。
+### GEX 口径 (GEX Caliber):Nominal(名义)vs Real(实测,sampled)
+两者**底层都是 gamma×OI(存量),唯一区别是每张合约的 dealer 符号怎么定**。UI 显示 **Nominal / Real (sampled)**(内部字段/开关仍叫 `flow`,未改以免动数据格式)。
+- **为什么不叫「Flow」**:"flow" 有二义——(A) 流量(成交量),(B) 用成交流向给存量定号。此处是 (B),GEX **仍是存量、不是流量**,故用 "Real(实测符号)" 对 "Nominal(假设符号)",避免误解成"成交量 GEX"。
+- **Nominal**:假设 call 记正、put 记负(dealer 多 call 空 put)。每轮算、覆盖全链、零额外 API;假设对指数合理,对单名股(散户买 call)常错。
+- **Real (sampled)**:用真实成交方向反推 dealer 符号(客户净买→dealer 空→负)。两层:①**采样版**(每轮用 snapshot 的 last_trade vs NBBO 判向、按成交量增量累积,零额外 API、全链)②**精确层**(top-N 高 gamma 合约逐笔 Lee-Ready,`FLOW_PRECISE` 2×/天)覆盖采样符号。存于 gex.json 的 `tickers[sym].flow`(`method`=sampled/sampled+precise、`coverage`、`ambiguity`)。只对**单名股**(`FLOW_SKIP` 排除 ETF);缺失时退回 Nominal 并标注。是**估计**(Lee-Ready ~80%、开/平仓不分、coverage<100%)。
 
 ### 净签名期权流 (Net Signed Options Flow) — 区别于 flow-GEX
 Lee-Ready(成交价对成交时刻 NBBO)判每笔主动买卖,size 加权,汇总近价 ≤14DTE 的**客户净买卖方向**。
