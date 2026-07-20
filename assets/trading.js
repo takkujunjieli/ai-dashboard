@@ -463,7 +463,7 @@ function renderMiniCards() {
     const price = snap.price ?? lastClose(s);
     const pct = snap.chg_pct;
     const deep = isDeep(s);
-    return `<div class="quote-card mini-card ${s === SYM ? "active" : ""} ${deep ? "" : "wl-only"}" data-act="pick" data-sym="${esc(s)}">
+    return `<div class="mini-card ${s === SYM ? "active" : ""} ${deep ? "" : "wl-only"}" data-act="pick" data-sym="${esc(s)}">
       <div class="mc-main">
         <div class="sym">${esc(s)}</div>
         <div class="price">${price != null ? Number(price).toFixed(2) : "—"}</div>
@@ -478,7 +478,7 @@ function renderMiniCards() {
       </div>
     </div>`;
   }).join("");
-  const adder = `<div class="quote-card mini-card mc-add">
+  const adder = `<div class="mini-card mc-add">
     <input id="mc-add-input" placeholder="+ ticker" maxlength="6" autocomplete="off">
   </div>`;
   $("mini-cards").innerHTML = syms.length ? cards + adder : adder;

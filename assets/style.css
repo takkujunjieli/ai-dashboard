@@ -146,7 +146,12 @@ footer { margin-top: 50px; text-align: center; }
 .mini-strip { padding: 10px 0 6px; flex-wrap: wrap; overflow-x: visible; }
 #cfg-status { padding: 2px 0 6px; }
 #cfg-status:not(:empty) { color: var(--text); }
-.mini-card { cursor: pointer; border-width: 1px; display: flex; align-items: stretch; gap: 8px; }
+.mini-card { cursor: pointer; display: flex; align-items: stretch; gap: 8px;
+  flex: 0 0 auto; min-width: 118px; padding: 10px 14px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px; }
+.mini-card .sym { font-weight: 700; font-size: 14px; }
+.mini-card .price { font-size: 18px; font-variant-numeric: tabular-nums; }
+.mini-card .chg { font-size: 13px; font-variant-numeric: tabular-nums; }
 .mini-card:hover { background: var(--card-hover); }
 .mini-card.active { border-color: var(--accent); background: rgba(96, 165, 250, .12); }
 .mini-card.wl-only { opacity: .62; }
