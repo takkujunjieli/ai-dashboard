@@ -188,6 +188,7 @@ footer { margin-top: 50px; text-align: center; }
 .wb-ladder { width: 260px; flex: 0 0 260px; }
 #ladder-box { position: relative; }
 #ladder { display: block; }
+#gex-exp button.bucket-empty { opacity: .38; text-decoration: line-through; }  /* 该到期桶当前无合约 */
 .wb-overlays { gap: 8px; }
 .wb-overlays .chips button { font-size: 11px; padding: 3px 9px; }
 
