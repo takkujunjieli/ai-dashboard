@@ -1028,6 +1028,17 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                 rows = oi_flow_rows(sym, contracts, flow_acc.get("c", {}), spot, now.date())
                 if rows:
                     oiflow_today[sym] = rows
+                # 每档净主动买卖(Lee-Ready buy−sell 按行权价聚合,calls+puts),供 Net Flow 梯
+                fc = flow_acc.get("c", {})
+                sflow: dict = {}
+                for c in contracts:
+                    acc = fc.get(c.get("ticker"))
+                    if acc:
+                        sflow[c["strike"]] = sflow.get(c["strike"], 0.0) + (acc[1] - acc[2])
+                for row in (entry.get("options") or {}).get("by_strike") or []:
+                    nf = sflow.get(row["strike"])
+                    if nf:
+                        row["netflow"] = round(nf, 1)
 
         out["tickers"][sym] = entry
         done = [k for k in ("bars_1m", "bars_5m", "bars_15m") if bar_entry.get(k)] \
