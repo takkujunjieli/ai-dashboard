@@ -339,8 +339,9 @@ function updateLadderTitle() {
     suffix = " · all expiries";
   }
   $("ladder-title").textContent = `Strike Ladder · ${m}${suffix}`;
-  $("gex-exp").style.opacity = ladderMode === "gex" ? "1" : "0.4";
-  $("gex-caliber").style.opacity = ladderMode === "gex" ? "1" : "0.4";
+  const gexOnlyOpacity = ladderMode === "gex" ? "1" : "0.4";
+  ($("gex-exp").closest(".tb-group") || $("gex-exp")).style.opacity = gexOnlyOpacity;
+  ($("gex-caliber").closest(".tb-group") || $("gex-caliber")).style.opacity = gexOnlyOpacity;
 
   // 到期桶按钮:当前票+口径下该桶无合约时置灰划掉,一眼看出(如周末/单名股无 0DTE)
   const t0 = GEX?.tickers?.[SYM];
