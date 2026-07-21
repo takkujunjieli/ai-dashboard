@@ -361,8 +361,9 @@ QUOTE_PAGE_CAP = int(os.environ.get("FLOW_QUOTE_PAGES", "4"))  # 逐条 NBBO 分
 
 def snapshot_side(c: dict) -> str | None:
     """用 snapshot 的 last_trade 对 last_quote(NBBO)判主动买卖方向(quote rule)。
-    价差过宽 / 无买卖盘 → None(脏,不信);成交价在买卖盘中间 → None(歧义)。
-    免疫 tick rule 的 delta 污染:比的是"有没有越过当前买卖盘",与标的涨跌无关。"""
+    价差过宽 / 无买卖盘 → None(脏,不信)。分层判向:
+    ① 触碰(≥ask/≤bid)—— 最强信号;② 价差内退到中价规则(>中价买/<中价卖,标准 Lee-Ready)
+    ③ 正好打在中价 → None(真歧义)。全程比同时刻买卖盘,免疫 tick rule 的 delta 污染。"""
     bid, ask, lt = c.get("bid"), c.get("ask"), c.get("lt")
     if not bid or not ask or bid <= 0 or ask <= 0 or lt is None:
         return None
@@ -373,7 +374,11 @@ def snapshot_side(c: dict) -> str | None:
         return "buy"
     if lt <= bid:
         return "sell"
-    return None  # 中价:无法判向(计入歧义)
+    if lt > mid:   # 价差内:退到中价规则
+        return "buy"
+    if lt < mid:
+        return "sell"
+    return None    # 正好在中价:无法判向(计入歧义)
 
 
 def update_flow_accum(contracts: list, acc: dict, today_str: str, spot: float, today) -> None:
@@ -409,7 +414,7 @@ def update_flow_accum(contracts: list, acc: dict, today_str: str, spot: float, t
 
 def compute_gex_flow_sampled(sym: str, spot: float, contracts: list, acc: dict, today,
                              precise: dict | None = None) -> dict | None:
-    """用累积的 buy/sell 定 dealer 符号,产出流量版 GEX(结构同 compute_gex_flow)。
+    """用累积的 buy/sell 定 dealer 符号,产出流量版 GEX。
     客户净买 → dealer 净空 → 空 gamma → 符号 -1;未判向合约退回名义符号。
     precise:top-N 逐笔 Lee-Ready 的净签名 {ticker: net},在这些高权重合约上覆盖采样判向。"""
     if not spot or sym in FLOW_SKIP:
@@ -497,73 +502,10 @@ def fetch_option_quotes(contract_ticker: str) -> list:
     return out
 
 
-def classify_net_flow(trades: list) -> tuple[float, float, float]:
-    """conditions 过滤 + 零档 tick rule + size 加权
-    → (净方向=买size−卖size, 已判向size, 无法判向的平价size)。平价占比 = 分类歧义度。"""
-    buy = sell = flat = 0.0
-    prev = None
-    last_dir = 0
-    for _ts, price, size, conds in trades:
-        if price is None or not size or any(c in FLOW_BAD_CONDITIONS for c in conds):
-            continue
-        if prev is None:
-            prev = price
-            continue
-        d = 1 if price > prev else -1 if price < prev else last_dir  # 零档沿用上一方向
-        prev = price
-        if d > 0:
-            buy += size; last_dir = 1
-        elif d < 0:
-            sell += size; last_dir = -1
-        else:
-            flat += size  # 平价且此前无方向,无法判向
-    return buy - sell, buy + sell, flat
-
-
-def compute_gex_flow(sym: str, spot: float, contracts: list, errors: list) -> dict | None:
-    """流量分类 GEX:±15%/≤14天里 top-N 活跃合约按真实买卖方向定 dealer 符号,其余用名义符号。"""
-    if not spot or sym in FLOW_SKIP:
-        return None
-    today = date.today()
-    lo, hi = spot * (1 - FLOW_STRIKE_BAND), spot * (1 + FLOW_STRIKE_BAND)
-    cand = [c for c in contracts if c.get("ticker") and c["vol"] and lo <= c["strike"] <= hi
-            and 0 <= (date.fromisoformat(c["exp"]) - today).days <= FLOW_MAX_DTE]
-    ranked = sorted(cand, key=lambda c: -c["vol"])[:FLOW_TOPN]
-    flow_sign = {}  # ticker -> dealer 符号(客户净多→dealer空→-1)
-    tot_dir = tot_flat = 0.0
-    for c in ranked:
-        try:
-            net, sz, flat = classify_net_flow(fetch_option_trades(c["ticker"]))
-            tot_dir += sz
-            tot_flat += flat
-            if sz > 0 and net != 0:
-                flow_sign[c["ticker"]] = -1 if net > 0 else 1
-        except Exception as exc:  # noqa: BLE001 单合约失败不影响整体
-            errors.append(f"{sym} 流量 {c['ticker']}: {redact(exc)}")
-    if not flow_sign:
-        return None  # 一个都没分类到就不出流量版,避免和名义版完全一样
-    enriched = []
-    for c in contracts:
-        go = _contract_gamma_oi(c, spot, today)
-        if go is None:
-            continue
-        sign = flow_sign.get(c.get("ticker"), 1 if c["type"] == "call" else -1)  # 未分类→名义
-        enriched.append(((date.fromisoformat(c["exp"]) - today).days, c["strike"], sign * go))
-    out = _bucketize(enriched, spot)
-    if out:
-        out["classified"] = len(flow_sign)  # 实际分类到的合约数
-        # 置信度:coverage = 已按流量定符号的合约占近价 gamma 的比例;ambiguity = 平价 tick 占比
-        g_cand = sum((_contract_gamma_oi(c, spot, today) or 0) for c in cand)
-        g_clf = sum((_contract_gamma_oi(c, spot, today) or 0)
-                    for c in cand if c.get("ticker") in flow_sign)
-        out["coverage"] = round(g_clf / g_cand, 3) if g_cand else None
-        out["ambiguity"] = round(tot_flat / (tot_dir + tot_flat), 3) if (tot_dir + tot_flat) else None
-    return out
-
-
 def classify_lee_ready(trades: list, quotes: list) -> tuple[float, float, float]:
     """逐笔 Lee-Ready:对每笔成交,用其成交时刻(sip_ts)前最近的 NBBO 判向 —
-    成交价 ≥ ask → 主动买;≤ bid → 主动卖;中价/无报价 → tick rule 回退。size 加权。
+    ≥ask 买 / ≤bid 卖(触碰);价差内 >中价 买 / <中价 卖(中价规则);
+    正好中价或无报价 → tick rule 回退。size 加权。
     比 tick rule 精确:比的是与同时刻买卖盘的关系,免疫标的涨跌带来的价格漂移。
     → (净=买size−卖size, 已判向size, 平价size)。"""
     q = sorted([x for x in quotes if x[0] and x[1] and x[2]], key=lambda x: x[0])
@@ -579,11 +521,16 @@ def classify_lee_ready(trades: list, quotes: list) -> tuple[float, float, float]
             i = bisect.bisect_right(qts, ts) - 1  # 成交时刻前最近的一条 NBBO
             if i >= 0:
                 _, bid, ask = q[i]
+                mid = (bid + ask) / 2
                 if price >= ask:
                     side = 1
                 elif price <= bid:
                     side = -1
-        if side == 0:  # 无报价 / 中价 → tick rule 回退
+                elif price > mid:   # 价差内:退到中价规则
+                    side = 1
+                elif price < mid:
+                    side = -1
+        if side == 0:  # 无报价 / 正好中价 → tick rule 回退(现在只剩这两种)
             side = 1 if (prev is not None and price > prev) else -1 if (prev is not None and price < prev) else last_dir
         prev = price
         if side > 0:
