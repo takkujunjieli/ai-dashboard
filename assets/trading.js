@@ -302,11 +302,18 @@ function renderChart() {
 
 /* ---------- 盘中净 GEX 副图(按所选到期桶) ---------- */
 function renderGexSub() {
+  // 与上方 stat tile 对齐:同一个已回退的桶(eff.bucket)+ 同一个口径(Real 缺失时退 Raw)
+  const eff = gexBucketData(SYM);
+  const bkey = eff?.bucket || gexBucket;
+  const useFlow = gexCaliber === "flow" && !eff?.flowMiss;
   const pts = (GEXH?.points || []).filter((p) => p.sym === SYM);
-  gexLine.setData(pts.map((p) => ({
-    time: tconv(Date.parse(p.t)),
-    value: (p.nets && p.nets[gexBucket] != null) ? p.nets[gexBucket] : p.net,
-  })));
+  gexLine.setData(pts.map((p) => {
+    const nets = (useFlow && p.fnets) ? p.fnets : p.nets;  // 逐点:该口径无数据(旧点)则退 Raw
+    const top = (useFlow && p.fnet != null) ? p.fnet : p.net;
+    return { time: tconv(Date.parse(p.t)), value: (nets && nets[bkey] != null) ? nets[bkey] : top };
+  }));
+  const gt = $("gex-sub-title");
+  if (gt) gt.textContent = `Intraday net GEX trend · ${GEX_BUCKET_LABEL[bkey] || bkey} · ${useFlow ? "Real" : "Raw"}`;
   subChart.timeScale().fitContent();
 }
 

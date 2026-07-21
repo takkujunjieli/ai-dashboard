@@ -1079,9 +1079,14 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
     for sym in targets:
         g = gex_out["tickers"].get(sym)
         if g:
-            hist["points"].append({"t": now_iso, "sym": sym,
-                                   "net": g["net_gex"], "spot": g["spot"],
-                                   "nets": {k: v["net_gex"] for k, v in g.get("buckets", {}).items()}})
+            pt = {"t": now_iso, "sym": sym,
+                  "net": g["net_gex"], "spot": g["spot"],
+                  "nets": {k: v["net_gex"] for k, v in g.get("buckets", {}).items()}}
+            f = g.get("flow")  # Real(sampled)口径的 per-bucket net,供趋势副线跟随口径
+            if f:
+                pt["fnet"] = f["net_gex"]
+                pt["fnets"] = {k: v["net_gex"] for k, v in f.get("buckets", {}).items()}
+            hist["points"].append(pt)
     hist_path.write_text(json.dumps(hist, ensure_ascii=False, indent=1))
 
     # 前向记录器(flow-GEX 预测力 pilot):每轮每票一条,**跨天累积不清零**,留 60 天。
