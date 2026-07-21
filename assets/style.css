@@ -148,7 +148,13 @@ footer { margin-top: 50px; text-align: center; }
 #cfg-status:not(:empty) { color: var(--text); }
 .mini-card { cursor: pointer; display: flex; align-items: stretch; gap: 8px;
   flex: 0 0 auto; min-width: 118px; padding: 10px 14px;
-  background: var(--card); border: 1px solid var(--border); border-radius: 10px; }
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  position: relative; overflow: hidden; }
+/* 成交量水位:半透明,从卡片底部按 √(ADV) 升起;内容层浮于其上 */
+.mc-water { position: absolute; left: 0; right: 0; bottom: 0; pointer-events: none;
+  background: rgba(96, 165, 250, .16); border-top: 1px solid rgba(96, 165, 250, .4); }
+.mini-card .mc-main, .mini-card .mc-side { position: relative; z-index: 1; }
+.mc-vol { font-size: 12px; color: #93b4e6; margin-top: 3px; font-variant-numeric: tabular-nums; }
 .mini-card .sym { font-weight: 700; font-size: 14px; }
 .mini-card .price { font-size: 18px; font-variant-numeric: tabular-nums; }
 .mini-card .chg { font-size: 13px; font-variant-numeric: tabular-nums; }
