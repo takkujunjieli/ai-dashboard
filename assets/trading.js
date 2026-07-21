@@ -313,7 +313,10 @@ function renderGexSub() {
     return { time: tconv(Date.parse(p.t)), value: (nets && nets[bkey] != null) ? nets[bkey] : top };
   }));
   const gt = $("gex-sub-title");
-  if (gt) gt.textContent = `Intraday net GEX trend · ${GEX_BUCKET_LABEL[bkey] || bkey} · ${useFlow ? "Real" : "Raw"}`;
+  if (gt) {
+    const upd = GEX?.updated_at ? ` · updated ${fmtDT(GEX.updated_at)}` : "";
+    gt.textContent = `Intraday net GEX trend · ${GEX_BUCKET_LABEL[bkey] || bkey} · ${useFlow ? "Real" : "Raw"}${upd}`;
+  }
   subChart.timeScale().fitContent();
 }
 
