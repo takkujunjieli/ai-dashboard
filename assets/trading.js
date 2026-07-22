@@ -703,7 +703,9 @@ function updateCfgStatus() {
 }
 
 async function loadCfg() {
-  const cfg = await loadJSON("config/tickers.json") || {};
+  // 读最新提交(contents API),而非 Pages 静态副本——config 提交在 main,
+  // 而 Pages 仅手动重部署,否则 PAT 同步后刷新会读到旧配置、新加的 ticker "消失"。
+  const cfg = await loadFreshJSON("config/tickers.json") || {};
   // 本机未保存的改动(add/remove/分组)存 localStorage,优先于 repo,防刷新丢失
   const local = JSON.parse(localStorage.getItem("wbCfgPending") || "null");
   const wl = local?.watchlist?.length ? local.watchlist : [...(cfg.watchlist || [])];
