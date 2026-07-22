@@ -476,24 +476,26 @@ function renderMiniCards() {
   const syms = CFG.watchlist.length ? CFG.watchlist : Object.keys(RESEARCH?.tickers || {});
   const deepSyms = syms.filter(isDeep);
   if (!SYM || !syms.includes(SYM)) SYM = deepSyms[0] || syms[0] || null;
-  // 20日均量(EWMA)水位:√相对当前列表最大值缩放(小票也可辨),数字取整到 M
+  // 日均成交额水位:20日均量(EWMA,股)× 现价 ≈ 日均 $ 成交额,√相对当前列表最大值缩放(小票也可辨)
   const advOf = (s) => { const t = researchOf(s); return t.adv20 ?? t.short?.avg_daily_volume ?? null; };
-  const maxAdv = Math.max(1, ...syms.map((s) => advOf(s) || 0));
+  const dvOf = (s) => { const a = advOf(s); const sp = (RESEARCH?.snapshots?.[s] || {}).price ?? lastClose(s); return (a && sp) ? a * sp : null; };
+  const fmtDV = (dv) => dv >= 1e9 ? `$${(dv / 1e9).toFixed(1)}B` : `$${Math.round(dv / 1e6)}M`;
+  const maxDV = Math.max(1, ...syms.map((s) => dvOf(s) || 0));
   const cards = syms.map((s) => {
     const snap = RESEARCH?.snapshots?.[s] || {};
     const price = snap.price ?? lastClose(s);
     const pct = snap.chg_pct;
     const deep = isDeep(s);
-    const adv = advOf(s);
-    const fill = adv ? Math.round(Math.sqrt(adv / maxAdv) * 100) : 0;
-    const volLbl = adv ? `${Math.round(adv / 1e6)}M` : "—";
+    const dv = dvOf(s);
+    const fill = dv ? Math.round(Math.sqrt(dv / maxDV) * 100) : 0;
+    const volLbl = dv ? fmtDV(dv) : "—";
     return `<div class="mini-card ${s === SYM ? "active" : ""} ${deep ? "" : "wl-only"}" data-act="pick" data-sym="${esc(s)}">
-      ${adv ? `<div class="mc-water" style="height:${fill}%"></div>` : ""}
+      ${dv ? `<div class="mc-water" style="height:${fill}%"></div>` : ""}
       <div class="mc-main">
         <div class="sym">${esc(s)}</div>
         <div class="price">${price != null ? Number(price).toFixed(2) : "—"}</div>
         <div class="chg ${(pct ?? 0) >= 0 ? "up" : "down"}">${pct != null ? ((pct >= 0 ? "+" : "") + pct.toFixed(2) + "%") : ""}</div>
-        <div class="mc-vol" title="20日均量(EWMA,股);水位=√相对列表最大值">${volLbl}</div>
+        <div class="mc-vol" title="日均成交额 ≈ 20日均量(EWMA)× 现价;水位=√相对列表最大值">${volLbl}</div>
       </div>
       <div class="mc-side">
         <div class="mc-grp">
