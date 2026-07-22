@@ -801,13 +801,20 @@ function initControls() {
 }
 
 /* ---------- 数据加载与轮询 ---------- */
-async function loadData() {
-  [RESEARCH, GEX, GEXH, BARS] = await Promise.all([
+// bars_intraday.json ~8.8MB 且 K线变化慢:与 GEX 轮询解耦,最多每 BARS_MIN_MS 拉一次
+// (GEX/flow 每轮拉;bars 首次/手动刷新/超过间隔才拉)。省带宽 & 加载延迟。
+let lastBarsAt = 0;
+const BARS_MIN_MS = 120_000;
+async function loadData(force = false) {
+  const wantBars = force || !BARS || (Date.now() - lastBarsAt >= BARS_MIN_MS);
+  const [research, gex, gexh, bars] = await Promise.all([
     loadFreshJSON("data/research.json"),
     loadFreshJSON("data/gex.json"),
     loadFreshJSON("data/gex_history.json"),
-    loadFreshJSON("data/bars_intraday.json"),
+    wantBars ? loadFreshJSON("data/bars_intraday.json") : Promise.resolve(null),
   ]);
+  RESEARCH = research; GEX = gex; GEXH = gexh;
+  if (wantBars && bars) { BARS = bars; lastBarsAt = Date.now(); }  // 拉失败保留旧 bars,下轮重试
 }
 
 function renderAll(keepRange = false) {
@@ -824,8 +831,8 @@ function renderAll(keepRange = false) {
     + ` · auto-refresh (${marketWindow() ? (getPat() ? "20s" : "2m, add PAT to speed up") : "off-hours 15m"})`;
 }
 
-async function refreshData() {
-  await loadData();
+async function refreshData(force = false) {
+  await loadData(force);
   renderAll(true);
   refreshRunStatus();
   startPolling(); // 每次刷新后按当前时段重排下一次
@@ -938,7 +945,7 @@ function initToolbar() {
     [...$("avwap-anchor").children].forEach((b) => b.classList.toggle("active", b === btn));
     renderChart();
   });
-  $("refresh-btn").addEventListener("click", refreshData);
+  $("refresh-btn").addEventListener("click", () => refreshData(true));  // 手动刷新强制拉最新 bars
   renderOverlayChips();
   [...$("gex-exp").children].forEach((b) => b.classList.toggle("active", b.dataset.b === gexBucket));
   [...$("gex-caliber").children].forEach((b) => b.classList.toggle("active", b.dataset.c === gexCaliber));
