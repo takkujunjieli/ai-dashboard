@@ -37,10 +37,13 @@ HEADERS = {"Authorization": f"Bearer {KEY}"}
 # 50/min 是期权 websocket 上限,与我们纯 REST 无关。
 SLEEP = float(os.environ.get("MASSIVE_SLEEP", "0.08"))
 OPT_SLEEP = float(os.environ.get("MASSIVE_SLEEP_OPTIONS", "0.08"))
+REQ_TIMEOUT = float(os.environ.get("MASSIVE_TIMEOUT", "30"))            # 普通端点读超时
+OPT_TIMEOUT = float(os.environ.get("MASSIVE_TIMEOUT_OPTIONS", "45"))    # 期权大链分页,给更长读超时
 MAX_DTE = 45
 MAX_EXPIRATIONS = 6
 BAR_KEEP = 800  # 每粒度保留 bar 数的默认上限(各粒度在 specs 里单独指定)
-PREFETCH_WORKERS = int(os.environ.get("PREFETCH_WORKERS", "10"))  # 阶段1 每票并发抓取(I/O bound)
+# 错峰:降并发给自建网关减压——10 并发时大链(AMD/MU/TSLA/SNDK)会把网关拖到读超时 → 误回退 Yahoo。
+PREFETCH_WORKERS = int(os.environ.get("PREFETCH_WORKERS", "6"))  # 阶段1 每票并发抓取(I/O bound)
 PRECISE_WORKERS = int(os.environ.get("PRECISE_WORKERS", "8"))     # 精确层 top-N 合约并发逐笔
 
 # 高频 K 线规格 (key, mult, timespan, days, yahoo_interval, yahoo_period, keep)
@@ -125,16 +128,24 @@ def mget(path: str, **params):
     # 期权端点(链快照 + 单合约逐笔成交)共用 50/分钟额度,单独降速
     is_opt = "/v3/snapshot/options/" in url or "/v3/trades/O" in url or "/v3/quotes/O" in url
     sleep = OPT_SLEEP if is_opt else SLEEP
-    resp = None
-    for _ in range(3):
-        resp = requests.get(url, params=params, headers=HEADERS, timeout=30)
+    timeout = OPT_TIMEOUT if is_opt else REQ_TIMEOUT
+    resp, last_exc = None, None
+    for attempt in range(4):
+        try:
+            resp = requests.get(url, params=params, headers=HEADERS, timeout=timeout)
+        except (requests.Timeout, requests.ConnectionError) as exc:  # 网关瞬时慢/断:退避重试(错峰),别直接回退 Yahoo
+            last_exc = exc
+            time.sleep(1.5 * (attempt + 1))
+            continue
         if resp.status_code == 429:
             time.sleep(62)
             continue
         resp.raise_for_status()
         time.sleep(sleep)
         return resp.json()
-    resp.raise_for_status()
+    if resp is not None:
+        resp.raise_for_status()
+    raise last_exc if last_exc else RuntimeError(f"mget 重试耗尽: {url}")
 
 
 # ---------- 股票 ----------
@@ -419,15 +430,18 @@ def compute_gex_flow_sampled(sym: str, spot: float, contracts: list, acc: dict, 
     precise:top-N 逐笔 Lee-Ready 的净签名 {ticker: net},在这些高权重合约上覆盖采样判向。"""
     if not spot or sym in FLOW_SKIP:
         return None
-    C = acc.get("c", {})
+    # 累加器 acc 是全票共享(key=OCC),这里只取本票的合约:O:{SYM} 后紧跟到期日数字,
+    # 避免 classified/ambiguity 混入别的票(如 O:MU 误配 O:MULN)。
+    pfx = f"O:{sym}"
+    is_sym = lambda tk: tk.startswith(pfx) and tk[len(pfx):len(pfx) + 1].isdigit()
+    Csym = {tk: v for tk, v in acc.get("c", {}).items() if is_sym(tk)}
     flow_sign = {}
-    for tk, (v, b, s, f) in C.items():           # 采样版判向(全链)
+    for tk, (v, b, s, f) in Csym.items():        # 采样版判向(本票近价链)
         if b + s > 0 and b != s:
             flow_sign[tk] = -1 if b > s else 1
-    precise = precise or {}
     prec_used = set()
-    for tk, net in precise.items():              # 精确层覆盖(top-N 高权重合约)
-        if net != 0:
+    for tk, net in (precise or {}).items():       # 精确层覆盖(本票 top-N 高权重合约)
+        if net != 0 and is_sym(tk):
             flow_sign[tk] = -1 if net > 0 else 1
             prec_used.add(tk)
     if not flow_sign:
@@ -450,7 +464,7 @@ def compute_gex_flow_sampled(sym: str, spot: float, contracts: list, acc: dict, 
         g_clf = sum((_contract_gamma_oi(c, spot, today) or 0) for c in cand if c.get("ticker") in flow_sign)
         out["coverage"] = round(g_clf / g_cand, 3) if g_cand else None
         out["precise_n"] = len([t for t in prec_used if any(c.get("ticker") == t for c in cand)])
-        tb = sum(v[1] for v in C.values()); ts = sum(v[2] for v in C.values()); tf = sum(v[3] for v in C.values())
+        tb = sum(v[1] for v in Csym.values()); ts = sum(v[2] for v in Csym.values()); tf = sum(v[3] for v in Csym.values())
         out["ambiguity"] = round(tf / (tb + ts + tf), 3) if (tb + ts + tf) else None
     return out
 
@@ -963,29 +977,32 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                 }
             gex = compute_gex(contracts, spot)
             if gex:
-                # 流量版=快照采样(每轮,零额外 API,免 delta 污染);FLOW_PRECISE 时叠 top-N 逐笔精确层
-                update_flow_accum(contracts, flow_acc, now.date().isoformat(), spot, now.date())
-                if do_precise:
-                    flow_precise["net"].update(compute_flow_precise(sym, spot, contracts, now.date(), out["errors"]))
-                flow = compute_gex_flow_sampled(sym, spot, contracts, flow_acc, now.date(),
-                                                precise=flow_precise.get("net"))
-                if flow:
-                    gex["flow"] = flow
+                # Real/flow 口径依赖 Massive 的 OCC ticker + NBBO;Yahoo 回退两者都没有,
+                # 跳过整段(gex.flow 缺失 → 前端 flowMiss 显示 "Real N/A→Raw",而非假的 coverage=0)。
+                if r["options_source"] == "massive":
+                    # 流量版=快照采样(每轮,零额外 API,免 delta 污染);FLOW_PRECISE 时叠 top-N 逐笔精确层
+                    update_flow_accum(contracts, flow_acc, now.date().isoformat(), spot, now.date())
+                    if do_precise:
+                        flow_precise["net"].update(compute_flow_precise(sym, spot, contracts, now.date(), out["errors"]))
+                    flow = compute_gex_flow_sampled(sym, spot, contracts, flow_acc, now.date(),
+                                                    precise=flow_precise.get("net"))
+                    if flow:
+                        gex["flow"] = flow
+                    rows = oi_flow_rows(sym, contracts, flow_acc.get("c", {}), spot, now.date())
+                    if rows:
+                        oiflow_today[sym] = rows
+                    # 每档净主动买卖(Lee-Ready buy−sell 按行权价聚合,calls+puts),供 Net Flow 梯
+                    fc = flow_acc.get("c", {})
+                    sflow: dict = {}
+                    for c in contracts:
+                        acc = fc.get(c.get("ticker"))
+                        if acc:
+                            sflow[c["strike"]] = sflow.get(c["strike"], 0.0) + (acc[1] - acc[2])
+                    for row in (entry.get("options") or {}).get("by_strike") or []:
+                        nf = sflow.get(row["strike"])
+                        if nf:
+                            row["netflow"] = round(nf, 1)
                 gex_out["tickers"][sym] = gex
-                rows = oi_flow_rows(sym, contracts, flow_acc.get("c", {}), spot, now.date())
-                if rows:
-                    oiflow_today[sym] = rows
-                # 每档净主动买卖(Lee-Ready buy−sell 按行权价聚合,calls+puts),供 Net Flow 梯
-                fc = flow_acc.get("c", {})
-                sflow: dict = {}
-                for c in contracts:
-                    acc = fc.get(c.get("ticker"))
-                    if acc:
-                        sflow[c["strike"]] = sflow.get(c["strike"], 0.0) + (acc[1] - acc[2])
-                for row in (entry.get("options") or {}).get("by_strike") or []:
-                    nf = sflow.get(row["strike"])
-                    if nf:
-                        row["netflow"] = round(nf, 1)
 
         out["tickers"][sym] = entry
         done = [k for k in ("bars_1m", "bars_5m", "bars_15m") if bar_entry.get(k)] \
