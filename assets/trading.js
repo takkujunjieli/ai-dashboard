@@ -25,6 +25,8 @@ let hoverSeries = [];       // 叠加曲线的 {series,name,color},供 hover 识
 let priceLines = [];
 let pollTimer = null;
 let ladderRetry = 0;  // 首屏梯子重试计数(坐标系就绪前 priceToCoordinate 返回 null)
+let ladderView = null;    // 梯的纵向视窗 {lo,hi};null=自动(贴合K线)。滚轮/拖动设置,双击复位
+let ladderBounds = null;  // 当前梯行权价范围 {min,max},限制视窗滚动边界(=已计算 GEX 的范围)
 
 /* lightweight-charts 按 UTC 显示,把时间戳平移成本地时间 */
 const tconv = (ms) => Math.floor(ms / 1000) - new Date(ms).getTimezoneOffset() * 60;
@@ -177,6 +179,7 @@ function initCharts() {
     upColor: "#34d399", downColor: "#f87171", borderVisible: false,
     wickUpColor: "#34d399", wickDownColor: "#f87171",
     priceLineVisible: false,  // 关掉自带的当前价虚线(梯上已有 Spot;右轴仍显示末值)
+    autoscaleInfoProvider: ladderAutoscale,  // ladderView 非空时强制价格轴=视窗,梯与K线共此范围
   });
   volume = chart.addHistogramSeries({ priceFormat: { type: "volume" }, priceScaleId: "vol" });
   chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
@@ -211,6 +214,7 @@ function initCharts() {
   const ro = new ResizeObserver(renderLadder);  // 首屏 flex 宽度就绪后重画
   ro.observe($("chart"));
   ro.observe($("ladder-box"));
+  initLadderZoom();  // 梯纵向缩放/平移(K线随之对齐)
 }
 
 /* 可勾选叠加层(K线/量常驻);AVWAP 由锚点选择器单独控制 */
@@ -364,6 +368,58 @@ function updateLadderTitle() {
   });
 }
 
+// 价格轴范围提供者:ladderView 非空 → 强制轴=[lo,hi](K线与梯共此范围);null → 用默认自动缩放
+function ladderAutoscale(orig) {
+  return ladderView ? { priceRange: { minValue: ladderView.lo, maxValue: ladderView.hi } } : orig();
+}
+// 应用当前 ladderView:重触发价格轴缩放(重设 provider 使其重算),下一帧对齐重画梯
+function applyLadderView() {
+  if (!candles) return;
+  candles.applyOptions({ autoscaleInfoProvider: (o) => ladderAutoscale(o) });  // 新引用→强制重算价格轴
+  requestAnimationFrame(renderLadder);
+}
+// 把 ladderView 夹在 ladderBounds 内(保持跨度整体平移),跨度不小于总范围 2%
+function clampLadderView() {
+  if (!ladderView || !ladderBounds) return;
+  let { lo, hi } = ladderView;
+  const full = ladderBounds.max - ladderBounds.min;
+  if (hi - lo < full * 0.02) { const c = (lo + hi) / 2, h = full * 0.01; lo = c - h; hi = c + h; }
+  if (lo < ladderBounds.min) { hi += ladderBounds.min - lo; lo = ladderBounds.min; }
+  if (hi > ladderBounds.max) { lo -= hi - ladderBounds.max; hi = ladderBounds.max; }
+  ladderView = { lo: Math.max(lo, ladderBounds.min), hi: Math.min(hi, ladderBounds.max) };
+}
+// 梯的滚轮缩放 / 拖动平移 / 双击复位(纵向聚焦局部 GEX;K线随之对齐)
+function initLadderZoom() {
+  const box = $("ladder-box");
+  if (!box) return;
+  box.title = "滚轮缩放 · 拖动平移 · 双击复位(范围限于已计算的 GEX 行权价)";
+  const chartH = () => $("chart").getBoundingClientRect().height;
+  const seed = () => {  // 首次交互:从当前可视价格区间起步
+    if (ladderView || !candles) return;
+    const hi = candles.coordinateToPrice(0), lo = candles.coordinateToPrice(chartH());
+    if (lo != null && hi != null) ladderView = { lo: Math.min(lo, hi), hi: Math.max(lo, hi) };
+  };
+  box.addEventListener("wheel", (e) => {
+    e.preventDefault(); seed();
+    if (!ladderView) return;
+    const pc = candles.coordinateToPrice(e.clientY - box.getBoundingClientRect().top);
+    const c = pc != null ? pc : (ladderView.lo + ladderView.hi) / 2;
+    const f = e.deltaY > 0 ? 1.15 : 0.87;  // 下滚=范围放大(看更宽);上滚=范围缩小(放大局部)
+    ladderView = { lo: c - (c - ladderView.lo) * f, hi: c + (ladderView.hi - c) * f };
+    clampLadderView(); applyLadderView();
+  }, { passive: false });
+  let drag = null;
+  box.addEventListener("mousedown", (e) => { seed(); if (ladderView) drag = { y: e.clientY, v: { ...ladderView } }; });
+  window.addEventListener("mousemove", (e) => {
+    if (!drag) return;
+    const dP = (e.clientY - drag.y) / chartH() * (drag.v.hi - drag.v.lo);  // 拖动:抓着内容走
+    ladderView = { lo: drag.v.lo + dP, hi: drag.v.hi + dP };
+    clampLadderView(); applyLadderView();
+  });
+  window.addEventListener("mouseup", () => { drag = null; });
+  box.addEventListener("dblclick", () => { ladderView = null; applyLadderView(); });  // 复位=自动贴合K线
+}
+
 function renderLadder() {
   const svg = $("ladder");
   if (!svg || !candles) return;
@@ -377,6 +433,8 @@ function renderLadder() {
   svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   svg.setAttribute("width", W); svg.setAttribute("height", H);
   if (!rows.length) { svg.innerHTML = `<text x="8" y="20" fill="#8b96ad" font-size="11">No data (collect once)</text>`; return; }
+  const ss = rows.map((r) => r.strike);  // 滚动边界 = 已计算 GEX 的行权价范围
+  ladderBounds = { min: Math.min(...ss), max: Math.max(...ss) };
   // 中间零轴发散:正(绿)向右、负(红)向左;OI/量 模式 call 向右、put 向左
   const cx = W / 2, half = cx - 3;
   const magOf = (r) => r.net ? Math.abs(r.a) : Math.max(r.a, r.b);
