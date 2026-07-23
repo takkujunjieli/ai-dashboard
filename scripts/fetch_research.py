@@ -491,6 +491,22 @@ def oi_flow_rows(sym: str, contracts: list, flow_c: dict, spot: float, today) ->
     return rows
 
 
+def iv_obs_rows(sym: str, contracts: list, today) -> dict:
+    """零风险观测:取最接近 30 DTE 的到期,导出该到期每张合约的 [strike, C/P, delta, iv, mid]。
+    供离线分析 ±20% 抓取带内 25Δ/50Δ 是否可达、翼部 delta 覆盖如何。不参与任何指标,可随时删。"""
+    cs = [c for c in contracts if c.get("exp")]
+    if not cs:
+        return {}
+    near = min({c["exp"] for c in cs}, key=lambda e: abs((date.fromisoformat(e) - today).days - 30))
+    rows = sorted(
+        [[c["strike"], "C" if c["type"] == "call" else "P",
+          round(c["delta"], 3) if c.get("delta") is not None else None,
+          round(c["iv"], 4) if c.get("iv") is not None else None, c.get("mid")]
+         for c in cs if c["exp"] == near],
+        key=lambda r: r[0])
+    return {"exp": near, "dte": (date.fromisoformat(near) - today).days, "rows": rows}
+
+
 def fetch_option_trades(contract_ticker: str) -> list:
     """单合约当日逐笔成交(时间升序),返回 [(sip_ts, price, size, conditions)]。"""
     out, url, pages = [], f"/v3/trades/{contract_ticker}?limit=50000&order=asc&sort=timestamp", 0
@@ -630,6 +646,8 @@ def options_massive(sym: str, spot: float | None = None) -> list:
                 "bid": lq.get("bid"),
                 "ask": lq.get("ask"),
                 "lt": lt.get("price"),        # 最近成交价(对 bid/ask 判主动买卖)
+                "delta": (o.get("greeks") or {}).get("delta"),  # 观测:供后续 25Δ/50Δ 选取(同一响应,零额外 API)
+                "mid": round((lq["bid"] + lq["ask"]) / 2, 4) if (lq.get("bid") and lq.get("ask")) else None,
             })
         url = rebase_url(data.get("next_url"))
     return contracts
@@ -650,8 +668,13 @@ def options_yahoo(sym: str) -> list:
                 vol = 0 if row.volume != row.volume else int(row.volume)
                 price = 0 if row.lastPrice != row.lastPrice else float(row.lastPrice)
                 iv = None if row.impliedVolatility != row.impliedVolatility else float(row.impliedVolatility)
+                bid = 0.0 if row.bid != row.bid else float(row.bid)
+                ask = 0.0 if row.ask != row.ask else float(row.ask)
                 contracts.append({"type": typ, "strike": float(row.strike), "exp": d,
-                                  "iv": iv, "oi": oi, "vol": vol, "price": price})
+                                  "iv": iv, "oi": oi, "vol": vol, "price": price,
+                                  "bid": bid or None, "ask": ask or None,
+                                  "mid": round((bid + ask) / 2, 4) if (bid and ask) else None})
+                                  # 注:Yahoo 无 greeks,delta 缺省(观测主要看 Massive 源)
         time.sleep(0.5)
     return contracts
 
@@ -896,6 +919,7 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
         flow_precise = {"date": now.date().isoformat(), "net": {}}
     do_precise = os.environ.get("FLOW_PRECISE", "").lower() in ("1", "true")
     oiflow_today: dict = {}  # 本轮各票近价合约的 OI+主动净+gamma,供开/平仓四象限离线估算
+    ivobs_today: dict = {}   # 零风险观测:近 30DTE 到期的 strike/delta/iv/mid,供离线看 25Δ 覆盖(可随时删)
 
     # 全 watchlist 实时快照(1 次调用,批模式下也整表刷新)
     if KEY:
@@ -966,6 +990,9 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
         if contracts:
             entry["options"] = summarize_options(sym, contracts, spot, oi_all, oi_next)
             entry["options"]["contracts"] = len(contracts)
+            obs = iv_obs_rows(sym, contracts, now.date())  # 观测(不入指标),含 Yahoo 源以便看缺口
+            if obs:
+                ivobs_today[sym] = obs
             # 批间 premium 增量(仅同一交易日内比较,premium 是当日累计值)
             old_opt = old.get("options") or {}
             if (merge and old_opt.get("call_premium") is not None
@@ -1085,6 +1112,11 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
         for d in sorted(days)[:-45]:
             del days[d]
         oif_path.write_text(json.dumps({"days": days}, ensure_ascii=False, separators=(",", ":")))
+
+    if ivobs_today:  # 零风险观测快照(最新一轮覆盖即可;不做保留,分析完可删本块+文件)
+        (ROOT / "data" / "iv_obs.json").write_text(
+            json.dumps({"updated_at": now_iso, "tickers": ivobs_today},
+                       ensure_ascii=False, separators=(",", ":")))
 
     # GEX 快照 + 当日盘中净 GEX 序列(隔日清空)
     (ROOT / "data" / "gex.json").write_text(json.dumps(gex_out, ensure_ascii=False, indent=1))
