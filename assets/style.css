@@ -203,7 +203,7 @@ footer { margin-top: 50px; text-align: center; }
 #gex-sub { height: 110px; }
 .sub-title { padding: 6px 0 2px; }
 .wb-ladder { width: 260px; flex: 0 0 260px; }
-#ladder-box { position: relative; }
+#ladder-box { position: relative; user-select: none; cursor: ns-resize; }  /* 纵向滚轮缩放/拖动平移 */
 #ladder { display: block; }
 #gex-exp button.bucket-empty { opacity: .38; text-decoration: line-through; }  /* 该到期桶当前无合约 */
 .wb-overlays { gap: 8px; }
