@@ -291,8 +291,9 @@ def bs_gamma(spot: float, strike: float, t_years: float, iv: float) -> float:
     return math.exp(-d1 * d1 / 2) / math.sqrt(2 * math.pi) / (spot * iv * math.sqrt(t_years))
 
 
-# GEX 按到期分桶(累计口径,0dte ⊂ week ⊂ 2wk ⊂ all),前端可切,默认 0DTE
-GEX_BUCKETS = [("0dte", 0), ("week", 7), ("2wk", 14), ("all", MAX_DTE)]
+# GEX 按到期分桶(累计口径,0dte ⊂ week ⊂ 2wk ⊂ 30d),前端可切,默认 0DTE
+# 内部键仍叫 "all"(避免动数据格式),语义=≤30d;仍抓 ≤MAX_DTE 供 IV 期限结构,只是 GEX 顶桶封在 30d
+GEX_BUCKETS = [("0dte", 0), ("week", 7), ("2wk", 14), ("all", 30)]
 
 
 def _gex_summary(signed: dict, spot: float) -> dict:
@@ -505,6 +506,20 @@ def iv_obs_rows(sym: str, contracts: list, today) -> dict:
          for c in cs if c["exp"] == near],
         key=lambda r: r[0])
     return {"exp": near, "dte": (date.fromisoformat(near) - today).days, "rows": rows}
+
+
+def gex_profile_rows(gex: dict, buckets=("week", "2wk", "all")) -> list:
+    """EOD GEX 形状:每桶 by_strike 的 (bucket, strike, net_nom, net_real)。
+    供离线研究"墙的厚度/长度/距现价/符号 → 后续当周价格引力/推力"。real 缺失(ETF/无flow)→ None。"""
+    nb = gex.get("buckets") or {}
+    fb = (gex.get("flow") or {}).get("buckets") or {}
+    rows = []
+    for b in buckets:
+        nom = {r["strike"]: r["net"] for r in (nb.get(b) or {}).get("by_strike", [])}
+        real = {r["strike"]: r["net"] for r in (fb.get(b) or {}).get("by_strike", [])}
+        for k in sorted(set(nom) | set(real)):
+            rows.append((b, k, nom.get(k), real.get(k)))
+    return rows
 
 
 def fetch_option_trades(contract_ticker: str) -> list:
@@ -920,6 +935,7 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
     do_precise = os.environ.get("FLOW_PRECISE", "").lower() in ("1", "true")
     oiflow_today: dict = {}  # 本轮各票近价合约的 OI+主动净+gamma,供开/平仓四象限离线估算
     ivobs_today: dict = {}   # 零风险观测:近 30DTE 到期的 strike/delta/iv/mid,供离线看 25Δ 覆盖(可随时删)
+    profile_today: dict = {}  # EOD GEX 形状快照(week/2wk/30d 各档 by_strike),按日期分区落 Parquet,供墙-引力研究
 
     # 全 watchlist 实时快照(1 次调用,批模式下也整表刷新)
     if KEY:
@@ -1030,6 +1046,13 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                         if nf:
                             row["netflow"] = round(nf, 1)
                 gex_out["tickers"][sym] = gex
+                prows = gex_profile_rows(gex)  # EOD 墙形状快照(nominal 恒有;real 仅 massive+单名股)
+                if prows:
+                    fnb = (gex.get("buckets", {}).get("all") or {})
+                    ffb = ((gex.get("flow") or {}).get("buckets", {}).get("all") or {})
+                    profile_today[sym] = {"spot": gex.get("spot"),
+                                          "flip_nom": fnb.get("flip"), "flip_real": ffb.get("flip"),
+                                          "rows": prows}
 
         out["tickers"][sym] = entry
         done = [k for k in ("bars_1m", "bars_5m", "bars_15m") if bar_entry.get(k)] \
@@ -1117,6 +1140,23 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
         (ROOT / "data" / "iv_obs.json").write_text(
             json.dumps({"updated_at": now_iso, "tickers": ivobs_today},
                        ensure_ascii=False, separators=(",", ":")))
+
+    if profile_today:  # EOD GEX 形状 → 每日一个 Parquet(按日期分区,只写当天;留 250 天),供墙-引力研究
+        try:
+            import pyarrow as pa, pyarrow.parquet as pq
+            cols = {k: [] for k in ("sym", "bucket", "strike", "net_nom", "net_real", "spot", "flip_nom", "flip_real")}
+            for sym, p in profile_today.items():
+                for (b, k, nn, nr) in p["rows"]:
+                    cols["sym"].append(sym); cols["bucket"].append(b); cols["strike"].append(k)
+                    cols["net_nom"].append(nn); cols["net_real"].append(nr)
+                    cols["spot"].append(p["spot"]); cols["flip_nom"].append(p["flip_nom"]); cols["flip_real"].append(p["flip_real"])
+            prof_dir = ROOT / "data" / "gex_profile"
+            prof_dir.mkdir(exist_ok=True)
+            pq.write_table(pa.table(cols), prof_dir / f"{now.date().isoformat()}.parquet", compression="zstd")
+            for f in sorted(prof_dir.glob("*.parquet"))[:-250]:  # 留 250 天
+                f.unlink()
+        except ImportError:
+            out["errors"].append("pyarrow 未安装:跳过 gex_profile Parquet sink(pip install pyarrow)")
 
     # GEX 快照 + 当日盘中净 GEX 序列(隔日清空)
     (ROOT / "data" / "gex.json").write_text(json.dumps(gex_out, ensure_ascii=False, indent=1))
