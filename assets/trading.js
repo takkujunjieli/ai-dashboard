@@ -20,6 +20,7 @@ let chart, candles, volume, ema9L, ema21L, vwapL, bbU, bbL, vsU, vsL, avwapL, su
 let overlayOn = JSON.parse(localStorage.getItem("wbOverlays") || "null")
   || { ema9: true, ema21: true, vwap: true, bb: false, vsig: false };  // 默认只开 EMA/VWAP,其余按需勾
 let avwapAnchor = localStorage.getItem("wbAvwapAnchor") || "off";
+let showETH = localStorage.getItem("wbShowETH") === "1";  // 分时图默认只画 RTH;开则含盘前盘后
 let hoverLevels = [];       // flip / MaxPain 横线的 {name,color,price},供 hover 识别
 let hoverSeries = [];       // 叠加曲线的 {series,name,color},供 hover 识别
 let priceLines = [];
@@ -53,6 +54,16 @@ function aggregate(bars, n) {
             Math.min(...bs.map((x) => x[3])), bs[bs.length - 1][4],
             bs.reduce((s, x) => s + x[5], 0), null];
   }
+}
+
+// 是否在美东常规交易时段(RTH)9:30–16:00 的工作日;用于过滤盘前盘后稀薄 bar
+const RTH_FMT = new Intl.DateTimeFormat("en-US", { timeZone: ET, hourCycle: "h23", weekday: "short", hour: "numeric", minute: "numeric" });
+function isRTH(ms) {
+  const p = RTH_FMT.formatToParts(new Date(ms));
+  const g = (t) => p.find((x) => x.type === t)?.value;
+  if (g("weekday") === "Sat" || g("weekday") === "Sun") return false;
+  const m = +g("hour") * 60 + +g("minute");
+  return m >= 570 && m < 960;  // ET 9:30(570)~16:00(960)
 }
 
 function barsFor(sym, tf) {
@@ -269,8 +280,9 @@ function initHoverLegend() {
 
 /* ---------- 主图 ---------- */
 function renderChart() {
-  const bars = barsFor(SYM, TF);
+  let bars = barsFor(SYM, TF);
   const daily = TF === "1d";
+  if (!daily && !showETH) bars = bars.filter((b) => isRTH(b[0]));  // 默认只画 RTH(去盘前盘后);VWAP/带/AVWAP 随之基于 RTH
   const t = (b) => daily ? etDay(b[0]) : tconv(b[0]);
   candles.setData(bars.map((b) => ({ time: t(b), open: b[1], high: b[2], low: b[3], close: b[4] })));
   volume.setData(bars.map((b) => ({ time: t(b), value: b[5], color: b[4] >= b[1] ? "#34d39955" : "#f8717155" })));
@@ -1007,11 +1019,21 @@ function initToolbar() {
     [...$("avwap-anchor").children].forEach((b) => b.classList.toggle("active", b === btn));
     renderChart();
   });
+  // 会话:RTH(默认)/ +ETH(含盘前盘后)
+  $("session-chips").addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button");
+    if (!btn) return;
+    showETH = btn.dataset.s === "eth";
+    localStorage.setItem("wbShowETH", showETH ? "1" : "0");
+    [...$("session-chips").children].forEach((b) => b.classList.toggle("active", b === btn));
+    renderChart();
+  });
   $("refresh-btn").addEventListener("click", () => refreshData(true));  // 手动刷新强制拉最新 bars
   renderOverlayChips();
   [...$("gex-exp").children].forEach((b) => b.classList.toggle("active", b.dataset.b === gexBucket));
   [...$("gex-caliber").children].forEach((b) => b.classList.toggle("active", b.dataset.c === gexCaliber));
   [...$("avwap-anchor").children].forEach((b) => b.classList.toggle("active", b.dataset.a === avwapAnchor));
+  [...$("session-chips").children].forEach((b) => b.classList.toggle("active", (b.dataset.s === "eth") === showETH));
 }
 
 /* ---------- 入口 ---------- */
