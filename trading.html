@@ -66,6 +66,11 @@
 
 <!-- Overlay toggles (candles & volume always on) + anchored-VWAP anchor -->
 <div class="wb-toolbar wb-overlays">
+  <span class="muted small" title="RTH=常规时段 9:30-16:00 ET(默认,去盘前盘后);+ETH=含盘前盘后。仅分时图,不影响日线">Session:</span>
+  <div id="session-chips" class="chips">
+    <button data-s="rth" class="active">RTH</button>
+    <button data-s="eth">+ETH</button>
+  </div>
   <span class="muted small">Overlays:</span>
   <div id="overlay-chips" class="chips"></div>
   <span class="muted small">AVWAP anchor:</span>
