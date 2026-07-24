@@ -2,3 +2,4 @@ requests>=2.31
 feedparser>=6.0
 PyYAML>=6.0
 yfinance>=0.2.40
+pyarrow>=15  # 每日 GEX-profile 快照写 Parquet(按日期分区);缺失时采集会跳过该 sink,不中断
