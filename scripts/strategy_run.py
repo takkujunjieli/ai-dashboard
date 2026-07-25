@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from strategy_backtest import run_backtest      # noqa: E402
 from strategy_metrics import compute_metrics     # noqa: E402
 from strategy_signals import SIGNALS, make_signals, buy_and_hold  # noqa: E402
+from strategy_walkforward import walk_forward    # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 GD = os.environ.get("GEX_DAILY", str(ROOT / "data" / "gex_daily.json"))
@@ -28,6 +29,9 @@ SIG = os.environ.get("SIG", "flow_sign")
 TP = float(os.environ.get("BT_TP", "2.0"))
 SL = float(os.environ.get("BT_SL", "1.0"))
 HOLD = int(os.environ.get("BT_HOLD", "16"))
+WF_TRAIN = int(os.environ.get("WF_TRAIN", "40"))   # walk-forward 训练/测试窗(bar 数)
+WF_TEST = int(os.environ.get("WF_TEST", "10"))
+WF_GRID = {"take_profit_pct": [1.0, 2.0, 3.0], "stop_loss_pct": [0.5, 1.0, 2.0], "max_holding_bars": [8, 16]}
 FEATS = ("net_flow", "net_nom", "pcr_vol", "pcr_oi", "atm_iv", "skew_rr", "iv_term", "vrp", "maxpain_pin", "coverage")
 
 
@@ -64,24 +68,36 @@ def main():
     res = run_backtest(ctx["prices"], signals, ctx["dates"], take_profit_pct=TP, stop_loss_pct=SL, max_holding_bars=HOLD)
     metrics = compute_metrics(res, ann_factor=252)   # 日线 → 252
     bh = buy_and_hold(ctx["prices"])
+    # 基准权益曲线(按日期配对),供前端叠加对照
+    bench_curve = [{"t": d, "equity": e} for d, e in zip(ctx["dates"], bh["equity_curve"])]
     out = {
         "sym": sym, "signal": SIG, "signal_desc": SIGNALS[SIG]["desc"], "n_bars": len(ctx["prices"]),
         "source": "data/gex_daily.json(日线 spot + 特征)",
-        "caveat": "示例信号/参数,未验证;含成本+无前视。结论待 PR6 walk-forward/OOS + IC 研究。",
+        "caveat": "示例信号/参数,未验证;含成本+无前视。结论以 OOS(walk-forward)为准 + IC 研究。",
         "available_signals": list(SIGNALS),
         **{k: res[k] for k in ("total_trades", "win_rate", "total_return_pct", "max_drawdown_pct",
                                "take_profit_pct", "stop_loss_pct", "max_holding_bars", "allow_short",
                                "cost_bps", "entry_lag")},
         "metrics": metrics,
         "benchmark": {"name": "buy_and_hold", "total_return_pct": bh["total_return_pct"],
-                      "max_drawdown_pct": bh["max_drawdown_pct"]},
+                      "max_drawdown_pct": bh["max_drawdown_pct"], "equity_curve": bench_curve},
         "equity_curve": res["equity_curve"], "trades": res["trades"],
     }
+    # walk-forward OOS(数据够才有折;否则不产出 oos 块,前端相应提示)
+    if len(ctx["prices"]) >= WF_TRAIN + WF_TEST:
+        wf = walk_forward(ctx["prices"], signals, ctx["dates"], grid=WF_GRID, train=WF_TRAIN, test=WF_TEST)
+        if wf["n_folds"] > 0:
+            out["oos"] = wf
+    else:
+        out["oos_note"] = f"样本不足做 walk-forward(需 ≥{WF_TRAIN + WF_TEST} bar,现 {len(ctx['prices'])});攒够再出 OOS。"
+
     outp = ROOT / "data" / "strategy_bt.json"
     outp.parent.mkdir(exist_ok=True)
     outp.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")))
+    oos = out.get("oos")
     print(f"{sym} [{SIG}]: n={len(ctx['prices'])} trades={res['total_trades']} net={res['total_return_pct']}% "
-          f"sharpe={metrics['sharpe']} vs B&H {bh['total_return_pct']}% → {outp}")
+          f"sharpe={metrics['sharpe']} vs B&H {bh['total_return_pct']}%"
+          + (f" | OOS {oos['n_folds']}折 {oos['oos_total_return_pct']}%" if oos else " | OOS: 样本不足"))
 
 
 if __name__ == "__main__":

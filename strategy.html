@@ -23,8 +23,18 @@
 </section>
 
 <section>
-  <h2>💰 Equity Curve <span class="muted small">(mark-to-market, base 10,000)</span></h2>
+  <h2>📐 Metrics <span class="muted small">(净收益口径,含成本;年化=252)</span></h2>
+  <div id="bt-metrics" class="wb-statbar"></div>
+</section>
+
+<section>
+  <h2>💰 Equity Curve <span class="muted small">(mark-to-market, base 10,000; 虚线=Buy&amp;Hold 基准)</span></h2>
   <div id="bt-chart" style="height:360px"></div>
+</section>
+
+<section>
+  <h2>🔁 Walk-forward OOS <span class="muted small">(参数在训练窗选、表现只在测试窗算 —— 反过拟合)</span></h2>
+  <div id="bt-oos"></div>
 </section>
 
 <section>
