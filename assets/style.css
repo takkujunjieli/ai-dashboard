@@ -204,6 +204,10 @@ footer { margin-top: 50px; text-align: center; }
 .sub-title { padding: 6px 0 2px; }
 .wb-ladder { width: 260px; flex: 0 0 260px; }
 #ladder-box { position: relative; user-select: none; cursor: ns-resize; }  /* 纵向滚轮缩放/拖动平移 */
+/* 策略回测页交易表 */
+.bt-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.bt-table th, .bt-table td { text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+.bt-table th { color: var(--muted); font-weight: 500; }
 #ladder { display: block; }
 #gex-exp button.bucket-empty { opacity: .38; text-decoration: line-through; }  /* 该到期桶当前无合约 */
 .wb-overlays { gap: 8px; }
