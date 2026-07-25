@@ -16,6 +16,7 @@ from __future__ import annotations
 def run_backtest(prices, signals, times=None, *,
                  take_profit_pct: float = 2.0, stop_loss_pct: float = 1.0,
                  max_holding_bars: int = 16, allow_short: bool = True,
+                 cost_bps: float = 1.0, entry_lag: int = 1,
                  initial_equity: float = 10000.0) -> dict:
     """在给定价格序列 + 入场信号上模拟交易。
 
@@ -29,11 +30,17 @@ def run_backtest(prices, signals, times=None, *,
     """
     n = len(prices)
     params = {"take_profit_pct": take_profit_pct, "stop_loss_pct": stop_loss_pct,
-              "max_holding_bars": max_holding_bars, "allow_short": allow_short}
+              "max_holding_bars": max_holding_bars, "allow_short": allow_short,
+              "cost_bps": cost_bps, "entry_lag": entry_lag}
     if n == 0 or len(signals) != n:
         return {"total_trades": 0, "win_rate": 0.0, "total_return_pct": 0.0,
                 "max_drawdown_pct": 0.0, "trades": [], "equity_curve": [], **params}
     lbl = times if (times is not None and len(times) == n) else list(range(n))
+    # 无前视:bar i 的信号延迟 entry_lag 根才生效(默认下一根入场),避免用同根 bar 的未来信息
+    if entry_lag > 0:
+        signals = ([0] * entry_lag + list(signals))[:n]
+    side_cost = cost_bps / 100.0   # 单边成本 %(手续费+滑点),1bp=0.01%
+    rt_cost = 2 * side_cost        # 往返(进+出)
 
     trades: list = []
     curve: list = []
@@ -60,10 +67,12 @@ def run_backtest(prices, signals, times=None, *,
                       else "stop_loss" if ret <= -stop_loss_pct
                       else "time_limit" if held >= max_holding_bars else None)
             if reason:
+                net = ret - rt_cost   # 扣往返成本后的净收益 %
                 trades.append({"entry_time": lbl[entry_i], "exit_time": lbl[i],
                                "type": position, "entry_price": entry_price, "exit_price": px,
-                               "return_pct": round(ret, 4), "bars_held": held, "reason": reason})
-                equity *= (1 + ret / 100.0)
+                               "gross_pct": round(ret, 4), "return_pct": round(net, 4),
+                               "bars_held": held, "reason": reason})
+                equity *= (1 + net / 100.0)
                 peak = max(peak, equity)
                 max_dd = max(max_dd, (peak - equity) / peak * 100.0)
                 position = None
@@ -77,7 +86,7 @@ def run_backtest(prices, signals, times=None, *,
                 position, entry_price, entry_i = "SHORT", px, i
 
         # 3) 逐 bar 盯市权益(含未平仓浮盈)
-        mtm = equity * (1 + open_ret(px) / 100.0) if (position and entry_price > 0) else equity
+        mtm = equity * (1 + (open_ret(px) - side_cost) / 100.0) if (position and entry_price > 0) else equity
         curve.append({"t": lbl[i], "equity": round(mtm, 2), "position": position or "FLAT"})
 
     total_ret = (equity - initial_equity) / initial_equity * 100.0
@@ -90,38 +99,46 @@ def run_backtest(prices, signals, times=None, *,
 
 def _selftest() -> None:
     ap = lambda a, b: abs(a - b) < 1e-6  # noqa: E731
+    # 核心机制用 entry_lag=0、cost_bps=0 做确定性断言(同根入场、零成本)
+    nb = lambda *a, **k: run_backtest(*a, entry_lag=0, cost_bps=0, **{k2: v for k2, v in k.items()})  # noqa: E731
 
     # 多头止盈:100→102 触发 tp=2
-    r = run_backtest([100, 101, 102, 103], [1, 0, 0, 0], take_profit_pct=2, stop_loss_pct=1)
+    r = nb([100, 101, 102, 103], [1, 0, 0, 0], take_profit_pct=2, stop_loss_pct=1)
     assert r["total_trades"] == 1 and r["trades"][0]["reason"] == "take_profit"
     assert ap(r["trades"][0]["return_pct"], 2.0) and ap(r["total_return_pct"], 2.0) and r["win_rate"] == 100.0
 
     # 多头止损:100→99 触发 sl=1
-    r = run_backtest([100, 99, 98], [1, 0, 0], take_profit_pct=5, stop_loss_pct=1)
+    r = nb([100, 99, 98], [1, 0, 0], take_profit_pct=5, stop_loss_pct=1)
     assert r["trades"][0]["reason"] == "stop_loss" and ap(r["trades"][0]["return_pct"], -1.0)
 
     # 超时退出:横盘,max_holding=2
-    r = run_backtest([100, 100, 100, 100], [1, 0, 0, 0], take_profit_pct=5, stop_loss_pct=5, max_holding_bars=2)
+    r = nb([100, 100, 100, 100], [1, 0, 0, 0], take_profit_pct=5, stop_loss_pct=5, max_holding_bars=2)
     assert r["trades"][0]["reason"] == "time_limit" and r["trades"][0]["bars_held"] == 2
 
     # 空头止盈:100→98 触发 tp=2
-    r = run_backtest([100, 99, 98], [-1, 0, 0], take_profit_pct=2, stop_loss_pct=5)
+    r = nb([100, 99, 98], [-1, 0, 0], take_profit_pct=2, stop_loss_pct=5)
     assert r["trades"][0]["type"] == "SHORT" and r["trades"][0]["reason"] == "take_profit" and ap(r["total_return_pct"], 2.0)
 
-    # 禁空:−1 信号不开仓
-    assert run_backtest([100, 99, 98], [-1, 0, 0], allow_short=False)["total_trades"] == 0
-
-    # 无信号:空仓、零收益
-    r = run_backtest([100, 101, 102], [0, 0, 0])
+    # 禁空 / 无信号 / 回撤 / 边界
+    assert nb([100, 99, 98], [-1, 0, 0], allow_short=False)["total_trades"] == 0
+    r = nb([100, 101, 102], [0, 0, 0])
     assert r["total_trades"] == 0 and r["total_return_pct"] == 0.0 and r["equity_curve"][-1]["position"] == "FLAT"
-
-    # 回撤:先 +2% 再 −3% → max_dd=3%
-    r = run_backtest([100, 102, 100, 97], [1, 0, 1, 0], take_profit_pct=2, stop_loss_pct=1, max_holding_bars=16)
+    r = nb([100, 102, 100, 97], [1, 0, 1, 0], take_profit_pct=2, stop_loss_pct=1, max_holding_bars=16)
     assert r["total_trades"] == 2 and ap(r["max_drawdown_pct"], 3.0)
-
-    # 边界:空输入 / 长度不匹配
     assert run_backtest([], [])["total_trades"] == 0
     assert run_backtest([100, 101], [1])["total_trades"] == 0
+
+    # entry_lag=1(无前视):信号在 bar0,应在 bar1 入场(entry_price=prices[1])
+    r = run_backtest([100, 100, 102, 103], [1, 0, 0, 0], take_profit_pct=2, stop_loss_pct=5, cost_bps=0, entry_lag=1)
+    assert r["total_trades"] == 1 and r["trades"][0]["entry_price"] == 100 and r["trades"][0]["entry_time"] == 1
+    # 对照 lag=0:bar0 入场,bar2 才涨到 102(相对 100 = +2%)——两者入场根不同即证明位移
+    r0 = run_backtest([100, 100, 102, 103], [1, 0, 0, 0], take_profit_pct=2, stop_loss_pct=5, cost_bps=0, entry_lag=0)
+    assert r0["trades"][0]["entry_time"] == 0
+
+    # 成本:gross 2% 的止盈,cost_bps=5(往返 0.1%)→ net=1.9%,且 gross_pct 仍=2
+    r = run_backtest([100, 100, 102], [1, 0, 0], take_profit_pct=2, stop_loss_pct=5, cost_bps=5, entry_lag=1)
+    t = r["trades"][0]
+    assert ap(t["gross_pct"], 2.0) and ap(t["return_pct"], 1.9) and ap(r["total_return_pct"], 1.9)
 
     print("strategy_backtest selftest: ALL PASS")
 
