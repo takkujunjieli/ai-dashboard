@@ -1201,6 +1201,14 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
     fh["points"] = [p for p in fh["points"] if (p.get("t") or "")[:10] >= cutoff]
     fh_path.write_text(json.dumps(fh, ensure_ascii=False, separators=(",", ":")))
 
+    # 策略回测示例(PR3):用刚写好的 flow_history 跑一条权益曲线 → data/strategy_bt.json 供 strategy.html 渲染。
+    # 示例信号/参数,非验证策略;失败绝不影响采集。PR6 做更完整的自动化/多信号/寻优。
+    try:
+        import strategy_run
+        strategy_run.main()
+    except Exception as exc:  # noqa: BLE001
+        out["errors"].append(f"strategy_bt: {redact(exc)}")
+
     # 累积日志(供回测 + PCR 历史百分位):每 (日期,标的) 一条,当日多次运行更新为最后读数;留 250 天
     day = daily.setdefault(today_str, {})
     for sym in targets:
