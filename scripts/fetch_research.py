@@ -41,6 +41,9 @@ REQ_TIMEOUT = float(os.environ.get("MASSIVE_TIMEOUT", "30"))            # 普通
 OPT_TIMEOUT = float(os.environ.get("MASSIVE_TIMEOUT_OPTIONS", "45"))    # 期权大链分页,给更长读超时
 MAX_DTE = 45
 MAX_EXPIRATIONS = 6
+IV_MIN_DTE = int(os.environ.get("IV_MIN_DTE", "20"))   # ATM IV 主口径的常数期限(避开近月 vega 塌缩)
+IV_ATM_BAND = 0.03                                     # ATM 定义:|strike-spot|/spot ≤ 此
+IV_SPREAD_MAX = float(os.environ.get("IV_SPREAD_MAX", "0.5"))  # (ask-bid)/mid > 此=脏报价,不进 IV
 BAR_KEEP = 800  # 每粒度保留 bar 数的默认上限(各粒度在 specs 里单独指定)
 # 错峰:降并发给自建网关减压——10 并发时大链(AMD/MU/TSLA/SNDK)会把网关拖到读超时 → 误回退 Yahoo。
 PREFETCH_WORKERS = int(os.environ.get("PREFETCH_WORKERS", "6"))  # 阶段1 每票并发抓取(I/O bound)
@@ -812,12 +815,59 @@ def max_pain(contracts: list, exp: str) -> float | None:
     return best
 
 
+def _clean_iv(c: dict) -> bool:
+    """合约 IV 是否可信:有 IV;若有双边报价则相对价差不过宽(脏报价过滤)。
+    无 bid/ask(如雅虎回退)→ 无法判脏,不因此丢弃。"""
+    if not c.get("iv"):
+        return False
+    b, a = c.get("bid"), c.get("ask")
+    if b is None or a is None:
+        return True
+    if a <= 0 or b <= 0 or a < b:
+        return False
+    mid = (a + b) / 2
+    return mid > 0 and (a - b) / mid <= IV_SPREAD_MAX
+
+
+def _atm_iv_oi(cs: list, spot: float | None) -> float | None:
+    """一组合约的 ATM±3%、干净报价、**OI 加权** IV;OI 全 0 时退回等权。
+    OI 加权抑制临期薄合约(1–2 张)主导整体 IV 的偏差。"""
+    if not spot:
+        return None
+    atm = [c for c in cs if abs(c["strike"] - spot) / spot <= IV_ATM_BAND and _clean_iv(c)]
+    if not atm:
+        return None
+    w = sum(c["oi"] for c in atm)
+    if w > 0:
+        return sum(c["iv"] * c["oi"] for c in atm) / w
+    return sum(c["iv"] for c in atm) / len(atm)
+
+
+def _const_tenor_iv(exp_iv: dict, exp_dte: dict, target: int) -> tuple[float, str | None]:
+    """常数期限 ATM IV:在夹住 target DTE 的上下两档间按**总方差(iv²·T)线性插值**。
+    返回 (iv, base_exp):直接采用某真实到期时 base_exp 为该到期,插值时为 None。
+    只有一侧时用最接近 target 的那档(全 <target=最长档;全 >target=最短档)。"""
+    pts = sorted((exp_dte[e], v, e) for e, v in exp_iv.items())
+    lower = [p for p in pts if p[0] <= target]
+    upper = [p for p in pts if p[0] >= target]
+    if lower and upper:
+        d0, v0, e0 = lower[-1]
+        d1, v1, e1 = upper[0]
+        if d0 == d1:
+            return v0, e0
+        w0, w1 = v0 * v0 * d0 / 365, v1 * v1 * d1 / 365      # 总方差
+        wt = w0 + (w1 - w0) * (target - d0) / (d1 - d0)
+        return (wt / (target / 365)) ** 0.5, None
+    d, v, e = min(pts, key=lambda p: abs(p[0] - target))
+    return v, e
+
+
 def summarize_options(sym: str, contracts: list, spot: float | None,
                       oi_prev: dict, oi_next: dict) -> dict:
     s = {"call_premium": 0.0, "put_premium": 0.0, "call_vol": 0, "put_vol": 0,
          "call_oi": 0, "put_oi": 0}
     by_exp: dict[str, dict] = {}
-    ivs = []
+    exp_cs: dict[str, list] = {}       # 每到期的合约(算 OI 加权 ATM IV 用)
     for c in contracts:
         side = "call" if c["type"] == "call" else "put"
         prem = c["vol"] * c["price"] * 100
@@ -826,41 +876,46 @@ def summarize_options(sym: str, contracts: list, spot: float | None,
         s[f"{side}_oi"] += c["oi"]
         e = by_exp.setdefault(c["exp"], {"call_premium": 0.0, "put_premium": 0.0,
                                          "call_vol": 0, "put_vol": 0,
-                                         "call_oi": 0, "put_oi": 0, "_ivs": []})
+                                         "call_oi": 0, "put_oi": 0})
         e[f"{side}_premium"] += prem
         e[f"{side}_vol"] += c["vol"]
         e[f"{side}_oi"] += c["oi"]
-        if spot and c["iv"] and abs(c["strike"] - spot) / spot <= 0.03:
-            ivs.append((c["exp"], c["iv"]))
-            e["_ivs"].append(c["iv"])
+        exp_cs.setdefault(c["exp"], []).append(c)
         oi_next[f"{sym}|{c['exp']}|{c['strike']}|{side}"] = c["oi"]
 
-    if ivs:
-        nearest = min(e for e, _ in ivs)
-        vals = [v for e, v in ivs if e == nearest]
-        s["atm_iv"] = sum(vals) / len(vals)
-        # IV skew(最近到期):~7% OTM put 与 call 的 IV 之差(risk reversal 代理)
+    # ---- ATM IV 去偏(#6):常数期限 ≥IV_MIN_DTE + OI 加权 + 脏报价过滤 ----
+    today = date.today()
+    exp_dte = {e: (date.fromisoformat(e) - today).days for e in exp_cs}
+    exp_iv = {e: iv for e, cs in exp_cs.items()
+              if (iv := _atm_iv_oi(cs, spot)) is not None}
+    if exp_iv and spot:
+        atm, base_exp = _const_tenor_iv(exp_iv, exp_dte, IV_MIN_DTE)
+        s["atm_iv"] = round(atm, 4)
+        s["atm_iv_dte"] = exp_dte[base_exp] if base_exp else IV_MIN_DTE   # 口径透明:实际/插值期限
+        front = min(exp_iv, key=lambda e: exp_dte[e])
+        s["atm_iv_front"] = round(exp_iv[front], 4)                       # 最近到期原值(对比近月失真)
+        # IV skew:~7% OTM put 与 call 的 IV 之差(risk reversal 代理),用最接近阈值的**真实**到期。
         # rr>0 = 看跌保护更贵 = 恐慌/看跌倾向;rr<0 = call 更贵 = 投机/看涨
-        if spot:
-            ne_c = [c for c in contracts if c["exp"] == nearest and c.get("iv")]
-            def _iv_near(target, typ):
-                cs = [c for c in ne_c if c["type"] == typ]
-                return min(cs, key=lambda c: abs(c["strike"] - target)) if cs else None
-            pk = _iv_near(spot * 0.93, "put")
-            ck = _iv_near(spot * 1.07, "call")
-            if pk and ck:
-                s["iv_skew"] = {"exp": nearest, "put_iv": round(pk["iv"], 4), "put_k": pk["strike"],
-                                "call_iv": round(ck["iv"], 4), "call_k": ck["strike"],
-                                "rr": round(pk["iv"] - ck["iv"], 4)}
+        skew_exp = min(exp_iv, key=lambda e: abs(exp_dte[e] - IV_MIN_DTE))
+        ne_c = [c for c in exp_cs[skew_exp] if _clean_iv(c)]
+        def _iv_near(target, typ):
+            cs = [c for c in ne_c if c["type"] == typ]
+            return min(cs, key=lambda c: abs(c["strike"] - target)) if cs else None
+        pk = _iv_near(spot * 0.93, "put")
+        ck = _iv_near(spot * 1.07, "call")
+        if pk and ck:
+            s["iv_skew"] = {"exp": skew_exp, "dte": exp_dte[skew_exp],
+                            "put_iv": round(pk["iv"], 4), "put_k": pk["strike"],
+                            "call_iv": round(ck["iv"], 4), "call_k": ck["strike"],
+                            "rr": round(pk["iv"] - ck["iv"], 4)}
     s["pcr_vol"] = round(s["put_vol"] / s["call_vol"], 2) if s["call_vol"] else None
     s["pcr_oi"] = round(s["put_oi"] / s["call_oi"], 2) if s["call_oi"] else None
     # 注意:premium 为成交总额(不分买卖方向),净额是"活跃度"指标而非方向指标
     s["net_premium"] = s["call_premium"] - s["put_premium"]
     s["pcr_prem"] = round(s["put_premium"] / s["call_premium"], 2) if s["call_premium"] else None
 
-    s["by_expiry"] = [{"exp": e,
-                       **{k: v for k, v in d.items() if k != "_ivs"},
-                       "atm_iv": (sum(d["_ivs"]) / len(d["_ivs"])) if d["_ivs"] else None}
+    s["by_expiry"] = [{"exp": e, **d,
+                       "atm_iv": (round(v, 4) if (v := _atm_iv_oi(exp_cs[e], spot)) is not None else None)}
                       for e, d in sorted(by_exp.items())][:MAX_EXPIRATIONS]
 
     # 按行权价聚合的 OI/成交量(交易页行权价梯用),现价 ±25%
@@ -1367,6 +1422,7 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                     "flip_flow": fl.get("flip"), "net_flow": fl.get("net_gex"),
                     "coverage": fl.get("coverage"), "ambiguity": fl.get("ambiguity"),
                     "pcr_vol": opt.get("pcr_vol"), "pcr_oi": opt.get("pcr_oi"), "atm_iv": opt.get("atm_iv"),
+                    "atm_iv_front": opt.get("atm_iv_front"), "atm_iv_dte": opt.get("atm_iv_dte"),
                     "skew_rr": opt.get("skew_rr"), "iv_term": opt.get("iv_term"),
                     "vrp": opt.get("vrp"), "iv_vs_qqq": opt.get("iv_vs_qqq"),
                     "max_pain": opt.get("max_pain"), "maxpain_pin": opt.get("maxpain_pin")}
