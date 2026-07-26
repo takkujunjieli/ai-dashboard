@@ -1201,11 +1201,11 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
     fh["points"] = [p for p in fh["points"] if (p.get("t") or "")[:10] >= cutoff]
     fh_path.write_text(json.dumps(fh, ensure_ascii=False, separators=(",", ":")))
 
-    # 策略回测示例(PR3):用刚写好的 flow_history 跑一条权益曲线 → data/strategy_bt.json 供 strategy.html 渲染。
-    # 示例信号/参数,非验证策略;失败绝不影响采集。PR6 做更完整的自动化/多信号/寻优。
+    # 策略页 producer:SPX SqueezeMetrics → 研究结论(净GEX→次日波动)+ DIX 真回测 → data/strategy_bt.json。
+    # 每天最多算一次(内部按 asof 日期 gate);拉外网/失败绝不影响采集。单名股回测走 CLI: strategy_run.py。
     try:
-        import strategy_run
-        strategy_run.main()
+        import strategy_spx
+        strategy_spx.main()
     except Exception as exc:  # noqa: BLE001
         out["errors"].append(f"strategy_bt: {redact(exc)}")
 
