@@ -201,6 +201,16 @@ def fetch_short(sym: str) -> dict:
             "settlement_date": r.get("settlement_date")}
 
 
+def fetch_ticker_ref(sym: str) -> dict:
+    """单票详情(低频层):流通股本 / 市值 / 行业。用于 GEX %float 口径。
+    weighted_shares_outstanding = 总流通股;share_class_shares_outstanding = 本类别股。
+    二者对单一类别股相同;双重股权(如 GOOGL)优先本类别。"""
+    r = (mget(f"/v3/reference/tickers/{sym}").get("results")) or {}
+    shares = r.get("share_class_shares_outstanding") or r.get("weighted_shares_outstanding")
+    return {"shares_out": shares, "market_cap": r.get("market_cap"),
+            "sic": r.get("sic_description")}
+
+
 def fetch_short_volume(sym: str) -> list:
     """每日空头成交占比,近 5 个交易日。"""
     rows = (mget("/stocks/v1/short-volume", ticker=sym, limit=5,
@@ -884,7 +894,7 @@ def summarize_options(sym: str, contracts: list, spot: float | None,
 # ---------- 主流程 ----------
 
 EXTRAS_TTL = int(os.environ.get("EXTRAS_TTL", "3600"))  # 指标/short/新闻/日线的刷新周期(秒)
-EXTRAS_KEYS = ("short", "short_vol", "news", "bars_d", "src_d", "extras_asof")
+EXTRAS_KEYS = ("short", "short_vol", "news", "ref", "bars_d", "src_d", "extras_asof")
 
 
 def load_json(path: Path, default):
@@ -950,6 +960,7 @@ def _prefetch_ticker(sym: str, snapshots: dict, old_bars: dict, skip_extras: boo
         if KEY:
             for fn, k, label in ((fetch_short, "short", "short interest"),
                                  (fetch_short_volume, "short_vol", "short volume"),
+                                 (fetch_ticker_ref, "ref", "单票详情"),
                                  (fetch_news, "news", "新闻(massive)")):
                 try:
                     extras[k] = fn(sym)
