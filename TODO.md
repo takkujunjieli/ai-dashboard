@@ -72,3 +72,56 @@
 3. **下结论**:跑 `eval_flow_history.py` + **block-bootstrap-by-day 显著性 + 多重检验校正**,给"可信/丢弃"。
 4. **只有信号通过**才进入策略化。
 **方法论可复用**:预注册 + 前视纪律 + 分层对照 + 诚实功效声明,套到任何后续指标。
+
+## 9. AVWAP 自动锚定到某根分时 bar 【前端 / 交互】
+**现状**([computeAVWAP](assets/trading.js:124)):锚点是**整个已加载窗口的全局极值**——Swing Low=最低 low、Swing High=最高 high、Range Start=窗口最老那根。三点都**窗口相对**、随周期漂移(1m≈3天 / 5m≈20天 / 15m≈60天,同票不同周期锚在不同日期),而且"swing"其实是全局极值、一根插针就把锚点钉过去,不是真正的枢轴。
+**目标**:能**自动锚定到某根有意义的分时 bar**,稳定、可跨周期复现、可锚定事件。候选(可组合):
+- **会话锚**:今日开盘 / 本周一开盘(最常用的成本基锚)。
+- **事件锚**:财报日、某固定日期的第一根 bar。
+- **点选锚**:用户在图上点某根 bar 即锚(lightweight-charts `subscribeClick` → 取该 bar 时间作 `ai`)。
+- **真 swing 枢轴**:N 根左右都更高/更低的局部极值(而非全局 min/max),避免插针误锚。
+**做法提示**:锚点从"下标 `ai`"改为"锚定**时间戳**",跨周期用时间对齐到对应 bar;`computeAVWAP` 起点按时间戳查,不再用全局 reduce。默认给"今日开盘"最实用。
+
+## 10. ✅ 回测框架完成(#46-#52,2026-07-25)—— 剩数据积累 + 可选机构流信号 【策略产出】
+**状态**:框架 7 个 PR 全部合并部署。**能力齐全**;可信 OOS 结论仍需 ~30-40 交易日样本。用法见文末「回测框架用法」。
+**来源**:`~/personal-projects/Playground-master`(Institutional Flow Monitor)。同数据源(Massive)。
+**为什么值得**:两边的"backtest"互补而非重复——
+- 本项目现有 backtest(`backtest_flow_gamma.py` / pilot)= **信号研究**(IC/条件自相关/预注册):测"指标**有没有预测力**"。
+- Playground 的 `run_backtest` = **交易模拟器**(TP/SL/最大持仓/权益曲线/胜率/回撤):测"按信号做策略**能不能赚钱**"。
+本项目**缺后半段**,这正是"策略产出"页要补的真空。
+**红线(必带)**:`run_grid_search` 是过拟合机器(324 组挑 Return/(DD+1) 最优),小样本上必出虚假最优 → **必须绑 OOS/walk-forward + 预注册**,复用现有纪律([backtest-flow-gamma-pilot.md](docs/backtest-flow-gamma-pilot.md))。
+**不搬**:交互式 server dashboard(与静态 Pages 架构冲突)、cache 系统(已有数据管线)、QC 算法。
+**依赖注意**:Playground 用 pandas/numpy/pandas_ta;本项目刻意精简。**PR 1 优先考虑用纯 Python 重写引擎**(避免把 pandas 拖进精简栈);若确需 pandas,只给离线脚本加、不进前端。
+
+**PR 拆分(每个独立可上线,tracer-bullet 纵切):**
+**重排(2026-07-25):目标是"完整可信的回测框架本身",信号只是可插拔输入(原 Playground 信号降级为以后随手插的候选)。**
+一个完整框架要有:事件循环+持仓 · 可插拔信号接口 · **真 OHLCV 价格对齐** · **无前视** · **成本/滑点** · **基准(buy-hold)+随机 null** · 完整指标(Sharpe/Sortino/profit factor/暴露度/CAGR) · **样本内外 + walk-forward** · 仅在 OOS 评估的寻优 · 多票汇总 · 可复现。
+
+- ✅ **PR1**(#46)引擎(信号无关,纯 Python):TP/SL/max_holding、权益曲线、win_rate/收益/回撤。
+- ✅ **PR2**(#47)接真信号:flow-GEX 喂引擎 → `data/strategy_bt.json`。(注:用了 flow_history 的每轮 spot,PR5 会换真 bars)
+- ✅ **PR3**(#48)静态页 `strategy.html` + 采集时 producer hook。
+- ✅ **PR4**(#49)框架核心:引擎 `cost_bps` + `entry_lag`(无前视);`strategy_metrics.py`(Sharpe/Sortino/PF/payoff/暴露度/CAGR);`strategy_signals.py` 基准 buy-and-hold + 随机 null + 构造器(sign/threshold/ma_cross)。
+- ✅ **PR5**(#50)信号层:`SIGNALS` 注册表 + `make_signals`(彻底解耦);`strategy_run.py` 从 `gex_daily` 建真日线上下文(price=spot,特征按日对齐)。
+- ✅ **PR6**(#51)walk-forward/OOS + 寻优:`strategy_walkforward.py` `grid_search`(样本内选参)+ `walk_forward`(train 选参→test OOS→串联)。
+- ✅ **PR7**(#52)报告:strategy.html 渲染 metrics + Buy&Hold 叠加 + OOS 区(每折训练选参);`strategy_run` 落 `oos`/`benchmark`。
+
+**剩下(非阻塞):**
+- ⬜ **数据积累**:等 `gex_daily` 攒到 ~30-40 交易日,walk-forward 才出可信折(在此之前页面显示"样本不足")。
+- ⬜ **(可选)机构流信号**:用注册表把 `InstitutionalFlowAnalyzer`(Playground)插成候选,**先过 IC 研究**再进策略。
+- ⬜ **(可选)多信号/多票批量 + 专用 workflow**:目前 producer hook 每轮跑单信号单票;要横向对比需扩批量。
+
+---
+## 回测框架用法(scripts/strategy_*.py)
+**文件**:`strategy_backtest.py`(引擎)· `strategy_metrics.py`(指标)· `strategy_signals.py`(注册表+基准)· `strategy_walkforward.py`(OOS/寻优)· `strategy_run.py`(管线,读 gex_daily → 写 data/strategy_bt.json)。全纯 stdlib、只读、无 key。
+
+**跑一次(离线,本机)**:
+```
+git fetch origin data && git show origin/data:data/gex_daily.json > data/gex_daily.json
+SIG=flow_sign python3 scripts/strategy_run.py        # 换 SIG 即换信号
+```
+env:`SYM`(默认点数最多的票)· `SIG`(见下)· `BT_TP`/`BT_SL`/`BT_HOLD` · `WF_TRAIN`/`WF_TEST`。
+**内置信号**:`flow_sign` `nom_sign` `pcr_contra` `ma_cross` `random`(null 对照)。
+**加新信号**:在 `strategy_signals.SIGNALS` 加一条 `{"名字": {"desc":..., "fn": lambda c: ...}}`,`c` = {prices, feat{字段:序列}}。
+**看结果**:strategy.html(采集会自动产 `strategy_bt.json`);或本机看 `data/strategy_bt.json`。
+**判有没有 edge**:比 `random`(null)和 `benchmark`(Buy&Hold);**只信 `oos` 块**(walk-forward),别信样本内 total_return。
+**直接调库**:`from strategy_backtest import run_backtest` / `from strategy_walkforward import walk_forward`。自检:`python3 scripts/strategy_*.py`。
