@@ -29,7 +29,8 @@
 ## 5. 真·秒级实时(可选,大改) 【架构】
 要秒级而非"每轮一跳",需用 **Massive 期权/股票 websocket 流**(订阅制,非 calls/min)。与当前"GitHub Actions 批量 → 静态 JSON → 前端轮询"架构不兼容,需常驻进程(自建小服务/Vercel 等)。仅在对实时性有强需求时评估。
 
-## 6. ATM IV 口径去偏:改用 ≥20 DTE 常数期限 + OI 加权 + 脏报价过滤 【数据质量 / 估计量去偏(estimator debiasing)】
+## 6. ✅ ATM IV 口径去偏(2026-07-26,PR #60):≥20 DTE 常数期限 + OI 加权 + 脏报价过滤 【数据质量 / 估计量去偏】
+**已完成**:`summarize_options` 主 `atm_iv` 改**方差插值到 ≥IV_MIN_DTE(默认20)常数期限** + ATM±3% **OI 加权** + `_clean_iv` **脏报价过滤**;新增 `atm_iv_front`(最近到期原值)/`atm_iv_dte`(口径透明);skew 用最接近阈值的真实到期;`by_expiry` 每档 IV 同口径去偏。前端 ATM IV tile 显示期限 + front 背离提示;`gex_daily` 存 front/dte。**口径已变,历史分位从改动日重累积**。以下为原始记录:
 **工作类型**:数据质量修复 · 估计量去偏(不是新功能,是给现有指标做**偏差校正**)。
 **根因(为何"脏")**:`summarize_options` 的 `atm_iv` 建在**最近到期**上,叠加三重偏差 —
 - **近月 vega 塌缩**:σ≈price/(0.4·S·√T),T→0 时分母趋零,报价噪声被 ~1/√T 放大(1DTE 比 30DTE 噪声 ~5.5×);
