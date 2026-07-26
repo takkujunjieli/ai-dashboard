@@ -364,7 +364,8 @@ function updateLadderTitle() {
   } else {
     suffix = " · all expiries";
   }
-  $("ladder-title").textContent = `Strike Ladder · ${m}${suffix}`;
+  const merged = ladderMode === "gex" ? GEX?.tickers?.[SYM]?.merged_index : null;  // SPY = SPX主池+SPY
+  $("ladder-title").textContent = `Strike Ladder · ${m}${suffix}${merged ? ` · +${merged}主池` : ""}`;
   const gexOnlyOpacity = ladderMode === "gex" ? "1" : "0.4";
   ($("gex-exp").closest(".tb-group") || $("gex-exp")).style.opacity = gexOnlyOpacity;
   ($("gex-caliber").closest(".tb-group") || $("gex-caliber")).style.opacity = gexOnlyOpacity;

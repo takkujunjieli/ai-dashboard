@@ -712,6 +712,42 @@ def fetch_index_gex(sym: str, errors: list) -> dict | None:
     return gex
 
 
+def merge_index_into_etf(etf_gex: dict, idx_gex: dict, ratio: float) -> dict:
+    """把指数主池 GEX 按 strike/ratio 归并进 ETF 的 GEX(逐桶):by_strike 的 net 相加、行权价 ÷ratio 落到
+    ETF 价格轴(SPX→SPY 用 ratio=SPX/SPY≈10)。net 单位=$/1% 波动,指数与 ETF 同步 → 可加。就地改 etf_gex。
+    结果:SPY 的梯/图显示真·标普总 gamma(SPX 主池 + SPY 自身),标 merged_index。"""
+    if not etf_gex or not idx_gex or not ratio:
+        return etf_gex
+    eb = etf_gex.get("buckets") or {}
+    ib = idx_gex.get("buckets") or {}
+    spot = etf_gex.get("spot")
+    snap = lambda k: round(k * 2) / 2                            # 落 0.5 网格,让 ETF 与指数档对齐合并
+    for name, e in eb.items():
+        i = ib.get(name) or {}
+        agg: dict = {}
+        for r in e.get("by_strike") or []:                       # ETF 自身档
+            agg[snap(r["strike"])] = agg.get(snap(r["strike"]), 0.0) + r["net"]
+        for r in i.get("by_strike") or []:                       # 指数档 → ÷ratio 落 ETF 轴
+            k = snap(r["strike"] / ratio)
+            agg[k] = agg.get(k, 0.0) + r["net"]
+        rows = [{"strike": k, "net": round(v, 2)} for k, v in sorted(agg.items())]
+        cross, cum, pc, pk = [], 0.0, None, None                 # flip 重算(累计变号,取近 spot)
+        for r in rows:
+            cum += r["net"]
+            if pc is not None and (pc < 0) != (cum < 0):
+                cross.append((pk + r["strike"]) / 2)
+            pc, pk = cum, r["strike"]
+        e["by_strike"] = rows
+        e["net_gex"] = (e.get("net_gex") or 0) + (i.get("net_gex") or 0)   # 真总量 = 两桶净值相加
+        e["flip"] = round(min(cross, key=lambda x: abs(x - spot)), 2) if (cross and spot) else None
+    a = eb.get("all") or {}
+    etf_gex["net_gex"] = a.get("net_gex")
+    etf_gex["flip"] = a.get("flip")
+    etf_gex["by_strike"] = a.get("by_strike")
+    etf_gex["merged_index"] = "SPX"
+    return etf_gex
+
+
 def options_yahoo(sym: str) -> list:
     import yfinance as yf
     tk = yf.Ticker(sym)
@@ -1202,12 +1238,16 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
         except ImportError:
             out["errors"].append("pyarrow 未安装:跳过 gex_profile Parquet sink(pip install pyarrow)")
 
-    # 指数主池 GEX(I:SPX):真·指数 gamma/flip,替换误导的 SPY/QQQ ETF 切片。失败不影响其余。
+    # 指数主池 GEX(I:SPX):真·指数 gamma。合并进 SPY(÷价格比落 SPY 轴)→ SPY 的梯/图显示真·标普结构。
+    # 失败不影响其余。QQQ←NDX 留后续。
     if KEY:
         try:
             idx = fetch_index_gex("SPX", out["errors"])
             if idx:
-                gex_out["tickers"]["SPX"] = idx
+                gex_out["tickers"]["SPX"] = idx   # 保留原始主池(参考/调试)
+                spy = gex_out["tickers"].get("SPY")
+                if spy and spy.get("spot") and idx.get("spot"):
+                    merge_index_into_etf(spy, idx, idx["spot"] / spy["spot"])
         except Exception as exc:  # noqa: BLE001
             out["errors"].append(f"SPX 指数GEX: {redact(exc)}")
 
