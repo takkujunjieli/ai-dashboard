@@ -7,11 +7,12 @@ import {
 const LWC = window.LightweightCharts;
 const ET = "America/New_York";
 
-let RESEARCH = null, GEX = null, GEXH = null, BARS = null;
+let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null;
 let CFG = { watchlist: [], deep: [] };  // 标的分组,来自 config/tickers.json,卡片开关就地编辑
 let SYM = localStorage.getItem("wbSym") || null;
 let TF = localStorage.getItem("wbTf") || "5m";
 let ladderMode = "gex";
+let ladderDay = null;   // 本周历史 GEX 快照的选中日期(null=最新/Live);GEX 梯用当周到期结构
 let gexBucket = localStorage.getItem("wbGexBucket") || "0dte";  // GEX 到期范围,默认 0DTE
 let gexCaliber = localStorage.getItem("wbGexCaliber") || "nominal";  // 名义 / 流量
 const GEX_BUCKET_ORDER = ["0dte", "week", "2wk", "all"];
@@ -337,8 +338,16 @@ function renderGexSub() {
 }
 
 /* ---------- 行权价梯(与主图共享价格轴) ---------- */
+function histDay() { return ladderDay ? WEEK?.days?.[ladderDay]?.[SYM] : null; }  // 选中的本周历史某日快照
+
 function ladderRows() {
   if (ladderMode === "gex") {
+    const h = histDay();  // 本周历史某日:用当周到期(week 桶)的 by_strike,按口径取 nominal/real
+    if (h) {
+      const useReal = gexCaliber === "flow";
+      return h.rows.map(([k, nom, real]) => ({ strike: k, a: (useReal && real != null) ? real : nom, b: 0, net: true }))
+        .filter((r) => r.a != null);
+    }
     return (gexBucketData(SYM)?.by_strike || []).map((r) => ({ strike: r.strike, a: r.net, b: 0, net: true }));
   }
   if (ladderMode === "netflow") {  // 每档净主动买卖(buy−sell),单条净值:绿=净买/红=净卖
@@ -357,6 +366,9 @@ function updateLadderTitle() {
   let suffix;
   if (ladderMode === "netflow") {
     suffix = " · 主动买卖(当日,calls+puts)";
+  } else if (ladderMode === "gex" && ladderDay) {   // 本周历史某日:固定当周到期(week 桶)
+    const cal = gexCaliber === "flow" ? "·Real" : "";
+    suffix = ` (${ladderDay} 快照·当周到期${cal})`;
   } else if (ladderMode === "gex") {
     const b = gexBucketData(SYM);
     const cal = b?.caliber === "flow" ? "·Real" : gexCaliber === "flow" ? "·Real N/A→Raw" : "";
@@ -364,7 +376,7 @@ function updateLadderTitle() {
   } else {
     suffix = " · all expiries";
   }
-  const merged = ladderMode === "gex" ? GEX?.tickers?.[SYM]?.merged_index : null;  // SPY = SPX主池+SPY
+  const merged = ladderMode === "gex" ? (histDay()?.merged_index ?? GEX?.tickers?.[SYM]?.merged_index) : null;  // SPY = SPX主池+SPY(历史日用当日)
   $("ladder-title").textContent = `Strike Ladder · ${m}${suffix}${merged ? ` · +${merged}主池` : ""}`;
   const gexOnlyOpacity = ladderMode === "gex" ? "1" : "0.4";
   ($("gex-exp").closest(".tb-group") || $("gex-exp")).style.opacity = gexOnlyOpacity;
@@ -433,7 +445,20 @@ function initLadderZoom() {
   box.addEventListener("dblclick", () => { ladderView = null; applyLadderView(); });  // 复位=自动贴合K线
 }
 
+function renderWeekChips() {  // 本周每日 GEX 快照日期选择(仅当前票有的日子);Live=最新
+  const box = $("gex-week-chips");
+  if (!box) return;
+  const days = WEEK?.days ? Object.keys(WEEK.days).filter((d) => WEEK.days[d][SYM]).sort() : [];
+  if (ladderDay && !days.includes(ladderDay)) ladderDay = null;   // 当前票无此日 → 回 Live
+  if (!days.length) { box.innerHTML = ""; return; }
+  const wd = ["日", "一", "二", "三", "四", "五", "六"];
+  const fmt = (d) => "周" + wd[new Date(d + "T00:00:00").getDay()] + " " + d.slice(5);
+  const chip = (d, lbl, on) => `<button data-day="${d}" class="${on ? "active" : ""}" style="padding:2px 8px;font-size:11px">${lbl}</button>`;
+  box.innerHTML = chip("", "Live", !ladderDay) + days.map((d) => chip(d, fmt(d), ladderDay === d)).join("");
+}
+
 function renderLadder() {
+  renderWeekChips();   // 先校准 ladderDay(可能因换票被重置)再画
   const svg = $("ladder");
   if (!svg || !candles) return;
   updateLadderTitle();
@@ -487,8 +512,9 @@ function renderLadder() {
     parts.push(`<line x1="0" y1="${y.toFixed(1)}" x2="${W}" y2="${y.toFixed(1)}" stroke="${color}" stroke-dasharray="4 3" stroke-width="1"/>`);
     parts.push(`<text x="2" y="${(y - 3).toFixed(1)}" fill="${color}" font-size="10">${label}</text>`);
   };
-  mark(spotOf(SYM), "#60a5fa", "Spot");
-  if (ladderMode === "gex") mark(gexBucketData(SYM)?.flip, "#fbbf24", "flip");
+  const hd = histDay();
+  mark(hd ? hd.spot : spotOf(SYM), "#60a5fa", hd ? "Spot(当日)" : "Spot");  // 历史模式标当日 spot
+  if (ladderMode === "gex" && !hd) mark(gexBucketData(SYM)?.flip, "#fbbf24", "flip");
   if (placed > 0) parts.push(volProfileFragment(W, H));  // VP 轮廓线叠加(坐标就绪后)
   svg.innerHTML = parts.join("");
   // 首屏图表坐标系未就绪时 priceToCoordinate 全返回 null → 稍后重试(用 setTimeout,后台标签页 rAF 会被节流)
@@ -882,13 +908,14 @@ let lastBarsAt = 0;
 const BARS_MIN_MS = 120_000;
 async function loadData(force = false) {
   const wantBars = force || !BARS || (Date.now() - lastBarsAt >= BARS_MIN_MS);
-  const [research, gex, gexh, bars] = await Promise.all([
+  const [research, gex, gexh, week, bars] = await Promise.all([
     loadFreshJSON("data/research.json"),
     loadFreshJSON("data/gex.json"),
     loadFreshJSON("data/gex_history.json"),
+    loadFreshJSON("data/gex_week.json"),
     wantBars ? loadFreshJSON("data/bars_intraday.json") : Promise.resolve(null),
   ]);
-  RESEARCH = research; GEX = gex; GEXH = gexh;
+  RESEARCH = research; GEX = gex; GEXH = gexh; WEEK = week;
   if (wantBars && bars) { BARS = bars; lastBarsAt = Date.now(); }  // 拉失败保留旧 bars,下轮重试
 }
 
@@ -937,7 +964,7 @@ function initToolbar() {
     if (!btn) return;
     const { act, sym } = btn.dataset;
     if (act === "pick") {
-      SYM = sym; localStorage.setItem("wbSym", SYM); renderAll();
+      SYM = sym; localStorage.setItem("wbSym", SYM); ladderDay = null; renderAll();  // 换票回 Live
     } else if (act === "deep") {
       if (!CFG.deep.includes(sym)) CFG.deep.push(sym);
       scheduleSave(); renderMiniCards(); renderAll();
@@ -1028,6 +1055,13 @@ function initToolbar() {
     localStorage.setItem("wbShowETH", showETH ? "1" : "0");
     [...$("session-chips").children].forEach((b) => b.classList.toggle("active", b === btn));
     renderChart();
+  });
+  // 本周历史 GEX 快照:选某日看当日墙(当周到期);data-day="" = Live/最新
+  $("gex-week-chips").addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button");
+    if (!btn) return;
+    ladderDay = btn.dataset.day || null;
+    renderLadder();   // 内部 renderWeekChips 更新高亮
   });
   $("refresh-btn").addEventListener("click", () => refreshData(true));  // 手动刷新强制拉最新 bars
   renderOverlayChips();

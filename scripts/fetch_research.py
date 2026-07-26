@@ -1254,6 +1254,25 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
 
     # GEX 快照 + 当日盘中净 GEX 序列(隔日清空)
     (ROOT / "data" / "gex.json").write_text(json.dumps(gex_out, ensure_ascii=False, indent=1))
+
+    # 本周每日 GEX 快照(week 桶 by_strike = 当周到期):供前端"选本周某天看历史结构 + VWAP 叠加"。
+    # 每票存 nominal + real(单名股),ETF 为合并主池 nominal;当日覆盖,只留本周(周一起)。
+    wk_path = ROOT / "data" / "gex_week.json"
+    monday = (now.date() - timedelta(days=now.date().weekday())).isoformat()
+    wk = load_json(wk_path, {})
+    if wk.get("week_start") != monday:
+        wk = {"week_start": monday, "days": {}}
+    snap = {}
+    for sym, g in gex_out["tickers"].items():
+        bs = ((g.get("buckets") or {}).get("week") or {}).get("by_strike") or []
+        if not bs:
+            continue
+        real = {r["strike"]: r["net"] for r in (((g.get("flow") or {}).get("buckets") or {}).get("week") or {}).get("by_strike") or []}
+        snap[sym] = {"spot": g.get("spot"), "merged_index": g.get("merged_index"),
+                     "rows": [[r["strike"], round(r["net"]),
+                               round(real[r["strike"]]) if r["strike"] in real else None] for r in bs]}
+    wk["days"][now.date().isoformat()] = snap
+    wk_path.write_text(json.dumps(wk, ensure_ascii=False, separators=(",", ":")))
     hist_path = ROOT / "data" / "gex_history.json"
     hist = load_json(hist_path, {"date": "", "points": []})
     today_str = now.date().isoformat()
