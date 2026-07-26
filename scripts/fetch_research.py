@@ -708,7 +708,7 @@ def fetch_index_gex(sym: str, errors: list) -> dict | None:
     gex = compute_gex(contracts, spot)
     if gex:
         gex["spot"] = spot
-        gex["index"] = True   # 标记:主池指数 GEX(非 ETF 切片)
+        gex["index"] = sym    # 标记:主池指数 GEX(非 ETF 切片),值=指数名
     return gex
 
 
@@ -744,7 +744,7 @@ def merge_index_into_etf(etf_gex: dict, idx_gex: dict, ratio: float) -> dict:
     etf_gex["net_gex"] = a.get("net_gex")
     etf_gex["flip"] = a.get("flip")
     etf_gex["by_strike"] = a.get("by_strike")
-    etf_gex["merged_index"] = "SPX"
+    etf_gex["merged_index"] = idx_gex.get("index") or "index"
     return etf_gex
 
 
@@ -1238,18 +1238,19 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
         except ImportError:
             out["errors"].append("pyarrow 未安装:跳过 gex_profile Parquet sink(pip install pyarrow)")
 
-    # 指数主池 GEX(I:SPX):真·指数 gamma。合并进 SPY(÷价格比落 SPY 轴)→ SPY 的梯/图显示真·标普结构。
-    # 失败不影响其余。QQQ←NDX 留后续。
+    # 指数主池 GEX:抓 I:{index} 真·指数 gamma,合并进对应 ETF(÷价格比落 ETF 轴)→ ETF 的梯/图显示真结构。
+    # 失败不影响其余。
     if KEY:
-        try:
-            idx = fetch_index_gex("SPX", out["errors"])
-            if idx:
-                gex_out["tickers"]["SPX"] = idx   # 保留原始主池(参考/调试)
-                spy = gex_out["tickers"].get("SPY")
-                if spy and spy.get("spot") and idx.get("spot"):
-                    merge_index_into_etf(spy, idx, idx["spot"] / spy["spot"])
-        except Exception as exc:  # noqa: BLE001
-            out["errors"].append(f"SPX 指数GEX: {redact(exc)}")
+        for isym, etf in (("SPX", "SPY"), ("NDX", "QQQ")):
+            try:
+                idx = fetch_index_gex(isym, out["errors"])
+                if idx:
+                    gex_out["tickers"][isym] = idx   # 保留原始主池(参考/调试)
+                    e = gex_out["tickers"].get(etf)
+                    if e and e.get("spot") and idx.get("spot"):
+                        merge_index_into_etf(e, idx, idx["spot"] / e["spot"])
+            except Exception as exc:  # noqa: BLE001
+                out["errors"].append(f"{isym} 指数GEX: {redact(exc)}")
 
     # GEX 快照 + 当日盘中净 GEX 序列(隔日清空)
     (ROOT / "data" / "gex.json").write_text(json.dumps(gex_out, ensure_ascii=False, indent=1))
