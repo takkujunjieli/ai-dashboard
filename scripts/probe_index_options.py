@@ -43,3 +43,28 @@ for u in ["SPX", "NDX"]:
         print(f"  {u:6} HTTP {r.status_code}  n(样本)={len(res)}  next={'Y' if d.get('next_url') else 'N'}  例:{res[0].get('ticker') if res else None}")
     except Exception as e:  # noqa: BLE001
         print(f"  {u:6} ERR {str(e)[:100]}")
+
+print("\n=== I:SPX 细节:①合约里 underlying 价字段 ②spot 端点 ③带宽链大小 ===")
+import json
+from datetime import date, timedelta
+try:
+    r = get("/v3/snapshot/options/I:SPX", limit=3)
+    first = (r.json().get("results") or [{}])[0]
+    print("  首个合约完整结构(找 underlying/spot 字段):")
+    print("  " + json.dumps(first, indent=2, default=str)[:1400].replace("\n", "\n  "))
+except Exception as e:  # noqa: BLE001
+    print(f"  ERR {str(e)[:120]}")
+for ep, kw in [("/v2/aggs/ticker/I:SPX/prev", {}), ("/v3/snapshot/indices/I:SPX", {}), ("/v3/snapshot/indices", {"ticker": "I:SPX"})]:
+    try:
+        r = get(ep, **kw)
+        print(f"  [spot] {ep}  HTTP {r.status_code}  {r.text[:180]}")
+    except Exception as e:  # noqa: BLE001
+        print(f"  [spot] {ep}  ERR {str(e)[:90]}")
+try:  # ±5% strike / ≤7 DTE 首页有多少(估 API 成本);spot 粗取 6600 只为估算
+    today = date.today().isoformat(); hi = (date.today() + timedelta(days=7)).isoformat()
+    r = get("/v3/snapshot/options/I:SPX", limit=250, **{"strike_price.gte": 6270, "strike_price.lte": 6930,
+                                                        "expiration_date.gte": today, "expiration_date.lte": hi})
+    d = r.json()
+    print(f"  [chain] ±5%/≤7DTE 首页 results={len(d.get('results') or [])}  next={'Y' if d.get('next_url') else 'N'}")
+except Exception as e:  # noqa: BLE001
+    print(f"  [chain] ERR {str(e)[:100]}")
