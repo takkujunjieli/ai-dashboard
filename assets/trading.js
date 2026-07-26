@@ -693,14 +693,17 @@ function renderOptPanel() {
 
   // ATM IV(自身分位 + 相对 QQQ 倍数及其分位)
   const ivPct = o.atm_iv_pct;
+  // front=最近到期原值;与常数期限口径明显背离时提示(近月 vega 塌缩/薄合约失真)
+  const frontDiverge = o.atm_iv_front != null && o.atm_iv != null && Math.abs(o.atm_iv_front - o.atm_iv) >= 0.03;
   const ivSub = [
     ivPct != null ? `P${ivPct}` : "hist n/a",
     o.iv_vs_qqq != null ? `vs QQQ ${o.iv_vs_qqq}×${o.iv_vs_qqq_pct != null ? " " + pv(o.iv_vs_qqq_pct) : ""}` : "",
+    frontDiverge ? `front ${(o.atm_iv_front * 100).toFixed(0)}%` : "",
   ].filter(Boolean).join(" · ");
-  const ivTile = tile("ATM IV", o.atm_iv != null ? (o.atm_iv * 100).toFixed(0) + "%" : "&mdash;",
+  const ivTile = tile(`ATM IV${o.atm_iv_dte ? ` ${o.atm_iv_dte}d` : ""}`, o.atm_iv != null ? (o.atm_iv * 100).toFixed(0) + "%" : "&mdash;",
     ivSub,
     ivPct != null && ivPct >= 70 ? "down" : ivPct != null && ivPct <= 30 ? "up" : "",
-    "ATM IV · 自身历史分位(P≥70 贵/≤30 便宜)· 相对 QQQ IV 的倍数及其分位");
+    "ATM IV(常数期限≥20d · OI 加权 · 脏报价过滤)· 自身分位(P≥70 贵/≤30 便宜)· 相对 QQQ · front=最近到期原值(近月失真参考)");
 
   // IV skew(自身分位 + 相对 QQQ 的 skew 价差)
   const sk = o.iv_skew;
