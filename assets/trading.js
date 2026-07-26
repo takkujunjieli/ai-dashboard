@@ -630,6 +630,13 @@ function renderStats() {
   // ADV 用 EWMA(span=20,新鲜)优先,回退旧的 short.avg_daily_volume
   const adv = d.adv20 ?? d.short?.avg_daily_volume;
   const gexPct = (g.net_gex != null && adv && g.spot) ? g.net_gex / (adv * g.spot) * 100 : null;
+  // %float:同一 GEX 对冲量相对该票总流通市值(shares_out × spot),跨标的规模可比,不受当日量能波动影响
+  const shares = d.ref?.shares_out;
+  const floatPct = (g.net_gex != null && shares && g.spot) ? g.net_gex / (shares * g.spot) * 100 : null;
+  const gexSub = [
+    gexPct != null ? `${gexPct >= 0 ? "+" : ""}${gexPct.toFixed(1)}% ADV` : "",
+    floatPct != null ? `${floatPct >= 0 ? "+" : ""}${floatPct.toFixed(2)}% flt` : "",
+  ].filter(Boolean).join(" · ");
   // 桶/口径由上方按钮显示,标签不再重复;/1% 为默认口径,省略。仅回退时提示 nearest。
   const tiles = [
     tile("Data", time),
@@ -638,8 +645,8 @@ function renderStats() {
     tile("VWAP", d.vwap != null ? d.vwap : null),
     tile(`Net GEX${g.fallback ? " (nearest)" : ""}`,
       g.net_gex != null ? fmtMoney(g.net_gex) : null,
-      gexPct != null ? `${gexPct >= 0 ? "+" : ""}${gexPct.toFixed(1)}% ADV` : "",
-      (g.net_gex ?? 0) >= 0 ? "up" : "down", "1% underlying move → dealer hedge, % of ADV"),
+      gexSub,
+      (g.net_gex ?? 0) >= 0 ? "up" : "down", "1% underlying move → dealer hedge · % of ADV(当日量能)· % of float(总流通市值)"),
     tile("Flip", g.flip != null ? g.flip : null, "", "", "Gamma flip strike"),
     tile("Short%", sv?.ratio != null ? (sv.ratio * 100).toFixed(1) + "%" : null),
   ].join("");

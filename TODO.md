@@ -82,6 +82,10 @@
 - **真 swing 枢轴**:N 根左右都更高/更低的局部极值(而非全局 min/max),避免插针误锚。
 **做法提示**:锚点从"下标 `ai`"改为"锚定**时间戳**",跨周期用时间对齐到对应 bar;`computeAVWAP` 起点按时间戳查,不再用全局 reduce。默认给"今日开盘"最实用。
 
+## 11. 历史 K线拆股校正(splits adjust) 【数据质量】
+**现状**:回填/累积历史日线 OHLC 未处理拆股;`/v3/reference/splits`(实测 200,字段 `execution_date/split_from/split_to/ticker`)可用。拆股当日价格会**静默跳变**(如 2:1 → 前一日 close ≈ 后一日 2×),污染 RV/EWMA-ADV/回测收益序列。
+**做法**:低频层(与单票详情同 TTL)拉各票 splits;对 `bars_d` 在 `execution_date` 之前的价格乘 `split_from/split_to`(成交量反向),或在算 RV/回测时按调整因子归一。watchlist 短期内很少拆股,优先级低,但一旦发生且未处理会造成明显假信号。
+
 ## 10. ✅ 回测框架完成(#46-#52,2026-07-25)—— 剩数据积累 + 可选机构流信号 【策略产出】
 **状态**:框架 7 个 PR 全部合并部署。**能力齐全**;可信 OOS 结论仍需 ~30-40 交易日样本。用法见文末「回测框架用法」。
 **来源**:`~/personal-projects/Playground-master`(Institutional Flow Monitor)。同数据源(Massive)。
