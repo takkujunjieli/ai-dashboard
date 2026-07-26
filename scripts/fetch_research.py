@@ -668,6 +668,50 @@ def options_massive(sym: str, spot: float | None = None) -> list:
     return contracts
 
 
+INDEX_BAND = float(os.environ.get("INDEX_BAND", "0.05"))    # 指数期权近价带宽(链大,收窄)
+INDEX_MAX_DTE = int(os.environ.get("INDEX_MAX_DTE", "7"))   # 只取近月(0DTE+本周,主导盘中 gamma)
+
+
+def fetch_index_gex(sym: str, errors: list) -> dict | None:
+    """抓 I:{sym} 指数期权(主池,如 SPX)算真·指数 GEX,替换 ETF 切片。
+    - 用 `I:` 前缀才带 greeks;spot 从 snapshot 的 `underlying_asset.value` 取(指数 aggs/indices 未授权)。
+    - 链很大 → 只取近价 ±INDEX_BAND、≤INDEX_MAX_DTE。指数 dealer 系统性空 gamma,nominal 符号即校准,不需 Real。
+    返回 compute_gex 的结果(net_gex/flip/by_strike/buckets),失败返回 None。"""
+    if not KEY:
+        return None
+    from urllib.parse import urlencode
+    u = f"I:{sym}"
+    try:
+        d0 = mget(f"/v3/snapshot/options/{u}", limit=1)              # 1 个合约即带 underlying_asset.value
+        spot = ((d0.get("results") or [{}])[0].get("underlying_asset") or {}).get("value")
+    except Exception as exc:  # noqa: BLE001
+        errors.append(f"{sym} 指数 spot: {redact(exc)}"); return None
+    if not spot:
+        return None
+    today = date.today()
+    params = {"limit": 250,
+              "strike_price.gte": round(spot * (1 - INDEX_BAND), 2), "strike_price.lte": round(spot * (1 + INDEX_BAND), 2),
+              "expiration_date.gte": today.isoformat(), "expiration_date.lte": (today + timedelta(days=INDEX_MAX_DTE)).isoformat()}
+    contracts, url = [], f"/v3/snapshot/options/{u}?{urlencode(params)}"
+    while url:
+        data = mget(url)
+        for o in data.get("results") or []:
+            det = o.get("details") or {}
+            exp = det.get("expiration_date")
+            if not exp or not 0 <= (date.fromisoformat(exp) - today).days <= INDEX_MAX_DTE:
+                continue
+            contracts.append({"ticker": det.get("ticker"), "type": det.get("contract_type"),
+                              "strike": det.get("strike_price"), "exp": exp,
+                              "iv": o.get("implied_volatility"), "gamma": (o.get("greeks") or {}).get("gamma"),
+                              "oi": o.get("open_interest") or 0, "vol": (o.get("day") or {}).get("volume") or 0})
+        url = rebase_url(data.get("next_url"))
+    gex = compute_gex(contracts, spot)
+    if gex:
+        gex["spot"] = spot
+        gex["index"] = True   # 标记:主池指数 GEX(非 ETF 切片)
+    return gex
+
+
 def options_yahoo(sym: str) -> list:
     import yfinance as yf
     tk = yf.Ticker(sym)
@@ -1157,6 +1201,15 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
                 f.unlink()
         except ImportError:
             out["errors"].append("pyarrow 未安装:跳过 gex_profile Parquet sink(pip install pyarrow)")
+
+    # 指数主池 GEX(I:SPX):真·指数 gamma/flip,替换误导的 SPY/QQQ ETF 切片。失败不影响其余。
+    if KEY:
+        try:
+            idx = fetch_index_gex("SPX", out["errors"])
+            if idx:
+                gex_out["tickers"]["SPX"] = idx
+        except Exception as exc:  # noqa: BLE001
+            out["errors"].append(f"SPX 指数GEX: {redact(exc)}")
 
     # GEX 快照 + 当日盘中净 GEX 序列(隔日清空)
     (ROOT / "data" / "gex.json").write_text(json.dumps(gex_out, ensure_ascii=False, indent=1))
