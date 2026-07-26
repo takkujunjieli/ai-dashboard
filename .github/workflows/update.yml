@@ -27,7 +27,9 @@ jobs:
         env:
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
 
+      # news/discussion 一天一次:仅盘后 cron(22:30 UTC)与手动触发跑;盘前 cron 跳过
       - name: 抓取 RSS 信息流
+        if: github.event.schedule != '0 13 * * 1-5'
         run: python scripts/fetch_feeds.py
         env:
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
