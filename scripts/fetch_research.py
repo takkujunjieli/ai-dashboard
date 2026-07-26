@@ -480,10 +480,18 @@ def compute_gex_flow_sampled(sym: str, spot: float, contracts: list, acc: dict, 
     return out
 
 
+OI_PANEL_COLS = ("exp", "strike", "cp", "oi", "vol", "gamma", "delta", "iv", "mid", "active_net")
+
+
 def oi_flow_rows(sym: str, contracts: list, flow_c: dict, spot: float, today) -> list:
-    """前向记录:近价 ≤14DTE 合约的 [exp, strike, C/P, 当前OI, 当日主动净(buy−sell), gamma]。
-    供离线 eval 用「跨日 ΔOI × 当日主动方向」估客户开/平仓四象限(long/short × call/put)→ pilot 真持仓输入。
-    API 无开平仓/历史OI,只能这样前向攒;时序对齐(OI 结算 T+1)留给离线处理。"""
+    """EOD 全链面板行:近价 ≤14DTE 每张合约的完整快照,列见 OI_PANEL_COLS。
+    核心用途:离线「跨日 ΔOI × 当日 vol」对账估客户开/平仓——
+      · ΔOI 同号且 ≈vol → 净开仓(dealer 反向建库存);
+      · vol >> |ΔOI| → 日内对倒/平仓(净持仓≈没变,主动净流会假信号);
+      · ΔOI<0 → 净平仓(gamma 墙在拆)。
+    ΔOI 就是 dealer 净库存变化本身(非其代理),绕开采样主动流的开/平仓污染。
+    API 无开平仓/历史OI,只能前向攒;时序对齐(OI 结算 T+1)留给离线处理。
+    active_net(采样 Lee-Ready 买−卖)保留作对照,与 ΔOI 打架时以 ΔOI 为准。"""
     if not spot or sym in FLOW_SKIP:
         return []
     lo, hi = spot * (1 - FLOW_STRIKE_BAND), spot * (1 + FLOW_STRIKE_BAND)
@@ -494,11 +502,16 @@ def oi_flow_rows(sym: str, contracts: list, flow_c: dict, spot: float, today) ->
         if not 0 <= (date.fromisoformat(c["exp"]) - today).days <= FLOW_MAX_DTE:
             continue
         acc = flow_c.get(c.get("ticker"))
-        aggr = (acc[1] - acc[2]) if acc else 0.0        # 当日 Lee-Ready 主动净(买−卖)
+        aggr = (acc[1] - acc[2]) if acc else 0.0        # 当日 Lee-Ready 主动净(买−卖),对照用
         g = c.get("gamma") or bs_gamma(spot, c["strike"],
               ((date.fromisoformat(c["exp"]) - today).days + 0.5) / 365, c.get("iv") or 0)
-        rows.append([c["exp"], c["strike"], "C" if c["type"] == "call" else "P",
-                     c.get("oi") or 0, round(aggr, 1), round(g or 0, 6)])
+        rows.append([
+            c["exp"], c["strike"], "C" if c["type"] == "call" else "P",
+            c.get("oi") or 0, c.get("vol") or 0, round(g or 0, 6),
+            round(c["delta"], 4) if c.get("delta") is not None else None,
+            round(c["iv"], 4) if c.get("iv") is not None else None,
+            c.get("mid"), round(aggr, 1),
+        ])
     return rows
 
 
@@ -1024,7 +1037,7 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
     if flow_precise.get("date") != now.date().isoformat():
         flow_precise = {"date": now.date().isoformat(), "net": {}}
     do_precise = os.environ.get("FLOW_PRECISE", "").lower() in ("1", "true")
-    oiflow_today: dict = {}  # 本轮各票近价合约的 OI+主动净+gamma,供开/平仓四象限离线估算
+    oiflow_today: dict = {}  # 本轮各票近价合约的全链面板行(OI/vol/greeks/mid/主动净),供开/平仓四象限离线估算
     ivobs_today: dict = {}   # 零风险观测:近 30DTE 到期的 strike/delta/iv/mid,供离线看 25Δ 覆盖(可随时删)
     profile_today: dict = {}  # EOD GEX 形状快照(week/2wk/30d 各档 by_strike),按日期分区落 Parquet,供墙-引力研究
 
@@ -1218,14 +1231,22 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
         flow_path.write_text(json.dumps(flow_acc, ensure_ascii=False, separators=(",", ":")))
     if flow_precise.get("net"):  # 逐笔精确层(当日复用)
         flow_precise_path.write_text(json.dumps(flow_precise, ensure_ascii=False, separators=(",", ":")))
-    if oiflow_today:  # 每日 per-contract OI+主动净+gamma(开/平仓四象限的离线原料),留 45 天
-        oif_path = ROOT / "data" / "oi_flow_daily.json"
-        oif = load_json(oif_path, {})
-        days = oif.get("days") or {}
-        days.setdefault(now.date().isoformat(), {}).update(oiflow_today)  # 当日最后一轮=全天累计主动流
-        for d in sorted(days)[:-45]:
-            del days[d]
-        oif_path.write_text(json.dumps({"days": days}, ensure_ascii=False, separators=(",", ":")))
+    if oiflow_today:  # EOD 全链面板 → 每日 Parquet(按日期分区,当轮覆盖=最后一轮即 EOD;留 500 天 ~2 年)
+        try:                                          # 供离线 ΔOI×vol 开/平仓四象限(见 oi_flow_rows 文档)
+            import pyarrow as pa, pyarrow.parquet as pq
+            cols = {"sym": [], **{k: [] for k in OI_PANEL_COLS}}
+            for sym, rows in oiflow_today.items():
+                for r in rows:
+                    cols["sym"].append(sym)
+                    for k, v in zip(OI_PANEL_COLS, r):
+                        cols[k].append(v)
+            panel_dir = ROOT / "data" / "oi_panel"
+            panel_dir.mkdir(exist_ok=True)
+            pq.write_table(pa.table(cols), panel_dir / f"{now.date().isoformat()}.parquet", compression="zstd")
+            for f in sorted(panel_dir.glob("*.parquet"))[:-500]:
+                f.unlink()
+        except ImportError:
+            out["errors"].append("pyarrow 未安装:跳过 oi_panel Parquet sink(pip install pyarrow)")
 
     if ivobs_today:  # 零风险观测快照(最新一轮覆盖即可;不做保留,分析完可删本块+文件)
         (ROOT / "data" / "iv_obs.json").write_text(
