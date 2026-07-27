@@ -23,7 +23,8 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent.parent
 ET = ZoneInfo("America/New_York")
 BATCH = int(os.environ.get("BATCH") or 3)
-os.environ.setdefault("SKIP_FLOW", "1")  # 盘中滚动跳过重的流量分类,保持轮次快;flow 交 update.yml
+# 盘中每轮跑采样版 flow(零额外 API);逐笔精确层贵,盘中只在 PRECISE_ET 后跑一次(top-N 反映今天)。
+PRECISE_ET = dtime(int(os.environ.get("PRECISE_HOUR", "12")), 0)
 ONCE = (os.environ.get("ONCE") or "").lower() == "true"
 END_OVERRIDE = (os.environ.get("END") or "").strip()
 MAX_SECONDS = 18600  # 5h10m,留出续派与收尾余量(job 上限 6h)
@@ -81,6 +82,7 @@ def main() -> None:
     sh("git", "config", "user.email", "github-actions[bot]@users.noreply.github.com")
 
     rounds = 0
+    did_precise = False
     while True:
         # 接近单 job 上限,续派一个 run 接力剩余时段
         if not ONCE and time.time() - job_start > MAX_SECONDS:
@@ -89,11 +91,20 @@ def main() -> None:
                             "-R", os.environ.get("GITHUB_REPOSITORY", ""),
                             "-f", f"end={END_OVERRIDE}"], cwd=ROOT)
             return
+        # 盘中 PRECISE_ET(默认 ET 12:00)后的第一轮跑一次逐笔精确层,让 top-N 符号反映今天
+        precise_now = not ONCE and not did_precise and datetime.now(ET).time() >= PRECISE_ET
+        if precise_now:
+            os.environ["FLOW_PRECISE"] = "1"
+            print(f"本轮启用精确层(逐笔 Lee-Ready,ET {datetime.now(ET).strftime('%H:%M')})")
         t0 = time.time()
         try:
             fetch_research.main(merge=True)  # 全 watchlist,一轮抓完
         except Exception as exc:  # noqa: BLE001 单轮失败不终止会话
             print(f"本轮失败: {fetch_research.redact(exc)}")
+        finally:
+            if precise_now:
+                os.environ.pop("FLOW_PRECISE", None)
+                did_precise = True
         commit_push(f"chore: 滚动采集 {datetime.now(ET).strftime('%H:%M')} (第{rounds + 1}轮)")
         print(f"第{rounds + 1}轮用时 {time.time() - t0:.0f}s")
         rounds += 1

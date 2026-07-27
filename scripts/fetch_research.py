@@ -548,9 +548,11 @@ def gex_profile_rows(gex: dict, buckets=("week", "2wk", "all")) -> list:
     return rows
 
 
-def fetch_option_trades(contract_ticker: str) -> list:
-    """单合约当日逐笔成交(时间升序),返回 [(sip_ts, price, size, conditions)]。"""
-    out, url, pages = [], f"/v3/trades/{contract_ticker}?limit=50000&order=asc&sort=timestamp", 0
+def fetch_option_trades(contract_ticker: str, day=None) -> list:
+    """单合约**当日**逐笔成交(时间升序),返回 [(sip_ts, price, size, conditions)]。
+    day 给定时按 timestamp.gte 只取当日,避免 order=asc 分页拿到最旧成交、漏掉今天。"""
+    ts = f"&timestamp.gte={day.isoformat()}" if day else ""
+    out, url, pages = [], f"/v3/trades/{contract_ticker}?limit=50000&order=asc&sort=timestamp{ts}", 0
     while url and pages < 3:
         d = mget(url)
         for t in d.get("results") or []:
@@ -560,10 +562,12 @@ def fetch_option_trades(contract_ticker: str) -> list:
     return out
 
 
-def fetch_option_quotes(contract_ticker: str) -> list:
-    """单合约当日逐条 NBBO(时间升序),返回 [(sip_ts, bid, ask)]。
-    limit=50000 时一天(~1万条)通常一页装下,故 QUOTE_PAGE_CAP 很小即可。"""
-    out, url, pages = [], f"/v3/quotes/{contract_ticker}?limit=50000&order=asc&sort=timestamp", 0
+def fetch_option_quotes(contract_ticker: str, day=None) -> list:
+    """单合约**当日**逐条 NBBO(时间升序),返回 [(sip_ts, bid, ask)]。
+    limit=50000 时一天(~1万条)通常一页装下,故 QUOTE_PAGE_CAP 很小即可。
+    day 给定时按 timestamp.gte 只取当日(与 trades 对齐,判向才有效)。"""
+    ts = f"&timestamp.gte={day.isoformat()}" if day else ""
+    out, url, pages = [], f"/v3/quotes/{contract_ticker}?limit=50000&order=asc&sort=timestamp{ts}", 0
     while url and pages < QUOTE_PAGE_CAP:
         d = mget(url)
         for q in d.get("results") or []:
@@ -626,8 +630,8 @@ def compute_flow_precise(sym: str, spot: float, contracts: list, today, errors: 
 
     def _one(c):  # 单合约逐笔:拉 trades+quotes 归并判向。返回 (ticker, net|None, err|None)
         try:
-            net, sz, _flat = classify_lee_ready(fetch_option_trades(c["ticker"]),
-                                                fetch_option_quotes(c["ticker"]))
+            net, sz, _flat = classify_lee_ready(fetch_option_trades(c["ticker"], today),
+                                                fetch_option_quotes(c["ticker"], today))
             return (c["ticker"], net if sz > 0 else None, None)
         except Exception as exc:  # noqa: BLE001 单合约失败不影响整体
             return (c["ticker"], None, f"{sym} 精确流量 {c['ticker']}: {redact(exc)}")
