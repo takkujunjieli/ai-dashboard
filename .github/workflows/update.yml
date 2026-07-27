@@ -2,8 +2,9 @@ name: 每日更新数据
 
 on:
   schedule:
-    - cron: "0 13 * * 1-5"   # 美东盘前 (UTC 13:00 ≈ ET 8/9 点)
-    - cron: "30 22 * * *"    # 美东盘后 (UTC 22:30 ≈ ET 5:30/6:30 pm)
+    # 收盘后 EOD:全天逐笔精确层 + 基线 + 行情/信息流。21:15 UTC 取"两季都在 16:00 ET 收盘之后"
+    # 的固定时刻(冬 ET 16:15 ≈ 收盘后 15min;夏 ET 17:15)。盘前那次已废(9:00 ET 测不到今天)。
+    - cron: "15 21 * * *"
   workflow_dispatch: {}       # 支持手动触发
 
 permissions:
@@ -27,9 +28,8 @@ jobs:
         env:
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
 
-      # news/discussion 一天一次:仅盘后 cron(22:30 UTC)与手动触发跑;盘前 cron 跳过
+      # news/discussion 一天一次(现只剩收盘后一次 cron + 手动触发)
       - name: 抓取 RSS 信息流
-        if: github.event.schedule != '0 13 * * 1-5'
         run: python scripts/fetch_feeds.py
         env:
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
@@ -42,7 +42,7 @@ jobs:
         env:
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
           MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
-          FLOW_PRECISE: "1"   # EOD/盘前跑逐笔 Lee-Ready 精确层(贵,~10min);盘中滚动不跑
+          FLOW_PRECISE: "1"   # 收盘后跑逐笔 Lee-Ready 精确层(全天完整 tape,~10min);盘中 12:00 ET 另跑一次(collect_session)
 
       - name: 提交数据到 main(EOD 基线 + Pages 兜底)
         run: |

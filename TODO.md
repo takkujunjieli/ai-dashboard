@@ -15,9 +15,13 @@
 现状:所有 ticker 都进"普通组"、全量拿深度数据(K线/期权/GEX/指标);`config/tickers.json` 的 `deep` 字段**保留但后端已不作门槛**(`fetch_research.main` 用 watchlist 全量)。交易台迷你卡上的 D/Q 开关目前对后端是 no-op。
 **待定**:重新定义 deep 用途(候选:更高频刷新的一小撮"重点盯盘"票 / 开启逐笔流量分类的票 / 更长历史或更多指标的票)。定了之后再决定 D/Q 开关和后端门槛怎么接。
 
-## 3. 流量分类(flow)目前只在每日 2 次的 update.yml 跑 【数据新鲜度,视需要】
-盘中滚动已 `SKIP_FLOW=1` 跳过(否则每轮被 ~640 次逐笔请求阻塞几分钟)。flow/OI 本就日更,2 次/天够用。
-**若要盘中 flow**:需把它拆成独立的低频并行任务(单独 workflow 或并发预取),只更新 `gex.json` 的 `.flow` 字段,不阻塞主循环。
+## 3. ✅ flow 采集节奏(2026-07-26 重排)【数据新鲜度】
+- **采样版 Real**:盘中**每轮**跑(快照 last_trade vs NBBO,零额外 API,全链)——修正 nominal 符号的主力,每轮实时刷新。(注:旧 `SKIP_FLOW` 是死变量,从未被读,已删。)
+- **精确层(top-N 逐笔 Lee-Ready)**:每日 **2 次**且都跑在"tape 真含当日"的时点——
+  - 盘中 **ET 12:00 后第一轮**(`collect_session` 内,`PRECISE_HOUR` 可调),让 top-N 符号反映今天;
+  - 收盘后 **~15min**(`update.yml` cron `15 21 UTC`),全天完整 tape,喂 EOD/gex_daily/`oi_panel`。
+  - **废掉盘前那次**(9:00 ET 时今天还没成交,只会把昨天符号钉一天)。
+- tape 抓取加 `timestamp.gte=当日`(修 `order=asc` 拿最旧、活跃合约漏掉今天的 bug)。
 
 ## 4. git 体积 【运维,长期观察】
 每轮提交一次 `data/*.json`,盘中 ~100s/轮 → 一天上百次提交,`.git` 持续增长。
