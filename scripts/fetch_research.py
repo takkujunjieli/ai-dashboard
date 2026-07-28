@@ -101,25 +101,40 @@ def ewma_adv(bars: list, span: int = 20, today=None) -> float | None:
     return ewma
 
 
-def maxpain_pin_score(spot, flip, net_gex, max_pain, iv, dte, rv, adv) -> int | None:
+NEAR_GAMMA_BAND = 0.02   # 近价 gamma 门带宽(现价 ±2%)
+PIN_GATE_SLOPE = 3.0     # 门 logistic 斜率(输入是近价净 gamma 倾斜 z∈[-1,1])
+
+
+def near_money_gamma(by_strike, spot, band=NEAR_GAMMA_BAND):
+    """现价 ±band 内各行权价 net GEX 的 (净, 毛)。净>0=近价正 gamma(有钉),
+    净/毛∈[-1,1]=近价 gamma 倾斜(局部对冲方向,比全链 net 符号稳、比 flip 越界稳)。"""
+    if not by_strike or not spot:
+        return 0.0, 0.0
+    lo, hi = spot * (1 - band), spot * (1 + band)
+    near = [r["net"] for r in by_strike if lo <= r["strike"] <= hi]
+    return sum(near), sum(abs(x) for x in near)
+
+
+def maxpain_pin_score(spot, near_net, near_gross, net_gex, max_pain, iv, dte, rv, adv) -> int | None:
     """Max Pain 作为"价格磁吸目标"的可信度 0-100(启发式,权重/阈值待回测校准,见 TODO#7)。
     结构:gamma 门(乘法)× 加权几何平均(距离/到期/波动/OI),weakest-link。
     <20 当噪声 · 20-45 弱参考 · >45 才当目标看。"""
     if not (spot and max_pain and iv and dte is not None):
         return None
     sig = iv * math.sqrt(max(dte, 0.5) / 365)                 # 到期前期望振幅(比例)
-    sig_abs = spot * sig
     d_sigma = abs(math.log(max_pain / spot)) / sig if sig else 9.0
     f_dist = math.exp(-0.5 * d_sigma ** 2)                    # max pain 距现价(σ 归一)
     f_time = math.exp(-dte / 5)                               # 越近到期越强
     f_vol = 1 / (1 + (rv / 0.6) ** 2) if rv else 0.5          # 越平静越强(RV 60%≈半分)
     gex_adv = abs(net_gex) / (adv * spot) * 100 if (net_gex and adv) else None
     f_oi = min(max(gex_adv / 1.5, 0.05), 1.0) if gex_adv is not None else 0.5  # 期权尾巴能否摇动股票
-    if flip is not None and sig_abs:                          # gamma 门:正 gamma 才有钉
-        z = (spot - flip) / sig_abs
+    # gamma 门:近价净 gamma 倾斜(z∈[-1,1],正=局部正 gamma 有钉)。替代旧的 flip 距离 / 全链 net 符号,
+    # 消除 ETF flip=None 退化成 ±1 的"假门"(单快照 net 符号一翻就把分摁死)。近价无 OI 才退回全链符号。
+    if near_gross:
+        z = near_net / near_gross
     else:
-        z = 1.0 if (net_gex or 0) > 0 else -1.0               # flip 越界时退化用 net 符号(粗,见 TODO#7b)
-    gate = 1 / (1 + math.exp(-1.5 * z))
+        z = 1.0 if (net_gex or 0) > 0 else -1.0
+    gate = 1 / (1 + math.exp(-PIN_GATE_SLOPE * z))
     core = (f_dist ** 0.35) * (f_time ** 0.25) * (f_vol ** 0.25) * (f_oi ** 0.15)
     return round(100 * gate * core)
 
@@ -1246,13 +1261,14 @@ def main(tickers: list | None = None, merge: bool = False) -> None:
         if opt.get("atm_iv") is not None and rv is not None:
             opt["vrp"] = round(opt["atm_iv"] - rv, 4)
             opt["rv20"] = round(rv, 4)
-        # Max Pain 可信度分(0-100):需 GEX(flip/net)+ ADV + RV,故在此后处理算(见 maxpain_pin_score)
+        # Max Pain 可信度分(0-100):需 GEX(近价 gamma/net)+ ADV + RV,故在此后处理算(见 maxpain_pin_score)
         gx = gex_out["tickers"].get(sym) or {}
         entry_sym = out["tickers"].get(sym) or {}
         adv = entry_sym.get("adv20") or ((entry_sym.get("short") or {}).get("avg_daily_volume"))  # 优先 EWMA,回退旧值
         mp_dte = (date.fromisoformat(opt["max_pain_exp"]) - now.date()).days if opt.get("max_pain_exp") else None
+        near_net, near_gross = near_money_gamma(gx.get("by_strike"), gx.get("spot"))
         opt["maxpain_pin"] = maxpain_pin_score(
-            gx.get("spot"), gx.get("flip"), gx.get("net_gex"),
+            gx.get("spot"), near_net, near_gross, gx.get("net_gex"),
             opt.get("max_pain"), opt.get("atm_iv"), mp_dte, rv, adv)
         # 相对 QQQ(基准自身不与自身比)
         if sym != "QQQ":
