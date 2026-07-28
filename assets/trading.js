@@ -427,7 +427,7 @@ function initLadderZoom() {
   box.addEventListener("wheel", (e) => {
     e.preventDefault(); seed();
     if (!ladderView) return;
-    const pc = candles.coordinateToPrice(e.clientY - box.getBoundingClientRect().top);
+    const pc = candles.coordinateToPrice(e.clientY - $("chart").getBoundingClientRect().top);  // 光标价:用图表顶部为基,非 ladder-box(差 dy)
     const c = pc != null ? pc : (ladderView.lo + ladderView.hi) / 2;
     const f = e.deltaY > 0 ? 1.15 : 0.87;  // 下滚=范围放大(看更宽);上滚=范围缩小(放大局部)
     ladderView = { lo: c - (c - ladderView.lo) * f, hi: c + (ladderView.hi - c) * f };
@@ -464,7 +464,13 @@ function renderLadder() {
   updateLadderTitle();
   const rows = ladderRows();
   const box = $("ladder-box").getBoundingClientRect();
-  const H = $("chart").getBoundingClientRect().height;
+  const chartRect = $("chart").getBoundingClientRect();
+  const H = chartRect.height;
+  // 梯 SVG 在 ladder-box(标题+chips 下方),价格坐标却来自 #chart 顶部;两者相差 dy → 逐点补偿才对齐。
+  // 堆叠(移动端)布局梯在图表下方、偏移过大 → 不补偿(无法也无需对齐)。yc(): 价格→梯 SVG 的 y。
+  const dy0 = box.top - chartRect.top;
+  const dy = (dy0 > 0 && dy0 < H * 0.5) ? dy0 : 0;
+  const yc = (p) => { const y = candles.priceToCoordinate(p); return y == null ? null : y - dy; };
   // 容器或图表尚未完成布局(宽/高≈0)→ 稍后重试,别画进塌陷的画布
   if ((box.width < 40 || H < 40) && ladderRetry < 40) { ladderRetry++; setTimeout(renderLadder, 80); return; }
   const W = Math.max(box.width, 60);
@@ -481,7 +487,7 @@ function renderLadder() {
   const rowH = Math.max(Math.min(H / rows.length * 0.7, 9), 2);
   let placed = 0;
   for (const r of rows) {
-    const y = candles.priceToCoordinate(r.strike);
+    const y = yc(r.strike);
     if (y == null || y < 0 || y > H) continue;
     placed++;
     const yr = (y - rowH / 2).toFixed(1);
@@ -496,7 +502,7 @@ function renderLadder() {
   }
   // 量级最大的 4 行标注行权价(放在柱末端外侧,越界则贴边)
   [...rows].sort((a, b) => magOf(b) - magOf(a)).slice(0, 4).forEach((r) => {
-    const y = candles.priceToCoordinate(r.strike);
+    const y = yc(r.strike);
     if (y == null || y < 8 || y > H - 4) return;
     const toRight = r.net ? r.a >= 0 : true;  // net 按方向;OI/量 标在右侧
     const w = (r.net ? Math.abs(r.a) : Math.max(r.a, r.b)) / maxV * half;
@@ -507,7 +513,7 @@ function renderLadder() {
   // 现价与 flip 横线
   const mark = (price, color, label) => {
     if (price == null) return;
-    const y = candles.priceToCoordinate(price);
+    const y = yc(price);
     if (y == null || y < 0 || y > H) return;
     parts.push(`<line x1="0" y1="${y.toFixed(1)}" x2="${W}" y2="${y.toFixed(1)}" stroke="${color}" stroke-dasharray="4 3" stroke-width="1"/>`);
     parts.push(`<text x="2" y="${(y - 3).toFixed(1)}" fill="${color}" font-size="10">${label}</text>`);
@@ -515,7 +521,7 @@ function renderLadder() {
   const hd = histDay();
   mark(hd ? hd.spot : spotOf(SYM), "#60a5fa", hd ? "Spot(当日)" : "Spot");  // 历史模式标当日 spot
   if (ladderMode === "gex" && !hd) mark(gexBucketData(SYM)?.flip, "#fbbf24", "flip");
-  if (placed > 0) parts.push(volProfileFragment(W, H));  // VP 轮廓线叠加(坐标就绪后)
+  if (placed > 0) parts.push(volProfileFragment(W, H, dy));  // VP 轮廓线叠加(坐标就绪后,同 dy 补偿)
   svg.innerHTML = parts.join("");
   // 首屏图表坐标系未就绪时 priceToCoordinate 全返回 null → 稍后重试(用 setTimeout,后台标签页 rAF 会被节流)
   if (placed === 0 && rows.length && ladderRetry < 40) { ladderRetry++; setTimeout(renderLadder, 80); }
@@ -524,7 +530,7 @@ function renderLadder() {
 
 /* Volume Profile 叠加片段:成交量按可见价格区间分箱,画成靠右轴锚定的轮廓线(+POC),
    叠在 GEX 梯同一 SVG、共享价格轴。返回 SVG 片段字符串,供 renderLadder 拼入。 */
-function volProfileFragment(W, H) {
+function volProfileFragment(W, H, dy = 0) {
   const d = researchOf(SYM);
   const bars = (d.bars_d && d.bars_d.length >= 20) ? d.bars_d : barsFor(SYM, TF);
   if (!bars.length) return "";
@@ -550,7 +556,8 @@ function volProfileFragment(W, H) {
   const price = (i) => lo + (i + 0.5) * binH;
   const pts = [];
   for (let i = 0; i < NB; i++) {
-    const y = candles.priceToCoordinate(price(i));
+    const yv = candles.priceToCoordinate(price(i));
+    const y = yv == null ? null : yv - dy;
     if (y == null || y < 0 || y > H) continue;
     pts.push([+(x0 + bins[i] / maxV * VPW).toFixed(1), +y.toFixed(1)]);
   }
@@ -559,7 +566,8 @@ function volProfileFragment(W, H) {
   const area = `M${x0},${pts[0][1]} ` + pts.map((p) => `L${p[0]},${p[1]}`).join("") + ` L${x0},${pts[pts.length - 1][1]} Z`;
   let out = `<line x1="${x0}" y1="0" x2="${x0}" y2="${H}" stroke="#a78bfa55" stroke-width="1"/>`  // VP 0 轴
     + `<path d="${area}" fill="#a78bfa22"/><path d="${poly}" fill="none" stroke="#a78bfa" stroke-width="1.2"/>`;
-  const yp = candles.priceToCoordinate(price(poc));
+  const ypv = candles.priceToCoordinate(price(poc));
+  const yp = ypv == null ? null : ypv - dy;
   if (yp != null && yp >= 0 && yp <= H) {
     out += `<line x1="${x0.toFixed(1)}" y1="${yp.toFixed(1)}" x2="${W}" y2="${yp.toFixed(1)}" stroke="#f59e0b" stroke-dasharray="3 3" stroke-width="1"/><text x="${W}" y="${(yp - 2).toFixed(1)}" fill="#f59e0b" font-size="9" text-anchor="end">POC ${price(poc).toFixed(1)}</text>`;
   }
