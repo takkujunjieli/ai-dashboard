@@ -471,11 +471,12 @@ function renderLadder() {
   const dy0 = box.top - chartRect.top;
   const dy = (dy0 > 0 && dy0 < H * 0.5) ? dy0 : 0;
   const yc = (p) => { const y = candles.priceToCoordinate(p); return y == null ? null : y - dy; };
+  const Hs = H - dy;  // 梯 SVG 显示高度:补偿 dy 后,把下沿截到与 K 线底沿齐平(顶已对齐 → 底也对齐)
   // 容器或图表尚未完成布局(宽/高≈0)→ 稍后重试,别画进塌陷的画布
   if ((box.width < 40 || H < 40) && ladderRetry < 40) { ladderRetry++; setTimeout(renderLadder, 80); return; }
   const W = Math.max(box.width, 60);
-  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-  svg.setAttribute("width", W); svg.setAttribute("height", H);
+  svg.setAttribute("viewBox", `0 0 ${W} ${Hs}`);
+  svg.setAttribute("width", W); svg.setAttribute("height", Hs);
   if (!rows.length) { svg.innerHTML = `<text x="8" y="20" fill="#8b96ad" font-size="11">No data (collect once)</text>`; return; }
   const ss = rows.map((r) => r.strike);  // 滚动边界 = 已计算 GEX 的行权价范围
   ladderBounds = { min: Math.min(...ss), max: Math.max(...ss) };
@@ -483,12 +484,12 @@ function renderLadder() {
   const cx = W / 2, half = cx - 3;
   const magOf = (r) => r.net ? Math.abs(r.a) : Math.max(r.a, r.b);
   const maxV = Math.max(...rows.map(magOf), 1);
-  const parts = [`<line x1="${cx}" y1="0" x2="${cx}" y2="${H}" stroke="#2a3550" stroke-width="1"/>`];
-  const rowH = Math.max(Math.min(H / rows.length * 0.7, 9), 2);
+  const parts = [`<line x1="${cx}" y1="0" x2="${cx}" y2="${Hs}" stroke="#2a3550" stroke-width="1"/>`];
+  const rowH = Math.max(Math.min(Hs / rows.length * 0.7, 9), 2);
   let placed = 0;
   for (const r of rows) {
     const y = yc(r.strike);
-    if (y == null || y < 0 || y > H) continue;
+    if (y == null || y < 0 || y > Hs) continue;
     placed++;
     const yr = (y - rowH / 2).toFixed(1);
     if (r.net) {
@@ -503,7 +504,7 @@ function renderLadder() {
   // 量级最大的 4 行标注行权价(放在柱末端外侧,越界则贴边)
   [...rows].sort((a, b) => magOf(b) - magOf(a)).slice(0, 4).forEach((r) => {
     const y = yc(r.strike);
-    if (y == null || y < 8 || y > H - 4) return;
+    if (y == null || y < 8 || y > Hs - 4) return;
     const toRight = r.net ? r.a >= 0 : true;  // net 按方向;OI/量 标在右侧
     const w = (r.net ? Math.abs(r.a) : Math.max(r.a, r.b)) / maxV * half;
     let lx = toRight ? cx + w + 2 : cx - w - 2, anchor = toRight ? "start" : "end";
@@ -514,7 +515,7 @@ function renderLadder() {
   const mark = (price, color, label) => {
     if (price == null) return;
     const y = yc(price);
-    if (y == null || y < 0 || y > H) return;
+    if (y == null || y < 0 || y > Hs) return;
     parts.push(`<line x1="0" y1="${y.toFixed(1)}" x2="${W}" y2="${y.toFixed(1)}" stroke="${color}" stroke-dasharray="4 3" stroke-width="1"/>`);
     parts.push(`<text x="2" y="${(y - 3).toFixed(1)}" fill="${color}" font-size="10">${label}</text>`);
   };
@@ -535,6 +536,7 @@ function volProfileFragment(W, H, dy = 0) {
   const bars = (d.bars_d && d.bars_d.length >= 20) ? d.bars_d : barsFor(SYM, TF);
   if (!bars.length) return "";
   const NB = 60;
+  const Hs = H - dy;  // 显示高度=下沿截到 K 线底(价格窗口仍用 chart 全高 H 查)
   const pTop = candles.coordinateToPrice(0), pBot = candles.coordinateToPrice(H);
   if (pTop == null || pBot == null) return "";
   const hi = Math.max(pTop, pBot), lo = Math.min(pTop, pBot);
@@ -558,17 +560,17 @@ function volProfileFragment(W, H, dy = 0) {
   for (let i = 0; i < NB; i++) {
     const yv = candles.priceToCoordinate(price(i));
     const y = yv == null ? null : yv - dy;
-    if (y == null || y < 0 || y > H) continue;
+    if (y == null || y < 0 || y > Hs) continue;
     pts.push([+(x0 + bins[i] / maxV * VPW).toFixed(1), +y.toFixed(1)]);
   }
   if (pts.length < 2) return "";
   const poly = pts.map((p, i) => `${i ? "L" : "M"}${p[0]},${p[1]}`).join("");
   const area = `M${x0},${pts[0][1]} ` + pts.map((p) => `L${p[0]},${p[1]}`).join("") + ` L${x0},${pts[pts.length - 1][1]} Z`;
-  let out = `<line x1="${x0}" y1="0" x2="${x0}" y2="${H}" stroke="#a78bfa55" stroke-width="1"/>`  // VP 0 轴
+  let out = `<line x1="${x0}" y1="0" x2="${x0}" y2="${Hs}" stroke="#a78bfa55" stroke-width="1"/>`  // VP 0 轴
     + `<path d="${area}" fill="#a78bfa22"/><path d="${poly}" fill="none" stroke="#a78bfa" stroke-width="1.2"/>`;
   const ypv = candles.priceToCoordinate(price(poc));
   const yp = ypv == null ? null : ypv - dy;
-  if (yp != null && yp >= 0 && yp <= H) {
+  if (yp != null && yp >= 0 && yp <= Hs) {
     out += `<line x1="${x0.toFixed(1)}" y1="${yp.toFixed(1)}" x2="${W}" y2="${yp.toFixed(1)}" stroke="#f59e0b" stroke-dasharray="3 3" stroke-width="1"/><text x="${W}" y="${(yp - 2).toFixed(1)}" fill="#f59e0b" font-size="9" text-anchor="end">POC ${price(poc).toFixed(1)}</text>`;
   }
   return out;
