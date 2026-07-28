@@ -61,8 +61,9 @@
 - 门几乎主导总分,但它依赖 `flip` / `net_gex` 的**符号质量**:
   - **ETF 的 `flip=None`**(SPY/QQQ/SOXX 无 flow,且 flip 常越界)→ 现在退化成用 `net_gex` 符号(±1),很粗。实测 QQQ 明明 max pain 贴现价、0DTE、低波动,却因快照期 `net_gex` 为负被门摁到 17 —— 疑似**假门**。
   - `net_gex` 单快照有噪声,符号可能翻。
-- 优化方向:(1) 门改用**近价窗口的净 gamma**(spot ±1–2% 累计),而非全链 `net_gex` 符号;(2) 对 `flip=None` 用**平滑的近价 gamma 斜率**替代 ±1 硬兜底;(3) 门值做**多快照平滑**(近 N 轮均值)降噪。
-- 验证:重跑 QQQ/SPY 这类"应高分却被门压低"的样本,确认修正后落回合理档。
+- 优化方向:
+  - ✅ **(1)(2) 已做(PR #62)**:门改用 `near_money_gamma`(现价 ±2% 各行权价 net GEX 的**净/毛倾斜** z∈[-1,1],`PIN_GATE_SLOPE=3`),替代旧的 flip 距离 / 全链 net 符号;`flip=None` 不再退化成 ±1(近价无 OI 才退回全链符号)。烟测:QQQ 式(近价净正、全链 net 负)94 分(旧≈十几);真近价净负 gamma → 5 分。
+  - ⬜ **(3) 多快照平滑**(近 N 轮门值均值降噪):需跨轮状态,留后续(本 PR 未做)。
 
 ## 8. flow-GEX 预测力 pilot(预注册)+ 前向累积 【signal research;累积中】
 **目标**:验证 flow-GEX(期权流的 gamma 区制)对短周期收益的预测力,再决定是否策略化。协议见 [docs/backtest-flow-gamma-pilot.md](docs/backtest-flow-gamma-pilot.md)(**预注册**:假设/口径先于结果冻结)。
