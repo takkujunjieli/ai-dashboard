@@ -354,8 +354,14 @@ def _contract_gamma_oi(c: dict, spot: float, today) -> float | None:
     return g * oi if g else None
 
 
-def _bucketize(enriched: list, spot: float) -> dict:
-    """enriched: [(dte, strike, signed gamma×oi)] → 按到期桶汇总。"""
+GEX_EXP_N = int(os.environ.get("GEX_EXP_N", "4"))  # 前端单到期选择:最近 N 个到期各自 by_strike
+
+
+def _bucketize(enriched: list, spot: float, today=None) -> dict:
+    """enriched: [(dte, strike, signed gamma×oi)] → 累计到期桶(0dte/week/2wk/all)
+    + 最近 GEX_EXP_N 个**单到期**(by_exp,各自 by_strike/net/flip)。
+    累计桶给聚合口径(总对冲压力/flip)与历史 sparkline;单到期给"某天到底往哪钉"的精确结构
+    (M/W/F 票的当周会混三个到期,单到期才不被稀释)。"""
     if not enriched:
         return None
     buckets = {}
@@ -366,8 +372,18 @@ def _bucketize(enriched: list, spot: float) -> dict:
                 signed[strike] = signed.get(strike, 0.0) + val
         buckets[name] = _gex_summary(signed, spot) if signed \
             else {"net_gex": 0.0, "flip": None, "by_strike": []}
+    by_dte: dict = {}
+    for dte, strike, val in enriched:
+        if 0 <= dte <= 30:
+            d = by_dte.setdefault(dte, {})
+            d[strike] = d.get(strike, 0.0) + val
+    by_exp = []
+    for dte in sorted(by_dte)[:GEX_EXP_N]:
+        s = _gex_summary(by_dte[dte], spot)
+        by_exp.append({"exp": (today + timedelta(days=dte)).isoformat() if today else None,
+                       "dte": dte, "net_gex": s["net_gex"], "flip": s["flip"], "by_strike": s["by_strike"]})
     a = buckets["all"]
-    return {"spot": round(spot, 2), "buckets": buckets,
+    return {"spot": round(spot, 2), "buckets": buckets, "by_exp": by_exp,
             "net_gex": a["net_gex"], "flip": a["flip"], "by_strike": a["by_strike"]}
 
 
@@ -383,7 +399,7 @@ def compute_gex(contracts: list, spot: float) -> dict | None:
             continue
         sign = 1 if c["type"] == "call" else -1
         enriched.append(((date.fromisoformat(c["exp"]) - today).days, c["strike"], sign * go))
-    return _bucketize(enriched, spot)
+    return _bucketize(enriched, spot, today)
 
 
 # ---------- 流量分类 GEX(top-N 活跃合约按真实买卖方向定 dealer 符号) ----------
@@ -483,7 +499,7 @@ def compute_gex_flow_sampled(sym: str, spot: float, contracts: list, acc: dict, 
             continue
         sign = flow_sign.get(c.get("ticker"), 1 if c["type"] == "call" else -1)
         enriched.append(((date.fromisoformat(c["exp"]) - today).days, c["strike"], sign * go))
-    out = _bucketize(enriched, spot)
+    out = _bucketize(enriched, spot, today)
     if out:
         out["classified"] = len(flow_sign)
         out["method"] = "sampled+precise" if prec_used else "sampled"
@@ -767,8 +783,9 @@ def merge_index_into_etf(etf_gex: dict, idx_gex: dict, ratio: float) -> dict:
     ib = idx_gex.get("buckets") or {}
     spot = etf_gex.get("spot")
     snap = lambda k: round(k * 2) / 2                            # 落 0.5 网格,让 ETF 与指数档对齐合并
-    for name, e in eb.items():
-        i = ib.get(name) or {}
+
+    def _merge_entry(e, i):
+        """把 index entry i(by_strike ÷ratio 落 ETF 轴)并入 ETF entry e:net 相加、flip 重算。就地改 e。"""
         agg: dict = {}
         for r in e.get("by_strike") or []:                       # ETF 自身档
             agg[snap(r["strike"])] = agg.get(snap(r["strike"]), 0.0) + r["net"]
@@ -783,8 +800,15 @@ def merge_index_into_etf(etf_gex: dict, idx_gex: dict, ratio: float) -> dict:
                 cross.append((pk + r["strike"]) / 2)
             pc, pk = cum, r["strike"]
         e["by_strike"] = rows
-        e["net_gex"] = (e.get("net_gex") or 0) + (i.get("net_gex") or 0)   # 真总量 = 两桶净值相加
+        e["net_gex"] = (e.get("net_gex") or 0) + (i.get("net_gex") or 0)   # 真总量 = 两档净值相加
         e["flip"] = round(min(cross, key=lambda x: abs(x - spot)), 2) if (cross and spot) else None
+
+    for name, e in eb.items():                                   # 累计桶:同名合并
+        _merge_entry(e, ib.get(name) or {})
+    ie = {x.get("exp"): x for x in (idx_gex.get("by_exp") or [])}  # 单到期:按 exp 匹配合并
+    for e in (etf_gex.get("by_exp") or []):
+        if e.get("exp") in ie:
+            _merge_entry(e, ie[e["exp"]])
     a = eb.get("all") or {}
     etf_gex["net_gex"] = a.get("net_gex")
     etf_gex["flip"] = a.get("flip")
