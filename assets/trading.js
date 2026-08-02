@@ -13,10 +13,21 @@ let SYM = localStorage.getItem("wbSym") || null;
 let TF = localStorage.getItem("wbTf") || "5m";
 let ladderMode = "gex";
 let ladderDay = null;   // 本周历史 GEX 快照的选中日期(null=最新/Live);GEX 梯用当周到期结构
-let gexBucket = localStorage.getItem("wbGexBucket") || "0dte";  // GEX 到期范围,默认 0DTE
+let gexBucket = localStorage.getItem("wbGexBucket") || "near";  // 单到期=exp 日期串 · "near"=最近 · "all"=≤30d 聚合
+if (["0dte", "week", "2wk"].includes(gexBucket)) gexBucket = "near";  // 迁移旧的累计桶选择
 let gexCaliber = localStorage.getItem("wbGexCaliber") || "nominal";  // 名义 / 流量
-const GEX_BUCKET_ORDER = ["0dte", "week", "2wk", "all"];
-const GEX_BUCKET_LABEL = { "0dte": "0DTE", week: "This Week", "2wk": "≤14d", all: "30d" };
+const GEX_BUCKET_ORDER = ["0dte", "week", "2wk", "all"];  // gex_history sparkline 仍按累计桶存
+const GEX_BUCKET_LABEL = { "0dte": "0DTE", week: "This Week", "2wk": "≤14d", all: "≤30d" };  // 累计桶名(sparkline 用)
+// 单到期 dte → gex_history 累计桶(历史序列只有累计桶,到期日每天滚动无法建时序)
+const expToHistBucket = (dte) => dte == null ? "all" : dte <= 0 ? "0dte" : dte <= 7 ? "week" : dte <= 14 ? "2wk" : "all";
+// "2026-08-03" → {chip:"8/3 一", full:"8/3 周一"};dte==0 时加 0DTE 标
+function expLabel(exp, dte) {
+  if (!exp) return { chip: "≤30d", full: "≤30d 聚合" };
+  const d = new Date(exp + "T00:00:00"), wd = ["日", "一", "二", "三", "四", "五", "六"][d.getDay()];
+  const md = `${d.getMonth() + 1}/${d.getDate()}`;
+  const z = dte === 0 ? " 0DTE" : "";
+  return { chip: `${md} ${wd}${z}`, full: `${md} 周${wd}${z}` };
+}
 let chart, candles, volume, ema9L, ema21L, vwapL, bbU, bbL, vsU, vsL, avwapL, subChart, gexLine;
 let indSub, atrL, pdiL, mdiL, adxL;  // 指标副图(ATR / DMI-ADX,与价格不同量纲,单独一栏)
 let overlayOn = JSON.parse(localStorage.getItem("wbOverlays") || "null")
@@ -208,17 +219,33 @@ function gexBucketData(sym) {
   if (!t0) return null;
   const flowMiss = gexCaliber === "flow" && !t0.flow;
   const t = gexCaliber === "flow" && t0.flow ? t0.flow : t0;
-  const buckets = t.buckets;
-  if (!buckets) return { ...t, bucket: "all", fallback: false, caliber: "nominal", flowMiss };
   const cal = gexCaliber === "flow" && t0.flow ? "flow" : "nominal";
-  const nonEmpty = (b) => b && b.by_strike && b.by_strike.length;
   const conf = { classified: t.classified, coverage: t.coverage, ambiguity: t.ambiguity };
-  const start = GEX_BUCKET_ORDER.indexOf(gexBucket);
-  for (let i = start; i < GEX_BUCKET_ORDER.length; i++) {
-    const name = GEX_BUCKET_ORDER[i];
-    if (nonEmpty(buckets[name])) return { spot: t.spot, ...buckets[name], bucket: name, fallback: i !== start, caliber: cal, flowMiss, ...conf };
-  }
-  return { spot: t.spot, ...(buckets[gexBucket] || { net_gex: 0, flip: null, by_strike: [] }), bucket: gexBucket, fallback: false, caliber: cal, flowMiss, ...conf };
+  const base = { spot: t.spot, caliber: cal, flowMiss, ...conf };
+  const agg = (t.buckets && t.buckets.all) || { net_gex: 0, flip: null, by_strike: [] };
+  const asAgg = (fallback) => ({ ...base, ...agg, bucket: "all", dte: null, label: "≤30d", fallback });
+  if (gexBucket === "all") return asAgg(false);
+  const byExp = t.by_exp || [];
+  let e = byExp.find((x) => x.exp === gexBucket);   // 选中的单到期
+  const fallback = !e && gexBucket !== "near";       // 选中的到期已滚动/换票 → 回退最近,标 nearest
+  if (!e) e = byExp[0];                              // "near" 或回退 → 最近一个到期
+  if (!e) return asAgg(true);                        // 无 by_exp(旧数据)→ 聚合兜底
+  return { ...base, net_gex: e.net_gex, flip: e.flip, by_strike: e.by_strike,
+    bucket: e.exp, dte: e.dte, label: expLabel(e.exp, e.dte).full, fallback };
+}
+
+/* 到期选择器:动态列出当前票最近 N 个真实到期日 + ≤30d 聚合(单到期不被 M/W/F 稀释)*/
+function renderExpChips() {
+  const box = $("gex-exp");
+  if (!box) return;
+  const t0 = GEX?.tickers?.[SYM];
+  const t = gexCaliber === "flow" && t0?.flow ? t0.flow : t0;
+  const byExp = t?.by_exp || [];
+  const cur = gexBucketData(SYM)?.bucket;   // 实际解析到的(near/回退后的真实值)
+  const chip = (b, lbl, ttl, on) => `<button data-b="${b}" class="${on ? "active" : ""}" title="${ttl}">${lbl}</button>`;
+  const parts = byExp.map((e) => { const L = expLabel(e.exp, e.dte); return chip(e.exp, L.chip, `${L.full}(单到期,不与其他到期混合)`, cur === e.exp); });
+  parts.push(chip("all", "≤30d", "所有 ≤30 天到期之和(总对冲压力 / flip 口径)", cur === "all"));
+  box.innerHTML = parts.join("");
 }
 
 /* ---------- 图表初始化 ---------- */
@@ -403,7 +430,7 @@ function renderIndSub() {
 function renderGexSub() {
   // 与上方 stat tile 对齐:同一个已回退的桶(eff.bucket)+ 同一个口径(Real 缺失时退 Raw)
   const eff = gexBucketData(SYM);
-  const bkey = eff?.bucket || gexBucket;
+  const bkey = expToHistBucket(eff?.dte);   // 单到期 → 其所属累计桶(历史序列只有累计桶)
   const useFlow = gexCaliber === "flow" && !eff?.flowMiss;
   const pts = (GEXH?.points || []).filter((p) => p.sym === SYM);
   gexLine.setData(pts.map((p) => {
@@ -414,7 +441,8 @@ function renderGexSub() {
   const gt = $("gex-sub-title");
   if (gt) {
     const upd = GEX?.updated_at ? ` · updated ${fmtDT(GEX.updated_at)}` : "";
-    gt.textContent = `Intraday net GEX trend · ${GEX_BUCKET_LABEL[bkey] || bkey} · ${useFlow ? "Real" : "Raw"}${upd}`;
+    const scope = eff?.bucket === "all" ? "≤30d 聚合" : `${eff?.label || ""}(所在 ${GEX_BUCKET_LABEL[bkey]} 序列)`;
+    gt.textContent = `Intraday net GEX trend · ${scope} · ${useFlow ? "Real" : "Raw"}${upd}`;
   }
   subChart.timeScale().fitContent();
 }
@@ -454,7 +482,7 @@ function updateLadderTitle() {
   } else if (ladderMode === "gex") {
     const b = gexBucketData(SYM);
     const cal = b?.caliber === "flow" ? "·Real" : gexCaliber === "flow" ? "·Real N/A→Raw" : "";
-    suffix = ` (${GEX_BUCKET_LABEL[b?.bucket] || GEX_BUCKET_LABEL[gexBucket]}${b?.fallback ? "·nearest" : ""}${cal})`;
+    suffix = ` (${b?.label || "≤30d"}${b?.fallback ? "·nearest" : ""}${cal})`;
   } else {
     suffix = " · all expiries";
   }
@@ -463,16 +491,7 @@ function updateLadderTitle() {
   const gexOnlyOpacity = ladderMode === "gex" ? "1" : "0.4";
   ($("gex-exp").closest(".tb-group") || $("gex-exp")).style.opacity = gexOnlyOpacity;
   ($("gex-caliber").closest(".tb-group") || $("gex-caliber")).style.opacity = gexOnlyOpacity;
-
-  // 到期桶按钮:当前票+口径下该桶无合约时置灰划掉,一眼看出(如周末/单名股无 0DTE)
-  const t0 = GEX?.tickers?.[SYM];
-  const bsrc = (gexCaliber === "flow" && t0?.flow) ? t0.flow : t0;
-  const bk = ladderMode === "gex" ? bsrc?.buckets : null;
-  [...$("gex-exp").children].forEach((btn) => {
-    const empty = !!(bk && !(bk[btn.dataset.b]?.by_strike?.length));
-    btn.classList.toggle("bucket-empty", empty);
-    btn.title = empty ? "该到期桶当前无合约(点击会回退到最近的非空桶)" : "";
-  });
+  // 到期选择器由 renderExpChips 动态渲染(只列该票真实存在的到期),不再需要空桶置灰
 }
 
 // 价格轴范围提供者:ladderView 非空 → 强制轴=[lo,hi](K线与梯共此范围);null → 用默认自动缩放
@@ -710,6 +729,7 @@ function tile(k, v, sub = "", cls = "", title = "") {
 
 /* ---------- 指标栏(与 Options Panel 同款 grid 磁贴) ---------- */
 function renderStats() {
+  renderExpChips();  // 到期选择器随票/口径/数据动态刷新
   if (SYM && CFG.watchlist.length && !isDeep(SYM)) {
     $("wb-stats").innerHTML = `<span class="muted">${esc(SYM)} is in the "Quotes only" group — no deep data. Click "D" on its card to add to Deep.</span>`;
     return;
@@ -1167,7 +1187,6 @@ function initToolbar() {
   });
   $("refresh-btn").addEventListener("click", () => refreshData(true));  // 手动刷新强制拉最新 bars
   renderOverlayChips();
-  [...$("gex-exp").children].forEach((b) => b.classList.toggle("active", b.dataset.b === gexBucket));
   [...$("gex-caliber").children].forEach((b) => b.classList.toggle("active", b.dataset.c === gexCaliber));
   [...$("avwap-anchor").children].forEach((b) => b.classList.toggle("active", b.dataset.a === avwapAnchor));
   [...$("session-chips").children].forEach((b) => b.classList.toggle("active", (b.dataset.s === "eth") === showETH));
