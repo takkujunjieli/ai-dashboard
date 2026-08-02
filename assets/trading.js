@@ -28,11 +28,15 @@ function expLabel(exp, dte) {
   const z = dte === 0 ? " 0DTE" : "";
   return { chip: `${md} ${wd}${z}`, full: `${md} 周${wd}${z}` };
 }
-let chart, candles, volume, ema9L, ema21L, vwapL, bbU, bbL, vsU, vsL, avwapL, subChart, gexLine;
+let chart, candles, volume, ema9L, ema21L, vwapL, bbU, bbL, vsU, vsL, subChart, gexLine;
 let indSub, atrL, pdiL, mdiL, adxL;  // 指标副图(ATR / DMI-ADX,与价格不同量纲,单独一栏)
 let overlayOn = JSON.parse(localStorage.getItem("wbOverlays") || "null")
   || { ema9: true, ema21: true, vwap: true, bb: false, vsig: false, atr: false, adx: false };  // 默认只开 EMA/VWAP,其余按需勾
-let avwapAnchor = localStorage.getItem("wbAvwapAnchor") || "off";
+// AVWAP:手动多锚(点击图上任意 bar 从那时刻起算),按时间戳存、跨周期一致、可留多条确认点位
+let avwapLines = [];   // 每锚一条线 [{series, ts, color}]
+let avwapCtx = null;   // 当前 {bars, t},供点击锚定映射
+let avwapAdd = localStorage.getItem("wbAvwapAdd") === "1";           // 点击锚定模式开关
+let avwapAnchors = JSON.parse(localStorage.getItem("wbAvwap") || "{}");  // {sym:[epoch,...]} 按票持久
 let showETH = localStorage.getItem("wbShowETH") === "1";  // 分时图默认只画 RTH;开则含盘前盘后
 let hoverLevels = [];       // flip / MaxPain 横线的 {name,color,price},供 hover 识别
 let hoverSeries = [];       // 叠加曲线的 {series,name,color},供 hover 识别
@@ -190,20 +194,40 @@ function vwapBands(bars, k = 1) {
 }
 
 /* Anchored VWAP:从锚点(swing 低/高/区间起点)起的成交量加权均价 = 成本基代理 */
-function computeAVWAP(bars, t) {
-  if (avwapAnchor === "off" || !bars.length) return [];
-  let ai = 0;
-  if (avwapAnchor === "low") ai = bars.reduce((m, b, i, a) => b[3] < a[m][3] ? i : m, 0);
-  else if (avwapAnchor === "high") ai = bars.reduce((m, b, i, a) => b[2] > a[m][2] ? i : m, 0);
+const AVWAP_COLORS = ["#fb923c", "#22d3ee", "#a3e635", "#f472b6", "#facc15", "#818cf8"];
+const AV_FMT = new Intl.DateTimeFormat("en-US", { timeZone: ET, month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+function avwapAnchorLabel(ep) { return ep == null ? "" : AV_FMT.format(new Date(ep)); }
+
+/* 从锚点 epoch 起的 AVWAP(成交量加权),按时间戳锚 → 跨周期一致。
+   锚落在当前窗口之前(数据不全)或之后 → 返回 [](不画,避免误导)。 */
+function computeAVWAP(bars, t, anchor) {
+  if (!bars.length || anchor == null) return [];
+  const start = bars.findIndex((b) => b[0] >= anchor);
+  if (start < 0 || (start === 0 && anchor < bars[0][0])) return [];
   const out = [];
   let pv = 0, vol = 0;
-  for (let i = ai; i < bars.length; i++) {
+  for (let i = start; i < bars.length; i++) {
     const b = bars[i];
     const p = b[6] || (b[2] + b[3] + b[4]) / 3;
     pv += p * b[5]; vol += b[5];
     out.push({ time: t(b), value: vol ? pv / vol : p });
   }
   return out;
+}
+
+/* 当前票的锚点集 → 一组 AVWAP 线(数量随锚点增删,颜色按序循环)*/
+function renderAvwap(bars, t) {
+  const anchors = (avwapAnchors[SYM] || []).slice().sort((a, b) => a - b);
+  while (avwapLines.length < anchors.length) {
+    avwapLines.push({ series: chart.addLineSeries({ lineWidth: 2, priceLineVisible: false, lastValueVisible: false }), ts: null, color: null });
+  }
+  while (avwapLines.length > anchors.length) chart.removeSeries(avwapLines.pop().series);
+  anchors.forEach((a, i) => {
+    const l = avwapLines[i], color = AVWAP_COLORS[i % AVWAP_COLORS.length];
+    l.ts = a; l.color = color;
+    l.series.applyOptions({ color });
+    l.series.setData(computeAVWAP(bars, t, a));
+  });
 }
 
 const lastClose = (sym) => {
@@ -276,7 +300,6 @@ function initCharts() {
   bbL = chart.addLineSeries({ color: "#2dd4bf", lineWidth: 1, lineStyle: LWC.LineStyle.Dashed, priceLineVisible: false, lastValueVisible: false });
   vsU = chart.addLineSeries({ color: "#fcd34d", lineWidth: 1, lineStyle: LWC.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false });
   vsL = chart.addLineSeries({ color: "#fcd34d", lineWidth: 1, lineStyle: LWC.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false });
-  avwapL = chart.addLineSeries({ color: "#fb923c", lineWidth: 2, priceLineVisible: false, lastValueVisible: false });
   hoverSeries = [
     { series: ema9L, name: "EMA9", color: "#60a5fa" },
     { series: ema21L, name: "EMA21", color: "#c084fc" },
@@ -285,10 +308,23 @@ function initCharts() {
     { series: bbL, name: "BB Lower (−2σ)", color: "#2dd4bf" },
     { series: vsU, name: "VWAP +σ", color: "#fcd34d" },
     { series: vsL, name: "VWAP −σ", color: "#fcd34d" },
-    { series: avwapL, name: "Anchored VWAP", color: "#fb923c" },
   ];
   initHoverLegend();
   applyOverlayVis();  // 按 overlayOn 设置各叠加层可见性
+  // 点击锚定 AVWAP:开启"点击锚定"后,点图上任一 bar 从那时刻加一条;点已有锚附近则删
+  chart.subscribeClick((param) => {
+    if (!avwapAdd || !avwapCtx || param.logical == null) return;
+    const { bars } = avwapCtx;
+    const i = Math.round(param.logical);
+    if (i < 0 || i >= bars.length) return;
+    const ep = bars[i][0], list = avwapAnchors[SYM] || (avwapAnchors[SYM] = []);
+    const gap = bars.length > 1 ? Math.abs(bars[1][0] - bars[0][0]) : 6e4;   // 容差=一根 bar
+    const at = list.findIndex((a) => Math.abs(a - ep) <= gap);
+    if (at >= 0) list.splice(at, 1); else list.push(ep);
+    if (!list.length) delete avwapAnchors[SYM];
+    localStorage.setItem("wbAvwap", JSON.stringify(avwapAnchors));
+    renderChart();
+  });
 
   subChart = LWC.createChart($("gex-sub"), { ...chartTheme, timeScale: { ...chartTheme.timeScale, timeVisible: true } });
   gexLine = subChart.addLineSeries({ color: "#60a5fa", lineWidth: 2, priceFormat: { type: "custom", formatter: (v) => (v / 1e6).toFixed(0) + "M" } });
@@ -357,6 +393,13 @@ function initHoverLegend() {
       const y = candles.priceToCoordinate(lv.price);
       if (y != null && Math.abs(y - cy) <= HIT) hits.push({ name: lv.name, color: lv.color, v: lv.price });
     }
+    for (const l of avwapLines) {   // 动态锚定 AVWAP 线
+      const d = param.seriesData.get(l.series);
+      const v = d && d.value;
+      if (v == null) continue;
+      const y = l.series.priceToCoordinate(v);
+      if (y != null && Math.abs(y - cy) <= HIT) hits.push({ name: `AVWAP ${avwapAnchorLabel(l.ts)}`, color: l.color, v });
+    }
     if (!hits.length) { el.style.display = "none"; return; }
     el.innerHTML = hits.map((h) => `<span style="color:${h.color}">● ${esc(h.name)} ${h.v.toFixed(2)}</span>`).join("<br>");
     el.style.display = "block";
@@ -385,8 +428,9 @@ function renderChart() {
   // VWAP ±1σ 带(仅盘中)
   if (daily) { vsU.setData([]); vsL.setData([]); }
   else { const vb = vwapBands(bars, 1); vsU.setData(line(vb.up)); vsL.setData(line(vb.lo)); }
-  // Anchored VWAP(锚点:swing low/high/range start;成本基代理)
-  avwapL.setData(computeAVWAP(bars, t));
+  // Anchored VWAP:每个手动锚点一条线(按时间戳锚,跨周期一致);供点击锚定映射
+  avwapCtx = { bars, t };
+  renderAvwap(bars, t);
 
   // 关键价位线: gamma flip / Max Pain(名称也走 hover,不常驻)
   priceLines.forEach((l) => candles.removePriceLine(l));
@@ -1161,13 +1205,19 @@ function initToolbar() {
     applyOverlayVis();
   });
   // Anchored VWAP 锚点
-  $("avwap-anchor").addEventListener("click", (ev) => {
+  $("avwap-ctrl").addEventListener("click", (ev) => {
     const btn = ev.target.closest("button");
     if (!btn) return;
-    avwapAnchor = btn.dataset.a;
-    localStorage.setItem("wbAvwapAnchor", avwapAnchor);
-    [...$("avwap-anchor").children].forEach((b) => b.classList.toggle("active", b === btn));
-    renderChart();
+    if (btn.dataset.a === "add") {
+      avwapAdd = !avwapAdd;
+      localStorage.setItem("wbAvwapAdd", avwapAdd ? "1" : "0");
+      btn.classList.toggle("active", avwapAdd);
+      $("chart").style.cursor = avwapAdd ? "crosshair" : "";
+    } else if (btn.dataset.a === "clear") {
+      delete avwapAnchors[SYM];
+      localStorage.setItem("wbAvwap", JSON.stringify(avwapAnchors));
+      renderChart();
+    }
   });
   // 会话:RTH(默认)/ +ETH(含盘前盘后)
   $("session-chips").addEventListener("click", (ev) => {
@@ -1188,7 +1238,8 @@ function initToolbar() {
   $("refresh-btn").addEventListener("click", () => refreshData(true));  // 手动刷新强制拉最新 bars
   renderOverlayChips();
   [...$("gex-caliber").children].forEach((b) => b.classList.toggle("active", b.dataset.c === gexCaliber));
-  [...$("avwap-anchor").children].forEach((b) => b.classList.toggle("active", b.dataset.a === avwapAnchor));
+  $("avwap-ctrl").querySelector('[data-a="add"]').classList.toggle("active", avwapAdd);
+  if (avwapAdd) $("chart").style.cursor = "crosshair";
   [...$("session-chips").children].forEach((b) => b.classList.toggle("active", (b.dataset.s === "eth") === showETH));
 }
 
