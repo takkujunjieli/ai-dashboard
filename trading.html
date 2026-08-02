@@ -68,12 +68,10 @@
   </div>
   <span class="muted small">Overlays:</span>
   <div id="overlay-chips" class="chips"></div>
-  <span class="muted small">AVWAP anchor:</span>
-  <div id="avwap-anchor" class="chips">
-    <button data-a="off" class="active">Off</button>
-    <button data-a="low">Swing Low</button>
-    <button data-a="high">Swing High</button>
-    <button data-a="start">Range Start</button>
+  <span class="muted small" title="开启后点图上任一根 bar,从那时刻起画一条锚定 VWAP(成本线);可留多条,聚拢处=强支撑/压力。按时间戳锚,切周期仍在。">AVWAP:</span>
+  <div id="avwap-ctrl" class="chips">
+    <button data-a="add" title="点击图表任一 bar 添加/删除一条锚定 VWAP">点击锚定</button>
+    <button data-a="clear" title="清除本票所有锚定 VWAP">清除</button>
   </div>
 </div>
 
