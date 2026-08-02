@@ -18,8 +18,9 @@ let gexCaliber = localStorage.getItem("wbGexCaliber") || "nominal";  // 名义 /
 const GEX_BUCKET_ORDER = ["0dte", "week", "2wk", "all"];
 const GEX_BUCKET_LABEL = { "0dte": "0DTE", week: "This Week", "2wk": "≤14d", all: "30d" };
 let chart, candles, volume, ema9L, ema21L, vwapL, bbU, bbL, vsU, vsL, avwapL, subChart, gexLine;
+let indSub, atrL, pdiL, mdiL, adxL;  // 指标副图(ATR / DMI-ADX,与价格不同量纲,单独一栏)
 let overlayOn = JSON.parse(localStorage.getItem("wbOverlays") || "null")
-  || { ema9: true, ema21: true, vwap: true, bb: false, vsig: false };  // 默认只开 EMA/VWAP,其余按需勾
+  || { ema9: true, ema21: true, vwap: true, bb: false, vsig: false, atr: false, adx: false };  // 默认只开 EMA/VWAP,其余按需勾
 let avwapAnchor = localStorage.getItem("wbAvwapAnchor") || "off";
 let showETH = localStorage.getItem("wbShowETH") === "1";  // 分时图默认只画 RTH;开则含盘前盘后
 let hoverLevels = [];       // flip / MaxPain 横线的 {name,color,price},供 hover 识别
@@ -113,6 +114,51 @@ function bollinger(closes, n = 20, k = 2) {
     up.push(m + k * sd); lo.push(m - k * sd);
   }
   return { up, lo };
+}
+
+/* Wilder 平滑(RMA):首个非空值起累积 n 个做 SMA 播种,之后 (prev*(n-1)+v)/n。保留前导 null */
+function rma(vals, n) {
+  const out = new Array(vals.length).fill(null);
+  let prev = null, sum = 0, cnt = 0;
+  for (let i = 0; i < vals.length; i++) {
+    const v = vals[i];
+    if (v == null) continue;
+    if (prev == null) { sum += v; if (++cnt === n) { prev = sum / n; out[i] = prev; } }
+    else { prev = (prev * (n - 1) + v) / n; out[i] = prev; }
+  }
+  return out;
+}
+
+/* True Range 序列(与 bars 对齐,首根为 null)。bars: [t,o,h,l,c,v] */
+function trueRanges(bars) {
+  const tr = [null];
+  for (let i = 1; i < bars.length; i++) {
+    const h = bars[i][2], l = bars[i][3], pc = bars[i - 1][4];
+    tr.push(Math.max(h - l, Math.abs(h - pc), Math.abs(l - pc)));
+  }
+  return tr;
+}
+
+/* ATR(n):真实波幅的 Wilder 平滑,价格单位、无方向。做止损距离/仓位/实现波动 */
+function atr(bars, n = 14) { return rma(trueRanges(bars), n); }
+
+/* DMI/ADX(n):+DI/−DI=方向动量,ADX=趋势强度(0–100,非方向)。ADX>25 趋势/<20 震荡 */
+function dmiAdx(bars, n = 14) {
+  const len = bars.length, pdm = [null], mdm = [null], tr = trueRanges(bars);
+  for (let i = 1; i < len; i++) {
+    const up = bars[i][2] - bars[i - 1][2];   // high − prevHigh
+    const dn = bars[i - 1][3] - bars[i][3];   // prevLow − low
+    pdm.push(up > dn && up > 0 ? up : 0);
+    mdm.push(dn > up && dn > 0 ? dn : 0);
+  }
+  const sP = rma(pdm, n), sM = rma(mdm, n), sT = rma(tr, n);
+  const pdi = [], mdi = [], dx = [];
+  for (let i = 0; i < len; i++) {
+    if (sT[i] == null || !sT[i]) { pdi.push(null); mdi.push(null); dx.push(null); continue; }
+    const p = 100 * sP[i] / sT[i], m = 100 * sM[i] / sT[i], s = p + m;
+    pdi.push(p); mdi.push(m); dx.push(s ? 100 * Math.abs(p - m) / s : 0);
+  }
+  return { pdi, mdi, adx: rma(dx, n) };
 }
 
 /* VWAP ±kσ 带:σ 为按会话累计的成交量加权标准差(每日重置),返回 {up, lo} */
@@ -220,6 +266,17 @@ function initCharts() {
   subChart = LWC.createChart($("gex-sub"), { ...chartTheme, timeScale: { ...chartTheme.timeScale, timeVisible: true } });
   gexLine = subChart.addLineSeries({ color: "#60a5fa", lineWidth: 2, priceFormat: { type: "custom", formatter: (v) => (v / 1e6).toFixed(0) + "M" } });
 
+  // 指标副图:DMI/ADX(左轴 0–100)+ ATR(右轴,价格单位)。x 轴跟随主图可见区间。
+  indSub = LWC.createChart($("ind-sub"), { ...chartTheme, timeScale: { ...chartTheme.timeScale, timeVisible: true } });
+  pdiL = indSub.addLineSeries({ color: "#34d399", lineWidth: 1, priceLineVisible: false, lastValueVisible: false });          // +DI
+  mdiL = indSub.addLineSeries({ color: "#f87171", lineWidth: 1, priceLineVisible: false, lastValueVisible: false });          // −DI
+  adxL = indSub.addLineSeries({ color: "#fbbf24", lineWidth: 2, priceLineVisible: false, lastValueVisible: false });          // ADX
+  atrL = indSub.addLineSeries({ color: "#a78bfa", lineWidth: 1, priceScaleId: "atr", priceLineVisible: false, lastValueVisible: false });
+  indSub.priceScale("atr").applyOptions({ scaleMargins: { top: 0.55, bottom: 0 } });  // ATR 压在下半,和 DMI 少重叠
+  chart.timeScale().subscribeVisibleLogicalRangeChange((r) => {  // 副图 x 轴对齐主图
+    if (r && indSub && $("ind-sub").style.display !== "none") indSub.timeScale().setVisibleLogicalRange(r);
+  });
+
   // 直接调用(不裹 rAF):后台标签页 rAF 会被节流不触发。
   // subscribeVisibleLogicalRangeChange 在图表坐标就绪后才触发,是最可靠的重画时机。
   chart.timeScale().subscribeVisibleLogicalRangeChange(renderLadder);  // VP 已并入 renderLadder
@@ -236,6 +293,8 @@ const OVERLAYS = [
   { key: "vwap", label: "VWAP", get: () => [vwapL] },
   { key: "bb", label: "BB(20,2)", get: () => [bbU, bbL] },
   { key: "vsig", label: "VWAP±σ", get: () => [vsU, vsL] },
+  { key: "adx", label: "ADX/DMI", ind: true, get: () => [pdiL, mdiL, adxL] },
+  { key: "atr", label: "ATR", ind: true, get: () => [atrL] },
 ];
 
 function applyOverlayVis() {
@@ -243,6 +302,7 @@ function applyOverlayVis() {
     const on = overlayOn[o.key] !== false;
     o.get().forEach((s) => s && s.applyOptions({ visible: on }));
   }
+  renderIndSub();  // 指标副图:按开关显隐整栏 + 填数据
 }
 
 function renderOverlayChips() {
@@ -315,6 +375,28 @@ function renderChart() {
   const visible = TF === "1d" ? 130 : TF === "1m" ? 200 : 160;
   chart.timeScale().setVisibleLogicalRange({ from: Math.max(0, bars.length - visible), to: bars.length + 3 });
   renderLadder();  // 内含 VP 叠加;setVisibleLogicalRange 也会触发 subscribe 兜底
+  renderIndSub();  // ATR / ADX 指标副图(与主图同源 bars)
+}
+
+/* ---------- 指标副图(ATR / DMI-ADX;与价格不同量纲,单独一栏)---------- */
+function renderIndSub() {
+  const el = $("ind-sub"), tt = $("ind-sub-title");
+  if (!el || !indSub) return;
+  const paneOn = overlayOn.atr || overlayOn.adx;
+  el.style.display = paneOn ? "" : "none";
+  if (tt) tt.parentElement && (tt.style.display = paneOn ? "" : "none");
+  if (!paneOn) { pdiL.setData([]); mdiL.setData([]); adxL.setData([]); atrL.setData([]); return; }
+  let bars = barsFor(SYM, TF);
+  const daily = TF === "1d";
+  if (!daily && !showETH) bars = bars.filter((b) => isRTH(b[0]));
+  const t = (b) => daily ? etDay(b[0]) : tconv(b[0]);
+  const line = (vals) => vals.map((v, i) => v == null ? null : ({ time: t(bars[i]), value: v })).filter(Boolean);
+  if (overlayOn.adx) { const { pdi, mdi, adx } = dmiAdx(bars, 14); pdiL.setData(line(pdi)); mdiL.setData(line(mdi)); adxL.setData(line(adx)); }
+  else { pdiL.setData([]); mdiL.setData([]); adxL.setData([]); }
+  atrL.setData(overlayOn.atr ? line(atr(bars, 14)) : []);
+  if (tt) tt.textContent = `${overlayOn.adx ? "ADX(14) 趋势强度 · +DI/−DI 方向" : ""}${overlayOn.adx && overlayOn.atr ? "   ·   " : ""}${overlayOn.atr ? "ATR(14) 波幅(右轴)" : ""}`;
+  const r = chart.timeScale().getVisibleLogicalRange();  // x 轴对齐主图
+  if (r) requestAnimationFrame(() => { try { indSub.timeScale().setVisibleLogicalRange(r); } catch { /* 容器刚显示、尺寸未就绪 */ } });
 }
 
 /* ---------- 盘中净 GEX 副图(按所选到期桶) ---------- */
