@@ -97,27 +97,29 @@ def main() -> None:
         write(out)
         return
 
-    hits: dict = {sym: [] for sym in watchlist}
+    # 按 (票, 机构, 季度) 聚合:一份 13F 里同一 issuer 可能多行(子账户/管理人),求和为总持仓。
+    # 跳过期权行(put_call),只算长股(避免把 call/put notional 混进持股)。
+    agg: dict = {}
     for cik, fname in CURATED.items():
         for h in filer_holdings(cik):
             sym = norm2sym.get(norm(h.get("issuer_name")))
-            if not sym:
+            if not sym or h.get("put_call"):
                 continue
-            typ = h.get("shares_or_principal_type")
-            hits[sym].append({
-                "filer": fname, "cik": cik, "period": h.get("period"),
-                "shares": h.get("shares_or_principal_amount") if typ == "SH" else None,
-                "value": h.get("market_value"),
-                "put_call": h.get("put_call"),
-            })
+            k = (sym, cik, h.get("period"))
+            a = agg.setdefault(k, {"filer": fname, "shares": 0, "value": 0})
+            if h.get("shares_or_principal_type") == "SH" and h.get("shares_or_principal_amount"):
+                a["shares"] += h["shares_or_principal_amount"]
+            if h.get("market_value"):
+                a["value"] += h["market_value"]
 
-    # 每票:留近 N 个季度;同 (filer,period) 只留一条(重复合并取最大 value)
-    for sym, lst in hits.items():
-        if not lst:
-            continue
+    per: dict = {}
+    for (sym, cik, period), a in agg.items():
+        per.setdefault(sym, []).append({"filer": a["filer"], "cik": cik, "period": period,
+                                        "shares": a["shares"], "value": a["value"]})
+    for sym, lst in per.items():
         periods = sorted({e["period"] for e in lst if e["period"]}, reverse=True)[:N_QUARTERS]
-        keep = [e for e in lst if e["period"] in periods]
-        keep.sort(key=lambda e: (e["filer"], e["period"]), reverse=True)
+        keep = sorted([e for e in lst if e["period"] in periods],
+                      key=lambda e: (e["filer"], e["period"]), reverse=True)
         out["tickers"][sym] = {"periods": periods, "holdings": keep}
 
     write(out)
