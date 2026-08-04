@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""探针3:13F 整个数据集到底多大?无过滤分页到底(或时间盒 150s),
-统计总行数、覆盖的 period 集合、distinct filer 数、AMD(007903107)是否出现。只读。"""
+"""探针4:按 filer_cik 查单个大机构——决定 Option B 可行性。
+每家报:持仓行数、覆盖的 period(历史深度)、是否含 AMD。只读。"""
 import os
-import time
 
 import requests
 
@@ -11,34 +10,32 @@ BASE = os.environ.get("MASSIVE_BASE_URL", "https://api.massive.com").rstrip("/")
 H = {"Authorization": f"Bearer {KEY}"}
 EP = "/stocks/filings/vX/13-F"
 AMD = "007903107"
+FILERS = {
+    "Berkshire Hathaway": "0001067983",
+    "Vanguard Group": "0000102909",
+    "BlackRock": "0001364742",
+    "Renaissance Tech": "0001037389",
+    "State Street": "0000093751",
+}
 
-print(f"BASE={BASE}\n== 无过滤全量分页(时间盒 150s,limit=1000)==")
-url = f"{BASE}{EP}?limit=1000&apiKey={KEY}"
-rows = pages = 0
-periods, filers = {}, set()
-amd_hits = 0
-t0 = time.time()
-exhausted = False
-while url and time.time() - t0 < 150:
-    d = requests.get(url, headers=H, timeout=45).json()
-    res = d.get("results") or []
-    rows += len(res)
-    pages += 1
-    for x in res:
-        p = x.get("period"); periods[p] = periods.get(p, 0) + 1
-        filers.add(x.get("filer_cik"))
-        if x.get("cusip") == AMD:
-            amd_hits += 1
-    nxt = d.get("next_url")
-    if not nxt:
-        exhausted = True
-        break
-    url = nxt + (f"&apiKey={KEY}" if "apiKey" not in nxt else "")
-
-el = time.time() - t0
-print(f"结果:{pages} 页 · {rows} 行 · {el:.0f}s · {'✅已到底(这就是全量)' if exhausted else '⏱仍有更多(≥ 上述)'}")
-print(f"distinct filer_cik: {len(filers)}")
-print(f"AMD(007903107)出现次数: {amd_hits}")
-print(f"period 分布(top10): {sorted(periods.items(), key=lambda kv: -kv[1])[:10]}")
-if not exhausted and rows:
-    print(f"速率 ~{rows/el:.0f} 行/s;若要全扫,需 总行数/速率 秒")
+print(f"BASE={BASE}\n")
+for name, cik in FILERS.items():
+    url = f"{BASE}{EP}?filer_cik={cik}&limit=1000&apiKey={KEY}"
+    rows, pages, periods, amd = 0, 0, {}, 0
+    while url and pages < 6:
+        try:
+            d = requests.get(url, headers=H, timeout=45).json()
+        except Exception as e:  # noqa: BLE001
+            print(f"{name:20} ERR {str(e)[:70]}"); break
+        res = d.get("results") or []
+        rows += len(res); pages += 1
+        for x in res:
+            periods[x.get("period")] = periods.get(x.get("period"), 0) + 1
+            if x.get("cusip") == AMD:
+                amd += 1
+        nxt = d.get("next_url")
+        if not nxt:
+            break
+        url = nxt + (f"&apiKey={KEY}" if "apiKey" not in nxt else "")
+    ps = sorted([p for p in periods if p], reverse=True)
+    print(f"{name:20} rows={rows:5}  periods={len(ps)} {ps[:6]}  AMD持仓={amd}")
