@@ -1,0 +1,147 @@
+{
+ "updated_at": "2026-08-05T19:06:52+00:00",
+ "filers": {
+  "0001067983": "Berkshire Hathaway",
+  "0001037389": "Renaissance Technologies",
+  "0001423053": "Citadel Advisors",
+  "0001179392": "Two Sigma",
+  "0001350694": "Bridgewater Associates",
+  "0001603466": "Point72",
+  "0001167483": "Tiger Global",
+  "0001135730": "Coatue Management",
+  "0001273087": "Millennium Management",
+  "0001009207": "D.E. Shaw",
+  "0000102909": "Vanguard Group",
+  "0001364742": "BlackRock",
+  "0000093751": "State Street"
+ },
+ "tickers": {
+  "CCL": {
+   "periods": [
+    "2026-03-31"
+   ],
+   "holdings": [
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-03-31",
+     "shares": 5240370,
+     "value": 135330148
+    }
+   ]
+  },
+  "FIG": {
+   "periods": [
+    "2026-03-31"
+   ],
+   "holdings": [
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-03-31",
+     "shares": 634500,
+     "value": 13413330
+    }
+   ]
+  },
+  "U": {
+   "periods": [
+    "2026-03-31"
+   ],
+   "holdings": [
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-03-31",
+     "shares": 2485597,
+     "value": 54534000
+    }
+   ]
+  },
+  "AAOI": {
+   "periods": [
+    "2026-03-31"
+   ],
+   "holdings": [
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-03-31",
+     "shares": 565279,
+     "value": 47816951
+    }
+   ]
+  },
+  "NOW": {
+   "periods": [
+    "2026-03-31"
+   ],
+   "holdings": [
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-03-31",
+     "shares": 1206018,
+     "value": 126089212
+    }
+   ]
+  },
+  "INTC": {
+   "periods": [
+    "2026-03-31"
+   ],
+   "holdings": [
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-03-31",
+     "shares": 7399394,
+     "value": 326535257
+    }
+   ]
+  },
+  "MU": {
+   "periods": [
+    "2026-03-31"
+   ],
+   "holdings": [
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-03-31",
+     "shares": 2162986,
+     "value": 730739401
+    }
+   ]
+  },
+  "NVDA": {
+   "periods": [
+    "2026-03-31"
+   ],
+   "holdings": [
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-03-31",
+     "shares": 2526948,
+     "value": 440696066
+    }
+   ]
+  },
+  "AMD": {
+   "periods": [
+    "2026-03-31"
+   ],
+   "holdings": [
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-03-31",
+     "shares": 216944,
+     "value": 42841643
+    }
+   ]
+  }
+ },
+ "errors": []
+}
