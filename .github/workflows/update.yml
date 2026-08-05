@@ -28,6 +28,12 @@ jobs:
         env:
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
 
+      - name: 抓取精选机构 13F 持仓 (季度更新,低频)
+        run: python scripts/fetch_13f.py
+        env:
+          MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+          MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
+
       # news/discussion 一天一次(现只剩收盘后一次 cron + 手动触发)
       - name: 抓取 RSS 信息流
         run: python scripts/fetch_feeds.py

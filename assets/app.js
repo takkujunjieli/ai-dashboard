@@ -1,6 +1,6 @@
 /* 信息页 — 阅读型内容:主页(行情/EPS/评级)、新闻、社区 */
 import {
-  $, esc, fmtDT, timeAgo, CAT_LABEL, SENTI, loadJSON, loadFreshJSON,
+  $, esc, fmtDT, fmtMoney, timeAgo, CAT_LABEL, SENTI, loadJSON, loadFreshJSON,
 } from "./shared.js";
 
 const SOCIAL_CATS = ["community", "kol", "youtube"];
@@ -8,6 +8,7 @@ const SOCIAL_CATS = ["community", "kol", "youtube"];
 let MARKET = null;   // Finnhub: 行情/财报/评级/公司新闻
 let FEEDS = null;    // RSS: 新闻/社区/大V
 let RESEARCH = null; // 只用它的 snapshots(实时行情)和 news(情绪新闻)
+let HOLD13F = null;  // 精选机构 13F 持仓
 let socialCat = "all";
 // 全局股票筛选(多选),空集 = 全部;记住上次的选择。票的增减在交易台「标的配置」操作。
 let selected = new Set(JSON.parse(localStorage.getItem("tickerFilter") || "[]"));
@@ -46,47 +47,38 @@ function feedMatches(i) {
   });
 }
 
-/* ---------- 主页: 最近财报 EPS ---------- */
-function renderSurprises(m) {
-  const data = m.earnings_surprises || {};
-  const cards = Object.entries(data)
-    .filter(([sym, v]) => isSel(sym) && Array.isArray(v) && v.length)
-    .map(([sym, list]) => {
-      const rows = list.slice(0, 4).map((r) => {
-        const pct = r.surprisePercent;
-        const cls = pct == null ? "" : pct >= 0 ? "up" : "down";
-        return `<tr>
-          <td>${esc(r.period ?? "")}</td>
-          <td>${r.actual?.toFixed(2) ?? "—"}</td>
-          <td>${r.estimate?.toFixed(2) ?? "—"}</td>
-          <td class="${cls}">${pct == null ? "—" : (pct >= 0 ? "+" : "") + pct.toFixed(1) + "%"}</td>
-        </tr>`;
-      }).join("");
-      return `<div class="card"><b>${esc(sym)}</b>
-        <table><tr><th>Quarter</th><th>Actual</th><th>Est.</th><th>Surprise</th></tr>${rows}</table>
-      </div>`;
-    });
-  $("earnings-surprises").innerHTML = cards.join("") || `<div class="card empty">No data</div>`;
+/* ---------- 主页: 精选机构 13F 持仓 ---------- */
+function qLabel(p) { const [y, m] = p.split("-"); return `Q${Math.ceil(+m / 3)}'${y.slice(2)}`; }
+function fmtShares(n) {
+  return n == null ? "—" : n >= 1e6 ? (n / 1e6).toFixed(2) + "M" : n >= 1e3 ? (n / 1e3).toFixed(0) + "K" : String(n);
 }
-
-/* ---------- 主页: 分析师评级 ---------- */
-function renderRecommendations(m) {
-  const data = m.recommendations || {};
-  const rows = Object.entries(data)
-    .filter(([sym, v]) => isSel(sym) && Array.isArray(v) && v.length)
-    .map(([sym, list]) => {
-      const r = list[0]; // 最新一期
-      const total = (r.strongBuy + r.buy + r.hold + r.sell + r.strongSell) || 1;
-      const seg = (n, cls) => n ? `<div class="${cls}" style="width:${(n / total * 100).toFixed(1)}%"></div>` : "";
-      return `<div class="rec-row">
-        <div class="rec-sym">${esc(sym)}</div>
-        <div class="rec-bar">
-          ${seg(r.strongBuy, "rb-sbuy")}${seg(r.buy, "rb-buy")}${seg(r.hold, "rb-hold")}${seg(r.sell, "rb-sell")}${seg(r.strongSell, "rb-ssell")}
-        </div>
-        <div class="rec-nums">Str.Buy ${r.strongBuy} · Buy ${r.buy} · Hold ${r.hold} · Sell ${r.sell} · Str.Sell ${r.strongSell}</div>
-      </div>`;
+function render13f() {
+  const d = HOLD13F || {};
+  const cards = Object.entries(d.tickers || {})
+    .filter(([sym]) => isSel(sym))
+    .map(([sym, v]) => {
+      const periods = (v.periods || []).slice(0, 4);   // 最近在前
+      const byFiler = {};                               // filer → {period: holding}
+      for (const h of v.holdings || []) (byFiler[h.filer] ||= {})[h.period] = h;
+      const head = `<tr><th>Fund</th>${periods.map((p) => `<th>${qLabel(p)}</th>`).join("")}</tr>`;
+      const rows = Object.entries(byFiler).map(([f, ps]) => {
+        const cells = periods.map((p, i) => {
+          const h = ps[p];
+          if (!h) return `<td class="muted">—</td>`;
+          const prev = ps[periods[i + 1]];               // 更老一季,算环比
+          let arrow = "";
+          if (prev && prev.shares && h.shares) {
+            const ch = (h.shares - prev.shares) / prev.shares;
+            if (Math.abs(ch) >= 0.02) arrow = ` <span class="${ch > 0 ? "up" : "down"}">${ch > 0 ? "▲" : "▼"}${Math.abs(ch * 100).toFixed(0)}%</span>`;
+          }
+          return `<td title="${fmtMoney(h.value)}">${fmtShares(h.shares)}${arrow}</td>`;
+        }).join("");
+        return `<tr><td>${esc(f)}</td>${cells}</tr>`;
+      }).join("");
+      return `<div class="card"><b>${esc(sym)}</b> <span class="muted small">持股(环比)· 市值见 hover</span>
+        <table>${head}${rows}</table></div>`;
     });
-  $("recommendations").innerHTML = rows.join("") || `<div class="empty">No data</div>`;
+  $("holdings13f").innerHTML = cards.join("") || `<div class="card empty">暂无精选机构持仓(或 13F 未采集)</div>`;
 }
 
 /* ---------- 新闻页: 财报日历 ---------- */
@@ -230,10 +222,9 @@ function initTabs() {
 
 function renderAll() {
   renderTickerFilter();
+  render13f();
   if (MARKET) {
     renderCalendar(MARKET);
-    renderSurprises(MARKET);
-    renderRecommendations(MARKET);
     renderCompanyNews(MARKET);
   }
   if (FEEDS) { renderNewsFeeds(); renderSocial(); }
@@ -246,10 +237,11 @@ function renderAll() {
   initTickerFilter();
   initSocialFilters();
 
-  [MARKET, FEEDS, RESEARCH] = await Promise.all([
+  [MARKET, FEEDS, RESEARCH, HOLD13F] = await Promise.all([
     loadJSON("data/market.json"),
     loadJSON("data/feeds.json"),
     loadFreshJSON("data/research.json"),
+    loadJSON("data/holdings13f.json"),
   ]);
 
   // watchlist 变动后清掉已失效的选择
