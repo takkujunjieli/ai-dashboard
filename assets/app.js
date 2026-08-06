@@ -54,6 +54,14 @@ function fmtShares(n) {
 }
 function render13f() {
   const d = HOLD13F || {};
+  // 数据期:所有票 period 的并集(季末日 = 持仓"截至"时点),标出覆盖区间 + 最新截至日 + 采集时间
+  const allP = [...new Set(Object.values(d.tickers || {}).flatMap((v) => v.periods || []))].sort();
+  const pn = $("h13f-period");
+  if (pn) {
+    pn.textContent = allP.length
+      ? `数据期 ${qLabel(allP[0])}${allP.length > 1 ? "–" + qLabel(allP.at(-1)) : ""} · 最新截至 ${allP.at(-1)}${d.updated_at ? " · 采集 " + fmtDT(d.updated_at) : ""}`
+      : "";
+  }
   const cards = Object.entries(d.tickers || {})
     .filter(([sym]) => isSel(sym))
     .map(([sym, v]) => {
