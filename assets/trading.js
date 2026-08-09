@@ -8,6 +8,8 @@ const LWC = window.LightweightCharts;
 const ET = "America/New_York";
 
 let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null, PORTFOLIO = null;
+let pfFilter = null;          // Portfolio 饼图选中的 sym → 交易明细按它 filter
+const PF_MIN_VALUE = 1000;    // 饼图只显示市值 ≥ 此的持仓
 let CFG = { watchlist: [], deep: [] };  // 标的分组,来自 config/tickers.json,卡片开关就地编辑
 let SYM = localStorage.getItem("wbSym") || null;
 let TF = localStorage.getItem("wbTf") || "5m";
@@ -950,26 +952,28 @@ function renderOptPanel() {
 }
 
 /* ---------- Portfolio(本地专用:券商持仓饼图 + 汇总磁贴 + 交易明细)---------- */
-function buildDonut(pos, total) {
-  const sorted = [...pos].sort((a, b) => b.mkt_value - a.mkt_value);
-  const slices = []; let other = 0;
-  sorted.forEach((x, i) => {
-    (i < 8 && x.mkt_value / total >= 0.02) ? slices.push({ sym: x.sym, val: x.mkt_value }) : (other += x.mkt_value);
-  });
-  if (other > 0) slices.push({ sym: "其他", val: other });
+// 均匀色相生成,slice 任意数量都可区分(暗色主题友好)
+const pfColor = (i, n) => `hsl(${Math.round(i * 360 / Math.max(n, 1))} 62% 58%)`;
+
+/* 饼图:只画市值 ≥ PF_MIN_VALUE 的持仓,每块可点(data-sym)。选中(pfFilter)时高亮该块、其余暗化。 */
+function buildDonut(pos) {
+  const slices = pos.filter((x) => x.mkt_value >= PF_MIN_VALUE).sort((a, b) => b.mkt_value - a.mkt_value);
+  const total = slices.reduce((s, x) => s + x.mkt_value, 0);
+  if (!slices.length || !total) return `<div class="muted small">无 ≥$${PF_MIN_VALUE} 的持仓可画饼图</div>`;
   const R = 88, r = 54, cx = 100, cy = 100, TAU = Math.PI * 2;
   const pt = (rad, a) => `${(cx + rad * Math.cos(a)).toFixed(2)},${(cy + rad * Math.sin(a)).toFixed(2)}`;
   let ang = -Math.PI / 2;
   const arcs = [], legend = [];
   slices.forEach((s, i) => {
-    const frac = s.val / total, a0 = ang, a1 = ang + TAU * frac; ang = a1;
-    const col = AVWAP_COLORS[i % AVWAP_COLORS.length], large = (a1 - a0) > Math.PI ? 1 : 0;
-    arcs.push(`<path d="M${pt(R, a0)} A${R} ${R} 0 ${large} 1 ${pt(R, a1)} L${pt(r, a1)} A${r} ${r} 0 ${large} 0 ${pt(r, a0)} Z" fill="${col}" opacity="0.9"><title>${esc(s.sym)}: ${fmtMoney(s.val)} (${(frac * 100).toFixed(1)}%)</title></path>`);
-    legend.push(`<div class="pf-leg"><span class="pf-sw" style="background:${col}"></span>${esc(s.sym)} <span class="muted">${(frac * 100).toFixed(0)}%</span></div>`);
+    const frac = s.val = s.mkt_value / total, a0 = ang, a1 = ang + TAU * frac; ang = a1;
+    const col = pfColor(i, slices.length), large = (a1 - a0) > Math.PI ? 1 : 0;
+    const sel = pfFilter === s.sym, dim = pfFilter && !sel;
+    arcs.push(`<path class="pf-slice${sel ? " sel" : ""}" data-sym="${esc(s.sym)}" d="M${pt(R, a0)} A${R} ${R} 0 ${large} 1 ${pt(R, a1)} L${pt(r, a1)} A${r} ${r} 0 ${large} 0 ${pt(r, a0)} Z" fill="${col}" opacity="${dim ? 0.28 : 0.9}"${sel ? ' stroke="#e5e9f0" stroke-width="1.5"' : ""}><title>${esc(s.sym)}: ${fmtMoney(s.mkt_value)} (${(frac * 100).toFixed(1)}%)</title></path>`);
+    legend.push(`<div class="pf-leg${sel ? " sel" : ""}" data-sym="${esc(s.sym)}"><span class="pf-sw" style="background:${col}"></span>${esc(s.sym)} <span class="muted">${(frac * 100).toFixed(0)}%</span></div>`);
   });
   return `<div class="pf-donut"><svg viewBox="0 0 200 200" width="200" height="200">${arcs.join("")}` +
     `<text x="100" y="97" text-anchor="middle" fill="#e5e9f0" font-size="15" font-weight="600">${fmtMoney(total)}</text>` +
-    `<text x="100" y="113" text-anchor="middle" fill="#8b96ad" font-size="10">总市值</text></svg>` +
+    `<text x="100" y="113" text-anchor="middle" fill="#8b96ad" font-size="10">≥$${(PF_MIN_VALUE / 1000).toFixed(0)}K 持仓</text></svg>` +
     `<div class="pf-legend">${legend.join("")}</div></div>`;
 }
 
@@ -978,6 +982,7 @@ function renderPortfolio() {
   if (!el) return;
   const p = PORTFOLIO, pos = (p?.positions || []).filter((x) => x.mkt_value != null);
   if (!pos.length) {
+    pfFilter = null;
     el.innerHTML = `<div class="card empty">本地视图专用 — 认证券商后跑 <code>scripts/build_portfolio.py</code>,在 localhost 查看。公开站不显示持仓。</div>`;
     return;
   }
@@ -991,16 +996,21 @@ function renderPortfolio() {
     tile("券商", (p.brokers || []).join("/") || "—"),
     tile("更新", p.updated_at ? fmtDT(p.updated_at) : "—"),
   ].join("");
-  const txns = (p.transactions || []).slice(0, 40);
+  let txns = p.transactions || [];
+  if (pfFilter) txns = txns.filter((t) => t.sym === pfFilter);
+  txns = txns.slice(0, 60);
+  const chip = pfFilter
+    ? `<button id="pf-clear" class="pf-chip">筛选 ${esc(pfFilter)} <span class="muted">✕</span></button>`
+    : `<span class="muted small">点饼图某块 → 只看该票交易</span>`;
   const txRows = txns.map((t) => `<tr>
       <td>${t.ts ? fmtDT(t.ts) : "—"}</td><td>${esc(t.broker || "")}</td><td>${esc(t.sym || "")}</td>
       <td class="${t.side === "buy" ? "up" : t.side === "sell" ? "down" : ""}">${esc(t.side || "—")}</td>
       <td>${t.qty != null ? fmtNum(t.qty) : "—"}</td><td>${t.price != null ? "$" + t.price : "—"}</td></tr>`).join("");
-  const txTable = txns.length
-    ? `<details open><summary class="muted small">交易明细 (${txns.length})</summary>
-       <table class="bt-table"><tr><th>时间</th><th>来源</th><th>代码</th><th>方向</th><th>数量</th><th>价格</th></tr>${txRows}</table></details>`
-    : `<div class="muted small">无交易记录</div>`;
-  el.innerHTML = `<div class="card"><div class="opt-grid">${tiles}</div>${buildDonut(pos, total)}${txTable}</div>`;
+  const txTable = `<details open><summary class="muted small">交易明细 (${txns.length})</summary>
+       <div class="pf-txhead">${chip}</div>
+       ${txns.length ? `<table class="bt-table"><tr><th>时间</th><th>来源</th><th>代码</th><th>方向</th><th>数量</th><th>价格</th></tr>${txRows}</table>`
+    : `<div class="muted small">${pfFilter ? esc(pfFilter) + " 无交易记录" : "无交易记录"}</div>`}</details>`;
+  el.innerHTML = `<div class="card"><div class="opt-grid">${tiles}</div>${buildDonut(pos)}${txTable}</div>`;
 }
 
 /* ---------- 错误 ---------- */
@@ -1284,6 +1294,15 @@ function initToolbar() {
     localStorage.setItem("wbShowETH", showETH ? "1" : "0");
     [...$("session-chips").children].forEach((b) => b.classList.toggle("active", b === btn));
     renderChart();
+  });
+  // Portfolio 饼图/图例点击 → 交易明细按该票 filter(再点同块或 ✕ 清除)。委托到常驻容器 #portfolio。
+  $("portfolio").addEventListener("click", (ev) => {
+    if (ev.target.closest("#pf-clear")) { pfFilter = null; renderPortfolio(); return; }
+    const hit = ev.target.closest("[data-sym]");
+    if (!hit) return;
+    const sym = hit.dataset.sym;
+    pfFilter = (pfFilter === sym) ? null : sym;   // 点已选中的 → 取消
+    renderPortfolio();
   });
   // 本周历史 GEX 快照:选某日看当日墙(当周到期);data-day="" = Live/最新
   $("gex-week-chips").addEventListener("click", (ev) => {

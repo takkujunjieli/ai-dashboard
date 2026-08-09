@@ -213,8 +213,14 @@ footer { margin-top: 50px; text-align: center; }
 /* Portfolio 饼图 + 图例 */
 .pf-donut { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
 .pf-legend { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
-.pf-leg { display: flex; align-items: center; gap: 6px; }
+.pf-leg { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 1px 4px; border-radius: 4px; }
+.pf-leg:hover { background: var(--card-hover); }
+.pf-leg.sel { background: var(--card-hover); font-weight: 600; }
 .pf-sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex: none; }
+.pf-slice { cursor: pointer; transition: opacity .12s; }
+.pf-txhead { margin: 4px 0 6px; }
+.pf-chip { background: var(--accent); color: #0b1220; border: none; border-radius: 12px; padding: 2px 10px; font-size: 12px; cursor: pointer; }
+.pf-chip .muted { color: #0b1220; opacity: .6; }
 #gex-exp button.bucket-empty { opacity: .38; text-decoration: line-through; }  /* 该到期桶当前无合约 */
 .wb-overlays { gap: 8px; }
 .wb-overlays .chips button { font-size: 11px; padding: 3px 9px; }
