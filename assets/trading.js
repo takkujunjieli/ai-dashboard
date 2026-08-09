@@ -956,13 +956,18 @@ function renderOptPanel() {
 // 均匀色相生成,slice 任意数量都可区分(暗色主题友好)
 const pfColor = (i, n) => `hsl(${Math.round(i * 360 / Math.max(n, 1))} 62% 58%)`;
 
-/* 饼图:只画规模 ≥ PF_MIN_VALUE 的持仓,每块可点(data-sym)。选中(pfFilter)时高亮该块、其余暗化。
-   value 取每块的正数规模(多头=市值,空头=|市值|);centerSub 是环心下方说明。 */
+/* 饼图:只画规模 ≥ PF_MIN_VALUE 的持仓,每块可点(data-sym)。value 取每块正数规模(多头=市值,
+   空头=|市值|)决定占比;centerSub 是环心默认说明。环心默认显示本饼图总仓位(有符号市值合计),
+   点中的票在本饼图时改显该票仓位、其余暗化;点中的票不在本饼图则该饼图保持显示总仓位。 */
 function buildDonut(items, { value = (x) => x.mkt_value, centerSub, emptyMsg } = {}) {
   const slices = items.map((x) => ({ x, v: value(x) })).filter((o) => o.v >= PF_MIN_VALUE)
     .sort((a, b) => b.v - a.v);
   const total = slices.reduce((s, o) => s + o.v, 0);
   if (!slices.length || !total) return emptyMsg ? `<div class="muted small">${emptyMsg}</div>` : "";
+  const dispTotal = slices.reduce((s, o) => s + o.x.mkt_value, 0);   // 有符号实际市值合计(空头为负)
+  const selSlice = pfFilter ? slices.find((o) => o.x.sym === pfFilter) : null;  // 选中的票在本饼图里?
+  const centerBig = fmtMoney(selSlice ? selSlice.x.mkt_value : dispTotal);
+  const centerSmall = selSlice ? selSlice.x.sym : centerSub;
   const R = 88, r = 54, cx = 100, cy = 100, TAU = Math.PI * 2;
   const pt = (rad, a) => `${(cx + rad * Math.cos(a)).toFixed(2)},${(cy + rad * Math.sin(a)).toFixed(2)}`;
   let ang = -Math.PI / 2;
@@ -970,13 +975,13 @@ function buildDonut(items, { value = (x) => x.mkt_value, centerSub, emptyMsg } =
   slices.forEach((o, i) => {
     const s = o.x, frac = o.v / total, a0 = ang, a1 = ang + TAU * frac; ang = a1;
     const col = pfColor(i, slices.length), large = (a1 - a0) > Math.PI ? 1 : 0;
-    const sel = pfFilter === s.sym, dim = pfFilter && !sel;
-    arcs.push(`<path class="pf-slice${sel ? " sel" : ""}" data-sym="${esc(s.sym)}" d="M${pt(R, a0)} A${R} ${R} 0 ${large} 1 ${pt(R, a1)} L${pt(r, a1)} A${r} ${r} 0 ${large} 0 ${pt(r, a0)} Z" fill="${col}" opacity="${dim ? 0.28 : 0.9}"${sel ? ' stroke="#e5e9f0" stroke-width="1.5"' : ""}><title>${esc(s.sym)}: ${fmtMoney(o.v)} (${(frac * 100).toFixed(1)}%)</title></path>`);
+    const sel = pfFilter === s.sym, dim = selSlice && !sel;   // 仅当选中的票在本饼图时才暗化其余
+    arcs.push(`<path class="pf-slice${sel ? " sel" : ""}" data-sym="${esc(s.sym)}" d="M${pt(R, a0)} A${R} ${R} 0 ${large} 1 ${pt(R, a1)} L${pt(r, a1)} A${r} ${r} 0 ${large} 0 ${pt(r, a0)} Z" fill="${col}" opacity="${dim ? 0.28 : 0.9}"${sel ? ' stroke="#e5e9f0" stroke-width="1.5"' : ""}><title>${esc(s.sym)}: ${fmtMoney(o.x.mkt_value)} (${(frac * 100).toFixed(1)}%)</title></path>`);
     legend.push(`<div class="pf-leg${sel ? " sel" : ""}" data-sym="${esc(s.sym)}"><span class="pf-sw" style="background:${col}"></span>${esc(s.sym)} <span class="muted">${(frac * 100).toFixed(0)}%</span></div>`);
   });
   return `<div class="pf-donut"><svg viewBox="0 0 200 200" width="200" height="200">${arcs.join("")}` +
-    `<text x="100" y="97" text-anchor="middle" fill="#e5e9f0" font-size="15" font-weight="600">${fmtMoney(total)}</text>` +
-    (centerSub ? `<text x="100" y="113" text-anchor="middle" fill="#8b96ad" font-size="10">${centerSub}</text>` : "") +
+    `<text x="100" y="97" text-anchor="middle" fill="#e5e9f0" font-size="15" font-weight="600">${centerBig}</text>` +
+    (centerSmall ? `<text x="100" y="113" text-anchor="middle" fill="#8b96ad" font-size="10">${esc(centerSmall)}</text>` : "") +
     `</svg><div class="pf-legend">${legend.join("")}</div></div>`;
 }
 
@@ -1032,19 +1037,21 @@ function renderPortfolio() {
        <div class="pf-txhead">${chip}</div>
        ${txns.length ? `<table class="bt-table"><tr><th>时间</th><th>种类</th><th>代码</th><th>方向</th><th>数量</th><th>价格</th><th>持仓变化</th></tr>${txRows}</table>`
     : `<div class="muted small">${pfFilter ? esc(pfFilter) + " 无交易记录" : "无交易记录"}</div>`}</details>`;
-  // 多头饼图(市值) + 空头饼图(按 |市值|,有做空仓位才显示)
+  // 多头饼图(市值) + 空头饼图(按 |市值|,有做空仓位才显示)。标题右侧显示该饼图总仓位。
   const longs = pos.filter((x) => x.mkt_value > 0);
   const shorts = pos.filter((x) => x.mkt_value < 0);
   const K = `≥$${(PF_MIN_VALUE / 1000).toFixed(0)}K`;
-  const longDonut = buildDonut(longs, { centerSub: shorts.length ? `多头 ${K}` : `${K} 持仓`,
-    emptyMsg: `无 ${K} 的持仓可画饼图` });
+  const longTotal = longs.filter((x) => x.mkt_value >= PF_MIN_VALUE).reduce((s, x) => s + x.mkt_value, 0);
+  const shortTotal = shorts.filter((x) => -x.mkt_value >= PF_MIN_VALUE).reduce((s, x) => s + x.mkt_value, 0);
+  const cap = (name, tot) => `<div class="pf-pie-cap muted small">${name} <span class="pf-cap-tot">${fmtMoney(tot)}</span></div>`;
+  const longBox = `<div class="pf-pie">${cap("多头", longTotal)}`
+    + `${buildDonut(longs, { centerSub: K, emptyMsg: `无 ${K} 的持仓可画饼图` })}</div>`;
   const donuts = shorts.length
-    ? `<div class="pf-pies">`
-      + `<div class="pf-pie"><div class="pf-pie-cap muted small">多头</div>${longDonut}</div>`
-      + `<div class="pf-pie"><div class="pf-pie-cap muted small">空头(做空 · 按 |市值|)</div>`
-      + `${buildDonut(shorts, { value: (x) => -x.mkt_value, centerSub: `空头 ${K}`, emptyMsg: `无 ${K} 的做空仓位` })}</div>`
+    ? `<div class="pf-pies">${longBox}`
+      + `<div class="pf-pie">${cap("空头", shortTotal)}`
+      + `${buildDonut(shorts, { value: (x) => -x.mkt_value, centerSub: K, emptyMsg: `无 ${K} 的做空仓位` })}</div>`
       + `</div>`
-    : longDonut;
+    : `<div class="pf-pies">${longBox}</div>`;
   el.innerHTML = `<div class="card">${acctBar}<div class="opt-grid">${tiles}</div>${donuts}${txTable}</div>`;
 }
 
