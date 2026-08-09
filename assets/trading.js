@@ -1052,8 +1052,16 @@ function renderPortfolio() {
        ${txTotal ? `<table class="bt-table"><tr><th>时间</th><th>种类</th><th>代码</th><th>方向</th><th>数量</th><th>价格</th><th>持仓变化</th></tr>${txRows}</table>${pager}`
     : `<div class="muted small">${pfFilter ? esc(pfFilter) + " 无交易记录" : "无交易记录"}</div>`}</details>`;
   // 多头饼图(市值) + 空头饼图(按 |市值|,有做空仓位才显示)。标题右侧显示该饼图总仓位。
-  const longs = pos.filter((x) => x.mkt_value > 0);
-  const shorts = pos.filter((x) => x.mkt_value < 0);
+  // 全部账户时同一股票会来自多个账户 → 画饼前按 sym 合并(市值/盈亏/数量相加),避免同票裂成多块。
+  const bySym = new Map();
+  for (const x of pos) {
+    const e = bySym.get(x.sym);
+    if (e) { e.mkt_value += x.mkt_value; e.pnl = (e.pnl || 0) + (x.pnl || 0); e.qty = (e.qty || 0) + (x.qty || 0); }
+    else bySym.set(x.sym, { sym: x.sym, mkt_value: x.mkt_value, pnl: x.pnl, qty: x.qty });
+  }
+  const mergedPos = [...bySym.values()];
+  const longs = mergedPos.filter((x) => x.mkt_value > 0);
+  const shorts = mergedPos.filter((x) => x.mkt_value < 0);
   const K = `≥$${(PF_MIN_VALUE / 1000).toFixed(0)}K`;
   const longTotal = longs.filter((x) => x.mkt_value >= PF_MIN_VALUE).reduce((s, x) => s + x.mkt_value, 0);
   const shortTotal = shorts.filter((x) => -x.mkt_value >= PF_MIN_VALUE).reduce((s, x) => s + x.mkt_value, 0);
