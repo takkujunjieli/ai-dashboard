@@ -3,3 +3,8 @@ __pycache__/
 venv/
 .DS_Store
 .env
+
+# 本地专用:券商持仓/交易,绝不提交进公开 repo
+data/portfolio.json
+data/portfolio_history.json
+data/_*_raw.json

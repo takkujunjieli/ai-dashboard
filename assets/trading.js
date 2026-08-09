@@ -7,7 +7,7 @@ import {
 const LWC = window.LightweightCharts;
 const ET = "America/New_York";
 
-let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null;
+let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null, PORTFOLIO = null;
 let CFG = { watchlist: [], deep: [] };  // 标的分组,来自 config/tickers.json,卡片开关就地编辑
 let SYM = localStorage.getItem("wbSym") || null;
 let TF = localStorage.getItem("wbTf") || "5m";
@@ -949,6 +949,60 @@ function renderOptPanel() {
   $("opt-panel").innerHTML = `<div class="card">${body}</div>`;
 }
 
+/* ---------- Portfolio(本地专用:券商持仓饼图 + 汇总磁贴 + 交易明细)---------- */
+function buildDonut(pos, total) {
+  const sorted = [...pos].sort((a, b) => b.mkt_value - a.mkt_value);
+  const slices = []; let other = 0;
+  sorted.forEach((x, i) => {
+    (i < 8 && x.mkt_value / total >= 0.02) ? slices.push({ sym: x.sym, val: x.mkt_value }) : (other += x.mkt_value);
+  });
+  if (other > 0) slices.push({ sym: "其他", val: other });
+  const R = 88, r = 54, cx = 100, cy = 100, TAU = Math.PI * 2;
+  const pt = (rad, a) => `${(cx + rad * Math.cos(a)).toFixed(2)},${(cy + rad * Math.sin(a)).toFixed(2)}`;
+  let ang = -Math.PI / 2;
+  const arcs = [], legend = [];
+  slices.forEach((s, i) => {
+    const frac = s.val / total, a0 = ang, a1 = ang + TAU * frac; ang = a1;
+    const col = AVWAP_COLORS[i % AVWAP_COLORS.length], large = (a1 - a0) > Math.PI ? 1 : 0;
+    arcs.push(`<path d="M${pt(R, a0)} A${R} ${R} 0 ${large} 1 ${pt(R, a1)} L${pt(r, a1)} A${r} ${r} 0 ${large} 0 ${pt(r, a0)} Z" fill="${col}" opacity="0.9"><title>${esc(s.sym)}: ${fmtMoney(s.val)} (${(frac * 100).toFixed(1)}%)</title></path>`);
+    legend.push(`<div class="pf-leg"><span class="pf-sw" style="background:${col}"></span>${esc(s.sym)} <span class="muted">${(frac * 100).toFixed(0)}%</span></div>`);
+  });
+  return `<div class="pf-donut"><svg viewBox="0 0 200 200" width="200" height="200">${arcs.join("")}` +
+    `<text x="100" y="97" text-anchor="middle" fill="#e5e9f0" font-size="15" font-weight="600">${fmtMoney(total)}</text>` +
+    `<text x="100" y="113" text-anchor="middle" fill="#8b96ad" font-size="10">总市值</text></svg>` +
+    `<div class="pf-legend">${legend.join("")}</div></div>`;
+}
+
+function renderPortfolio() {
+  const el = $("portfolio");
+  if (!el) return;
+  const p = PORTFOLIO, pos = (p?.positions || []).filter((x) => x.mkt_value != null);
+  if (!pos.length) {
+    el.innerHTML = `<div class="card empty">本地视图专用 — 认证券商后跑 <code>scripts/build_portfolio.py</code>,在 localhost 查看。公开站不显示持仓。</div>`;
+    return;
+  }
+  const total = pos.reduce((s, x) => s + x.mkt_value, 0);
+  const pnl = pos.reduce((s, x) => s + (x.pnl || 0), 0);
+  const cost = total - pnl;
+  const tiles = [
+    tile("总市值", fmtMoney(total)),
+    tile("未实现盈亏", `${pnl >= 0 ? "+" : ""}${fmtMoney(pnl)}`, cost ? `${(pnl / cost * 100).toFixed(1)}%` : "", pnl >= 0 ? "up" : "down"),
+    tile("持仓数", String(pos.length)),
+    tile("券商", (p.brokers || []).join("/") || "—"),
+    tile("更新", p.updated_at ? fmtDT(p.updated_at) : "—"),
+  ].join("");
+  const txns = (p.transactions || []).slice(0, 40);
+  const txRows = txns.map((t) => `<tr>
+      <td>${t.ts ? fmtDT(t.ts) : "—"}</td><td>${esc(t.broker || "")}</td><td>${esc(t.sym || "")}</td>
+      <td class="${t.side === "buy" ? "up" : t.side === "sell" ? "down" : ""}">${esc(t.side || "—")}</td>
+      <td>${t.qty != null ? fmtNum(t.qty) : "—"}</td><td>${t.price != null ? "$" + t.price : "—"}</td></tr>`).join("");
+  const txTable = txns.length
+    ? `<details open><summary class="muted small">交易明细 (${txns.length})</summary>
+       <table class="bt-table"><tr><th>时间</th><th>来源</th><th>代码</th><th>方向</th><th>数量</th><th>价格</th></tr>${txRows}</table></details>`
+    : `<div class="muted small">无交易记录</div>`;
+  el.innerHTML = `<div class="card"><div class="opt-grid">${tiles}</div>${buildDonut(pos, total)}${txTable}</div>`;
+}
+
 /* ---------- 错误 ---------- */
 function renderErrors() {
   const msgs = [...(RESEARCH?.errors || []), ...(GEX?.errors || [])];
@@ -1083,6 +1137,8 @@ async function loadData(force = false) {
   ]);
   RESEARCH = research; GEX = gex; GEXH = gexh; WEEK = week;
   if (wantBars && bars) { BARS = bars; lastBarsAt = Date.now(); }  // 拉失败保留旧 bars,下轮重试
+  // 券商持仓:本地专用文件(gitignored)。用 loadJSON 相对路径 → localhost 有、公开站 404→null。
+  PORTFOLIO = await loadJSON("data/portfolio.json");
 }
 
 function renderAll(keepRange = false) {
@@ -1092,6 +1148,7 @@ function renderAll(keepRange = false) {
   renderChart();
   renderGexSub();
   renderOptPanel();
+  renderPortfolio();
   renderErrors();
   if (lr) chart.timeScale().setVisibleLogicalRange(lr);
   const upd = RESEARCH?.updated_at || GEX?.updated_at;
