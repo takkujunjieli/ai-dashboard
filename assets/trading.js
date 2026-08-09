@@ -9,6 +9,7 @@ const ET = "America/New_York";
 
 let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null, PORTFOLIO = null;
 let pfFilter = null;          // Portfolio 饼图选中的 sym → 交易明细按它 filter
+let pfAccount = null;         // Portfolio 选中的账户 id(null=全部账户)
 const PF_MIN_VALUE = 1000;    // 饼图只显示市值 ≥ 此的持仓
 let CFG = { watchlist: [], deep: [] };  // 标的分组,来自 config/tickers.json,卡片开关就地编辑
 let SYM = localStorage.getItem("wbSym") || null;
@@ -955,37 +956,57 @@ function renderOptPanel() {
 // 均匀色相生成,slice 任意数量都可区分(暗色主题友好)
 const pfColor = (i, n) => `hsl(${Math.round(i * 360 / Math.max(n, 1))} 62% 58%)`;
 
-/* 饼图:只画市值 ≥ PF_MIN_VALUE 的持仓,每块可点(data-sym)。选中(pfFilter)时高亮该块、其余暗化。 */
-function buildDonut(pos) {
-  const slices = pos.filter((x) => x.mkt_value >= PF_MIN_VALUE).sort((a, b) => b.mkt_value - a.mkt_value);
-  const total = slices.reduce((s, x) => s + x.mkt_value, 0);
-  if (!slices.length || !total) return `<div class="muted small">无 ≥$${PF_MIN_VALUE} 的持仓可画饼图</div>`;
+/* 饼图:只画规模 ≥ PF_MIN_VALUE 的持仓,每块可点(data-sym)。value 取每块正数规模(多头=市值,
+   空头=|市值|)决定占比;centerSub 是环心默认说明。环心默认显示本饼图总仓位(有符号市值合计),
+   点中的票在本饼图时改显该票仓位、其余暗化;点中的票不在本饼图则该饼图保持显示总仓位。 */
+function buildDonut(items, { value = (x) => x.mkt_value, centerSub, emptyMsg } = {}) {
+  const slices = items.map((x) => ({ x, v: value(x) })).filter((o) => o.v >= PF_MIN_VALUE)
+    .sort((a, b) => b.v - a.v);
+  const total = slices.reduce((s, o) => s + o.v, 0);
+  if (!slices.length || !total) return emptyMsg ? `<div class="muted small">${emptyMsg}</div>` : "";
+  const dispTotal = slices.reduce((s, o) => s + o.x.mkt_value, 0);   // 有符号实际市值合计(空头为负)
+  const selSlice = pfFilter ? slices.find((o) => o.x.sym === pfFilter) : null;  // 选中的票在本饼图里?
+  const centerBig = fmtMoney(selSlice ? selSlice.x.mkt_value : dispTotal);
+  const centerSmall = selSlice ? selSlice.x.sym : centerSub;
   const R = 88, r = 54, cx = 100, cy = 100, TAU = Math.PI * 2;
   const pt = (rad, a) => `${(cx + rad * Math.cos(a)).toFixed(2)},${(cy + rad * Math.sin(a)).toFixed(2)}`;
   let ang = -Math.PI / 2;
   const arcs = [], legend = [];
-  slices.forEach((s, i) => {
-    const frac = s.val = s.mkt_value / total, a0 = ang, a1 = ang + TAU * frac; ang = a1;
+  slices.forEach((o, i) => {
+    const s = o.x, frac = o.v / total, a0 = ang, a1 = ang + TAU * frac; ang = a1;
     const col = pfColor(i, slices.length), large = (a1 - a0) > Math.PI ? 1 : 0;
-    const sel = pfFilter === s.sym, dim = pfFilter && !sel;
-    arcs.push(`<path class="pf-slice${sel ? " sel" : ""}" data-sym="${esc(s.sym)}" d="M${pt(R, a0)} A${R} ${R} 0 ${large} 1 ${pt(R, a1)} L${pt(r, a1)} A${r} ${r} 0 ${large} 0 ${pt(r, a0)} Z" fill="${col}" opacity="${dim ? 0.28 : 0.9}"${sel ? ' stroke="#e5e9f0" stroke-width="1.5"' : ""}><title>${esc(s.sym)}: ${fmtMoney(s.mkt_value)} (${(frac * 100).toFixed(1)}%)</title></path>`);
+    const sel = pfFilter === s.sym, dim = selSlice && !sel;   // 仅当选中的票在本饼图时才暗化其余
+    arcs.push(`<path class="pf-slice${sel ? " sel" : ""}" data-sym="${esc(s.sym)}" d="M${pt(R, a0)} A${R} ${R} 0 ${large} 1 ${pt(R, a1)} L${pt(r, a1)} A${r} ${r} 0 ${large} 0 ${pt(r, a0)} Z" fill="${col}" opacity="${dim ? 0.28 : 0.9}"${sel ? ' stroke="#e5e9f0" stroke-width="1.5"' : ""}><title>${esc(s.sym)}: ${fmtMoney(o.x.mkt_value)} (${(frac * 100).toFixed(1)}%)</title></path>`);
     legend.push(`<div class="pf-leg${sel ? " sel" : ""}" data-sym="${esc(s.sym)}"><span class="pf-sw" style="background:${col}"></span>${esc(s.sym)} <span class="muted">${(frac * 100).toFixed(0)}%</span></div>`);
   });
   return `<div class="pf-donut"><svg viewBox="0 0 200 200" width="200" height="200">${arcs.join("")}` +
-    `<text x="100" y="97" text-anchor="middle" fill="#e5e9f0" font-size="15" font-weight="600">${fmtMoney(total)}</text>` +
-    `<text x="100" y="113" text-anchor="middle" fill="#8b96ad" font-size="10">≥$${(PF_MIN_VALUE / 1000).toFixed(0)}K 持仓</text></svg>` +
-    `<div class="pf-legend">${legend.join("")}</div></div>`;
+    `<text x="100" y="97" text-anchor="middle" fill="#e5e9f0" font-size="15" font-weight="600">${centerBig}</text>` +
+    (centerSmall ? `<text x="100" y="113" text-anchor="middle" fill="#8b96ad" font-size="10">${esc(centerSmall)}</text>` : "") +
+    `</svg><div class="pf-legend">${legend.join("")}</div></div>`;
 }
 
 function renderPortfolio() {
   const el = $("portfolio");
   if (!el) return;
-  const p = PORTFOLIO, pos = (p?.positions || []).filter((x) => x.mkt_value != null);
-  if (!pos.length) {
-    pfFilter = null;
+  const p = PORTFOLIO;
+  const allPos = (p?.positions || []).filter((x) => x.mkt_value != null);
+  if (!allPos.length) {
+    pfFilter = null; pfAccount = null;
     el.innerHTML = `<div class="card empty">本地视图专用 — 认证券商后跑 <code>scripts/build_portfolio.py</code>,在 localhost 查看。公开站不显示持仓。</div>`;
     return;
   }
+  // 账户下拉:>1 个账户才显示;选中的账户已不存在(数据变了)则回退到全部
+  const accounts = p.accounts || [];
+  if (pfAccount && !accounts.some((a) => a.id === pfAccount)) pfAccount = null;
+  const pos = pfAccount ? allPos.filter((x) => x.account === pfAccount) : allPos;
+  const acctSel = accounts.length > 1
+    ? `<select id="pf-acct" class="pf-acct"><option value=""${pfAccount ? "" : " selected"}>全部账户</option>`
+      + accounts.map((a) => `<option value="${esc(a.id)}"${pfAccount === a.id ? " selected" : ""}>${esc(a.label || a.id)}</option>`).join("")
+      + `</select>`
+    : "";
+  const acctBar = acctSel ? `<div class="pf-acctbar"><span class="muted small">账户</span>${acctSel}</div>` : "";
+  const curAcct = pfAccount ? (accounts.find((a) => a.id === pfAccount)?.label || pfAccount)
+    : (accounts.length > 1 ? `全部 ${accounts.length} 户` : ((p.brokers || []).join("/") || "—"));
   const total = pos.reduce((s, x) => s + x.mkt_value, 0);
   const pnl = pos.reduce((s, x) => s + (x.pnl || 0), 0);
   const cost = total - pnl;
@@ -993,24 +1014,45 @@ function renderPortfolio() {
     tile("总市值", fmtMoney(total)),
     tile("未实现盈亏", `${pnl >= 0 ? "+" : ""}${fmtMoney(pnl)}`, cost ? `${(pnl / cost * 100).toFixed(1)}%` : "", pnl >= 0 ? "up" : "down"),
     tile("持仓数", String(pos.length)),
-    tile("券商", (p.brokers || []).join("/") || "—"),
+    tile("账户", curAcct),
     tile("更新", p.updated_at ? fmtDT(p.updated_at) : "—"),
   ].join("");
   let txns = p.transactions || [];
+  if (pfAccount) txns = txns.filter((t) => t.account === pfAccount);
   if (pfFilter) txns = txns.filter((t) => t.sym === pfFilter);
   txns = txns.slice(0, 60);
   const chip = pfFilter
     ? `<button id="pf-clear" class="pf-chip">筛选 ${esc(pfFilter)} <span class="muted">✕</span></button>`
     : `<span class="muted small">点饼图某块 → 只看该票交易</span>`;
-  const txRows = txns.map((t) => `<tr>
-      <td>${t.ts ? fmtDT(t.ts) : "—"}</td><td>${esc(t.broker || "")}</td><td>${esc(t.sym || "")}</td>
+  const txRows = txns.map((t) => {
+    // 持仓变化:买入(含 buy_to_cover)+qty、卖出(含 sell_short)-qty,即该笔对仓位的净份额影响
+    const delta = t.side === "buy" ? t.qty : t.side === "sell" ? -t.qty : null;
+    return `<tr>
+      <td>${t.ts ? fmtDT(t.ts) : "—"}</td><td>${t.kind === "option" ? "期权" : "正股"}</td><td>${esc(t.sym || "")}</td>
       <td class="${t.side === "buy" ? "up" : t.side === "sell" ? "down" : ""}">${esc(t.side || "—")}</td>
-      <td>${t.qty != null ? fmtNum(t.qty) : "—"}</td><td>${t.price != null ? "$" + t.price : "—"}</td></tr>`).join("");
+      <td>${t.qty != null ? fmtNum(t.qty) : "—"}</td><td>${t.price != null ? "$" + t.price : "—"}</td>
+      <td class="${delta > 0 ? "up" : delta < 0 ? "down" : ""}">${delta != null ? (delta > 0 ? "+" : "") + fmtNum(delta) : "—"}</td></tr>`;
+  }).join("");
   const txTable = `<details open><summary class="muted small">交易明细 (${txns.length})</summary>
        <div class="pf-txhead">${chip}</div>
-       ${txns.length ? `<table class="bt-table"><tr><th>时间</th><th>来源</th><th>代码</th><th>方向</th><th>数量</th><th>价格</th></tr>${txRows}</table>`
+       ${txns.length ? `<table class="bt-table"><tr><th>时间</th><th>种类</th><th>代码</th><th>方向</th><th>数量</th><th>价格</th><th>持仓变化</th></tr>${txRows}</table>`
     : `<div class="muted small">${pfFilter ? esc(pfFilter) + " 无交易记录" : "无交易记录"}</div>`}</details>`;
-  el.innerHTML = `<div class="card"><div class="opt-grid">${tiles}</div>${buildDonut(pos)}${txTable}</div>`;
+  // 多头饼图(市值) + 空头饼图(按 |市值|,有做空仓位才显示)。标题右侧显示该饼图总仓位。
+  const longs = pos.filter((x) => x.mkt_value > 0);
+  const shorts = pos.filter((x) => x.mkt_value < 0);
+  const K = `≥$${(PF_MIN_VALUE / 1000).toFixed(0)}K`;
+  const longTotal = longs.filter((x) => x.mkt_value >= PF_MIN_VALUE).reduce((s, x) => s + x.mkt_value, 0);
+  const shortTotal = shorts.filter((x) => -x.mkt_value >= PF_MIN_VALUE).reduce((s, x) => s + x.mkt_value, 0);
+  const cap = (name, tot) => `<div class="pf-pie-cap muted small">${name} <span class="pf-cap-tot">${fmtMoney(tot)}</span></div>`;
+  const longBox = `<div class="pf-pie">${cap("多头", longTotal)}`
+    + `${buildDonut(longs, { centerSub: K, emptyMsg: `无 ${K} 的持仓可画饼图` })}</div>`;
+  const donuts = shorts.length
+    ? `<div class="pf-pies">${longBox}`
+      + `<div class="pf-pie">${cap("空头", shortTotal)}`
+      + `${buildDonut(shorts, { value: (x) => -x.mkt_value, centerSub: K, emptyMsg: `无 ${K} 的做空仓位` })}</div>`
+      + `</div>`
+    : `<div class="pf-pies">${longBox}</div>`;
+  el.innerHTML = `<div class="card">${acctBar}<div class="opt-grid">${tiles}</div>${donuts}${txTable}</div>`;
 }
 
 /* ---------- 错误 ---------- */
@@ -1302,6 +1344,13 @@ function initToolbar() {
     if (!hit) return;
     const sym = hit.dataset.sym;
     pfFilter = (pfFilter === sym) ? null : sym;   // 点已选中的 → 取消
+    renderPortfolio();
+  });
+  // Portfolio 账户下拉 → 切换当前查看的账户(切账户时清掉个股 filter)
+  $("portfolio").addEventListener("change", (ev) => {
+    if (!ev.target.closest("#pf-acct")) return;
+    pfAccount = ev.target.value || null;
+    pfFilter = null;
     renderPortfolio();
   });
   // 本周历史 GEX 快照:选某日看当日墙(当周到期);data-day="" = Live/最新
