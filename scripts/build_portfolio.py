@@ -23,11 +23,21 @@ accounts 用带人名的 id/label(如 {"id":"mom-rh","label":"妈妈·个人"})�
 """
 import glob
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
+TX_KEEP_DAYS = 14        # portfolio.json 只保留最近 N 天的交易明细
+
+
+def _parse_ts(ts):
+    if not ts:
+        return None
+    try:
+        return datetime.fromisoformat(ts.replace("Z", "+00:00"))
+    except ValueError:
+        return None
 
 
 def _num(x):
@@ -64,7 +74,9 @@ def _txn(t: dict) -> dict:
 
 
 def main() -> None:
-    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    now_dt = datetime.now(timezone.utc)
+    now = now_dt.isoformat(timespec="seconds")
+    cutoff = now_dt - timedelta(days=TX_KEEP_DAYS)
     positions, transactions, brokers, accounts = [], [], [], []
     seen_acct = set()
     for f in sorted(glob.glob(str(DATA / "_*_raw.json"))):
@@ -91,6 +103,8 @@ def main() -> None:
         for t in d.get("transactions") or []:
             transactions.append({"broker": broker, "account": t.get("account") or default_acct, **_txn(t)})
 
+    # 交易明细只保留最近 TX_KEEP_DAYS 天(ts 缺失/不可解析的丢弃)
+    transactions = [t for t in transactions if (pt := _parse_ts(t.get("ts"))) and pt >= cutoff]
     transactions.sort(key=lambda t: t.get("ts") or "", reverse=True)
     out = {"updated_at": now, "brokers": brokers, "accounts": accounts,
            "positions": positions, "transactions": transactions}

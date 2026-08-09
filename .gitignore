@@ -4,7 +4,6 @@ venv/
 .DS_Store
 .env
 
-# 本地专用:券商持仓/交易,绝不提交进公开 repo
-data/portfolio.json
+# portfolio.json 会公开发布(持仓概览 + 最近14天交易);原料与历史仍留本地不上传
 data/portfolio_history.json
 data/_*_raw.json
