@@ -28,7 +28,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
-TX_KEEP_DAYS = 14        # portfolio.json 只保留最近 N 天的交易明细
+TX_KEEP_DAYS = 90        # portfolio.json 只保留最近 N 天的交易明细(≈最近 3 个月)
 
 
 def _parse_ts(ts):
