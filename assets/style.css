@@ -57,7 +57,6 @@ nav .tab.active { background: var(--accent); border-color: var(--accent); color:
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
 /* 13F 卡片:min-width:0 防止宽表格撑破格子压到邻卡(grid blowout);太宽则卡内横向滚动 */
 #holdings13f .card { min-width: 0; overflow-x: auto; }
-.h13f-avg { font-size: 11px; opacity: .75; margin-top: 1px; white-space: nowrap; }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
 th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
 th { color: var(--muted); font-weight: 500; font-size: 12px; }
