@@ -62,6 +62,12 @@ function render13f() {
       ? `数据期 ${qLabel(allP[0])}${allP.length > 1 ? "–" + qLabel(allP.at(-1)) : ""} · 最新截至 ${allP.at(-1)}${d.updated_at ? " · 采集 " + fmtDT(d.updated_at) : ""}`
       : "";
   }
+  // 每个机构"已提交 13F 的季度"集合(跨所有票):某季它在任何票有数据 = 那季报告已出。
+  // 用于区分空格:该季已提交但未持有本票(—) vs 该季报告还没出(N/A)。
+  const filerFiled = {};
+  for (const v of Object.values(d.tickers || {})) {
+    for (const h of v.holdings || []) if (h.period) (filerFiled[h.filer] ||= new Set()).add(h.period);
+  }
   const cards = Object.entries(d.tickers || {})
     .filter(([sym]) => isSel(sym))
     .map(([sym, v]) => {
@@ -72,7 +78,11 @@ function render13f() {
       const rows = Object.entries(byFiler).map(([f, ps]) => {
         const cells = periods.map((p, i) => {
           const h = ps[p];
-          if (!h) return `<td class="muted">—</td>`;
+          if (!h) {
+            return filerFiled[f]?.has(p)
+              ? `<td class="muted" title="该季已提交 13F,但未持有本票">—</td>`
+              : `<td class="muted" title="该机构尚未提交该季 13F(报告未出)">N/A</td>`;
+          }
           const prev = ps[periods[i + 1]];               // 更老一季,算环比
           let arrow = "";
           if (prev && prev.shares && h.shares) {
@@ -83,7 +93,7 @@ function render13f() {
         }).join("");
         return `<tr><td>${esc(f)}</td>${cells}</tr>`;
       }).join("");
-      return `<div class="card"><b>${esc(sym)}</b> <span class="muted small">持股(环比)· 市值见 hover</span>
+      return `<div class="card"><b>${esc(sym)}</b> <span class="muted small">持股(环比)· 市值 hover · N/A=该季报告未出 · —=已报未持有</span>
         <table>${head}${rows}</table></div>`;
     });
   $("holdings13f").innerHTML = cards.join("") || `<div class="card empty">暂无精选机构持仓(或 13F 未采集)</div>`;
