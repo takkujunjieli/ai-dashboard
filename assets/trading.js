@@ -10,7 +10,9 @@ const ET = "America/New_York";
 let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null, PORTFOLIO = null;
 let pfFilter = null;          // Portfolio 饼图选中的 sym → 交易明细按它 filter
 let pfAccount = null;         // Portfolio 选中的账户 id(null=全部账户)
+let pfTxPage = 0;             // Portfolio 交易明细当前页(0 起,每页 PF_TX_PAGE 条)
 const PF_MIN_VALUE = 1000;    // 饼图只显示市值 ≥ 此的持仓
+const PF_TX_PAGE = 20;        // 交易明细每页条数
 let CFG = { watchlist: [], deep: [] };  // 标的分组,来自 config/tickers.json,卡片开关就地编辑
 let SYM = localStorage.getItem("wbSym") || null;
 let TF = localStorage.getItem("wbTf") || "5m";
@@ -1020,11 +1022,16 @@ function renderPortfolio() {
   let txns = p.transactions || [];
   if (pfAccount) txns = txns.filter((t) => t.account === pfAccount);
   if (pfFilter) txns = txns.filter((t) => t.sym === pfFilter);
-  txns = txns.slice(0, 60);
+  // 分页:每页 PF_TX_PAGE 条;filter 变化后当前页可能越界,夹回有效范围
+  const txTotal = txns.length;
+  const txPages = Math.max(1, Math.ceil(txTotal / PF_TX_PAGE));
+  pfTxPage = Math.min(Math.max(pfTxPage, 0), txPages - 1);
+  const pageStart = pfTxPage * PF_TX_PAGE;
+  const pageTxns = txns.slice(pageStart, pageStart + PF_TX_PAGE);
   const chip = pfFilter
     ? `<button id="pf-clear" class="pf-chip">筛选 ${esc(pfFilter)} <span class="muted">✕</span></button>`
     : `<span class="muted small">点饼图某块 → 只看该票交易</span>`;
-  const txRows = txns.map((t) => {
+  const txRows = pageTxns.map((t) => {
     // 持仓变化:买入(含 buy_to_cover)+qty、卖出(含 sell_short)-qty,即该笔对仓位的净份额影响
     const delta = t.side === "buy" ? t.qty : t.side === "sell" ? -t.qty : null;
     return `<tr>
@@ -1033,13 +1040,28 @@ function renderPortfolio() {
       <td>${t.qty != null ? fmtNum(t.qty) : "—"}</td><td>${t.price != null ? "$" + t.price : "—"}</td>
       <td class="${delta > 0 ? "up" : delta < 0 ? "down" : ""}">${delta != null ? (delta > 0 ? "+" : "") + fmtNum(delta) : "—"}</td></tr>`;
   }).join("");
-  const txTable = `<details open><summary class="muted small">交易明细 (${txns.length})</summary>
+  const pager = txPages > 1
+    ? `<div class="pf-pager">
+         <button class="mini-btn" data-pfpage="prev"${pfTxPage === 0 ? " disabled" : ""}>‹ 上一页</button>
+         <span class="muted small">${pageStart + 1}–${pageStart + pageTxns.length} / ${txTotal} · 第 ${pfTxPage + 1}/${txPages} 页</span>
+         <button class="mini-btn" data-pfpage="next"${pfTxPage >= txPages - 1 ? " disabled" : ""}>下一页 ›</button>
+       </div>`
+    : "";
+  const txTable = `<details open><summary class="muted small">交易明细 (${txTotal})</summary>
        <div class="pf-txhead">${chip}</div>
-       ${txns.length ? `<table class="bt-table"><tr><th>时间</th><th>种类</th><th>代码</th><th>方向</th><th>数量</th><th>价格</th><th>持仓变化</th></tr>${txRows}</table>`
+       ${txTotal ? `<table class="bt-table"><tr><th>时间</th><th>种类</th><th>代码</th><th>方向</th><th>数量</th><th>价格</th><th>持仓变化</th></tr>${txRows}</table>${pager}`
     : `<div class="muted small">${pfFilter ? esc(pfFilter) + " 无交易记录" : "无交易记录"}</div>`}</details>`;
   // 多头饼图(市值) + 空头饼图(按 |市值|,有做空仓位才显示)。标题右侧显示该饼图总仓位。
-  const longs = pos.filter((x) => x.mkt_value > 0);
-  const shorts = pos.filter((x) => x.mkt_value < 0);
+  // 全部账户时同一股票会来自多个账户 → 画饼前按 sym 合并(市值/盈亏/数量相加),避免同票裂成多块。
+  const bySym = new Map();
+  for (const x of pos) {
+    const e = bySym.get(x.sym);
+    if (e) { e.mkt_value += x.mkt_value; e.pnl = (e.pnl || 0) + (x.pnl || 0); e.qty = (e.qty || 0) + (x.qty || 0); }
+    else bySym.set(x.sym, { sym: x.sym, mkt_value: x.mkt_value, pnl: x.pnl, qty: x.qty });
+  }
+  const mergedPos = [...bySym.values()];
+  const longs = mergedPos.filter((x) => x.mkt_value > 0);
+  const shorts = mergedPos.filter((x) => x.mkt_value < 0);
   const K = `≥$${(PF_MIN_VALUE / 1000).toFixed(0)}K`;
   const longTotal = longs.filter((x) => x.mkt_value >= PF_MIN_VALUE).reduce((s, x) => s + x.mkt_value, 0);
   const shortTotal = shorts.filter((x) => -x.mkt_value >= PF_MIN_VALUE).reduce((s, x) => s + x.mkt_value, 0);
@@ -1337,20 +1359,24 @@ function initToolbar() {
     [...$("session-chips").children].forEach((b) => b.classList.toggle("active", b === btn));
     renderChart();
   });
-  // Portfolio 饼图/图例点击 → 交易明细按该票 filter(再点同块或 ✕ 清除)。委托到常驻容器 #portfolio。
+  // Portfolio 饼图/图例点击 → 交易明细按该票 filter(再点同块或 ✕ 清除);交易明细翻页。委托到常驻容器 #portfolio。
   $("portfolio").addEventListener("click", (ev) => {
-    if (ev.target.closest("#pf-clear")) { pfFilter = null; renderPortfolio(); return; }
+    const pageBtn = ev.target.closest("[data-pfpage]");
+    if (pageBtn) { pfTxPage += pageBtn.dataset.pfpage === "next" ? 1 : -1; renderPortfolio(); return; }
+    if (ev.target.closest("#pf-clear")) { pfFilter = null; pfTxPage = 0; renderPortfolio(); return; }
     const hit = ev.target.closest("[data-sym]");
     if (!hit) return;
     const sym = hit.dataset.sym;
     pfFilter = (pfFilter === sym) ? null : sym;   // 点已选中的 → 取消
+    pfTxPage = 0;                                 // 换筛选回到第 1 页
     renderPortfolio();
   });
-  // Portfolio 账户下拉 → 切换当前查看的账户(切账户时清掉个股 filter)
+  // Portfolio 账户下拉 → 切换当前查看的账户(切账户时清掉个股 filter、回到第 1 页)
   $("portfolio").addEventListener("change", (ev) => {
     if (!ev.target.closest("#pf-acct")) return;
     pfAccount = ev.target.value || null;
     pfFilter = null;
+    pfTxPage = 0;
     renderPortfolio();
   });
   // 本周历史 GEX 快照:选某日看当日墙(当周到期);data-day="" = Live/最新
