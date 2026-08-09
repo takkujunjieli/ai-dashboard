@@ -212,7 +212,9 @@ footer { margin-top: 50px; text-align: center; }
 #ladder { display: block; }
 /* Portfolio 饼图 + 图例 */
 .pf-donut { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
-.pf-legend { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+/* 图例:每列最多 8 行,持仓多了自动溢出到新列,不再挤成一长条(高度≈饼图) */
+.pf-legend { display: grid; grid-auto-flow: column; grid-template-rows: repeat(8, auto);
+  grid-auto-columns: max-content; gap: 4px 16px; align-content: start; font-size: 12px; }
 .pf-leg { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 1px 4px; border-radius: 4px; }
 .pf-leg:hover { background: var(--card-hover); }
 .pf-leg.sel { background: var(--card-hover); font-weight: 600; }
