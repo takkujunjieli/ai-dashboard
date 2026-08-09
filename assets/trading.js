@@ -994,7 +994,7 @@ function renderPortfolio() {
   const allPos = (p?.positions || []).filter((x) => x.mkt_value != null);
   if (!allPos.length) {
     pfFilter = null; pfAccount = null;
-    el.innerHTML = `<div class="card empty">本地视图专用 — 认证券商后跑 <code>scripts/build_portfolio.py</code>,在 localhost 查看。公开站不显示持仓。</div>`;
+    el.innerHTML = `<div class="card empty">暂无持仓数据 — 认证券商后跑 <code>scripts/build_portfolio.py</code> 生成 <code>data/portfolio.json</code>。</div>`;
     return;
   }
   // 账户下拉:>1 个账户才显示;选中的账户已不存在(数据变了)则回退到全部
