@@ -6,15 +6,20 @@
    "positions":[{account,kind,sym,qty,avg_cost,price,mkt_value,pnl,pnl_pct}...],
    "transactions":[{account,kind,ts,sym,side,qty,price,state}...]}
 kind: equity(正股,默认)/ option(期权);省略即 equity。做空仓位 qty<0、mkt_value<0。
-broker 由文件名推断(_rh_raw.json→rh)。多账户:在 accounts 里声明 {id,label},
-每条 position/transaction 带 account=<id>;单账户券商可省略 accounts 与 account
-(默认整份归到 id=broker 的单一账户)。本脚本 broker/account 无关:补算缺失字段、
-合并、按时间排交易,写 portfolio.json(含 accounts 供 UI 下拉);并 append 一份持仓
-快照到 portfolio_history.json(供"仓位变动"相邻快照 diff)。纯 stdlib。
+broker 由文件名推断(_rh_raw.json→rh),可用文件顶层 "broker" 字段覆盖。多账户:在
+accounts 里声明 {id,label},每条 position/transaction 带 account=<id>;单账户券商可
+省略 accounts 与 account(默认整份归到 id=broker 的单一账户)。本脚本 broker/account
+无关:补算缺失字段、合并、按时间排交易,写 portfolio.json(含 accounts 供 UI 下拉);
+并 append 一份持仓快照到 portfolio_history.json(供"仓位变动"相邻快照 diff)。纯 stdlib。
+
+多人合并(家庭成员各自独立登录):一人一份 data/_<人名>_raw.json,文件里 "broker":"rh"、
+accounts 用带人名的 id/label(如 {"id":"mom-rh","label":"妈妈·个人"})。account id 全局
+唯一即可,本脚本按 id 去重合并;UI 下拉即列出全家所有账户,"全部"= 全家合计。
 
 来源:
   Robinhood — Claude 调 robinhood-trading MCP 只读工具,归一后写 data/_rh_raw.json
   moomoo    — scripts/fetch_moomoo.py(OpenD)写 data/_moomoo_raw.json
+  家庭成员   — 各人在自己的 Claude/脚本里用自己的登录导出 data/_<人名>_raw.json(同 schema)
 """
 import glob
 import json
@@ -71,6 +76,7 @@ def main() -> None:
         except (json.JSONDecodeError, OSError) as e:
             print(f"跳过 {Path(f).name}: {e}")
             continue
+        broker = d.get("broker") or broker   # 文件可显式声明 broker(如 _mom_raw.json → "rh")
         brokers.append(broker)
         # 账户表:文件可声明 accounts[{id,label}];未声明则该券商作单一账户(id=broker)
         file_accts = d.get("accounts") or [{"id": broker, "label": broker}]
