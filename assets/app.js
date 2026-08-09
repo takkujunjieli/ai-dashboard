@@ -79,11 +79,13 @@ function render13f() {
             const ch = (h.shares - prev.shares) / prev.shares;
             if (Math.abs(ch) >= 0.02) arrow = ` <span class="${ch > 0 ? "up" : "down"}">${ch > 0 ? "▲" : "▼"}${Math.abs(ch * 100).toFixed(0)}%</span>`;
           }
-          return `<td title="${fmtMoney(h.value)}">${fmtShares(h.shares)}${arrow}</td>`;
+          const avg = (h.shares && h.value != null) ? h.value / h.shares : null;   // 均价 = 市值/股数
+          return `<td title="${fmtMoney(h.value)}">${fmtShares(h.shares)}${arrow}`
+            + `<div class="h13f-avg muted">(均 ${avg != null ? "$" + avg.toFixed(1) : "—"})</div></td>`;
         }).join("");
         return `<tr><td>${esc(f)}</td>${cells}</tr>`;
       }).join("");
-      return `<div class="card"><b>${esc(sym)}</b> <span class="muted small">持股(环比)· 市值见 hover</span>
+      return `<div class="card"><b>${esc(sym)}</b> <span class="muted small">持股(环比)·下方(均价)·市值见 hover</span>
         <table>${head}${rows}</table></div>`;
     });
   $("holdings13f").innerHTML = cards.join("") || `<div class="card empty">暂无精选机构持仓(或 13F 未采集)</div>`;
