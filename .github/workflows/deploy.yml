@@ -18,6 +18,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+      - name: 资源打版本号(cache-busting,只改 artifact 不动源码)
+        run: bash scripts/cache_bust.sh
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
