@@ -3,8 +3,9 @@
 
 每个券商写一份已归一的原料 data/_<broker>_raw.json,形如
   {"accounts":[{id,label}...],          # 可选;一个券商下的多个账户
-   "positions":[{account,sym,qty,avg_cost,price,mkt_value,pnl,pnl_pct}...],
-   "transactions":[{account,ts,sym,side,qty,price,state}...]}
+   "positions":[{account,kind,sym,qty,avg_cost,price,mkt_value,pnl,pnl_pct}...],
+   "transactions":[{account,kind,ts,sym,side,qty,price,state}...]}
+kind: equity(正股,默认)/ option(期权);省略即 equity。做空仓位 qty<0、mkt_value<0。
 broker 由文件名推断(_rh_raw.json→rh)。多账户:在 accounts 里声明 {id,label},
 每条 position/transaction 带 account=<id>;单账户券商可省略 accounts 与 account
 (默认整份归到 id=broker 的单一账户)。本脚本 broker/account 无关:补算缺失字段、
@@ -43,6 +44,7 @@ def _pos(p: dict) -> dict:
     if pct is None and pnl is not None and cost and qty and cost * qty:
         pct = pnl / (cost * qty)
     return {"sym": p.get("sym"), "qty": qty, "avg_cost": cost, "price": price,
+            "kind": p.get("kind") or "equity",
             "mkt_value": round(mv, 2) if mv is not None else None,
             "pnl": round(pnl, 2) if pnl is not None else None,
             "pnl_pct": round(pct, 4) if pct is not None else None}
@@ -50,6 +52,7 @@ def _pos(p: dict) -> dict:
 
 def _txn(t: dict) -> dict:
     return {"ts": t.get("ts"), "sym": t.get("sym"),
+            "kind": t.get("kind") or "equity",       # equity 正股 / option 期权
             "side": (t.get("side") or "").lower(),
             "qty": _num(t.get("qty")), "price": _num(t.get("price")),
             "state": t.get("state")}

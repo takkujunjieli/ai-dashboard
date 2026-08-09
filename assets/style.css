@@ -223,6 +223,8 @@ footer { margin-top: 50px; text-align: center; }
 .pf-chip .muted { color: #0b1220; opacity: .6; }
 .pf-acctbar { display: flex; align-items: center; gap: 8px; margin: 2px 0 12px; }
 .pf-acct { background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 5px 9px; font-size: 13px; color-scheme: dark; cursor: pointer; }
+.pf-pies { display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-start; }
+.pf-pie-cap { font-weight: 600; margin: 0 0 2px; }
 #gex-exp button.bucket-empty { opacity: .38; text-decoration: line-through; }  /* 该到期桶当前无合约 */
 .wb-overlays { gap: 8px; }
 .wb-overlays .chips button { font-size: 11px; padding: 3px 9px; }
