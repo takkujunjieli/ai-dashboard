@@ -9,6 +9,7 @@ const ET = "America/New_York";
 
 let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null, PORTFOLIO = null;
 let pfFilter = null;          // Portfolio 饼图选中的 sym → 交易明细按它 filter
+let pfAccount = null;         // Portfolio 选中的账户 id(null=全部账户)
 const PF_MIN_VALUE = 1000;    // 饼图只显示市值 ≥ 此的持仓
 let CFG = { watchlist: [], deep: [] };  // 标的分组,来自 config/tickers.json,卡片开关就地编辑
 let SYM = localStorage.getItem("wbSym") || null;
@@ -980,12 +981,25 @@ function buildDonut(pos) {
 function renderPortfolio() {
   const el = $("portfolio");
   if (!el) return;
-  const p = PORTFOLIO, pos = (p?.positions || []).filter((x) => x.mkt_value != null);
-  if (!pos.length) {
-    pfFilter = null;
+  const p = PORTFOLIO;
+  const allPos = (p?.positions || []).filter((x) => x.mkt_value != null);
+  if (!allPos.length) {
+    pfFilter = null; pfAccount = null;
     el.innerHTML = `<div class="card empty">本地视图专用 — 认证券商后跑 <code>scripts/build_portfolio.py</code>,在 localhost 查看。公开站不显示持仓。</div>`;
     return;
   }
+  // 账户下拉:>1 个账户才显示;选中的账户已不存在(数据变了)则回退到全部
+  const accounts = p.accounts || [];
+  if (pfAccount && !accounts.some((a) => a.id === pfAccount)) pfAccount = null;
+  const pos = pfAccount ? allPos.filter((x) => x.account === pfAccount) : allPos;
+  const acctSel = accounts.length > 1
+    ? `<select id="pf-acct" class="pf-acct"><option value=""${pfAccount ? "" : " selected"}>全部账户</option>`
+      + accounts.map((a) => `<option value="${esc(a.id)}"${pfAccount === a.id ? " selected" : ""}>${esc(a.label || a.id)}</option>`).join("")
+      + `</select>`
+    : "";
+  const acctBar = acctSel ? `<div class="pf-acctbar"><span class="muted small">账户</span>${acctSel}</div>` : "";
+  const curAcct = pfAccount ? (accounts.find((a) => a.id === pfAccount)?.label || pfAccount)
+    : (accounts.length > 1 ? `全部 ${accounts.length} 户` : ((p.brokers || []).join("/") || "—"));
   const total = pos.reduce((s, x) => s + x.mkt_value, 0);
   const pnl = pos.reduce((s, x) => s + (x.pnl || 0), 0);
   const cost = total - pnl;
@@ -993,10 +1007,11 @@ function renderPortfolio() {
     tile("总市值", fmtMoney(total)),
     tile("未实现盈亏", `${pnl >= 0 ? "+" : ""}${fmtMoney(pnl)}`, cost ? `${(pnl / cost * 100).toFixed(1)}%` : "", pnl >= 0 ? "up" : "down"),
     tile("持仓数", String(pos.length)),
-    tile("券商", (p.brokers || []).join("/") || "—"),
+    tile("账户", curAcct),
     tile("更新", p.updated_at ? fmtDT(p.updated_at) : "—"),
   ].join("");
   let txns = p.transactions || [];
+  if (pfAccount) txns = txns.filter((t) => t.account === pfAccount);
   if (pfFilter) txns = txns.filter((t) => t.sym === pfFilter);
   txns = txns.slice(0, 60);
   const chip = pfFilter
@@ -1010,7 +1025,7 @@ function renderPortfolio() {
        <div class="pf-txhead">${chip}</div>
        ${txns.length ? `<table class="bt-table"><tr><th>时间</th><th>来源</th><th>代码</th><th>方向</th><th>数量</th><th>价格</th></tr>${txRows}</table>`
     : `<div class="muted small">${pfFilter ? esc(pfFilter) + " 无交易记录" : "无交易记录"}</div>`}</details>`;
-  el.innerHTML = `<div class="card"><div class="opt-grid">${tiles}</div>${buildDonut(pos)}${txTable}</div>`;
+  el.innerHTML = `<div class="card">${acctBar}<div class="opt-grid">${tiles}</div>${buildDonut(pos)}${txTable}</div>`;
 }
 
 /* ---------- 错误 ---------- */
@@ -1302,6 +1317,13 @@ function initToolbar() {
     if (!hit) return;
     const sym = hit.dataset.sym;
     pfFilter = (pfFilter === sym) ? null : sym;   // 点已选中的 → 取消
+    renderPortfolio();
+  });
+  // Portfolio 账户下拉 → 切换当前查看的账户(切账户时清掉个股 filter)
+  $("portfolio").addEventListener("change", (ev) => {
+    if (!ev.target.closest("#pf-acct")) return;
+    pfAccount = ev.target.value || null;
+    pfFilter = null;
     renderPortfolio();
   });
   // 本周历史 GEX 快照:选某日看当日墙(当周到期);data-day="" = Live/最新

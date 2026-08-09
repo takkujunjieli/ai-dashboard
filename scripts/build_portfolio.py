@@ -2,11 +2,14 @@
 """合并各券商原料 → data/portfolio.json(本地专用,gitignored,绝不提交)。
 
 每个券商写一份已归一的原料 data/_<broker>_raw.json,形如
-  {"positions":[{sym,qty,avg_cost,price,mkt_value,pnl,pnl_pct}...],
-   "transactions":[{ts,sym,side,qty,price,state}...]}
-broker 由文件名推断(_rh_raw.json→rh)。本脚本 broker 无关:补算缺失字段、合并、
-按时间排交易,写 portfolio.json;并 append 一份持仓快照到 portfolio_history.json
-(供"仓位变动"相邻快照 diff)。纯 stdlib。
+  {"accounts":[{id,label}...],          # 可选;一个券商下的多个账户
+   "positions":[{account,sym,qty,avg_cost,price,mkt_value,pnl,pnl_pct}...],
+   "transactions":[{account,ts,sym,side,qty,price,state}...]}
+broker 由文件名推断(_rh_raw.json→rh)。多账户:在 accounts 里声明 {id,label},
+每条 position/transaction 带 account=<id>;单账户券商可省略 accounts 与 account
+(默认整份归到 id=broker 的单一账户)。本脚本 broker/account 无关:补算缺失字段、
+合并、按时间排交易,写 portfolio.json(含 accounts 供 UI 下拉);并 append 一份持仓
+快照到 portfolio_history.json(供"仓位变动"相邻快照 diff)。纯 stdlib。
 
 来源:
   Robinhood — Claude 调 robinhood-trading MCP 只读工具,归一后写 data/_rh_raw.json
@@ -54,7 +57,8 @@ def _txn(t: dict) -> dict:
 
 def main() -> None:
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    positions, transactions, brokers = [], [], []
+    positions, transactions, brokers, accounts = [], [], [], []
+    seen_acct = set()
     for f in sorted(glob.glob(str(DATA / "_*_raw.json"))):
         broker = Path(f).stem[1:]
         if broker.endswith("_raw"):
@@ -65,25 +69,35 @@ def main() -> None:
             print(f"跳过 {Path(f).name}: {e}")
             continue
         brokers.append(broker)
+        # 账户表:文件可声明 accounts[{id,label}];未声明则该券商作单一账户(id=broker)
+        file_accts = d.get("accounts") or [{"id": broker, "label": broker}]
+        for a in file_accts:
+            aid = a.get("id") or broker
+            if aid not in seen_acct:
+                seen_acct.add(aid)
+                accounts.append({"id": aid, "label": a.get("label") or aid, "broker": broker})
+        default_acct = file_accts[0].get("id") if len(file_accts) == 1 else broker
         for p in d.get("positions") or []:
-            positions.append({"broker": broker, **_pos(p)})
+            positions.append({"broker": broker, "account": p.get("account") or default_acct, **_pos(p)})
         for t in d.get("transactions") or []:
-            transactions.append({"broker": broker, **_txn(t)})
+            transactions.append({"broker": broker, "account": t.get("account") or default_acct, **_txn(t)})
 
     transactions.sort(key=lambda t: t.get("ts") or "", reverse=True)
-    out = {"updated_at": now, "brokers": brokers,
+    out = {"updated_at": now, "brokers": brokers, "accounts": accounts,
            "positions": positions, "transactions": transactions}
     (DATA / "portfolio.json").write_text(json.dumps(out, ensure_ascii=False, indent=1))
 
     hp = DATA / "portfolio_history.json"
     hist = json.loads(hp.read_text()) if hp.exists() else {"snapshots": []}
     hist["snapshots"].append({"ts": now, "positions": [
-        {"broker": p["broker"], "sym": p["sym"], "qty": p.get("qty"), "mkt_value": p.get("mkt_value")}
+        {"broker": p["broker"], "account": p.get("account"), "sym": p["sym"],
+         "qty": p.get("qty"), "mkt_value": p.get("mkt_value")}
         for p in positions]})
     hist["snapshots"] = hist["snapshots"][-200:]
     hp.write_text(json.dumps(hist, ensure_ascii=False, indent=1))
 
-    print(f"portfolio.json: {len(positions)} 持仓 / {len(transactions)} 交易 · 券商 {brokers or '(无原料)'}")
+    print(f"portfolio.json: {len(positions)} 持仓 / {len(transactions)} 交易 · "
+          f"账户 {[a['id'] for a in accounts] or '(无原料)'}")
 
 
 if __name__ == "__main__":
