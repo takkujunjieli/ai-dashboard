@@ -52,7 +52,15 @@ let ladderView = null;    // 梯的纵向视窗 {lo,hi};null=自动(贴合K线)�
 let ladderBounds = null;  // 当前梯行权价范围 {min,max},限制视窗滚动边界(=已计算 GEX 的范围)
 
 /* lightweight-charts 按 UTC 显示,把时间戳平移成本地时间 */
-const tconv = (ms) => Math.floor(ms / 1000) - new Date(ms).getTimezoneOffset() * 60;
+// 某时刻 ET 相对 UTC 的偏移(分钟,正=落后 UTC:EDT=240/EST=300),含夏令时。
+// 用它(而非浏览器 getTimezoneOffset)把 UTC 平移,使 K 线时间轴恒显示美东时间,不随访问者时区变。
+const ET_OFF_FMT = new Intl.DateTimeFormat("en-US", { timeZone: ET, hourCycle: "h23",
+  year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" });
+const etOffsetMin = (ms) => {
+  const p = Object.fromEntries(ET_OFF_FMT.formatToParts(ms).filter((x) => x.type !== "literal").map((x) => [x.type, +x.value]));
+  return (ms - Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second)) / 60000;
+};
+const tconv = (ms) => Math.floor(ms / 1000) - etOffsetMin(ms) * 60;
 const etDay = (ms) => new Date(ms).toLocaleDateString("en-CA", { timeZone: ET });
 
 /* ---------- 数据变换 ---------- */
@@ -786,7 +794,7 @@ function renderStats() {
   const d = researchOf(SYM);
   const g = gexBucketData(SYM) || {};
   const sv = (d.short_vol || [])[0];
-  const time = d.asof ? new Date(d.asof).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }) : null;
+  const time = d.asof ? new Date(d.asof).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: ET }) : null;
   // GEX 相对日均成交额:1% 变动的对冲量 ≈ 一天成交量的百分之几(跨标的可比的强度)
   // ADV 用 EWMA(span=20,新鲜)优先,回退旧的 short.avg_daily_volume
   const adv = d.adv20 ?? d.short?.avg_daily_volume;

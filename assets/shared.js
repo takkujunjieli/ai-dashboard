@@ -4,7 +4,8 @@ export const REPO = "takkujunjieli/stock-dashboard";
 
 export const $ = (id) => document.getElementById(id);
 export const esc = (t) => { const d = document.createElement("div"); d.textContent = t ?? ""; return d.innerHTML; };
-export const fmtDT = (iso) => iso ? new Date(iso).toLocaleString("zh-CN", { hour12: false }) : "—";
+// 全站时间统一美东(ET/America/New_York),不随浏览器所在时区变化
+export const fmtDT = (iso) => iso ? new Date(iso).toLocaleString("zh-CN", { hour12: false, timeZone: "America/New_York" }) + " ET" : "—";
 
 export const CAT_LABEL = { news: "News", kol: "KOL", youtube: "Video", community: "Community" };
 export const SENTI = {
