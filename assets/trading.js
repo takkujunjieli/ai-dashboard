@@ -344,9 +344,7 @@ function initCharts() {
 
   // 指标副图(DMI/ADX + ATR)改为懒创建(见 ensureIndSub):必须在容器 display:"" 可见时创建,
   // autoSize 才能量到真实尺寸;若在此处(容器 display:none 0×0)创建,autoSize 之后不恢复、画布 0 宽画不出线。
-  chart.timeScale().subscribeVisibleLogicalRangeChange((r) => {  // 副图 x 轴对齐主图(indSub 建好后生效)
-    if (r && indSub && $("ind-sub").style.display !== "none") indSub.timeScale().setVisibleLogicalRange(r);
-  });
+  chart.timeScale().subscribeVisibleLogicalRangeChange(syncSubs);  // 主图平移/缩放 → 两副图按时间范围对齐
 
   // 直接调用(不裹 rAF):后台标签页 rAF 会被节流不触发。
   // subscribeVisibleLogicalRangeChange 在图表坐标就绪后才触发,是最可靠的重画时机。
@@ -488,8 +486,16 @@ function renderIndSub() {
   else { pdiL.setData([]); mdiL.setData([]); adxL.setData([]); }
   atrL.setData(overlayOn.atr ? line(atr(bars, 14)) : []);
   if (tt) tt.textContent = `${overlayOn.adx ? "ADX(14) 趋势强度 · +DI/−DI 方向" : ""}${overlayOn.adx && overlayOn.atr ? "   ·   " : ""}${overlayOn.atr ? "ATR(14) 波幅(右轴)" : ""}`;
-  const r = chart.timeScale().getVisibleLogicalRange();  // x 轴对齐主图
-  if (r) requestAnimationFrame(() => { try { indSub.timeScale().setVisibleLogicalRange(r); } catch { /* 容器刚显示、尺寸未就绪 */ } });
+  requestAnimationFrame(syncSubs);  // 显示/换数据后按主图时间范围对齐
+}
+
+// 两个副图(ADX/DMI、净GEX)按主图"可见时间范围"对齐。副图数据网格与主图不同(GEX 稀疏、
+// 指标有 warmup 偏移),故用时间范围而非逻辑索引,平移/缩放主图时都能对齐。
+function syncSubs() {
+  const tr = chart && chart.timeScale().getVisibleRange();
+  if (!tr) return;
+  try { if (subChart) subChart.timeScale().setVisibleRange(tr); } catch { /* 数据未就绪 */ }
+  try { if (indSub && $("ind-sub").style.display !== "none") indSub.timeScale().setVisibleRange(tr); } catch { /* 容器刚显示 */ }
 }
 
 /* ---------- 盘中净 GEX 副图(按所选到期桶) ---------- */
@@ -510,7 +516,7 @@ function renderGexSub() {
     const scope = eff?.bucket === "all" ? "≤30d 聚合" : `${eff?.label || ""}(所在 ${GEX_BUCKET_LABEL[bkey]} 序列)`;
     gt.textContent = `Intraday net GEX trend · ${scope} · ${useFlow ? "Real" : "Raw"}${upd}`;
   }
-  subChart.timeScale().fitContent();
+  requestAnimationFrame(syncSubs);  // 对齐主图时间范围(替代 fitContent 自适应,否则会覆盖 x 轴对齐)
 }
 
 /* ---------- 行权价梯(与主图共享价格轴) ---------- */
