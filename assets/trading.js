@@ -342,14 +342,9 @@ function initCharts() {
   subChart = LWC.createChart($("gex-sub"), { ...chartTheme, timeScale: { ...chartTheme.timeScale, timeVisible: true } });
   gexLine = subChart.addLineSeries({ color: "#60a5fa", lineWidth: 2, priceFormat: { type: "custom", formatter: (v) => (v / 1e6).toFixed(0) + "M" } });
 
-  // 指标副图:DMI/ADX(左轴 0–100)+ ATR(右轴,价格单位)。x 轴跟随主图可见区间。
-  indSub = LWC.createChart($("ind-sub"), { ...chartTheme, timeScale: { ...chartTheme.timeScale, timeVisible: true } });
-  pdiL = indSub.addLineSeries({ color: "#34d399", lineWidth: 1, priceLineVisible: false, lastValueVisible: false });          // +DI
-  mdiL = indSub.addLineSeries({ color: "#f87171", lineWidth: 1, priceLineVisible: false, lastValueVisible: false });          // −DI
-  adxL = indSub.addLineSeries({ color: "#fbbf24", lineWidth: 2, priceLineVisible: false, lastValueVisible: false });          // ADX
-  atrL = indSub.addLineSeries({ color: "#a78bfa", lineWidth: 1, priceScaleId: "atr", priceLineVisible: false, lastValueVisible: false });
-  indSub.priceScale("atr").applyOptions({ scaleMargins: { top: 0.55, bottom: 0 } });  // ATR 压在下半,和 DMI 少重叠
-  chart.timeScale().subscribeVisibleLogicalRangeChange((r) => {  // 副图 x 轴对齐主图
+  // 指标副图(DMI/ADX + ATR)改为懒创建(见 ensureIndSub):必须在容器 display:"" 可见时创建,
+  // autoSize 才能量到真实尺寸;若在此处(容器 display:none 0×0)创建,autoSize 之后不恢复、画布 0 宽画不出线。
+  chart.timeScale().subscribeVisibleLogicalRangeChange((r) => {  // 副图 x 轴对齐主图(indSub 建好后生效)
     if (r && indSub && $("ind-sub").style.display !== "none") indSub.timeScale().setVisibleLogicalRange(r);
   });
 
@@ -463,13 +458,27 @@ function renderChart() {
 }
 
 /* ---------- 指标副图(ATR / DMI-ADX;与价格不同量纲,单独一栏)---------- */
+// 懒创建 ind-sub 图表:第一次要显示时才建。此刻容器已 display:"" 可见,autoSize 能量到真实尺寸。
+function ensureIndSub() {
+  if (indSub) return;
+  indSub = LWC.createChart($("ind-sub"), { ...chartTheme, timeScale: { ...chartTheme.timeScale, timeVisible: true } });
+  pdiL = indSub.addLineSeries({ color: "#34d399", lineWidth: 1, priceLineVisible: false, lastValueVisible: false });          // +DI
+  mdiL = indSub.addLineSeries({ color: "#f87171", lineWidth: 1, priceLineVisible: false, lastValueVisible: false });          // −DI
+  adxL = indSub.addLineSeries({ color: "#fbbf24", lineWidth: 2, priceLineVisible: false, lastValueVisible: false });          // ADX
+  atrL = indSub.addLineSeries({ color: "#a78bfa", lineWidth: 1, priceScaleId: "atr", priceLineVisible: false, lastValueVisible: false });
+  indSub.priceScale("atr").applyOptions({ scaleMargins: { top: 0.55, bottom: 0 } });  // ATR 压在下半,和 DMI 少重叠
+  const r = chart.timeScale().getVisibleLogicalRange();
+  if (r) indSub.timeScale().setVisibleLogicalRange(r);  // 立刻对齐主图 x 轴
+}
+
 function renderIndSub() {
   const el = $("ind-sub"), tt = $("ind-sub-title");
-  if (!el || !indSub) return;
+  if (!el) return;
   const paneOn = overlayOn.atr || overlayOn.adx;
   el.style.display = paneOn ? "" : "none";
   if (tt) tt.parentElement && (tt.style.display = paneOn ? "" : "none");
-  if (!paneOn) { pdiL.setData([]); mdiL.setData([]); adxL.setData([]); atrL.setData([]); return; }
+  if (!paneOn) { if (indSub) { pdiL.setData([]); mdiL.setData([]); adxL.setData([]); atrL.setData([]); } return; }
+  ensureIndSub();  // 首次显示时懒创建(容器已可见 → autoSize 量到真实尺寸)
   let bars = barsFor(SYM, TF);
   const daily = TF === "1d";
   if (!daily && !showETH) bars = bars.filter((b) => isRTH(b[0]));
