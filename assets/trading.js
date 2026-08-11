@@ -7,10 +7,11 @@ import {
 const LWC = window.LightweightCharts;
 const ET = "America/New_York";
 
-let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null, PORTFOLIO = null;
+let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null, PORTFOLIO = null, PNL = null;
 let pfFilter = null;          // Portfolio 饼图选中的 sym → 交易明细按它 filter
 let pfAccount = null;         // Portfolio 选中的账户 id(null=全部账户)
 let pfTxPage = 0;             // Portfolio 交易明细当前页(0 起,每页 PF_TX_PAGE 条)
+let pfPnlWin = "ytd";         // Portfolio 盈亏诊断窗口:ytd / 3m / 1m
 const PF_MIN_VALUE = 1000;    // 饼图只显示市值 ≥ 此的持仓
 const PF_TX_PAGE = 20;        // 交易明细每页条数
 let CFG = { watchlist: [], deep: [] };  // 标的分组,来自 config/tickers.json,卡片开关就地编辑
@@ -1037,6 +1038,59 @@ function buildDonut(items, { value = (x) => x.mkt_value, centerSub, emptyMsg } =
     `</svg><div class="pf-legend">${legend.join("")}</div></div>`;
 }
 
+/* 整数美元格式(盈亏诊断用;fmtMoney 是 K/M/B 组合口径,几百块会显成 $0K)。 */
+const usd = (v) => (v < 0 ? "−$" : "$") + Math.round(Math.abs(v)).toLocaleString("en-US");
+
+/* 每笔已实现盈亏的分布直方图(红=亏/绿=盈,灰线=0,黄虚线=均值)。trades: [{d,s,k,p}]。 */
+function buildHist(trades) {
+  const ps = trades.map((t) => t.p);
+  if (!ps.length) return `<div class="muted small">窗口内无平仓记录</div>`;
+  const min = Math.min(...ps, 0), max = Math.max(...ps, 0), span = (max - min) || 1;
+  const NB = 25, bw = span / NB, counts = new Array(NB).fill(0);
+  for (const p of ps) counts[Math.min(NB - 1, Math.max(0, Math.floor((p - min) / bw)))]++;
+  const maxc = Math.max(...counts, 1);
+  const W = 480, H = 150, padL = 6, padR = 6, padT = 8, padB = 20, iw = W - padL - padR, ih = H - padT - padB;
+  const xat = (v) => padL + (v - min) / span * iw;
+  const mean = ps.reduce((a, b) => a + b, 0) / ps.length;
+  const bars = counts.map((c, i) => {
+    const bx = padL + i / NB * iw, wpx = iw / NB - 1, h = c / maxc * ih;
+    const lo = min + i * bw, hi = min + (i + 1) * bw, col = (lo + hi) / 2 < 0 ? "#f87171" : "#34d399";
+    return c ? `<rect x="${bx.toFixed(1)}" y="${(padT + ih - h).toFixed(1)}" width="${wpx.toFixed(1)}" height="${h.toFixed(1)}" fill="${col}" opacity="0.85"><title>[${usd(lo)}, ${usd(hi)}): ${c} 笔</title></rect>` : "";
+  }).join("");
+  const axis = (v, dy = 12) => `<text x="${Math.min(W - padR, Math.max(padL, xat(v)))}" y="${H - padB + dy}" fill="#8b96ad" font-size="9" text-anchor="middle">${usd(v)}</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet">${bars}` +
+    `<line x1="${xat(0).toFixed(1)}" y1="${padT}" x2="${xat(0).toFixed(1)}" y2="${padT + ih}" stroke="#8b96ad" stroke-width="1"/>` +
+    `<line x1="${xat(mean).toFixed(1)}" y1="${padT}" x2="${xat(mean).toFixed(1)}" y2="${padT + ih}" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3 2"><title>均值 ${usd(mean)}</title></line>` +
+    axis(min) + axis(0) + axis(max) + `</svg>`;
+}
+
+/* 盈亏诊断块:窗口切换(YTD/3M/1M)+ 量化指标 tiles + 收益分布。仅对有完整历史数据的账户显示。 */
+function buildPnlPanel() {
+  if (!PNL || !PNL.accounts) return "";
+  const ids = Object.keys(PNL.accounts);
+  const aid = (pfAccount && PNL.accounts[pfAccount]) ? pfAccount
+    : (!pfAccount && ids.length === 1) ? ids[0] : null;   // 全部 且唯一有数据账户 → 显示它;选了无数据账户 → 不显示
+  if (!aid) return "";
+  const acc = PNL.accounts[aid];
+  const win = acc.windows[pfPnlWin] ? pfPnlWin : Object.keys(acc.windows)[0];
+  const m = acc.windows[win].metrics, trades = acc.windows[win].trades;
+  const toggle = ["ytd", "3m", "1m"].filter((w) => acc.windows[w])
+    .map((w) => `<button data-pw="${w}"${w === win ? ' class="active"' : ""}>${w.toUpperCase()}</button>`).join("");
+  const skewTxt = m.skew == null ? "—" : `${m.skew > 0 ? "+" : ""}${m.skew}`;
+  const tiles = [
+    tile("净已实现", usd(m.net), `${m.n} 笔`, m.net >= 0 ? "up" : "down"),
+    tile("胜率", `${(m.win_rate * 100).toFixed(0)}%`, `${m.wins}胜/${m.losses}亏`),
+    tile("盈亏比", m.payoff != null ? m.payoff.toFixed(2) : "—", `均盈${usd(m.avg_win)} / 均亏${usd(m.avg_loss)}`, (m.payoff ?? 0) >= 1 ? "up" : "down", "平均盈利 ÷ 平均亏损;<1=靠胜率撑,>1=payoff 占优"),
+    tile("偏度", skewTxt, m.skew == null ? "" : (m.skew < 0 ? "左尾·大亏拖累" : "右尾·大赢主导"), (m.skew ?? 0) >= 0 ? "up" : "down", "收益分布偏度;负=有大亏肥尾,正=有大赢肥尾"),
+    tile("亏损集中度", m.loss_conc != null ? `${(m.loss_conc * 100).toFixed(0)}%` : "—", "最大输家占毛亏", (m.loss_conc ?? 0) > 0.5 ? "down" : "", "单只票占全部亏损的比例;越高=亏损越集中在一只"),
+    tile("期望/笔", usd(m.expectancy), "每笔平均", m.expectancy >= 0 ? "up" : "down"),
+  ].join("");
+  return `<details open class="pf-pnl"><summary class="muted small">📊 盈亏诊断 · ${esc(acc.label)} <span class="muted">(已实现,截至 ${esc(PNL.as_of)})</span></summary>
+      <div class="pf-pnl-bar"><div class="chips seg" id="pf-pw">${toggle}</div><span class="muted small">收益分布 · 红=亏 绿=盈 · 灰线=0 · 黄虚线=均值</span></div>
+      <div class="opt-grid">${tiles}</div>
+      <div class="pf-hist">${buildHist(trades)}</div></details>`;
+}
+
 function renderPortfolio() {
   const el = $("portfolio");
   if (!el) return;
@@ -1124,7 +1178,7 @@ function renderPortfolio() {
       + `${buildDonut(shorts, { value: (x) => -x.mkt_value, centerSub: K, emptyMsg: `无 ${K} 的做空仓位` })}</div>`
       + `</div>`
     : `<div class="pf-pies">${longBox}</div>`;
-  el.innerHTML = `<div class="card">${acctBar}<div class="opt-grid">${tiles}</div>${donuts}${txTable}</div>`;
+  el.innerHTML = `<div class="card">${acctBar}<div class="opt-grid">${tiles}</div>${donuts}${buildPnlPanel()}${txTable}</div>`;
 }
 
 /* ---------- 错误 ---------- */
@@ -1263,6 +1317,7 @@ async function loadData(force = false) {
   if (wantBars && bars) { BARS = bars; lastBarsAt = Date.now(); }  // 拉失败保留旧 bars,下轮重试
   // 券商持仓:本地专用文件(gitignored)。用 loadJSON 相对路径 → localhost 有、公开站 404→null。
   PORTFOLIO = await loadJSON("data/portfolio.json");
+  PNL = await loadJSON("data/pnl.json");   // 盈亏诊断(公开);缺失则面板不显示该块
 }
 
 function renderAll(keepRange = false) {
@@ -1411,6 +1466,8 @@ function initToolbar() {
   });
   // Portfolio 饼图/图例点击 → 交易明细按该票 filter(再点同块或 ✕ 清除);交易明细翻页。委托到常驻容器 #portfolio。
   $("portfolio").addEventListener("click", (ev) => {
+    const pwBtn = ev.target.closest("#pf-pw button");
+    if (pwBtn) { pfPnlWin = pwBtn.dataset.pw; renderPortfolio(); return; }
     const pageBtn = ev.target.closest("[data-pfpage]");
     if (pageBtn) { pfTxPage += pageBtn.dataset.pfpage === "next" ? 1 : -1; renderPortfolio(); return; }
     if (ev.target.closest("#pf-clear")) { pfFilter = null; pfTxPage = 0; renderPortfolio(); return; }

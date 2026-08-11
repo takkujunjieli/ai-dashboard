@@ -232,6 +232,10 @@ footer { margin-top: 50px; text-align: center; }
 .pf-cap-tot { color: var(--text); font-weight: 600; margin-left: 6px; }
 .pf-pager { display: flex; align-items: center; gap: 12px; margin: 8px 0 2px; }
 .pf-pager .mini-btn:disabled { opacity: .4; cursor: default; }
+.pf-pnl { margin: 12px 0 4px; }
+.pf-pnl-bar { display: flex; align-items: center; gap: 12px; margin: 8px 0; flex-wrap: wrap; }
+.pf-pnl .chips.seg button[data-pw] { padding: 3px 12px; font-size: 12px; }
+.pf-hist { margin-top: 6px; max-width: 520px; }
 #gex-exp button.bucket-empty { opacity: .38; text-decoration: line-through; }  /* 该到期桶当前无合约 */
 .wb-overlays { gap: 8px; }
 .wb-overlays .chips button { font-size: 11px; padding: 3px 9px; }
