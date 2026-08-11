@@ -7,3 +7,6 @@ venv/
 # portfolio.json 会公开发布(持仓概览 + 最近14天交易);原料与历史仍留本地不上传
 data/portfolio_history.json
 data/_*_raw.json
+
+# 本地盈亏分析(含私人财务数据,绝不提交进公开 repo)
+analysis/

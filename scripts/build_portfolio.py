@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""合并各券商原料 → data/portfolio.json(本地专用,gitignored,绝不提交)。
+"""合并各券商原料 → data/portfolio.json(已公开发布);末尾顺带刷新 data/pnl.json(盈亏诊断)。
+原料 data/_*_raw.json 与 portfolio_history.json 仍本地专用不提交。
 
 每个券商写一份已归一的原料 data/_<broker>_raw.json,形如
   {"accounts":[{id,label}...],          # 可选;一个券商下的多个账户
@@ -121,6 +122,14 @@ def main() -> None:
 
     print(f"portfolio.json: {len(positions)} 持仓 / {len(transactions)} 交易 · "
           f"账户 {[a['id'] for a in accounts] or '(无原料)'}")
+
+    # 顺带刷新盈亏诊断(公开 data/pnl.json,供面板)。引擎独立、只对有完整历史的账户出;
+    # 失败不影响持仓构建。要更新公开站,build 后照常 commit + push + deploy。
+    try:
+        import analyze_pnl
+        analyze_pnl.emit_json()
+    except Exception as e:  # noqa: BLE001
+        print(f"pnl.json 生成跳过: {e}")
 
 
 if __name__ == "__main__":
