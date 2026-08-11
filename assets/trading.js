@@ -992,7 +992,7 @@ function renderOptPanel() {
   </div>
     <div class="prem-bar" title="Call premium share: ${cwInt}% (Put ${100 - cwInt}%)"><div class="prem-call" style="width:${cw}%"></div></div>
     <div class="muted small">Premium = activity (not buy/sell) — read direction with OI change + Real(sampled) GEX.</div>
-    ${(o.top_strikes || []).length ? `<details open><summary class="muted small">Most active strikes today</summary>
+    ${(o.top_strikes || []).length ? `<details><summary class="muted small">Most active strikes today</summary>
       <table><tr><th>Exp</th><th>Strike</th><th>Side</th><th>Vol</th><th>OI</th><th>Prem</th></tr>${(o.top_strikes || []).map((t) => `<tr>
         <td>${mmdd(t.exp)}</td><td>${t.strike}</td><td class="${t.side === "call" ? "up" : "down"}">${t.side === "call" ? "C" : "P"}</td>
         <td>${fmtNum(t.vol)}</td><td>${fmtNum(t.oi)}</td><td>${fmtMoney(t.premium)}</td></tr>`).join("")}</table></details>` : ""}
@@ -1151,7 +1151,7 @@ function renderPortfolio() {
          <button class="mini-btn" data-pfpage="next"${pfTxPage >= txPages - 1 ? " disabled" : ""}>下一页 ›</button>
        </div>`
     : "";
-  const txTable = `<details open><summary class="muted small">交易明细 (${txTotal})</summary>
+  const txTable = `<details><summary class="muted small">交易明细 (${txTotal})</summary>
        <div class="pf-txhead">${chip}</div>
        ${txTotal ? `<table class="bt-table"><tr><th>时间</th><th>种类</th><th>代码</th><th>方向</th><th>数量</th><th>价格</th><th>持仓变化</th></tr>${txRows}</table>${pager}`
     : `<div class="muted small">${pfFilter ? esc(pfFilter) + " 无交易记录" : "无交易记录"}</div>`}</details>`;
