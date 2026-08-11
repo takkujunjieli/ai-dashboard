@@ -128,6 +128,33 @@ function vwapPerDay(bars) {
   return out;
 }
 
+/* VWAP 统一走 1m 口径:无论显示周期是 1m/5m/15m,会话 VWAP 都从 1m 线算(每日重置、优先用 vw),
+   保证准度不随周期变粗、且与 stat 数字同源。rth 决定是否只用 RTH 分钟(跟随图表 RTH/+ETH 模式)。 */
+function vwap1mSeries(sym, rth) {
+  const b1 = rth ? barsFor(sym, "1m").filter((b) => isRTH(b[0])) : barsFor(sym, "1m");
+  return { bars: b1, vals: vwapPerDay(b1) };
+}
+/* 把 1m 累计 VWAP 采样到显示周期的每根 bar:取累计到该 bar 末的值(末根=最新 1m 值)。
+   1m 比显示周期细,每根显示 bar 区间内必有 ≥1 根 1m,故不会串日;无 1m 覆盖的老 bar 留 null。 */
+function vwapSampledTo(sym, rth, dbars) {
+  const { bars: b1, vals } = vwap1mSeries(sym, rth);
+  const out = new Array(dbars.length).fill(null);
+  let j = 0;
+  for (let i = 0; i < dbars.length; i++) {
+    const nextOpen = i + 1 < dbars.length ? dbars[i + 1][0] : Infinity;
+    let v = null;
+    while (j < b1.length && b1[j][0] < nextOpen) { if (vals[j] != null) v = vals[j]; j++; }
+    out[i] = v;
+  }
+  return out;
+}
+/* 当前会话 1m VWAP 的最新值,供 stat 与图表线保持一致。 */
+function vwapLatest(sym, rth) {
+  const { vals } = vwap1mSeries(sym, rth);
+  for (let i = vals.length - 1; i >= 0; i--) if (vals[i] != null) return vals[i];
+  return null;
+}
+
 /* 布林带:中轨 SMA(n),上下轨 ±k×标准差。返回 {up, lo} 与 closes 对齐(前 n-1 为 null) */
 function bollinger(closes, n = 20, k = 2) {
   const up = [], lo = [];
@@ -427,7 +454,7 @@ function renderChart() {
   const line = (vals) => vals.map((v, i) => v == null ? null : ({ time: t(bars[i]), value: v })).filter(Boolean);
   ema9L.setData(line(ema(closes, 9)));
   ema21L.setData(line(ema(closes, 21)));
-  vwapL.setData(daily ? [] : line(vwapPerDay(bars)));
+  vwapL.setData(daily ? [] : line(vwapSampledTo(SYM, !showETH, bars)));  // VWAP 统一 1m 口径,采样到显示周期
   // 布林带 BB(20,2)
   const bb = bollinger(closes, 20, 2);
   bbU.setData(line(bb.up)); bbL.setData(line(bb.lo));
@@ -826,7 +853,7 @@ function renderStats() {
     tile("Data", time),
     tile("RSI 1m", d.ind?.rsi_m != null ? d.ind.rsi_m : null),
     tile("RSI D", d.ind?.rsi_d != null ? d.ind.rsi_d : null),
-    tile("VWAP", d.vwap != null ? d.vwap : null),
+    tile("VWAP", (() => { const v = vwapLatest(SYM, !showETH); return v != null ? +v.toFixed(2) : (d.vwap != null ? d.vwap : null); })()),  // 与图表 VWAP 线同源(1m 口径,跟随 RTH/+ETH)
     tile(`Net GEX${g.fallback ? " (nearest)" : ""}`,
       g.net_gex != null ? fmtMoney(g.net_gex) : null,
       gexSub,
