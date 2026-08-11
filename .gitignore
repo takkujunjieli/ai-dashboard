@@ -4,7 +4,9 @@ venv/
 .DS_Store
 .env
 
-# portfolio.json 会公开发布(持仓概览 + 最近14天交易);原料与历史仍留本地不上传
+# 持仓/盈亏数据退回本地专用,不再公开发布(公开站不显示;原料与历史一直不上传)
+data/portfolio.json
+data/pnl.json
 data/portfolio_history.json
 data/_*_raw.json
 
