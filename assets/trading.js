@@ -1084,6 +1084,10 @@ function buildPnlPanel() {
     tile("偏度", skewTxt, m.skew == null ? "" : (m.skew < 0 ? "左尾·大亏拖累" : "右尾·大赢主导"), (m.skew ?? 0) >= 0 ? "up" : "down", "收益分布偏度;负=有大亏肥尾,正=有大赢肥尾"),
     tile("亏损集中度", m.loss_conc != null ? `${(m.loss_conc * 100).toFixed(0)}%` : "—", "最大输家占毛亏", (m.loss_conc ?? 0) > 0.5 ? "down" : "", "单只票占全部亏损的比例;越高=亏损越集中在一只"),
     tile("期望/笔", usd(m.expectancy), "每笔平均", m.expectancy >= 0 ? "up" : "down"),
+    tile("波动率", m.vol_daily != null ? usd(m.vol_daily) : "—", "日已实现P&L σ", "", "日已实现盈亏的标准差(美元);衡量每日盈亏波动大小"),
+    tile("Sharpe", m.sharpe != null ? m.sharpe.toFixed(2) : "—", "年化·日P&L口径", (m.sharpe ?? 0) >= 1 ? "up" : "", "基于日已实现$P&L(rf=0,×√252),非账户%收益 Sharpe——读数偏高,勿与标准 Sharpe 直接比较"),
+    tile("Sortino", m.sortino != null ? m.sortino.toFixed(2) : "—", "年化·仅下行", (m.sortino ?? 0) >= 1 ? "up" : "", "同 Sharpe 但分母只用下行波动(亏损日)"),
+    tile("最大回撤", m.max_dd != null ? usd(m.max_dd) : "—", "已实现累计峰谷", (m.max_dd ?? 0) < 0 ? "down" : "", "已实现盈亏累计曲线从峰值的最大回落(美元)"),
   ].join("");
   return `<details open class="pf-pnl"><summary class="muted small">📊 盈亏诊断 · ${esc(acc.label)} <span class="muted">(已实现,截至 ${esc(PNL.as_of)})</span></summary>
       <div class="pf-pnl-bar"><div class="chips seg" id="pf-pw">${toggle}</div><span class="muted small">收益分布 · 红=亏 绿=盈 · 灰线=0 · 黄虚线=均值</span></div>

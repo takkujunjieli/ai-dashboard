@@ -67,8 +67,17 @@ def _skew(xs):
     return (sum((x - m) ** 3 for x in xs) / n) / (s ** 3)
 
 
-def window_stats(ev):
-    """ev: [(date, account, kind, sym, pnl)] 已在窗口内。返回 {metrics, trades}。"""
+def _std(xs):
+    n = len(xs)
+    if n < 2:
+        return None
+    m = sum(xs) / n
+    return math.sqrt(sum((x - m) ** 2 for x in xs) / (n - 1))
+
+
+def window_stats(ev, start=None, as_of=None):
+    """ev: [(date, account, kind, sym, pnl)] 已在窗口内。返回 {metrics, trades}。
+    给 start/as_of 时,额外算日已实现 P&L 序列(工作日无交易填0)的波动率/Sharpe/Sortino/最大回撤。"""
     if not ev:
         return None
     pnls = [e[4] for e in ev]
@@ -93,6 +102,33 @@ def window_stats(ev):
         "profit_conc": round(sum(sorted([v for v in bysym.values() if v > 0], reverse=True)[:5]) / gp, 4) if gp else None,
         "max_win": round(max(pnls), 2), "max_loss": round(min(pnls), 2),
     }
+    # 日已实现 P&L 序列(窗口内工作日,无交易日填 0)→ 波动率/Sharpe/Sortino/最大回撤。
+    # 口径:基于"日已实现美元 P&L"(非账户%收益,无每日净值);rf=0;年化 ×√252。
+    if start and as_of:
+        by_day = defaultdict(float)
+        for d, a, k, s, p in ev:
+            by_day[d] += p
+        daily, cur, d1 = [], date.fromisoformat(start), date.fromisoformat(as_of)
+        while cur <= d1:
+            if cur.weekday() < 5:
+                daily.append(by_day.get(cur.isoformat(), 0.0))
+            cur += timedelta(days=1)
+        ann = math.sqrt(252)
+        md = sum(daily) / len(daily) if daily else 0.0
+        sd = _std(daily)
+        dd_dev = math.sqrt(sum(min(x, 0.0) ** 2 for x in daily) / len(daily)) if daily else 0.0
+        cum = peak = mdd = 0.0
+        for x in daily:
+            cum += x
+            peak = max(peak, cum)
+            mdd = min(mdd, cum - peak)
+        metrics.update({
+            "n_days": len(daily),
+            "vol_daily": round(sd, 2) if sd is not None else None,
+            "sharpe": round(md / sd * ann, 2) if sd else None,
+            "sortino": round(md / dd_dev * ann, 2) if dd_dev else None,
+            "max_dd": round(mdd, 2),
+        })
     trades = [{"d": d, "s": s, "k": k, "p": round(p, 2)} for d, a, k, s, p in ev]
     return {"metrics": metrics, "trades": trades}
 
@@ -123,7 +159,7 @@ def emit_json():
     for acct, evs in by_acct.items():
         w = {}
         for wname, start in windows.items():
-            ws = window_stats([e for e in evs if e[0] >= start])
+            ws = window_stats([e for e in evs if e[0] >= start], start, as_of)
             if ws:
                 w[wname] = ws
         if w:
