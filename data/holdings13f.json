@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-08-13T22:07:18+00:00",
+ "updated_at": "2026-08-14T21:45:10+00:00",
  "filers": {
   "0001067983": "Berkshire Hathaway",
   "0001037389": "Renaissance Technologies",
@@ -16,6 +16,128 @@
   "0000093751": "State Street"
  },
  "tickers": {
+  "AMD": {
+   "periods": [
+    "2026-06-30",
+    "2026-03-31",
+    "2025-12-31",
+    "2025-09-30"
+   ],
+   "holdings": [
+    {
+     "filer": "Vanguard Group",
+     "cik": "0000102909",
+     "period": "2025-12-31",
+     "shares": 142338013,
+     "value": 30483108864
+    },
+    {
+     "filer": "Two Sigma",
+     "cik": "0001179392",
+     "period": "2026-03-31",
+     "shares": 1372004,
+     "value": 279106774
+    },
+    {
+     "filer": "State Street",
+     "cik": "0000093751",
+     "period": "2026-06-30",
+     "shares": 74361687,
+     "value": 43197447595
+    },
+    {
+     "filer": "State Street",
+     "cik": "0000093751",
+     "period": "2026-03-31",
+     "shares": 74771220,
+     "value": 15210709285
+    },
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-06-30",
+     "shares": 829697,
+     "value": 463818193
+    },
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-03-31",
+     "shares": 216944,
+     "value": 42841643
+    },
+    {
+     "filer": "Point72",
+     "cik": "0001603466",
+     "period": "2026-03-31",
+     "shares": 1414656,
+     "value": 287783470
+    },
+    {
+     "filer": "Point72",
+     "cik": "0001603466",
+     "period": "2025-12-31",
+     "shares": 545993,
+     "value": 116929861
+    },
+    {
+     "filer": "Millennium Management",
+     "cik": "0001273087",
+     "period": "2026-03-31",
+     "shares": 1443561,
+     "value": 293663614
+    },
+    {
+     "filer": "D.E. Shaw",
+     "cik": "0001009207",
+     "period": "2026-03-31",
+     "shares": 3853311,
+     "value": 783879057
+    },
+    {
+     "filer": "D.E. Shaw",
+     "cik": "0001009207",
+     "period": "2025-12-31",
+     "shares": 846734,
+     "value": 181336553
+    },
+    {
+     "filer": "Coatue Management",
+     "cik": "0001135730",
+     "period": "2025-12-31",
+     "shares": 2478086,
+     "value": 530706898
+    },
+    {
+     "filer": "Coatue Management",
+     "cik": "0001135730",
+     "period": "2025-09-30",
+     "shares": 1239043,
+     "value": 200464767
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2026-03-31",
+     "shares": 1292767,
+     "value": 262987591
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2025-12-31",
+     "shares": 1656527,
+     "value": 354761822
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2025-09-30",
+     "shares": 1794801,
+     "value": 290380854
+    }
+   ]
+  },
   "CCL": {
    "periods": [
     "2026-06-30",
@@ -55,16 +177,16 @@
     {
      "filer": "Renaissance Technologies",
      "cik": "0001037389",
-     "period": "2026-03-31",
-     "shares": 5240370,
-     "value": 135330148
+     "period": "2026-06-30",
+     "shares": 493000,
+     "value": 14085010
     },
     {
      "filer": "Renaissance Technologies",
      "cik": "0001037389",
-     "period": "2025-12-31",
-     "shares": 9179393,
-     "value": 279728828
+     "period": "2026-03-31",
+     "shares": 5240370,
+     "value": 135330148
     },
     {
      "filer": "Point72",
@@ -114,6 +236,142 @@
      "period": "2025-09-30",
      "shares": 198182,
      "value": 5729442
+    }
+   ]
+  },
+  "NVDA": {
+   "periods": [
+    "2026-06-30",
+    "2026-03-31",
+    "2025-12-31",
+    "2025-09-30"
+   ],
+   "holdings": [
+    {
+     "filer": "Vanguard Group",
+     "cik": "0000102909",
+     "period": "2025-12-31",
+     "shares": 38245058,
+     "value": 7132703317
+    },
+    {
+     "filer": "Two Sigma",
+     "cik": "0001179392",
+     "period": "2026-03-31",
+     "shares": 11234245,
+     "value": 1959252328
+    },
+    {
+     "filer": "Tiger Global",
+     "cik": "0001167483",
+     "period": "2026-03-31",
+     "shares": 12011752,
+     "value": 2094849549
+    },
+    {
+     "filer": "Tiger Global",
+     "cik": "0001167483",
+     "period": "2025-12-31",
+     "shares": 11011752,
+     "value": 2053691748
+    },
+    {
+     "filer": "Tiger Global",
+     "cik": "0001167483",
+     "period": "2025-09-30",
+     "shares": 11709752,
+     "value": 2184805528
+    },
+    {
+     "filer": "State Street",
+     "cik": "0000093751",
+     "period": "2026-06-30",
+     "shares": 1009783437,
+     "value": 202047567909
+    },
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-06-30",
+     "shares": 7091256,
+     "value": 1418869170
+    },
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-03-31",
+     "shares": 2526948,
+     "value": 440696066
+    },
+    {
+     "filer": "Point72",
+     "cik": "0001603466",
+     "period": "2026-03-31",
+     "shares": 7584654,
+     "value": 1322763658
+    },
+    {
+     "filer": "Millennium Management",
+     "cik": "0001273087",
+     "period": "2026-03-31",
+     "shares": 10585647,
+     "value": 1846136837
+    },
+    {
+     "filer": "D.E. Shaw",
+     "cik": "0001009207",
+     "period": "2026-03-31",
+     "shares": 14705215,
+     "value": 2564589496
+    },
+    {
+     "filer": "Coatue Management",
+     "cik": "0001135730",
+     "period": "2026-03-31",
+     "shares": 6331620,
+     "value": 1104234528
+    },
+    {
+     "filer": "Coatue Management",
+     "cik": "0001135730",
+     "period": "2025-12-31",
+     "shares": 18406676,
+     "value": 3432845076
+    },
+    {
+     "filer": "Coatue Management",
+     "cik": "0001135730",
+     "period": "2025-09-30",
+     "shares": 9870743,
+     "value": 1841683229
+    },
+    {
+     "filer": "Citadel Advisors",
+     "cik": "0001423053",
+     "period": "2026-03-31",
+     "shares": 9595733,
+     "value": 1673495835
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2026-03-31",
+     "shares": 4693003,
+     "value": 818459723
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2025-12-31",
+     "shares": 3865205,
+     "value": 720860733
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2025-09-30",
+     "shares": 2509751,
+     "value": 468269342
     }
    ]
   },
@@ -177,16 +435,16 @@
     {
      "filer": "Renaissance Technologies",
      "cik": "0001037389",
-     "period": "2026-03-31",
-     "shares": 634500,
-     "value": 13413330
+     "period": "2026-06-30",
+     "shares": 3027800,
+     "value": 54772902
     },
     {
      "filer": "Renaissance Technologies",
      "cik": "0001037389",
-     "period": "2025-12-31",
-     "shares": 1768200,
-     "value": 66077634
+     "period": "2026-03-31",
+     "shares": 634500,
+     "value": 13413330
     },
     {
      "filer": "Millennium Management",
@@ -215,6 +473,114 @@
      "period": "2026-03-31",
      "shares": 2491436,
      "value": 52668957
+    }
+   ]
+  },
+  "INTC": {
+   "periods": [
+    "2026-06-30",
+    "2026-03-31",
+    "2025-12-31",
+    "2024-06-30"
+   ],
+   "holdings": [
+    {
+     "filer": "Vanguard Group",
+     "cik": "0000102909",
+     "period": "2025-12-31",
+     "shares": 370026358,
+     "value": 13653972610
+    },
+    {
+     "filer": "Two Sigma",
+     "cik": "0001179392",
+     "period": "2026-03-31",
+     "shares": 351850,
+     "value": 15527141
+    },
+    {
+     "filer": "Two Sigma",
+     "cik": "0001179392",
+     "period": "2025-12-31",
+     "shares": 3283737,
+     "value": 121169895
+    },
+    {
+     "filer": "Tiger Global",
+     "cik": "0001167483",
+     "period": "2026-03-31",
+     "shares": 1638700,
+     "value": 72315831
+    },
+    {
+     "filer": "State Street",
+     "cik": "0000093751",
+     "period": "2026-06-30",
+     "shares": 216849675,
+     "value": 30278720120
+    },
+    {
+     "filer": "State Street",
+     "cik": "0000093751",
+     "period": "2026-03-31",
+     "shares": 214321018,
+     "value": 9457986524
+    },
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-06-30",
+     "shares": 7321928,
+     "value": 1022356867
+    },
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-03-31",
+     "shares": 7399394,
+     "value": 326535257
+    },
+    {
+     "filer": "Point72",
+     "cik": "0001603466",
+     "period": "2026-03-31",
+     "shares": 2947714,
+     "value": 130082619
+    },
+    {
+     "filer": "Millennium Management",
+     "cik": "0001273087",
+     "period": "2026-03-31",
+     "shares": 1901836,
+     "value": 83928023
+    },
+    {
+     "filer": "D.E. Shaw",
+     "cik": "0001009207",
+     "period": "2026-03-31",
+     "shares": 16956585,
+     "value": 748294096
+    },
+    {
+     "filer": "Citadel Advisors",
+     "cik": "0001423053",
+     "period": "2026-03-31",
+     "shares": 3435362,
+     "value": 151602525
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2025-12-31",
+     "shares": 12859,
+     "value": 474497
+    },
+    {
+     "filer": "BlackRock",
+     "cik": "0001364742",
+     "period": "2024-06-30",
+     "shares": 13884406,
+     "value": 430000054
     }
    ]
   },
@@ -257,6 +623,13 @@
     {
      "filer": "Renaissance Technologies",
      "cik": "0001037389",
+     "period": "2026-06-30",
+     "shares": 1527297,
+     "value": 43650148
+    },
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
      "period": "2026-03-31",
      "shares": 2485597,
      "value": 54534000
@@ -295,6 +668,114 @@
      "period": "2024-12-31",
      "shares": 487696,
      "value": 10958529
+    }
+   ]
+  },
+  "MU": {
+   "periods": [
+    "2026-06-30",
+    "2026-03-31",
+    "2025-12-31",
+    "2025-09-30"
+   ],
+   "holdings": [
+    {
+     "filer": "Vanguard Group",
+     "cik": "0000102909",
+     "period": "2025-12-31",
+     "shares": 6805352,
+     "value": 1942315514
+    },
+    {
+     "filer": "Two Sigma",
+     "cik": "0001179392",
+     "period": "2026-03-31",
+     "shares": 2290444,
+     "value": 773803601
+    },
+    {
+     "filer": "State Street",
+     "cik": "0000093751",
+     "period": "2026-06-30",
+     "shares": 50075870,
+     "value": 57802075982
+    },
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-06-30",
+     "shares": 211580,
+     "value": 244224678
+    },
+    {
+     "filer": "Renaissance Technologies",
+     "cik": "0001037389",
+     "period": "2026-03-31",
+     "shares": 2162986,
+     "value": 730739401
+    },
+    {
+     "filer": "Point72",
+     "cik": "0001603466",
+     "period": "2026-03-31",
+     "shares": 567557,
+     "value": 191743457
+    },
+    {
+     "filer": "Point72",
+     "cik": "0001603466",
+     "period": "2025-12-31",
+     "shares": 785940,
+     "value": 224315135
+    },
+    {
+     "filer": "Millennium Management",
+     "cik": "0001273087",
+     "period": "2026-03-31",
+     "shares": 1605077,
+     "value": 542259214
+    },
+    {
+     "filer": "D.E. Shaw",
+     "cik": "0001009207",
+     "period": "2026-03-31",
+     "shares": 3658476,
+     "value": 1235979531
+    },
+    {
+     "filer": "Coatue Management",
+     "cik": "0001135730",
+     "period": "2026-03-31",
+     "shares": 165931,
+     "value": 56058129
+    },
+    {
+     "filer": "Citadel Advisors",
+     "cik": "0001423053",
+     "period": "2026-03-31",
+     "shares": 4246007,
+     "value": 1434471005
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2026-03-31",
+     "shares": 1475704,
+     "value": 498551839
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2025-12-31",
+     "shares": 889640,
+     "value": 253912152
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2025-09-30",
+     "shares": 1696,
+     "value": 283775
     }
    ]
   },
@@ -443,13 +924,6 @@
      "value": 126089212
     },
     {
-     "filer": "Renaissance Technologies",
-     "cik": "0001037389",
-     "period": "2025-12-31",
-     "shares": 1331977,
-     "value": 204045529
-    },
-    {
      "filer": "Millennium Management",
      "cik": "0001273087",
      "period": "2026-03-31",
@@ -483,480 +957,6 @@
      "period": "2025-09-30",
      "shares": 301993,
      "value": 277918118
-    }
-   ]
-  },
-  "INTC": {
-   "periods": [
-    "2026-06-30",
-    "2026-03-31",
-    "2025-12-31",
-    "2024-06-30"
-   ],
-   "holdings": [
-    {
-     "filer": "Vanguard Group",
-     "cik": "0000102909",
-     "period": "2025-12-31",
-     "shares": 370026358,
-     "value": 13653972610
-    },
-    {
-     "filer": "Two Sigma",
-     "cik": "0001179392",
-     "period": "2026-03-31",
-     "shares": 351850,
-     "value": 15527141
-    },
-    {
-     "filer": "Two Sigma",
-     "cik": "0001179392",
-     "period": "2025-12-31",
-     "shares": 3283737,
-     "value": 121169895
-    },
-    {
-     "filer": "Tiger Global",
-     "cik": "0001167483",
-     "period": "2026-03-31",
-     "shares": 1638700,
-     "value": 72315831
-    },
-    {
-     "filer": "State Street",
-     "cik": "0000093751",
-     "period": "2026-06-30",
-     "shares": 216849675,
-     "value": 30278720120
-    },
-    {
-     "filer": "State Street",
-     "cik": "0000093751",
-     "period": "2026-03-31",
-     "shares": 214321018,
-     "value": 9457986524
-    },
-    {
-     "filer": "Renaissance Technologies",
-     "cik": "0001037389",
-     "period": "2026-03-31",
-     "shares": 7399394,
-     "value": 326535257
-    },
-    {
-     "filer": "Renaissance Technologies",
-     "cik": "0001037389",
-     "period": "2025-12-31",
-     "shares": 9889367,
-     "value": 364920598
-    },
-    {
-     "filer": "Point72",
-     "cik": "0001603466",
-     "period": "2026-03-31",
-     "shares": 2947714,
-     "value": 130082619
-    },
-    {
-     "filer": "Millennium Management",
-     "cik": "0001273087",
-     "period": "2026-03-31",
-     "shares": 1901836,
-     "value": 83928023
-    },
-    {
-     "filer": "D.E. Shaw",
-     "cik": "0001009207",
-     "period": "2026-03-31",
-     "shares": 16956585,
-     "value": 748294096
-    },
-    {
-     "filer": "Citadel Advisors",
-     "cik": "0001423053",
-     "period": "2026-03-31",
-     "shares": 3435362,
-     "value": 151602525
-    },
-    {
-     "filer": "Bridgewater Associates",
-     "cik": "0001350694",
-     "period": "2025-12-31",
-     "shares": 12859,
-     "value": 474497
-    },
-    {
-     "filer": "BlackRock",
-     "cik": "0001364742",
-     "period": "2024-06-30",
-     "shares": 13884406,
-     "value": 430000054
-    }
-   ]
-  },
-  "MU": {
-   "periods": [
-    "2026-06-30",
-    "2026-03-31",
-    "2025-12-31",
-    "2025-09-30"
-   ],
-   "holdings": [
-    {
-     "filer": "Vanguard Group",
-     "cik": "0000102909",
-     "period": "2025-12-31",
-     "shares": 6805352,
-     "value": 1942315514
-    },
-    {
-     "filer": "Two Sigma",
-     "cik": "0001179392",
-     "period": "2026-03-31",
-     "shares": 2290444,
-     "value": 773803601
-    },
-    {
-     "filer": "State Street",
-     "cik": "0000093751",
-     "period": "2026-06-30",
-     "shares": 50075870,
-     "value": 57802075982
-    },
-    {
-     "filer": "Renaissance Technologies",
-     "cik": "0001037389",
-     "period": "2026-03-31",
-     "shares": 2162986,
-     "value": 730739401
-    },
-    {
-     "filer": "Renaissance Technologies",
-     "cik": "0001037389",
-     "period": "2025-12-31",
-     "shares": 3011143,
-     "value": 859411122
-    },
-    {
-     "filer": "Point72",
-     "cik": "0001603466",
-     "period": "2026-03-31",
-     "shares": 567557,
-     "value": 191743457
-    },
-    {
-     "filer": "Point72",
-     "cik": "0001603466",
-     "period": "2025-12-31",
-     "shares": 785940,
-     "value": 224315135
-    },
-    {
-     "filer": "Millennium Management",
-     "cik": "0001273087",
-     "period": "2026-03-31",
-     "shares": 1605077,
-     "value": 542259214
-    },
-    {
-     "filer": "D.E. Shaw",
-     "cik": "0001009207",
-     "period": "2026-03-31",
-     "shares": 3658476,
-     "value": 1235979531
-    },
-    {
-     "filer": "Coatue Management",
-     "cik": "0001135730",
-     "period": "2026-03-31",
-     "shares": 165931,
-     "value": 56058129
-    },
-    {
-     "filer": "Citadel Advisors",
-     "cik": "0001423053",
-     "period": "2026-03-31",
-     "shares": 4246007,
-     "value": 1434471005
-    },
-    {
-     "filer": "Bridgewater Associates",
-     "cik": "0001350694",
-     "period": "2026-03-31",
-     "shares": 1475704,
-     "value": 498551839
-    },
-    {
-     "filer": "Bridgewater Associates",
-     "cik": "0001350694",
-     "period": "2025-12-31",
-     "shares": 889640,
-     "value": 253912152
-    },
-    {
-     "filer": "Bridgewater Associates",
-     "cik": "0001350694",
-     "period": "2025-09-30",
-     "shares": 1696,
-     "value": 283775
-    }
-   ]
-  },
-  "NVDA": {
-   "periods": [
-    "2026-06-30",
-    "2026-03-31",
-    "2025-12-31",
-    "2025-09-30"
-   ],
-   "holdings": [
-    {
-     "filer": "Vanguard Group",
-     "cik": "0000102909",
-     "period": "2025-12-31",
-     "shares": 38245058,
-     "value": 7132703317
-    },
-    {
-     "filer": "Two Sigma",
-     "cik": "0001179392",
-     "period": "2026-03-31",
-     "shares": 11234245,
-     "value": 1959252328
-    },
-    {
-     "filer": "Tiger Global",
-     "cik": "0001167483",
-     "period": "2026-03-31",
-     "shares": 12011752,
-     "value": 2094849549
-    },
-    {
-     "filer": "Tiger Global",
-     "cik": "0001167483",
-     "period": "2025-12-31",
-     "shares": 11011752,
-     "value": 2053691748
-    },
-    {
-     "filer": "Tiger Global",
-     "cik": "0001167483",
-     "period": "2025-09-30",
-     "shares": 11709752,
-     "value": 2184805528
-    },
-    {
-     "filer": "State Street",
-     "cik": "0000093751",
-     "period": "2026-06-30",
-     "shares": 1009783437,
-     "value": 202047567909
-    },
-    {
-     "filer": "Renaissance Technologies",
-     "cik": "0001037389",
-     "period": "2026-03-31",
-     "shares": 2526948,
-     "value": 440696066
-    },
-    {
-     "filer": "Renaissance Technologies",
-     "cik": "0001037389",
-     "period": "2025-12-31",
-     "shares": 871420,
-     "value": 162519830
-    },
-    {
-     "filer": "Point72",
-     "cik": "0001603466",
-     "period": "2026-03-31",
-     "shares": 7584654,
-     "value": 1322763658
-    },
-    {
-     "filer": "Millennium Management",
-     "cik": "0001273087",
-     "period": "2026-03-31",
-     "shares": 10585647,
-     "value": 1846136837
-    },
-    {
-     "filer": "D.E. Shaw",
-     "cik": "0001009207",
-     "period": "2026-03-31",
-     "shares": 14705215,
-     "value": 2564589496
-    },
-    {
-     "filer": "Coatue Management",
-     "cik": "0001135730",
-     "period": "2026-03-31",
-     "shares": 6331620,
-     "value": 1104234528
-    },
-    {
-     "filer": "Coatue Management",
-     "cik": "0001135730",
-     "period": "2025-12-31",
-     "shares": 18406676,
-     "value": 3432845076
-    },
-    {
-     "filer": "Coatue Management",
-     "cik": "0001135730",
-     "period": "2025-09-30",
-     "shares": 9870743,
-     "value": 1841683229
-    },
-    {
-     "filer": "Citadel Advisors",
-     "cik": "0001423053",
-     "period": "2026-03-31",
-     "shares": 9595733,
-     "value": 1673495835
-    },
-    {
-     "filer": "Bridgewater Associates",
-     "cik": "0001350694",
-     "period": "2026-03-31",
-     "shares": 4693003,
-     "value": 818459723
-    },
-    {
-     "filer": "Bridgewater Associates",
-     "cik": "0001350694",
-     "period": "2025-12-31",
-     "shares": 3865205,
-     "value": 720860733
-    },
-    {
-     "filer": "Bridgewater Associates",
-     "cik": "0001350694",
-     "period": "2025-09-30",
-     "shares": 2509751,
-     "value": 468269342
-    }
-   ]
-  },
-  "AMD": {
-   "periods": [
-    "2026-06-30",
-    "2026-03-31",
-    "2025-12-31",
-    "2025-09-30"
-   ],
-   "holdings": [
-    {
-     "filer": "Vanguard Group",
-     "cik": "0000102909",
-     "period": "2025-12-31",
-     "shares": 142338013,
-     "value": 30483108864
-    },
-    {
-     "filer": "Two Sigma",
-     "cik": "0001179392",
-     "period": "2026-03-31",
-     "shares": 1372004,
-     "value": 279106774
-    },
-    {
-     "filer": "State Street",
-     "cik": "0000093751",
-     "period": "2026-06-30",
-     "shares": 74361687,
-     "value": 43197447595
-    },
-    {
-     "filer": "State Street",
-     "cik": "0000093751",
-     "period": "2026-03-31",
-     "shares": 74771220,
-     "value": 15210709285
-    },
-    {
-     "filer": "Renaissance Technologies",
-     "cik": "0001037389",
-     "period": "2026-03-31",
-     "shares": 216944,
-     "value": 42841643
-    },
-    {
-     "filer": "Renaissance Technologies",
-     "cik": "0001037389",
-     "period": "2025-12-31",
-     "shares": 1264310,
-     "value": 267912229
-    },
-    {
-     "filer": "Point72",
-     "cik": "0001603466",
-     "period": "2026-03-31",
-     "shares": 1414656,
-     "value": 287783470
-    },
-    {
-     "filer": "Point72",
-     "cik": "0001603466",
-     "period": "2025-12-31",
-     "shares": 545993,
-     "value": 116929861
-    },
-    {
-     "filer": "Millennium Management",
-     "cik": "0001273087",
-     "period": "2026-03-31",
-     "shares": 1443561,
-     "value": 293663614
-    },
-    {
-     "filer": "D.E. Shaw",
-     "cik": "0001009207",
-     "period": "2026-03-31",
-     "shares": 3853311,
-     "value": 783879057
-    },
-    {
-     "filer": "D.E. Shaw",
-     "cik": "0001009207",
-     "period": "2025-12-31",
-     "shares": 846734,
-     "value": 181336553
-    },
-    {
-     "filer": "Coatue Management",
-     "cik": "0001135730",
-     "period": "2025-12-31",
-     "shares": 2478086,
-     "value": 530706898
-    },
-    {
-     "filer": "Coatue Management",
-     "cik": "0001135730",
-     "period": "2025-09-30",
-     "shares": 1239043,
-     "value": 200464767
-    },
-    {
-     "filer": "Bridgewater Associates",
-     "cik": "0001350694",
-     "period": "2026-03-31",
-     "shares": 1292767,
-     "value": 262987591
-    },
-    {
-     "filer": "Bridgewater Associates",
-     "cik": "0001350694",
-     "period": "2025-12-31",
-     "shares": 1656527,
-     "value": 354761822
-    },
-    {
-     "filer": "Bridgewater Associates",
-     "cik": "0001350694",
-     "period": "2025-09-30",
-     "shares": 1794801,
-     "value": 290380854
     }
    ]
   },
