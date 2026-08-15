@@ -21,7 +21,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-RAW_FILES = ["data/_takku_raw.json"]   # 有完整历史、可算 P&L 的账户原料(hui 数据不全,暂不算)
+RAW_FILES = ["data/_takku_raw.json", "data/_rh_raw.json"]   # 有完整历史、可算 P&L 的账户原料
 
 
 def realized_events(transactions):
@@ -155,15 +155,24 @@ def emit_json():
     by_acct = defaultdict(list)
     for e in all_ev:
         by_acct[e[1]].append(e)
-    accounts = {}
-    for acct, evs in by_acct.items():
+    def build_windows(evs):
         w = {}
         for wname, start in windows.items():
             ws = window_stats([e for e in evs if e[0] >= start], start, as_of)
             if ws:
                 w[wname] = ws
+        return w
+
+    accounts = {}
+    for acct, evs in by_acct.items():
+        w = build_windows(evs)
         if w:
             accounts[acct] = {"label": labels.get(acct, acct), "windows": w}
+    # "全部"合并视图:跨账户所有已实现事件(供 UI 选"全部账户"时显示)
+    if len(accounts) > 1:
+        wall = build_windows(all_ev)
+        if wall:
+            accounts["_all"] = {"label": "全部账户", "windows": wall}
     out = {"updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
            "as_of": as_of, "accounts": accounts}
     (ROOT / "data/pnl.json").write_text(json.dumps(out, ensure_ascii=False, indent=1))

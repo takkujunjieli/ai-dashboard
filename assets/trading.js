@@ -1067,9 +1067,9 @@ function buildHist(trades) {
 /* 盈亏诊断块:窗口切换(YTD/3M/1M)+ 量化指标 tiles + 收益分布。仅对有完整历史数据的账户显示。 */
 function buildPnlPanel() {
   if (!PNL || !PNL.accounts) return "";
-  const ids = Object.keys(PNL.accounts);
-  const aid = (pfAccount && PNL.accounts[pfAccount]) ? pfAccount
-    : (!pfAccount && ids.length === 1) ? ids[0] : null;   // 全部 且唯一有数据账户 → 显示它;选了无数据账户 → 不显示
+  const aid = pfAccount
+    ? (PNL.accounts[pfAccount] ? pfAccount : null)          // 选了某账户:有数据才显示,否则不显示
+    : (PNL.accounts["_all"] ? "_all" : Object.keys(PNL.accounts)[0] || null);  // 全部:优先合并视图,否则唯一账户
   if (!aid) return "";
   const acc = PNL.accounts[aid];
   const win = acc.windows[pfPnlWin] ? pfPnlWin : Object.keys(acc.windows)[0];
