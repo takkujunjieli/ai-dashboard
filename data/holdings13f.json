@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-08-17T21:45:23+00:00",
+ "updated_at": "2026-08-18T21:43:46+00:00",
  "filers": {
   "0001067983": "Berkshire Hathaway",
   "0001037389": "Renaissance Technologies",
@@ -1041,6 +1041,100 @@
      "period": "2025-09-30",
      "shares": 301993,
      "value": 277918118
+    }
+   ]
+  },
+  "COHR": {
+   "periods": [
+    "2026-06-30",
+    "2026-03-31",
+    "2025-12-31",
+    "2024-06-30"
+   ],
+   "holdings": [
+    {
+     "filer": "Vanguard Group",
+     "cik": "0000102909",
+     "period": "2025-12-31",
+     "shares": 62419,
+     "value": 11520675
+    },
+    {
+     "filer": "Two Sigma",
+     "cik": "0001179392",
+     "period": "2026-06-30",
+     "shares": 28944,
+     "value": 11417540
+    },
+    {
+     "filer": "State Street",
+     "cik": "0000093751",
+     "period": "2026-06-30",
+     "shares": 8591135,
+     "value": 3388945023
+    },
+    {
+     "filer": "Point72",
+     "cik": "0001603466",
+     "period": "2026-06-30",
+     "shares": 42993,
+     "value": 16959449
+    },
+    {
+     "filer": "Point72",
+     "cik": "0001603466",
+     "period": "2026-03-31",
+     "shares": 580398,
+     "value": 138256608
+    },
+    {
+     "filer": "Millennium Management",
+     "cik": "0001273087",
+     "period": "2026-06-30",
+     "shares": 83939,
+     "value": 33111417
+    },
+    {
+     "filer": "D.E. Shaw",
+     "cik": "0001009207",
+     "period": "2026-06-30",
+     "shares": 1642670,
+     "value": 647984035
+    },
+    {
+     "filer": "Citadel Advisors",
+     "cik": "0001423053",
+     "period": "2026-06-30",
+     "shares": 57203,
+     "value": 22564867
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2026-06-30",
+     "shares": 15206,
+     "value": 5998311
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2026-03-31",
+     "shares": 163368,
+     "value": 38915891
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2025-12-31",
+     "shares": 48979,
+     "value": 9040054
+    },
+    {
+     "filer": "BlackRock",
+     "cik": "0001364742",
+     "period": "2024-06-30",
+     "shares": 7367659,
+     "value": 533860571
     }
    ]
   },
