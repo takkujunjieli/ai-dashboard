@@ -1360,8 +1360,10 @@ function renderScorecards() {
   const SCORE_COLS = new Set([2, 3, 4, 5, 6, 7, 8, 9, 10]);   // 8 features + Total,均 0–10
   const heat = (v) => {
     const s = parseFloat(v); if (isNaN(s)) return "";
-    const h = Math.max(0, Math.min(10, s)) / 10 * 130;         // 0=红 → 130=绿
-    return ` style="background:hsl(${h.toFixed(0)} 60% 45% / .28)"`;
+    const m = Math.min(Math.abs(s), 5) / 5;          // 0..1 深浅(幅度)
+    const hue = s >= 0 ? 142 : 0;                     // 正=绿 / 负=红,无黄
+    const a = (0.05 + m * 0.37).toFixed(2);           // 0≈透明 → ±5 最深
+    return ` style="background:hsl(${hue} 65% 45% / ${a})"`;
   };
   const th = head.map((h) => `<th>${esc(SC_SHORT[h] || h)}</th>`).join("");
   let seenShort = false;
@@ -1380,7 +1382,7 @@ function renderScorecards() {
     return `<tr${split ? ' class="sc-split"' : ""}>${tds}</tr>`;
   }).join("");
   el.innerHTML = `<div class="card"><div class="sc-head"><b>📊 Scorecards</b> `
-    + `<span class="muted small">本地 · 8-feature 打分(0–10 看多吸引力)。多头看高、空头看低;★项需当前数据校准</span></div>`
+    + `<span class="muted small">本地 · 8-feature 打分(-5~+5 看多吸引力,0=中性/正=好负=差,格式 现状/前瞻)。多头看高、空头看低;★项需当前数据校准</span></div>`
     + `<div class="sc-wrap"><table class="bt-table sc-table"><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table></div></div>`;
 }
 
