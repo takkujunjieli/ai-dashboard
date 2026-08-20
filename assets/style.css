@@ -208,6 +208,21 @@ footer { margin-top: 50px; text-align: center; }
 .wb-ladder { width: 260px; flex: 0 0 260px; }
 #ladder-box { position: relative; user-select: none; cursor: ns-resize; }  /* 纵向滚轮缩放/拖动平移 */
 /* 策略回测页交易表 */
+/* Scorecards 热力表 */
+#scorecards { margin-top: 14px; }
+.sc-head { margin-bottom: 10px; }
+.sc-wrap { overflow-x: auto; }
+.sc-table th { text-align: center; }
+.sc-table td { text-align: center; }
+.sc-table th:first-child, .sc-table td:first-child { text-align: left; }
+.sc-table .sc-num { font-weight: 600; border-radius: 3px; }
+.sc-table .sc-tk { position: sticky; left: 0; background: var(--card); }
+.sc-dir { font-size: 11px; padding: 0 7px; border-radius: 8px; }
+.sc-dir.up { color: var(--up); background: hsl(152 60% 45% / .18); }
+.sc-dir.down { color: var(--down); background: hsl(0 70% 62% / .18); }
+.sc-chk { text-align: left !important; white-space: normal; min-width: 130px; font-size: 11px; }
+.sc-split td { border-top: 2px solid var(--accent); }
+
 .bt-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .bt-table th, .bt-table td { text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
 .bt-table th { color: var(--muted); font-weight: 500; }

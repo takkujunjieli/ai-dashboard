@@ -12,3 +12,9 @@ data/_*_raw.json
 
 # 本地盈亏分析(含私人财务数据,绝不提交进公开 repo)
 analysis/
+
+# 个人研究/打分,本地专用不公开
+research/
+
+# 打分脚本内嵌私有评分/理由,不进公开库(实体可放私有库)
+scripts/build_scorecards.py

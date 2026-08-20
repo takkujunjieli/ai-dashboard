@@ -7,7 +7,7 @@ import {
 const LWC = window.LightweightCharts;
 const ET = "America/New_York";
 
-let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null, PORTFOLIO = null, PNL = null;
+let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null, PORTFOLIO = null, PNL = null, SCORES = null;
 let pfFilter = null;          // Portfolio 饼图选中的 sym → 交易明细按它 filter
 let pfAccount = null;         // Portfolio 选中的账户 id(null=全部账户)
 let pfTxPage = 0;             // Portfolio 交易明细当前页(0 起,每页 PF_TX_PAGE 条)
@@ -1085,12 +1085,12 @@ function buildPnlPanel() {
     tile("亏损集中度", m.loss_conc != null ? `${(m.loss_conc * 100).toFixed(0)}%` : "—", "最大输家占毛亏", (m.loss_conc ?? 0) > 0.5 ? "down" : "", "单只票占全部亏损的比例;越高=亏损越集中在一只"),
     tile("期望/笔", usd(m.expectancy), "每笔平均", m.expectancy >= 0 ? "up" : "down"),
     tile("波动率", m.vol_daily != null ? usd(m.vol_daily) : "—", "日已实现P&L σ", "", "日已实现盈亏的标准差(美元);衡量每日盈亏波动大小"),
-    tile("Sharpe", m.sharpe != null ? m.sharpe.toFixed(2) : "—", "年化·日P&L口径", (m.sharpe ?? 0) >= 1 ? "up" : "", "基于日已实现$P&L(rf=0,×√252),非账户%收益 Sharpe——读数偏高,勿与标准 Sharpe 直接比较"),
-    tile("Sortino", m.sortino != null ? m.sortino.toFixed(2) : "—", "年化·仅下行", (m.sortino ?? 0) >= 1 ? "up" : "", "同 Sharpe 但分母只用下行波动(亏损日)"),
+    tile("Sharpe", m.sharpe != null ? m.sharpe.toFixed(2) : "—", "年化·日P&L口径", (m.sharpe ?? 0) >= 1 ? "up" : "", "基于日已实现$P&L,超额=日均P&L−每日$门槛(账户资本×15%年化/252),÷日σ×√252;非账户%收益 Sharpe,勿与标准 Sharpe 直接比较"),
+    tile("Sortino", m.sortino != null ? m.sortino.toFixed(2) : "—", "年化·仅下行", (m.sortino ?? 0) >= 1 ? "up" : "", "同 Sharpe(MAR=15%年化门槛),但分母只用低于门槛的下行波动"),
     tile("最大回撤", m.max_dd != null ? usd(m.max_dd) : "—", "已实现累计峰谷", (m.max_dd ?? 0) < 0 ? "down" : "", "已实现盈亏累计曲线从峰值的最大回落(美元)"),
   ].join("");
   return `<details open class="pf-pnl"><summary class="muted small">📊 盈亏诊断 · ${esc(acc.label)} <span class="muted">(已实现,截至 ${esc(PNL.as_of)})</span></summary>
-      <div class="pf-pnl-bar"><div class="chips seg" id="pf-pw">${toggle}</div><span class="muted small">收益分布 · 红=亏 绿=盈 · 灰线=0 · 黄虚线=均值</span></div>
+      <div class="pf-pnl-bar"><div class="chips seg" id="pf-pw">${toggle}</div><span class="muted small">无风险收益为 ${(((PNL && PNL.risk_free_annual) || 0) * 100).toFixed(0)}%</span></div>
       <div class="opt-grid">${tiles}</div>
       <div class="pf-hist">${buildHist(trades)}</div></details>`;
 }
@@ -1322,6 +1322,66 @@ async function loadData(force = false) {
   // 券商持仓:本地专用文件(gitignored)。用 loadJSON 相对路径 → localhost 有、公开站 404→null。
   PORTFOLIO = await loadJSON("data/portfolio.json");
   PNL = await loadJSON("data/pnl.json");   // 盈亏诊断(公开);缺失则面板不显示该块
+  SCORES = parseCSV(await loadText("research/scorecards/_summary.csv"));  // 打分总表(本地符号链接→私有库);公开站404→null
+}
+
+/* 简易 fetch 文本 + CSV 解析(处理引号内逗号、BOM);失败→null */
+async function loadText(path) {
+  try { const r = await fetch(path + "?t=" + Date.now()); if (!r.ok) throw 0; return await r.text(); }
+  catch { return null; }
+}
+function parseCSV(text) {
+  if (text == null) return null;
+  text = text.replace(/^\uFEFF/, "");
+  const rows = []; let row = [], f = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) { if (c === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+    else if (c === '"') q = true;
+    else if (c === ",") { row.push(f); f = ""; }
+    else if (c === "\n") { row.push(f); rows.push(row); row = []; f = ""; }
+    else if (c !== "\r") f += c;
+  }
+  if (f.length || row.length) { row.push(f); rows.push(row); }
+  return rows;
+}
+
+/* ---------- Scorecards(解析 _summary.csv,热力表;风格同交易台)---------- */
+const SC_SHORT = {
+  Ticker: "Ticker", Direction: "Dir", Operation: "Op", "Capital Allocation": "Cap",
+  "Financial Health": "Fin", Valuation: "Val", Macro: "Mac", Industry: "Ind",
+  Institution: "Inst", News: "News", Total: "Total", PositionCheck: "Check",
+};
+function renderScorecards() {
+  const el = $("scorecards"); if (!el) return;
+  const rows = SCORES;
+  if (!rows || rows.length < 2) { el.innerHTML = ""; return; }  // 公开站/无文件 → 不显示
+  const head = rows[0];
+  const SCORE_COLS = new Set([2, 3, 4, 5, 6, 7, 8, 9, 10]);   // 8 features + Total,均 0–10
+  const heat = (v) => {
+    const s = parseFloat(v); if (isNaN(s)) return "";
+    const h = Math.max(0, Math.min(10, s)) / 10 * 130;         // 0=红 → 130=绿
+    return ` style="background:hsl(${h.toFixed(0)} 60% 45% / .28)"`;
+  };
+  const th = head.map((h) => `<th>${esc(SC_SHORT[h] || h)}</th>`).join("");
+  let seenShort = false;
+  const body = rows.slice(1).filter((r) => r.length > 1 && r[0]).map((r) => {
+    const isShort = r[1] === "Short";
+    const split = isShort && !seenShort; if (isShort) seenShort = true;
+    const chk = r[11] || "";
+    const chkCls = chk.includes("弱") ? "down" : chk.startsWith("ok") ? "up" : "muted";
+    const tds = r.map((v, i) => {
+      if (i === 0) return `<td class="sc-tk"><b>${esc(v)}</b></td>`;
+      if (i === 1) return `<td><span class="sc-dir ${isShort ? "down" : "up"}">${isShort ? "空" : "多"}</span></td>`;
+      if (i === 11) return `<td class="${chkCls} sc-chk">${esc(v)}</td>`;
+      if (SCORE_COLS.has(i)) return `<td class="sc-num"${heat(v)}>${esc(v)}</td>`;
+      return `<td>${esc(v)}</td>`;
+    }).join("");
+    return `<tr${split ? ' class="sc-split"' : ""}>${tds}</tr>`;
+  }).join("");
+  el.innerHTML = `<div class="card"><div class="sc-head"><b>📊 Scorecards</b> `
+    + `<span class="muted small">本地 · 8-feature 打分(0–10 看多吸引力)。多头看高、空头看低;★项需当前数据校准</span></div>`
+    + `<div class="sc-wrap"><table class="bt-table sc-table"><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table></div></div>`;
 }
 
 function renderAll(keepRange = false) {
@@ -1332,6 +1392,7 @@ function renderAll(keepRange = false) {
   renderGexSub();
   renderOptPanel();
   renderPortfolio();
+  renderScorecards();
   renderErrors();
   if (lr) chart.timeScale().setVisibleLogicalRange(lr);
   const upd = RESEARCH?.updated_at || GEX?.updated_at;
