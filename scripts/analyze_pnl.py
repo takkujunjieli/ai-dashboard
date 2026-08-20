@@ -23,6 +23,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 RAW_FILES = ["data/_takku_raw.json", "data/_rh_raw.json"]   # 有完整历史、可算 P&L 的账户原料
 
+# rf 与 MAR(最低可接受收益)统一取此年化值(全局)。因指标基于每日美元 P&L,需账户资本
+# 把年化% 折成每日美元门槛:日门槛$ = 资本 × RISK_FREE_ANNUAL / 252。
+RISK_FREE_ANNUAL = 0.15
+TRADING_DAYS = 252
+ACCOUNT_CAPITAL = {          # 账户资本基数≈当前市值(equity_value),随市值变动手改
+    "rh-7159": 86746,        # hui
+    "takku-rh-2566": 35150,  # Takku·个人(Margin)
+}
+
 
 def realized_events(transactions):
     """[(date10, account, kind, sym, pnl)],按整段历史滚动的已实现事件。
@@ -75,9 +84,10 @@ def _std(xs):
     return math.sqrt(sum((x - m) ** 2 for x in xs) / (n - 1))
 
 
-def window_stats(ev, start=None, as_of=None):
+def window_stats(ev, start=None, as_of=None, capital=0.0):
     """ev: [(date, account, kind, sym, pnl)] 已在窗口内。返回 {metrics, trades}。
-    给 start/as_of 时,额外算日已实现 P&L 序列(工作日无交易填0)的波动率/Sharpe/Sortino/最大回撤。"""
+    给 start/as_of 时,额外算日已实现 P&L 序列(工作日无交易填0)的波动率/Sharpe/Sortino/最大回撤。
+    capital: 账户资本基数,用于把 RISK_FREE_ANNUAL 折成每日美元门槛(rf 与 MAR 同值)。"""
     if not ev:
         return None
     pnls = [e[4] for e in ev]
@@ -103,7 +113,7 @@ def window_stats(ev, start=None, as_of=None):
         "max_win": round(max(pnls), 2), "max_loss": round(min(pnls), 2),
     }
     # 日已实现 P&L 序列(窗口内工作日,无交易日填 0)→ 波动率/Sharpe/Sortino/最大回撤。
-    # 口径:基于"日已实现美元 P&L"(非账户%收益,无每日净值);rf=0;年化 ×√252。
+    # 口径:基于"日已实现美元 P&L"(非账户%收益,无每日净值);rf=MAR=每日$门槛;年化 ×√252。
     if start and as_of:
         by_day = defaultdict(float)
         for d, a, k, s, p in ev:
@@ -113,10 +123,13 @@ def window_stats(ev, start=None, as_of=None):
             if cur.weekday() < 5:
                 daily.append(by_day.get(cur.isoformat(), 0.0))
             cur += timedelta(days=1)
-        ann = math.sqrt(252)
+        ann = math.sqrt(TRADING_DAYS)
+        rf_daily = (capital or 0.0) * RISK_FREE_ANNUAL / TRADING_DAYS   # 每日$门槛(rf=MAR)
         md = sum(daily) / len(daily) if daily else 0.0
-        sd = _std(daily)
-        dd_dev = math.sqrt(sum(min(x, 0.0) ** 2 for x in daily) / len(daily)) if daily else 0.0
+        excess = md - rf_daily                                          # 日均超额(超过门槛)
+        sd = _std(daily)                                               # 波动率不因常数门槛而变
+        # 下行偏差:以门槛(MAR)为基准,只罚低于门槛的日子
+        dd_dev = math.sqrt(sum(min(x - rf_daily, 0.0) ** 2 for x in daily) / len(daily)) if daily else 0.0
         cum = peak = mdd = 0.0
         for x in daily:
             cum += x
@@ -125,8 +138,9 @@ def window_stats(ev, start=None, as_of=None):
         metrics.update({
             "n_days": len(daily),
             "vol_daily": round(sd, 2) if sd is not None else None,
-            "sharpe": round(md / sd * ann, 2) if sd else None,
-            "sortino": round(md / dd_dev * ann, 2) if dd_dev else None,
+            "mar_daily": round(rf_daily, 2),                            # 每日$门槛(供展示/核对)
+            "sharpe": round(excess / sd * ann, 2) if sd else None,
+            "sortino": round(excess / dd_dev * ann, 2) if dd_dev else None,
             "max_dd": round(mdd, 2),
         })
     trades = [{"d": d, "s": s, "k": k, "p": round(p, 2)} for d, a, k, s, p in ev]
@@ -155,26 +169,27 @@ def emit_json():
     by_acct = defaultdict(list)
     for e in all_ev:
         by_acct[e[1]].append(e)
-    def build_windows(evs):
+    def build_windows(evs, capital):
         w = {}
         for wname, start in windows.items():
-            ws = window_stats([e for e in evs if e[0] >= start], start, as_of)
+            ws = window_stats([e for e in evs if e[0] >= start], start, as_of, capital)
             if ws:
                 w[wname] = ws
         return w
 
     accounts = {}
     for acct, evs in by_acct.items():
-        w = build_windows(evs)
+        w = build_windows(evs, ACCOUNT_CAPITAL.get(acct, 0.0))
         if w:
             accounts[acct] = {"label": labels.get(acct, acct), "windows": w}
-    # "全部"合并视图:跨账户所有已实现事件(供 UI 选"全部账户"时显示)
+    # "全部"合并视图:跨账户所有已实现事件(资本=各账户资本之和)
     if len(accounts) > 1:
-        wall = build_windows(all_ev)
+        cap_all = sum(ACCOUNT_CAPITAL.get(a, 0.0) for a in by_acct)
+        wall = build_windows(all_ev, cap_all)
         if wall:
             accounts["_all"] = {"label": "全部账户", "windows": wall}
     out = {"updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-           "as_of": as_of, "accounts": accounts}
+           "as_of": as_of, "risk_free_annual": RISK_FREE_ANNUAL, "accounts": accounts}
     (ROOT / "data/pnl.json").write_text(json.dumps(out, ensure_ascii=False, indent=1))
     print(f"data/pnl.json: {len(accounts)} 账户 · as_of {as_of} · 窗口 {list(windows)}")
 
