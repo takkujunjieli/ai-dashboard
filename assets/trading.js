@@ -1368,13 +1368,16 @@ function renderScorecards() {
   const th = head.map((h) => `<th>${esc(SC_SHORT[h] || h)}</th>`).join("");
   let seenShort = false;
   const body = rows.slice(1).filter((r) => r.length > 1 && r[0]).map((r) => {
-    const isShort = r[1] === "Short";
+    const dir = r[1];
+    const isShort = dir === "Short";
     const split = isShort && !seenShort; if (isShort) seenShort = true;
+    const dirCls = dir === "Short" ? "down" : dir === "Long" ? "up" : "muted";
+    const dirTxt = dir === "Short" ? "空" : dir === "Long" ? "多" : "观";  // Watch=无仓位
     const chk = r[11] || "";
     const chkCls = chk.includes("弱") ? "down" : chk.startsWith("ok") ? "up" : "muted";
     const tds = r.map((v, i) => {
       if (i === 0) return `<td class="sc-tk"><b>${esc(v)}</b></td>`;
-      if (i === 1) return `<td><span class="sc-dir ${isShort ? "down" : "up"}">${isShort ? "空" : "多"}</span></td>`;
+      if (i === 1) return `<td><span class="sc-dir ${dirCls}">${dirTxt}</span></td>`;
       if (i === 11) return `<td class="${chkCls} sc-chk">${esc(v)}</td>`;
       if (SCORE_COLS.has(i)) return `<td class="sc-num"${heat(v)}>${esc(v)}</td>`;
       return `<td>${esc(v)}</td>`;
