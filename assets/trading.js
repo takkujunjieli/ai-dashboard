@@ -1347,11 +1347,6 @@ function parseCSV(text) {
 }
 
 /* ---------- Scorecards(解析 _summary.csv,热力表;风格同交易台)---------- */
-const SC_SHORT = {
-  Ticker: "Ticker", Direction: "Dir", Operation: "Op", "Capital Allocation": "Cap",
-  "Financial Health": "Fin", Valuation: "Val", Macro: "Mac", Industry: "Ind",
-  Institution: "Inst", News: "News", Total: "Total", PositionCheck: "Check",
-};
 function renderScorecards() {
   const el = $("scorecards"); if (!el) return;
   const rows = SCORES;
@@ -1365,7 +1360,7 @@ function renderScorecards() {
     const a = (0.05 + m * 0.37).toFixed(2);           // 0≈透明 → ±5 最深
     return ` style="background:hsl(${hue} 65% 45% / ${a})"`;
   };
-  const th = head.map((h) => `<th>${esc(SC_SHORT[h] || h)}</th>`).join("");
+  const th = head.map((h) => `<th>${esc(h === "PositionCheck" ? "Position Check" : h)}</th>`).join("");
   let seenShort = false;
   const body = rows.slice(1).filter((r) => r.length > 1 && r[0]).map((r) => {
     const dir = r[1];
