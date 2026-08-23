@@ -1360,7 +1360,8 @@ function renderScorecards() {
     const a = (0.05 + m * 0.37).toFixed(2);           // 0≈透明 → ±5 最深
     return ` style="background:hsl(${hue} 65% 45% / ${a})"`;
   };
-  const th = head.map((h) => `<th>${esc(h === "PositionCheck" ? "Position Check" : h)}</th>`).join("");
+  const TH = { "Capital Allocation": "Capital", "Financial Health": "Financial", PositionCheck: "Position Check" };
+  const th = head.map((h) => `<th>${esc(TH[h] || h)}</th>`).join("");
   let seenShort = false;
   const body = rows.slice(1).filter((r) => r.length > 1 && r[0]).map((r) => {
     const dir = r[1];
