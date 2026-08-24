@@ -50,6 +50,9 @@ jobs:
           MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
           FLOW_PRECISE: "1"   # 收盘后跑逐笔 Lee-Ready 精确层(全天完整 tape,~10min);盘中 12:00 ET 另跑一次(collect_session)
 
+      - name: 抓取利率/指数走势(FRED 免key + Yahoo,5Y 日频)
+        run: python scripts/fetch_rates.py
+
       - name: 提交数据到 main(EOD 基线 + Pages 兜底)
         run: |
           git config user.name "github-actions[bot]"

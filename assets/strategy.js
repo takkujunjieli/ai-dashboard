@@ -41,7 +41,53 @@ function renderStudy(s) {  // 研究结论:净 GEX → 次日已实现波动
      <div class="muted small">按 GEX 五分位分组的次日 |r|:低 GEX(Q1)→ 高波动,高 GEX(Q5)→ 低波动(单调,符合 dealer-gamma 抑制/放大机制)。</div>`;
 }
 
+/* 5Y 走势聚合:左轴=SPY/QQQ/IWM 归一到100,右轴(虚线)=US 10/30Y 收益率%。独立于回测数据。 */
+async function renderRates() {
+  const el = $("rates-chart"); if (!el) return;
+  const r = await loadFreshJSON("data/rates.json");
+  if (!r || !r.series) return;
+  const meta = r.meta || {};
+  const chart = LWC.createChart(el, {
+    layout: { background: { color: "transparent" }, textColor: "#8b96ad" },
+    grid: { vertLines: { color: "#1e2941" }, horzLines: { color: "#1e2941" } },
+    leftPriceScale: { visible: true, borderColor: "#2a3550" },
+    rightPriceScale: { visible: true, borderColor: "#2a3550" },
+    timeScale: { borderColor: "#2a3550" },
+    height: 380,
+  });
+  const toLine = (arr) => {
+    const seen = new Set(), out = [];
+    for (const [d, v] of arr) if (!seen.has(d)) { seen.add(d); out.push({ time: d, value: v }); }
+    return out;
+  };
+  const legend = [];
+  for (const [key, arr] of Object.entries(r.series)) {
+    if (!arr || !arr.length) continue;
+    const m = meta[key] || {}, isYield = m.axis === "yield";
+    let data, latest;
+    if (isYield) {
+      data = toLine(arr);
+      latest = arr[arr.length - 1][1].toFixed(2) + "%";
+    } else {
+      const base = arr[0][1] || 1;
+      data = toLine(arr.map(([d, v]) => [d, v / base * 100]));
+      const chg = (arr[arr.length - 1][1] / base - 1) * 100;
+      latest = (chg >= 0 ? "+" : "") + chg.toFixed(0) + "%";
+    }
+    chart.addLineSeries({
+      color: m.color || "#60a5fa", lineWidth: 2,
+      lineStyle: isYield ? LWC.LineStyle.Dashed : LWC.LineStyle.Solid,
+      priceScaleId: isYield ? "right" : "left",
+      priceLineVisible: false, lastValueVisible: false,
+    }).setData(data);
+    legend.push(`<span class="rt-leg"><span class="rt-sw" style="background:${m.color || "#60a5fa"}"></span>${esc(m.label || key)} <b>${latest}</b></span>`);
+  }
+  chart.timeScale().fitContent();
+  if ($("rates-legend")) $("rates-legend").innerHTML = legend.join("");
+}
+
 async function main() {
+  await renderRates();   // 独立面板,回测数据缺失也显示
   const d = await loadFreshJSON("data/strategy_bt.json");
   if (!d || !Array.isArray(d.equity_curve) || !d.equity_curve.length) {
     $("bt-empty").style.display = "block";
@@ -99,24 +145,13 @@ async function main() {
         tile("OOS trades", oos.oos_trades ?? 0),
         tile("OOS max DD", "−" + (oos.oos_max_drawdown_pct ?? 0) + "%", "", "down"),
         tile("train / test", oos.train + " / " + oos.test + " bars"),
-      ].join("")}</div>` +
-      `<table class="bt-table"><thead><tr><th>Fold</th><th>Test range</th><th>Chosen params (train)</th><th>OOS ret</th><th>Trades</th></tr></thead><tbody>` +
-      oos.folds.map((f, i) => `<tr><td>${i + 1}</td><td>${f.test[0]}–${f.test[1]}</td>
-        <td class="muted">tp${f.params.take_profit_pct}/sl${f.params.stop_loss_pct}/h${f.params.max_holding_bars}</td>
-        <td class="${f.oos_return_pct >= 0 ? "up" : "down"}">${pct(f.oos_return_pct)}</td><td>${f.oos_trades}</td></tr>`).join("") +
-      `</tbody></table>`;
+      ].join("")}</div>`;   // 逐折明细长表已隐藏,只留汇总
   } else {
     $("bt-oos").innerHTML = `<div class="empty">${esc(d.oos_note || "样本不足做 walk-forward;攒够后这里出 OOS 结果(参数在训练窗选、表现在测试窗算)。")}</div>`;
   }
 
-  // 逐笔交易
-  $("bt-trades-n").textContent = `(${d.trades.length})`;
-  $("bt-trades").innerHTML = `<table class="bt-table"><thead><tr>
-    <th>Entry</th><th>Exit</th><th>Type</th><th>In</th><th>Out</th><th>Ret</th><th>Bars</th><th>Reason</th>
-    </tr></thead><tbody>${d.trades.map((t) => `<tr>
-    <td>${esc(String(t.entry_time))}</td><td>${esc(String(t.exit_time))}</td>
-    <td>${t.type}</td><td>${t.entry_price}</td><td>${t.exit_price}</td>
-    <td class="${t.return_pct >= 0 ? "up" : "down"}">${t.return_pct >= 0 ? "+" : ""}${t.return_pct}%</td>
-    <td>${t.bars_held}</td><td class="muted">${esc(t.reason)}</td></tr>`).join("")}</tbody></table>`;
+  // 逐笔交易长表已隐藏 —— 整节收起
+  const tsec = $("bt-trades") && $("bt-trades").closest("section");
+  if (tsec) tsec.style.display = "none";
 }
 main();

@@ -208,6 +208,12 @@ footer { margin-top: 50px; text-align: center; }
 .wb-ladder { width: 260px; flex: 0 0 260px; }
 #ladder-box { position: relative; user-select: none; cursor: ns-resize; }  /* 纵向滚轮缩放/拖动平移 */
 /* 策略回测页交易表 */
+/* 5Y 走势聚合图例 */
+.rt-legend { display: flex; flex-wrap: wrap; gap: 16px; margin: 4px 0 8px; font-size: 12px; }
+.rt-leg { display: flex; align-items: center; gap: 6px; color: var(--muted); }
+.rt-sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.rt-leg b { color: var(--text); font-variant-numeric: tabular-nums; }
+
 /* Scorecards 热力表 */
 #scorecards { margin-top: 14px; }
 .sc-head { margin-bottom: 10px; }
