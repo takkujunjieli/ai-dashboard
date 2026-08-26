@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-08-24T21:48:14+00:00",
+ "updated_at": "2026-08-25T21:48:29+00:00",
  "filers": {
   "0001067983": "Berkshire Hathaway",
   "0001037389": "Renaissance Technologies",
@@ -16,6 +16,100 @@
   "0000093751": "State Street"
  },
  "tickers": {
+  "SNOW": {
+   "periods": [
+    "2026-06-30",
+    "2026-03-31",
+    "2025-12-31",
+    "2025-09-30"
+   ],
+   "holdings": [
+    {
+     "filer": "Vanguard Group",
+     "cik": "0000102909",
+     "period": "2025-12-31",
+     "shares": 151840,
+     "value": 33307623
+    },
+    {
+     "filer": "Two Sigma",
+     "cik": "0001179392",
+     "period": "2026-06-30",
+     "shares": 57649,
+     "value": 14671671
+    },
+    {
+     "filer": "State Street",
+     "cik": "0000093751",
+     "period": "2026-06-30",
+     "shares": 7957874,
+     "value": 2126107764
+    },
+    {
+     "filer": "Point72",
+     "cik": "0001603466",
+     "period": "2026-06-30",
+     "shares": 2813766,
+     "value": 789429735
+    },
+    {
+     "filer": "Point72",
+     "cik": "0001603466",
+     "period": "2026-03-31",
+     "shares": 0,
+     "value": 21884738
+    },
+    {
+     "filer": "Millennium Management",
+     "cik": "0001273087",
+     "period": "2026-06-30",
+     "shares": 1347035,
+     "value": 418198152
+    },
+    {
+     "filer": "Coatue Management",
+     "cik": "0001135730",
+     "period": "2025-12-31",
+     "shares": 4961926,
+     "value": 1088448088
+    },
+    {
+     "filer": "Coatue Management",
+     "cik": "0001135730",
+     "period": "2025-09-30",
+     "shares": 1956448,
+     "value": 441276848
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2026-06-30",
+     "shares": 7020,
+     "value": 1786590
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2026-03-31",
+     "shares": 7020,
+     "value": 1058756
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2025-12-31",
+     "shares": 19886,
+     "value": 4362193
+    },
+    {
+     "filer": "Bridgewater Associates",
+     "cik": "0001350694",
+     "period": "2025-09-30",
+     "shares": 31773,
+     "value": 7166400
+    }
+   ]
+  },
   "AMD": {
    "periods": [
     "2026-06-30",
