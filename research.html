@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research · 研究台</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="trading">
+<header>
+  <h1>🔬 Research <a class="muted small" href="index.html">← Info</a> <a class="muted small" href="trading.html">Trading →</a></h1>
+</header>
+
+<!-- Topic 导航(每个 topic 是自成一体的研究模块) -->
+<nav>
+  <span class="tab active" data-topic="bearbull">🐻 熊/牛预测</span>
+  <span class="tab" data-topic="deadtime" title="后续" style="opacity:.5;cursor:not-allowed">🕳️ 垃圾时间预测(即将)</span>
+</nav>
+
+<div id="r-status" class="muted small" style="padding:8px 0"></div>
+
+<!-- ========== Topic 1:熊/牛预测(v1 熊侧) ========== -->
+<section data-topic-panel="bearbull">
+  <h2>② 预警概率 vs 历史熊市</h2>
+  <div id="bb-chart" class="card"><span class="muted small">计算中…</span></div>
+
+  <h2>③ 逐熊市记分卡(leave-one-bear-out)</h2>
+  <div id="bb-score" class="card"><span class="muted small">计算中…</span></div>
+
+  <h2>⑦ 模型系数(标准化)</h2>
+  <div id="bb-coef" class="card"><span class="muted small">计算中…</span></div>
+</section>
+
+<footer class="muted small">
+  熊侧 v1 · 模型 L2-logistic 在浏览器实时计算 · 公开宏观数据(French/FRED/Welch-Goyal)· personal research only
+</footer>
+
+<script type="module" src="assets/research.js"></script>
+</body>
+</html>
