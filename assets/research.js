@@ -4,8 +4,23 @@
 import { $, esc, loadJSON } from "./shared.js";
 
 const LAM = 10;            // L2 强度(与 factorlab/model.py 默认一致)
-const CLASS_COLOR = { endogenous: "#f87171", policy: "#fbbf24", exogenous: "#8b96ad", unknown: "#8b96ad" };
-const CLASS_LABEL = { endogenous: "内生", policy: "政策", exogenous: "外生", unknown: "?" };
+/* 按"驱动机制"分簇(比 内生/政策/外生 更贴数据、名实相符):
+   imbalance=信用扩张过度/估值泡沫/曲线倒挂酝酿的顶 → 模型稳健可预警;
+   shock=外生(COVID)或政策 regime 突变(1980 Volcker、2022 通胀加息)→ leading 信号看不到甚至反向。
+   成因先验判定(不是拿 AUC 结果倒推),再由 LOBO 验证该簇可不可预测。 */
+const DRIVER = {
+  1966: "imbalance", 1968: "imbalance", 1972: "imbalance", 1980: "shock", 1987: "imbalance",
+  1990: "imbalance", 1998: "imbalance", 2000: "imbalance", 2007: "imbalance", 2020: "shock", 2021: "shock",
+};
+const DRIVER_COLOR = { imbalance: "#f87171", shock: "#8b96ad" };
+const DRIVER_LABEL = { imbalance: "信用/估值", shock: "冲击" };
+const DRIVER_NOTE = {
+  1966: "信用紧缩(credit crunch)", 1968: "高估值 + 滞胀酝酿", 1972: "Nifty-Fifty 估值泡沫 + 紧缩",
+  1980: "Volcker 加息冲击(货币 regime 突变)", 1987: "利率飙升 + 估值拉伸下的结构性崩盘",
+  1990: "S&L 信用危机 + 海湾油价", 1998: "LTCM / 俄债信用挤兑", 2000: "互联网估值泡沫破裂",
+  2007: "次贷 / 房地产信用危机", 2020: "COVID 外生冲击", 2021: "通胀飙升 + 联储加息 regime 突变",
+};
+const driverOf = (e) => DRIVER[+e.peak.slice(0, 4)] || "shock";
 
 /* ---------- 线性代数 / 模型 ---------- */
 function solve(A, b) {                       // 高斯消元 + 部分主元
@@ -182,7 +197,7 @@ function chartProbVsBears(J, dir, series, benchmarks) {
   const shades = eps.map((e) => {
     const a = dayi(e.peak), b = dayi(e.trough);
     if (a == null || b == null) return "";
-    return `<rect x="${x(a).toFixed(1)}" y="${pt}" width="${(x(b) - x(a)).toFixed(1)}" height="${ih}" fill="${CLASS_COLOR[e.class]}" opacity="0.16"><title>#${e.id} ${e.peak}→${e.trough} ${(e.dd * 100).toFixed(0)}% · ${CLASS_LABEL[e.class]}</title></rect>`;
+    return `<rect x="${x(a).toFixed(1)}" y="${pt}" width="${(x(b) - x(a)).toFixed(1)}" height="${ih}" fill="${DRIVER_COLOR[driverOf(e)]}" opacity="0.16"><title>#${e.id} ${e.peak}→${e.trough} ${(e.dd * 100).toFixed(0)}% · ${DRIVER_LABEL[driverOf(e)]}(${DRIVER_NOTE[+e.peak.slice(0, 4)] || ""})</title></rect>`;
   }).join("");
 
   // 概率线(左轴,主角,画在最上层)
@@ -197,7 +212,7 @@ function chartProbVsBears(J, dir, series, benchmarks) {
   const legend = [
     ...series.map((s) => `<span style="white-space:nowrap"><span style="color:${s.color};font-weight:700">${s.dash ? "▬ ▬" : "▬▬"}</span> ${esc(s.name)}(当前 ${(s.prob[s.prob.length - 1] * 100).toFixed(0)}%)</span>`),
     ...prices.map((p) => `<span style="white-space:nowrap"><span style="color:${p.color};font-weight:700">▬</span> ${esc(p.name)}</span>`),
-    `<span style="white-space:nowrap">阴影=历史熊市(<span style="color:${CLASS_COLOR.endogenous}">内生</span>/<span style="color:${CLASS_COLOR.policy}">政策</span>/<span style="color:${CLASS_COLOR.exogenous}">外生</span>)</span>`,
+    `<span style="white-space:nowrap">阴影=历史熊市(<span style="color:${DRIVER_COLOR.imbalance}">信用/估值驱动</span>/<span style="color:${DRIVER_COLOR.shock}">冲击</span>)</span>`,
   ].join("");
 
   return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px">
@@ -215,23 +230,25 @@ function scorecard(J, dir, res) {
     const a = res.aucByBear[e.id];
     const av = a == null ? "—" : a.toFixed(3);
     const cls = a == null ? "" : (a > 0.5 ? "up" : "down");
+    const dv = driverOf(e), yr = +e.peak.slice(0, 4);
     return `<tr><td>#${e.id}</td><td>${e.peak.slice(0, 7)}→${e.trough.slice(0, 7)}</td>
       <td>${(e.dd * 100).toFixed(0)}%</td>
-      <td><span style="color:${CLASS_COLOR[e.class]}">${CLASS_LABEL[e.class]}</span></td>
+      <td><span style="color:${DRIVER_COLOR[dv]}" title="${esc(DRIVER_NOTE[yr] || "")}">${DRIVER_LABEL[dv]}</span></td>
       <td class="${cls}">${av}</td></tr>`;
   }).join("");
   const sub = (pred) => {
-    const vals = eps.filter((e) => res.aucByBear[e.id] != null && (pred(e.class))).map((e) => res.aucByBear[e.id]);
+    const vals = eps.filter((e) => res.aucByBear[e.id] != null && pred(driverOf(e))).map((e) => res.aucByBear[e.id]);
     if (!vals.length) return "—";
     const hit = vals.filter((v) => v > 0.5).length;
     return `mean ${mean(vals).toFixed(3)} · min ${Math.min(...vals).toFixed(3)} · hit ${hit}/${vals.length}`;
   };
-  return `<table class="bt-table"><tr><th>#</th><th>熊市(峰→谷)</th><th>跌幅</th><th>可预测性</th><th>LOBO AUC</th></tr>${rows}</table>
+  return `<table class="bt-table"><tr><th>#</th><th>熊市(峰→谷)</th><th>跌幅</th><th>驱动机制</th><th>LOBO AUC</th></tr>${rows}</table>
     <div class="opt-grid" style="margin-top:10px">
       ${tile("全部可评估", sub(() => true), "9 次揉成一个均值 → 会骗人")}
-      ${tile("内生簇(信用/估值/曲线)", sub((c) => c === "endogenous"), "1998 / 2000 / 2007 — 稳健可预警")}
+      ${tile("信用/估值驱动", sub((d) => d === "imbalance"), "内生金融失衡 — 稳健可预警")}
+      ${tile("冲击(外生/政策)", sub((d) => d === "shock"), "regime 突变 — 本质不可预警")}
     </div>
-    <div class="muted small">LOBO(embargo + 净基线,口径同 factorlab/model.py):留出该熊市(含其邻近月做 embargo)、用其余熊市训练,再看能否认出它。&gt;0.5 有效。<b>修正泄漏后真相是双峰的</b>:内生(信用/估值/曲线驱动)≈0.93 稳健;而通胀-政策冲击(2022,甚至反向 &lt;0.5)与纯外生(COVID)本质不可预测——别被"全部平均"骗了。</div>`;
+    <div class="muted small">按<b>驱动机制</b>分簇(比 内生/政策/外生 名实相符):<span style="color:${DRIVER_COLOR.imbalance}">信用/估值驱动</span>=信用扩张过度 / 估值泡沫 / 曲线倒挂酝酿的顶,模型稳健可预警;<span style="color:${DRIVER_COLOR.shock}">冲击</span>=外生(COVID)或政策 regime 突变(1980 Volcker、2022 通胀加息),leading 信号看不到、甚至反向(2022→0.17)。LOBO 用 embargo + 净基线(口径同 factorlab/model.py):留出该熊市训练其余、再看能否认出它,&gt;0.5 有效。hover「驱动机制」看成因。</div>`;
 }
 
 function tile(k, v, sub = "") {
