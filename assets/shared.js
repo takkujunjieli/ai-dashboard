@@ -1,6 +1,6 @@
 /* 信息页与交易页共享的工具函数与数据加载 */
 
-export const REPO = "takkujunjieli/stock-dashboard";
+export const REPO = "takkujunjieli/ai-dashboard";
 
 export const $ = (id) => document.getElementById(id);
 export const esc = (t) => { const d = document.createElement("div"); d.textContent = t ?? ""; return d.innerHTML; };

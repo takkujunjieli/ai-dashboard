@@ -2,7 +2,7 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "stock-dashboard",
+      "name": "ai-dashboard",
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8642", "--directory", "."],
       "port": 8642

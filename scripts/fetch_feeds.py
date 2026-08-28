@@ -16,7 +16,7 @@ import requests
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
-UA = "stock-dashboard/1.0 (personal RSS reader)"  # Reddit 等站点会拦截默认 python UA
+UA = "ai-dashboard/1.0 (personal RSS reader)"  # Reddit 等站点会拦截默认 python UA
 
 # Massive 市场新闻(/v2/reference/news):有 key 才抓,只保留提及 watchlist 股票的文章
 MASSIVE_KEY = os.environ.get("MASSIVE_API_KEY", "").strip()

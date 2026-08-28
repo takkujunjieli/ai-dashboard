@@ -37,7 +37,7 @@ Stocks Starter($29/月)起为盘中 15 分钟延迟;期权链快照需 Options S
 ### 2. 推到 GitHub 并配置
 
 ```bash
-gh repo create stock-dashboard --private --source . --push
+gh repo create ai-dashboard --private --source . --push
 gh secret set FINNHUB_API_KEY   # 粘贴你的 key
 ```
 
@@ -46,7 +46,7 @@ gh secret set FINNHUB_API_KEY   # 粘贴你的 key
 ### 3. 手动触发一次验证
 
 仓库 **Actions → 每日更新数据 → Run workflow**,跑完后访问
-`https://<你的用户名>.github.io/stock-dashboard/`。
+`https://<你的用户名>.github.io/ai-dashboard/`。
 
 > 私有仓库的 Pages 需要 GitHub Pro;免费账号可以把仓库设为 public,或改用本地运行。
 
