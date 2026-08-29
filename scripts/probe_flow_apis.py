@@ -34,8 +34,63 @@ def section(t):
     print("\n" + "=" * 70 + f"\n### {t}\n" + "=" * 70)
 
 
+def probe_equity(sym):
+    """股票逐笔/逐报价探针:确认 (a) 权限, (b) exchange 字段(隔离场外 TRF),
+    (c) 次美分价格精度, (d) 密度(为成本估算)。这是 retail-flow 引擎的前置门槛。"""
+    from collections import Counter
+    section(f"0) 股票 /v3/trades/{sym} — 逐笔(exchange + 次美分 + 密度)")
+    try:
+        tr = get(f"/v3/trades/{sym}", limit=1000, order="asc", sort="timestamp")
+    except Exception as exc:
+        print(f"✗ 股票逐笔失败(权限/套餐?): {exc}")
+        print("   → 若为 403/entitlement,股票 tick 引擎不可行,需走 fallback(期权流复用 / FINRA)")
+        return
+    rows = tr.get("results") or []
+    print(f"本页条数: {len(rows)}  | 有 next_url: {bool(tr.get('next_url'))}")
+    if not rows:
+        print("   → 返回空(可能延迟套餐/非交易时段);换个交易日或用带日期的 range 再试"); return
+    dump("equity trades[0]  (完整一笔)", rows[0])
+    print("字段:", sorted(rows[0].keys()))
+    # (b) exchange 分布 + TRF/场外标记
+    exch = Counter(r.get("exchange") for r in rows)
+    n_trf = sum(1 for r in rows if r.get("trf_id") is not None)
+    print(f"\n>>> exchange 码分布(本页): {dict(exch)}")
+    print(f">>> 含 trf_id(场外/TRF 标记)的笔数: {n_trf}/{len(rows)}  "
+          f"({100*n_trf/len(rows):.0f}%)  | 有 trf_timestamp 字段: {'trf_timestamp' in rows[0]}")
+    # (c) 次美分精度:Z=(100*price) 的小数部分,>0 说明保留了次美分
+    def subpenny(p):
+        z = (round(p * 100, 6)) % 1
+        return z
+    zs = [subpenny(r["price"]) for r in rows if r.get("price") is not None]
+    n_sub = sum(1 for z in zs if 1e-6 < z < 1 - 1e-6)
+    print(f">>> 次美分精度: {n_sub}/{len(zs)} 笔价格带次美分零头({100*n_sub/max(len(zs),1):.0f}%)  "
+          f"样例价格: {[round(r['price'],4) for r in rows[:6] if r.get('price') is not None]}")
+    # (d) 密度:翻几页估当日总量级 → 成本
+    total, nxt, pages = len(rows), tr.get("next_url"), 1
+    while nxt and pages < 5:
+        try:
+            d = get(nxt); total += len(d.get("results") or []); nxt = d.get("next_url"); pages += 1
+        except Exception as exc:
+            print(f"   翻页失败: {exc}"); break
+    print(f">>> 密度: ≥{total} 笔(翻 {pages} 页{',仍有更多→当日海量' if nxt else ',已到底'})  "
+          f"每 50k/请求 → 约需 {max(1, total)//50000 + 1}+ 请求/票/天(下限)")
+    # 逐报价 NBBO(中点签名需要)
+    section(f"0b) 股票 /v3/quotes/{sym} — 逐条 NBBO(中点签名关键)")
+    try:
+        q = get(f"/v3/quotes/{sym}", limit=1000, order="asc", sort="timestamp")
+        qr = q.get("results") or []
+        print(f"本页条数: {len(qr)}  | 有 next_url: {bool(q.get('next_url'))}")
+        if qr:
+            dump("equity quotes[0]  (完整一条)", qr[0])
+            print("字段:", sorted(qr[0].keys()),
+                  "| 有 bid/ask:", all(k in qr[0] for k in ("bid_price", "ask_price")))
+    except Exception as exc:
+        print(f"✗ 股票逐报价失败(中点签名不可得则退回 tick-rule): {exc}")
+
+
 def main():
     print(f"BASE={BASE}  SYM={SYM}  key={'set' if KEY else 'MISSING'}")
+    probe_equity(SYM)
 
     # 1) 期权链快照:dump 一整张合约的所有字段(看有没有 last_quote / last_trade)
     section("1) /v3/snapshot/options/{SYM} — 一张合约的完整原始字段")
