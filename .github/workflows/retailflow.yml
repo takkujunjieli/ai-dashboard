@@ -1,0 +1,26 @@
+name: Retail flow 引擎
+on:
+  workflow_dispatch:
+    inputs:
+      sym:
+        description: "标的(逗号分隔;留空=deep 集)"
+        required: false
+        default: "HOOD"
+      day:
+        description: "目标日 YYYY-MM-DD(留空=最近工作日)"
+        required: false
+        default: ""
+jobs:
+  flow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install requests
+      - run: python scripts/fetch_tick_flow.py
+        env:
+          MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+          MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
+          RF_SYMS: ${{ inputs.sym }}
+          RF_DAY: ${{ inputs.day }}
