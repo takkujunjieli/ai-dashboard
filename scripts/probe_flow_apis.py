@@ -38,9 +38,12 @@ def probe_equity(sym):
     """股票逐笔/逐报价探针:确认 (a) 权限, (b) exchange 字段(隔离场外 TRF),
     (c) 次美分价格精度, (d) 密度(为成本估算)。这是 retail-flow 引擎的前置门槛。"""
     from collections import Counter
-    section(f"0) 股票 /v3/trades/{sym} — 逐笔(exchange + 次美分 + 密度)")
+    from datetime import datetime, timezone
+    rw = lambda u: u.replace("https://api.massive.com", BASE) if u else u   # next_url 指向官方 host,重写到网关
+    ts2d = lambda ns: datetime.fromtimestamp(ns / 1e9, timezone.utc).strftime("%Y-%m-%d %H:%M") if ns else "?"
+    section(f"0) 股票 /v3/trades/{sym} — 逐笔(exchange + 次美分 + 密度);order=desc 取最新")
     try:
-        tr = get(f"/v3/trades/{sym}", limit=1000, order="asc", sort="timestamp")
+        tr = get(f"/v3/trades/{sym}", limit=1000, order="desc", sort="timestamp")
     except Exception as exc:
         print(f"✗ 股票逐笔失败(权限/套餐?): {exc}")
         print("   → 若为 403/entitlement,股票 tick 引擎不可行,需走 fallback(期权流复用 / FINRA)")
@@ -51,6 +54,7 @@ def probe_equity(sym):
         print("   → 返回空(可能延迟套餐/非交易时段);换个交易日或用带日期的 range 再试"); return
     dump("equity trades[0]  (完整一笔)", rows[0])
     print("字段:", sorted(rows[0].keys()))
+    print(f">>> 数据时点(本页首/末 sip): {ts2d(rows[0].get('sip_timestamp'))} … {ts2d(rows[-1].get('sip_timestamp'))} UTC")
     # (b) exchange 分布 + TRF/场外标记
     exch = Counter(r.get("exchange") for r in rows)
     n_trf = sum(1 for r in rows if r.get("trf_id") is not None)
@@ -66,10 +70,10 @@ def probe_equity(sym):
     print(f">>> 次美分精度: {n_sub}/{len(zs)} 笔价格带次美分零头({100*n_sub/max(len(zs),1):.0f}%)  "
           f"样例价格: {[round(r['price'],4) for r in rows[:6] if r.get('price') is not None]}")
     # (d) 密度:翻几页估当日总量级 → 成本
-    total, nxt, pages = len(rows), tr.get("next_url"), 1
+    total, nxt, pages = len(rows), rw(tr.get("next_url")), 1
     while nxt and pages < 5:
         try:
-            d = get(nxt); total += len(d.get("results") or []); nxt = d.get("next_url"); pages += 1
+            d = get(nxt); total += len(d.get("results") or []); nxt = rw(d.get("next_url")); pages += 1
         except Exception as exc:
             print(f"   翻页失败: {exc}"); break
     print(f">>> 密度: ≥{total} 笔(翻 {pages} 页{',仍有更多→当日海量' if nxt else ',已到底'})  "
@@ -77,7 +81,7 @@ def probe_equity(sym):
     # 逐报价 NBBO(中点签名需要)
     section(f"0b) 股票 /v3/quotes/{sym} — 逐条 NBBO(中点签名关键)")
     try:
-        q = get(f"/v3/quotes/{sym}", limit=1000, order="asc", sort="timestamp")
+        q = get(f"/v3/quotes/{sym}", limit=1000, order="desc", sort="timestamp")
         qr = q.get("results") or []
         print(f"本页条数: {len(qr)}  | 有 next_url: {bool(q.get('next_url'))}")
         if qr:
