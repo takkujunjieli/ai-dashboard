@@ -20,6 +20,7 @@
 <!-- Topic 导航(每个 topic 是自成一体的研究模块) -->
 <nav>
   <span class="tab active" data-topic="bearbull">🐻 熊/牛预测</span>
+  <span class="tab" data-topic="retailflow">📊 散户订单流</span>
   <span class="tab" data-topic="deadtime" title="后续" style="opacity:.5;cursor:not-allowed">🕳️ 垃圾时间预测(即将)</span>
 </nav>
 
@@ -35,6 +36,21 @@
 
   <h2>⑦ 模型系数(标准化)</h2>
   <div id="bb-coef" class="card"><span class="muted small">计算中…</span></div>
+</section>
+
+<!-- ========== Topic 2:散户订单流(live, 30d 滚动) ========== -->
+<section data-topic-panel="retailflow" hidden>
+  <h2>① 当前信号(每票)</h2>
+  <div id="rf-now" class="card"><span class="muted small">计算中…</span></div>
+
+  <h2>② 预测信号 vs 实际收益</h2>
+  <div id="rf-scatter" class="card"><span class="muted small">计算中…</span></div>
+
+  <h2>③ 预测力(rank-IC)</h2>
+  <div id="rf-ic" class="card"><span class="muted small">计算中…</span></div>
+
+  <h2>④ 散户净买入热力图</h2>
+  <div id="rf-series" class="card"><span class="muted small">计算中…</span></div>
 </section>
 
 <footer class="muted small">

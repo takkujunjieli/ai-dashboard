@@ -271,8 +271,8 @@ function coefBars(res) {
   return `${rows}<div class="muted small" style="margin-top:6px">标准化系数:<span class="down">红=推高</span>预警 / <span class="up">绿=压低</span>。⚠️ 特征相关时个别系数符号可能翻转,别单独解读。</div>`;
 }
 
-/* ---------- 主流程 ---------- */
-async function main() {
+/* ---------- Topic 1:熊/牛预测 ---------- */
+async function renderBearbull() {
   const J = await loadJSON("data/research_bearbull.json");
   if (!J) { $("r-status").textContent = "缺 data/research_bearbull.json(在 factor-research 跑 export_web.py 生成)"; return; }
   $("r-status").textContent = `Topic: 熊/牛预测 · 熊侧 · ${J.dates[0]}→${J.dates[J.dates.length - 1]} · ${J.dates.length} 月 · 模型在浏览器实时计算(L2-logistic, λ=${LAM})`;
@@ -288,4 +288,102 @@ async function main() {
   $("bb-coef").innerHTML = coefBars(res);
 }
 
-main();
+/* ---------- Topic 2:散户订单流 ---------- */
+const fmtIC = (v) => v == null ? "—" : (v > 0 ? "+" : "") + v.toFixed(3);
+const latest = (arr) => { for (let i = arr.length - 1; i >= 0; i--) if (arr[i] != null) return arr[i]; return null; };
+const sgncls = (v) => v == null ? "" : (v > 0 ? "up" : "down");
+
+// 预测信号(x)vs 实际收益(y)散点 + IC 标注
+function scatterPredVsRealized(points, ic, ylab) {
+  const W = 470, H = 250, pl = 46, pr = 12, pt = 14, pb = 30, iw = W - pl - pr, ih = H - pt - pb;
+  if (!points || !points.length) return `<div class="muted small" style="padding:20px">${esc(ylab)}:暂无已兑现样本(前瞻窗口未到期)</div>`;
+  const xs = points.map((p) => p[0]), ys = points.map((p) => p[1]);
+  const xmin = Math.min(...xs), xmax = Math.max(...xs), ymin = Math.min(...ys), ymax = Math.max(...ys);
+  const sx = (v) => pl + (xmax === xmin ? 0.5 : (v - xmin) / (xmax - xmin)) * iw;
+  const sy = (v) => pt + (1 - (ymax === ymin ? 0.5 : (v - ymin) / (ymax - ymin))) * ih;
+  const dots = points.map((p) => `<circle cx="${sx(p[0]).toFixed(1)}" cy="${sy(p[1]).toFixed(1)}" r="2.6" fill="var(--accent)" opacity="0.5"><title>${esc(p[2])} 信号 ${p[0].toFixed(2)} → ${(p[1] * 100).toFixed(2)}%</title></circle>`).join("");
+  const z0y = (ymin < 0 && ymax > 0) ? `<line x1="${pl}" y1="${sy(0).toFixed(1)}" x2="${pl + iw}" y2="${sy(0).toFixed(1)}" stroke="var(--border)"/>` : "";
+  const z0x = (xmin < 0 && xmax > 0) ? `<line x1="${sx(0).toFixed(1)}" y1="${pt}" x2="${sx(0).toFixed(1)}" y2="${pt + ih}" stroke="var(--border)"/>` : "";
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px">
+    <rect x="${pl}" y="${pt}" width="${iw}" height="${ih}" fill="none" stroke="var(--border)"/>
+    ${z0y}${z0x}${dots}
+    <text x="${pl + iw / 2}" y="${H - 6}" text-anchor="middle" font-size="10" fill="var(--muted)">预测信号(z 之积)</text>
+    <text x="12" y="${pt + ih / 2}" text-anchor="middle" font-size="10" fill="var(--muted)" transform="rotate(-90 12 ${pt + ih / 2})">${esc(ylab)}</text>
+    <text x="${pl + iw - 4}" y="${pt + 12}" text-anchor="end" font-size="11" fill="var(--accent)">IC ${fmtIC(ic)} · n=${points.length}</text>
+  </svg>`;
+}
+
+// 散户净买入热力图(票 × 日)
+function netbuyHeatmap(J) {
+  const d = J.dates, tks = J.tickers, D = J.data;
+  const cell = (v) => {
+    if (v == null) return `<td style="padding:0;width:13px"></td>`;
+    const a = Math.min(1, Math.abs(v) / 0.3), c = v > 0 ? `rgba(52,211,153,${a})` : `rgba(248,113,113,${a})`;
+    return `<td style="padding:0;width:13px;background:${c}" title="${(v > 0 ? "+" : "") + v.toFixed(3)}"></td>`;
+  };
+  const head = `<tr><th></th>${d.map((x) => `<th style="font-size:8px;font-weight:400;color:var(--muted)">${x.slice(5).replace("-", "/")}</th>`).join("")}</tr>`;
+  const rows = tks.map((tk) => `<tr><td style="font-size:11px">${esc(tk)}</td>${d.map((_, i) => cell(D[tk].netbuy[i])).join("")}</tr>`).join("");
+  return `<div style="overflow-x:auto"><table class="bt-table" style="border-spacing:1px">${head}${rows}</table></div>
+    <div class="muted small" style="margin-top:6px">每格=某票某日散户净买入(<span class="up">绿=净买</span>/<span class="down">红=净卖</span>,深浅随 |值|,饱和于 0.3)。</div>`;
+}
+
+async function renderRetailflow() {
+  const J = await loadJSON("data/retailflow.json");
+  const set = (id, html) => { const el = $(id); if (el) el.innerHTML = html; };
+  if (!J) {
+    $("r-status").textContent = "Topic: 散户订单流 · 缺 data/retailflow.json(在 Actions 跑 retailflow 工作流生成)";
+    ["rf-now", "rf-scatter", "rf-ic", "rf-series"].forEach((id) => set(id, `<span class="muted small">暂无数据:需在 Actions 跑 fetch_tick_flow + build_retailflow 生成 data/retailflow.json</span>`));
+    return;
+  }
+  const d = J.dates, tks = J.tickers, D = J.data, E = J.eval;
+  $("r-status").textContent = `Topic: 散户订单流 · ${d[0]}→${d[d.length - 1]} · ${tks.length} 票 × ${d.length} 天(${J.window_days || 30}d 滚动)· 更新 ${(J.updated || "").slice(0, 16)}`;
+
+  // ① 当前信号表
+  const rows = tks.map((tk) => {
+    const o = D[tk], nb = latest(o.netbuy), it = latest(o.intensity), at = o.attention ? latest(o.attention) : null, sg = latest(o.signal);
+    const p = (E.per_ticker || {})[tk] || {};
+    return `<tr><td>${esc(tk)}</td>
+      <td class="${sgncls(nb)}">${nb == null ? "—" : (nb > 0 ? "+" : "") + nb.toFixed(3)}</td>
+      <td>${it == null ? "—" : (it * 100).toFixed(1) + "%"}</td>
+      <td>${at == null ? "—" : at.toFixed(0)}</td>
+      <td class="${sgncls(sg)}">${sg == null ? "—" : (sg > 0 ? "+" : "") + sg.toFixed(2)}</td>
+      <td class="${sgncls(p.ic_1d)}">${fmtIC(p.ic_1d)}</td>
+      <td class="${sgncls(p.ic_5d)}">${fmtIC(p.ic_5d)}</td></tr>`;
+  }).join("");
+  set("rf-now", `<table class="bt-table"><tr><th>票</th><th>净买入</th><th>强度</th><th>关注</th><th>复合信号</th><th>IC次日</th><th>IC次周</th></tr>${rows}</table>
+    <div class="muted small">最新交易日值。净买入∈[-1,1](中点签名的场外散户买卖不平衡);强度=散户量/总量;关注=Google Trends;复合=三项时序 z 之积。逐票 IC=该票信号对前瞻收益的秩相关。</div>`);
+
+  // ② 散点:预测 vs 实际
+  set("rf-scatter", `<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+      <div>${scatterPredVsRealized(E.scatter_1d, E.ic_1d, "次日实际收益")}</div>
+      <div>${scatterPredVsRealized(E.scatter_5d, E.ic_5d, "次周实际收益")}</div></div>
+    <div class="muted small">每点=某票某日:x=当日复合信号,y=之后实际收益。正斜率=信号有预测力。散户流常在极端处反向(聪明钱反做)。</div>`);
+
+  // ③ 预测力 IC
+  set("rf-ic", `<div class="opt-grid">
+      ${tile("IC 次日 · 复合", fmtIC(E.ic_1d), `n=${E.n_obs_1d}`)}
+      ${tile("IC 次周 · 复合", fmtIC(E.ic_5d), `n=${E.n_obs_5d}`)}
+      ${tile("IC 次日 · 仅净买入", fmtIC(E.ic_netbuy_1d), "对照:去掉强度/关注")}
+      ${tile("IC 次周 · 仅净买入", fmtIC(E.ic_netbuy_5d), "对照")}
+    </div>
+    <div class="muted small">${(J.meta && J.meta.caveats || []).map(esc).join(" · ")}</div>`);
+
+  // ④ 净买入热力图
+  set("rf-series", netbuyHeatmap(J));
+}
+
+/* ---------- Tab 调度 ---------- */
+const RENDER = { bearbull: renderBearbull, retailflow: renderRetailflow };
+const rendered = {};
+async function showTopic(topic) {
+  if (!RENDER[topic]) return;
+  document.querySelectorAll(".tab[data-topic]").forEach((t) => t.classList.toggle("active", t.dataset.topic === topic));
+  document.querySelectorAll("[data-topic-panel]").forEach((s) => { s.hidden = s.dataset.topicPanel !== topic; });
+  if (!rendered[topic]) { rendered[topic] = true; try { await RENDER[topic](); } catch (e) { console.error(e); } }
+}
+document.querySelectorAll(".tab[data-topic]").forEach((t) => {
+  if (!RENDER[t.dataset.topic]) return;             // deadtime 等未实现的保持禁用
+  t.style.cursor = "pointer";
+  t.addEventListener("click", () => showTopic(t.dataset.topic));
+});
+showTopic("bearbull");

@@ -22,6 +22,7 @@ import bisect
 import json
 import os
 import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlparse
@@ -84,6 +85,15 @@ def subpenny(price):
     return round(price * 100, 6) % 1
 
 
+def day_close(sym, day):
+    """当日日线收盘(算前瞻收益用);失败返回 None。"""
+    try:
+        rows = get(f"/v2/aggs/ticker/{sym}/range/1/day/{day}/{day}?adjusted=true").get("results") or []
+        return rows[0].get("c") if rows else None
+    except Exception:
+        return None
+
+
 def last_trading_day():
     d = date.today() - timedelta(days=1)
     while d.weekday() >= 5:                        # 六/日回退到周五
@@ -91,72 +101,84 @@ def last_trading_day():
     return d.isoformat()
 
 
-def flow_for(sym, day, verbose=False):
-    """返回该票当日聚合 dict,或 None(数据不足)。"""
-    win = f"&timestamp.gte={day}T{RTH_GTE_H}Z&timestamp.lte={day}T{RTH_LTE_H}Z"
-    # 1) 逐报价 → 排序的 (ts, bid, ask),供中点 asof
+def fetch_quotes(sym, win):
+    """→ 排序的 (qts[], qba[(bid,ask)]) + 翻页数。"""
     qts, qba = [], []
     def on_q(x):
         ts, b, a = x.get("sip_timestamp"), x.get("bid_price"), x.get("ask_price")
         if ts and b and a:
             qts.append(ts); qba.append((b, a))
     npq = stream(f"/v3/quotes/{sym}?limit=50000&order=asc&sort=timestamp{win}", on_q)
-    # 报价流已是 asc;确保有序
     if qts and any(qts[i] > qts[i + 1] for i in range(min(len(qts) - 1, 5000))):
         order = sorted(range(len(qts)), key=lambda i: qts[i])
         qts = [qts[i] for i in order]; qba = [qba[i] for i in order]
+    return qts, qba, npq
 
-    # 2) 逐笔 → 识别散户候选(场外+次美分)→ 中点签名 → 聚合
-    agg = {"mbuy": 0, "msell": 0, "total_vol": 0, "n_off": 0, "n_retail": 0, "n_trades": 0}
-    prev = [None]
+
+def fetch_trades(sym, win):
+    """→ 精简逐笔 [(ts, price, size, off_retail_flag)] + total_vol + 场外笔占比 + 翻页数。
+    只保留识别为散户候选(场外次美分)的笔用于签名;total_vol 统计全部有效成交。"""
+    rows, tot = [], [0, 0, 0]   # total_vol, n_trades, n_off
     def on_t(t):
         ts, price = t.get("sip_timestamp"), t.get("price")
         size, conds = t.get("size") or 0, t.get("conditions") or []
         if ts is None or price is None or not size or any(c in BAD_CONDITIONS for c in conds):
             return
-        agg["n_trades"] += 1
-        agg["total_vol"] += size
-        off = t.get("trf_id") is not None                     # 场外/TRF
+        tot[0] += size; tot[1] += 1
+        off = t.get("trf_id") is not None
         if off:
-            agg["n_off"] += 1
+            tot[2] += 1
         z = subpenny(price)
-        retail = off and (0 < z < 0.4 or 0.6 < z < 1.0)       # BJZZ 识别(场外次美分)
-        if not retail:
-            prev[0] = price
-            return
-        agg["n_retail"] += 1
+        if off and (0 < z < 0.4 or 0.6 < z < 1.0):        # BJZZ 识别:场外次美分
+            rows.append((ts, price, size))
+    npt = stream(f"/v3/trades/{sym}?limit=50000&order=asc&sort=timestamp{win}", on_t)
+    return rows, tot, npt
+
+
+def flow_for(sym, day, verbose=False):
+    """返回该票当日聚合 dict,或 None(数据不足)。trades/quotes 并发拉,再中点签名。"""
+    win = f"&timestamp.gte={day}T{RTH_GTE_H}Z&timestamp.lte={day}T{RTH_LTE_H}Z"
+    with ThreadPoolExecutor(max_workers=3) as ex:
+        fq = ex.submit(fetch_quotes, sym, win)
+        ft = ex.submit(fetch_trades, sym, win)
+        fp = ex.submit(day_close, sym, day)
+        qts, qba, npq = fq.result()
+        rtrades, tot, npt = ft.result()
+        px = fp.result()
+    total_vol, n_trades, n_off = tot
+    # 中点签名(Barber):对散户候选逐笔按 prevailing NBBO 定向,价内落回 tick rule
+    mbuy = msell = 0
+    prev = None
+    for ts, price, size in rtrades:
         side = 0
-        if qts:                                                # Barber:中点/quote rule 定向
+        if qts:
             i = bisect.bisect_right(qts, ts) - 1
             if i >= 0:
                 bid, ask = qba[i]
                 side = 1 if price >= ask else -1 if price <= bid else 0
-        if side == 0:                                          # 落在价内 → tick rule 回退
-            side = 1 if (prev[0] is not None and price > prev[0]) else -1 if (prev[0] is not None and price < prev[0]) else 0
-        prev[0] = price
+        if side == 0:
+            side = 1 if (prev is not None and price > prev) else -1 if (prev is not None and price < prev) else 0
+        prev = price
         if side > 0:
-            agg["mbuy"] += size
+            mbuy += size
         elif side < 0:
-            agg["msell"] += size
-    npt = stream(f"/v3/trades/{sym}?limit=50000&order=asc&sort=timestamp{win}", on_t)
-
-    rv = agg["mbuy"] + agg["msell"]
-    if agg["n_trades"] == 0 or rv == 0:
+            msell += size
+    rv = mbuy + msell
+    if n_trades == 0 or rv == 0:
         if verbose:
-            print(f"  {sym} {day}: 数据不足 (trades={agg['n_trades']}, retail_vol={rv}, "
-                  f"quote页={npq}, trade页={npt})")
+            print(f"  {sym} {day}: 数据不足 (trades={n_trades}, retail_vol={rv}, q页={npq} t页={npt})")
         return None
     out = {
-        "mbuy": agg["mbuy"], "msell": agg["msell"],
-        "netbuy": round((agg["mbuy"] - agg["msell"]) / rv, 6),
-        "retail_vol": rv, "total_vol": agg["total_vol"],
-        "intensity": round(rv / agg["total_vol"], 6) if agg["total_vol"] else None,
+        "mbuy": mbuy, "msell": msell,
+        "netbuy": round((mbuy - msell) / rv, 6),
+        "retail_vol": rv, "total_vol": total_vol,
+        "intensity": round(rv / total_vol, 6) if total_vol else None,
+        "px": px,
     }
     if verbose:
-        offshare = agg["n_off"] / agg["n_trades"]
-        print(f"  {sym} {day}: netbuy={out['netbuy']:+.3f} intensity={out['intensity']:.3f} "
-              f"| 场外占比 {offshare:.0%} 散户笔 {agg['n_retail']} "
-              f"| 翻页 q={npq} t={npt} | retail_vol={rv:,} total_vol={agg['total_vol']:,}")
+        print(f"  {sym} {day}: netbuy={out['netbuy']:+.3f} intensity={out['intensity']:.3f} px={px} "
+              f"| 场外占比 {n_off/n_trades:.0%} 散户笔 {len(rtrades)} "
+              f"| 翻页 q={npq} t={npt} | retail_vol={rv:,} total_vol={total_vol:,}")
     return out
 
 
@@ -187,13 +209,19 @@ def main():
     store = load_store()
     dayrec = store["days"].get(day, {})
     ok = 0
-    for s in syms:
+    workers = min(int(os.environ.get("RF_WORKERS", "3")), max(1, len(syms)))
+
+    def one(s):
         try:
-            r = flow_for(s, day, verbose=True)
-            if r:
-                dayrec[s] = r; ok += 1
+            return s, flow_for(s, day, verbose=True)
         except Exception as exc:
             print(f"  ✗ {s} {day}: {exc}")
+            return s, None
+
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        for s, r in ex.map(one, syms):
+            if r:
+                dayrec[s] = r; ok += 1
     store["days"][day] = dayrec
     store["window_days"] = WINDOW
     store["updated"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
