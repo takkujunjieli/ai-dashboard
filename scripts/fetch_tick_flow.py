@@ -22,7 +22,6 @@ import bisect
 import json
 import os
 import time
-from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlparse
@@ -59,7 +58,7 @@ def get(path):
     sep = "&" if "?" in url else "?"
     full = url + f"{sep}apiKey={KEY}"
     for attempt in range(5):                     # 429 退避(网关限流)
-        r = requests.get(full, headers=HEADERS, timeout=60)
+        r = requests.get(full, headers=HEADERS, timeout=120)
         if r.status_code == 429:
             time.sleep(3 * (attempt + 1))
             continue
@@ -136,15 +135,12 @@ def fetch_trades(sym, win):
 
 
 def flow_for(sym, day, verbose=False):
-    """返回该票当日聚合 dict,或 None(数据不足)。trades/quotes 并发拉,再中点签名。"""
+    """返回该票当日聚合 dict,或 None(数据不足)。
+    弱 HTTP 网关:trades/quotes/px 串行拉——并发会把网关压垮(实测 9 并发全 Read timeout)。"""
     win = f"&timestamp.gte={day}T{RTH_GTE_H}Z&timestamp.lte={day}T{RTH_LTE_H}Z"
-    with ThreadPoolExecutor(max_workers=3) as ex:
-        fq = ex.submit(fetch_quotes, sym, win)
-        ft = ex.submit(fetch_trades, sym, win)
-        fp = ex.submit(day_close, sym, day)
-        qts, qba, npq = fq.result()
-        rtrades, tot, npt = ft.result()
-        px = fp.result()
+    qts, qba, npq = fetch_quotes(sym, win)
+    rtrades, tot, npt = fetch_trades(sym, win)
+    px = day_close(sym, day)
     total_vol, n_trades, n_off = tot
     # 中点签名(Barber):对散户候选逐笔按 prevailing NBBO 定向,价内落回 tick rule
     mbuy = msell = 0
@@ -209,19 +205,13 @@ def main():
     store = load_store()
     dayrec = store["days"].get(day, {})
     ok = 0
-    workers = min(int(os.environ.get("RF_WORKERS", "3")), max(1, len(syms)))
-
-    def one(s):
+    for s in syms:                                # 串行:弱网关扛不住并发
         try:
-            return s, flow_for(s, day, verbose=True)
-        except Exception as exc:
-            print(f"  ✗ {s} {day}: {exc}")
-            return s, None
-
-    with ThreadPoolExecutor(max_workers=workers) as ex:
-        for s, r in ex.map(one, syms):
+            r = flow_for(s, day, verbose=True)
             if r:
                 dayrec[s] = r; ok += 1
+        except Exception as exc:
+            print(f"  ✗ {s} {day}: {exc}")
     store["days"][day] = dayrec
     store["window_days"] = WINDOW
     store["updated"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
