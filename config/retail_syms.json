@@ -1,8 +1,9 @@
 {
-  "_note": "散户订单流引擎跑哪些票(独立于 D/Q;由 research 页多选下拉编辑,写回本文件)。逐笔成本 ~2-15min/票。",
+  "_note": "散户订单流引擎跑哪些票(独立于 D/Q;research 页多选下拉编辑)。逐笔成本 ~2-15min/票。",
   "symbols": [
+    "SNDK",
     "HOOD",
-    "COIN",
-    "RKLB"
+    "RKLB",
+    "SPCX"
   ]
 }
