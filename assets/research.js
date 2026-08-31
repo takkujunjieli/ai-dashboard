@@ -419,8 +419,9 @@ async function renderRetailflow() {
   set("rf-series", netbuyHeatmap(J));
 }
 
-/* Topic 3:收益率×市场 — 左轴=SPY/QQQ/IWM 归一100,右轴(虚线)=US 10/30Y 收益率%。
-   研究债券收益率对市场的影响(自 strategy 页迁移;lightweight-charts 交互图)。 */
+/* Topic 3:国债 vs 股市 — 左轴=SPY/QQQ/IWM 归一100,右轴(虚线)=US 2/10/30Y 收益率%。
+   研究国债收益率对股市的影响(自 strategy 页迁移)。lightweight-charts(与 trading K 线同框架):
+   点击图例开关任意曲线;悬停显示该日所有已展示曲线的值。 */
 async function renderRates() {
   const el = $("rates-chart"); if (!el) return;
   const LWC = window.LightweightCharts;
@@ -428,12 +429,14 @@ async function renderRates() {
   const r = await loadJSON("data/rates.json");
   if (!r || !r.series) { el.innerHTML = '<span class="muted small">缺 data/rates.json</span>'; return; }
   const meta = r.meta || {};
+  el.innerHTML = "";
   const chart = LWC.createChart(el, {
     layout: { background: { color: "transparent" }, textColor: "#8b96ad" },
     grid: { vertLines: { color: "#1e2941" }, horzLines: { color: "#1e2941" } },
     leftPriceScale: { visible: true, borderColor: "#2a3550" },
     rightPriceScale: { visible: true, borderColor: "#2a3550" },
     timeScale: { borderColor: "#2a3550" },
+    crosshair: { mode: LWC.CrosshairMode.Normal },
     height: 380,
   });
   const toLine = (arr) => {
@@ -441,30 +444,68 @@ async function renderRates() {
     for (const [d, v] of arr) if (!seen.has(d)) { seen.add(d); out.push({ time: d, value: v }); }
     return out;
   };
-  const legend = [];
+  const S = [];                                     // 每条曲线:{label,color,isYield,series,visible,latest,fmt}
   for (const [key, arr] of Object.entries(r.series)) {
     if (!arr || !arr.length) continue;
     const m = meta[key] || {}, isYield = m.axis === "yield";
-    let data, latest;
+    const color = m.color || "#60a5fa", label = m.label || key;
+    let data, latest, fmt;
     if (isYield) {
       data = toLine(arr);
       latest = arr[arr.length - 1][1].toFixed(2) + "%";
+      fmt = (v) => v.toFixed(2) + "%";
     } else {
       const base = arr[0][1] || 1;
-      data = toLine(arr.map(([d, v]) => [d, v / base * 100]));
+      data = toLine(arr.map(([d, v]) => [d, v / base * 100]));   // 归一到 100
       const chg = (arr[arr.length - 1][1] / base - 1) * 100;
       latest = (chg >= 0 ? "+" : "") + chg.toFixed(0) + "%";
+      fmt = (v) => (v >= 100 ? "+" : "") + (v - 100).toFixed(0) + "%";   // 归一值→自起点涨跌%
     }
-    chart.addLineSeries({
-      color: m.color || "#60a5fa", lineWidth: 2,
+    const series = chart.addLineSeries({
+      color, lineWidth: 2,
       lineStyle: isYield ? LWC.LineStyle.Dashed : LWC.LineStyle.Solid,
       priceScaleId: isYield ? "right" : "left",
       priceLineVisible: false, lastValueVisible: false,
-    }).setData(data);
-    legend.push(`<span class="rt-leg"><span class="rt-sw" style="background:${m.color || "#60a5fa"}"></span>${esc(m.label || key)} <b>${latest}</b></span>`);
+    });
+    series.setData(data);
+    S.push({ label, color, isYield, series, visible: true, latest, fmt });
   }
   chart.timeScale().fitContent();
-  if ($("rates-legend")) $("rates-legend").innerHTML = legend.join("");
+
+  // 可点图例:点 label 开关曲线
+  const leg = $("rates-legend");
+  if (leg) {
+    leg.innerHTML = "";
+    S.forEach((s) => {
+      const chip = document.createElement("span");
+      chip.className = "rt-leg";
+      chip.innerHTML = `<span class="rt-sw" style="background:${s.color}"></span>${esc(s.label)} <b>${s.latest}</b>`;
+      chip.onclick = () => {
+        s.visible = !s.visible;
+        s.series.applyOptions({ visible: s.visible });
+        chip.classList.toggle("off", !s.visible);
+      };
+      leg.appendChild(chip);
+    });
+  }
+
+  // 悬停浮层:该日所有"已展示"曲线的值
+  const hov = $("rates-hover");
+  if (hov) {
+    chart.subscribeCrosshairMove((param) => {
+      if (!param.point || !param.time) { hov.style.display = "none"; return; }
+      const rows = [];
+      for (const s of S) {
+        if (!s.visible) continue;
+        const d = param.seriesData.get(s.series);
+        if (!d || d.value == null) continue;
+        rows.push(`<span style="color:${s.color}">● ${esc(s.label)} ${s.fmt(d.value)}</span>`);
+      }
+      if (!rows.length) { hov.style.display = "none"; return; }
+      hov.innerHTML = `<div class="muted" style="margin-bottom:2px">${param.time}</div>` + rows.join("<br>");
+      hov.style.display = "block";
+    });
+  }
 }
 
 /* ---------- Tab 调度 ---------- */

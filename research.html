@@ -21,7 +21,7 @@
 <nav>
   <span class="tab active" data-topic="bearbull">🐻 熊/牛预测</span>
   <span class="tab" data-topic="retailflow">📊 散户订单流</span>
-  <span class="tab" data-topic="rates">📉 收益率×市场</span>
+  <span class="tab" data-topic="rates">🏦 国债vs股市</span>
 </nav>
 
 <div id="r-status" class="muted small" style="padding:8px 0"></div>
@@ -57,10 +57,13 @@
 
 <!-- ========== Topic 3:收益率×市场(债券收益率对市场的影响) ========== -->
 <section data-topic-panel="rates" hidden>
-  <h2>📉 收益率 × 市场 <span class="muted small">左轴:SPY/QQQ/IWM 归一100 · 右轴(虚线):US 10/30Y 收益率%</span></h2>
+  <h2>🏦 国债 vs 股市 <span class="muted small">左轴:SPY/QQQ/IWM 归一100 · 右轴(虚线):US 2/10/30Y 收益率% · 点击图例开关曲线</span></h2>
   <div id="rates-legend" class="rt-legend"></div>
-  <div id="rates-chart" style="height:380px"></div>
-  <div class="muted small" style="margin-top:8px">研究债券收益率对市场的影响:利率上行区间成长(QQQ)相对小盘(IWM)/大盘(SPY)的相对表现。数据 FRED(DGS10/30)+ SPY/QQQ/IWM,近 5 年。</div>
+  <div class="chart-wrap">
+    <div id="rates-chart" style="height:380px"></div>
+    <div id="rates-hover" class="chart-hover"></div>
+  </div>
+  <div class="muted small" style="margin-top:8px">研究国债收益率对股市的影响:利率(2/10/30Y)上行区间,成长(QQQ)相对小盘(IWM)/大盘(SPY)的相对表现。点击图例开关任意曲线;鼠标悬停显示该日所有已展示曲线的值。数据 FRED + Yahoo,近 5 年。</div>
 </section>
 
 <footer class="muted small">

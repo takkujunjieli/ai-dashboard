@@ -222,9 +222,17 @@ footer { margin-top: 50px; text-align: center; }
 /* 策略回测页交易表 */
 /* 5Y 走势聚合图例 */
 .rt-legend { display: flex; flex-wrap: wrap; gap: 16px; margin: 4px 0 8px; font-size: 12px; }
-.rt-leg { display: flex; align-items: center; gap: 6px; color: var(--muted); }
+.rt-leg { display: flex; align-items: center; gap: 6px; color: var(--muted); cursor: pointer; user-select: none; }
+.rt-leg.off { opacity: .4; }
+.rt-leg.off b { color: var(--muted); }
 .rt-sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
 .rt-leg b { color: var(--text); font-variant-numeric: tabular-nums; }
+/* 悬停读数浮层(lightweight-charts 图通用,与 trading #chart-legend 同风格) */
+.chart-hover {
+  position: absolute; display: none; z-index: 6; pointer-events: none; top: 8px; left: 8px;
+  background: rgba(15, 20, 32, .92); border: 1px solid var(--border); border-radius: 6px;
+  padding: 5px 9px; font-size: 12px; line-height: 1.55; white-space: nowrap; font-variant-numeric: tabular-nums;
+}
 
 /* Scorecards 热力表 */
 #scorecards { margin-top: 14px; }
