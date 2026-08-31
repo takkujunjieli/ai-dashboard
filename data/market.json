@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-08-29T23:22:24+00:00",
+ "updated_at": "2026-08-30T23:32:13+00:00",
  "watchlist": [
   "AMD",
   "CCL",
@@ -2777,6 +2777,17 @@
   "AMD": [
    {
     "category": "company",
+    "datetime": 1788049800,
+    "headline": "Two Tech Stocks Take The Season",
+    "id": 141346912,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2290040711/image_2290040711.jpg?io=getty-c-w1536",
+    "related": "AMD",
+    "source": "SeekingAlpha",
+    "summary": "The Tech sector accounted for about 80% of the S&P's increase in market cap by adding $1.392 trillion.",
+    "url": "https://finnhub.io/api/news?id=d3e222c8d53d06eaa41a882f4a3c9974ce47502133ed8c290135535a9e377606"
+   },
+   {
+    "category": "company",
     "datetime": 1787985434,
     "headline": "What Moved Markets This Week",
     "id": 141343025,
@@ -2873,17 +2884,6 @@
     "source": "SeekingAlpha",
     "summary": "Nvidia Corporation delivered 106% revenue growth and $21.3B FCF, trading at 16x forward earnings. Click for this NVDA earnings update.",
     "url": "https://finnhub.io/api/news?id=84d8ba867725f7db9d628571de5b71bd633c02f11e2543578f180548338c93fa"
-   },
-   {
-    "category": "company",
-    "datetime": 1787828414,
-    "headline": "Nvidia Beats Again - But Cash Flow Must Keep Up With Blackwell's Growth",
-    "id": 141330456,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/1002175840/image_1002175840.jpg?io=getty-c-w1536",
-    "related": "AMD",
-    "source": "SeekingAlpha",
-    "summary": "Nvidia Corporation is a medium-confidence Buy for 6â12 months. Click for more on NVDA and its recent blowout Q2 earnings release.",
-    "url": "https://finnhub.io/api/news?id=952c58ae2a4c18c3868d849fc653a0a0d40a08cf8025a0b5fd2cc0298683dfa1"
    }
   ],
   "CCL": [
@@ -2922,6 +2922,17 @@
    }
   ],
   "SNDK": [
+   {
+    "category": "company",
+    "datetime": 1788027309,
+    "headline": "Broadcom Stock Faces Valuation Test as Fiscal Q3 Earnings Approach",
+    "id": 141345947,
+    "image": "https://cdn.benzinga.com/files/images/story/2026/08/29/Broadcom-Headquarters-Main-Entrance-Sign.jpg?width=2048&height=1536",
+    "related": "SNDK",
+    "source": "Benzinga",
+    "summary": "Broadcom stock is in the spotlight as it prepares to publish its financial results. Here&#39;s what to expect when the numbers come out",
+    "url": "https://finnhub.io/api/news?id=57465e6b570887927c69c198fa50b0fec911d3b237cc3b4a0007f20fa1eb78e1"
+   },
    {
     "category": "company",
     "datetime": 1787975893,
@@ -3020,20 +3031,31 @@
     "source": "Benzinga",
     "summary": "Sandisk Corporation (NASDAQ: SNDK) stock gains on Thursday as semiconductor memory makers move higher following Nvidia’s Q2 financial results.",
     "url": "https://finnhub.io/api/news?id=913a68c408d25e58a5d5c486a507b43f4b8b7b15170934b6956728f23d50f13f"
-   },
-   {
-    "category": "company",
-    "datetime": 1787816528,
-    "headline": "Sandisk And Kioxia Announce Anticipated Japan Investments Of Over $31B Through 2032, Contingent Upon Government Support",
-    "id": 141330914,
-    "image": "",
-    "related": "SNDK",
-    "source": "Benzinga",
-    "summary": "The investments through 2032 will continue to strengthen the Kioxia and Sandisk partnership, one of the most successful joint ventures across any industry. The partnership has helped drive decades of NAND flash memory",
-    "url": "https://finnhub.io/api/news?id=9cf0eb46b46dce0f72e539d1ac473a1449bd28efc4dcd9f6628b65ab9177e2cb"
    }
   ],
   "TSLA": [
+   {
+    "category": "company",
+    "datetime": 1788084420,
+    "headline": "Wall Street Brunch: Jobs And More AI Litmus Test Earnings",
+    "id": 141349056,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/1299491248/image_1299491248.jpg?io=getty-c-w1536",
+    "related": "TSLA",
+    "source": "SeekingAlpha",
+    "summary": "Augustâs jobs report could cement a September rate hike. Broadcom earnings give another look at the AI spending. John Ternus takes the reins from Tim Cook at Apple.",
+    "url": "https://finnhub.io/api/news?id=b65dcfa0f8f8e542ff67693f72381cc5309af36902e5be4ba7bbc2a6c8f91e94"
+   },
+   {
+    "category": "company",
+    "datetime": 1788069518,
+    "headline": "Wall Street Week Ahead",
+    "id": 141348099,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2240083979/image_2240083979.jpg?io=getty-c-w1536",
+    "related": "TSLA",
+    "source": "SeekingAlpha",
+    "summary": "Wall Street heads into September: August jobs report, AI chip earnings, and Teslaâs Cybercab launchâplus Fed Beige Book insights.",
+    "url": "https://finnhub.io/api/news?id=ba315618ffbe316cfaad6942270af6a92eed58515a9f13eba6d622c94ad24900"
+   },
    {
     "category": "company",
     "datetime": 1787994951,
@@ -3121,28 +3143,6 @@
     "source": "Benzinga",
     "summary": "Tesla to deliver 75 Semi trucks to Einride AB by 2026, with the rest by 2027. The order comes after Tesla received an initial order of 500 trucks.",
     "url": "https://finnhub.io/api/news?id=e7dc25953a855d6442b8e18fd79852965427d910329ed86be679d0246c7244af"
-   },
-   {
-    "category": "company",
-    "datetime": 1787881055,
-    "headline": "Elon Musk Touts $3.5 Trillion Revenue For SpaceX By 2033, Seven Years Earlier Than Morgan Stanley's Prediction",
-    "id": 141337953,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/28/Paris--France---February-3--2026-A-Horiz.jpg?width=2048&height=1536",
-    "related": "TSLA",
-    "source": "Benzinga",
-    "summary": "SpaceX aiming for $3.5 trillion in revenue by 2033, according to CEO Elon Musk as Morgan Stanley predicts $3.5 trillion revenue by 2040.",
-    "url": "https://finnhub.io/api/news?id=fa72328a0e938373da465f810ac6c2ebfddd98b8876600dbbf05645d103338cc"
-   },
-   {
-    "category": "company",
-    "datetime": 1787854138,
-    "headline": "Nvidia: The 'Coiled Spring' Poised To Jump",
-    "id": 141333089,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2263947713/image_2263947713.jpg?io=getty-c-w1536",
-    "related": "TSLA",
-    "source": "SeekingAlpha",
-    "summary": "Nvidia Corporation is deeply undervalued with massive AI growth ahead. See the P/E, PEG, demand-supply outlook & price targets ($300-$400). Click for an NVDA stock update.",
-    "url": "https://finnhub.io/api/news?id=2cc4a9c1f698b781123b0ae14a5b20f2743779d7e68ec543de2f90442810e647"
    }
   ],
   "U": [
@@ -3224,53 +3224,20 @@
     "source": "Benzinga",
     "summary": "",
     "url": "https://finnhub.io/api/news?id=b9f78f24eaedc16157b950e524c8d033dd496fd83833897f1588b4f1fdad611f"
-   },
-   {
-    "category": "company",
-    "datetime": 1787762101,
-    "headline": "What's going on in today's session: S&P500 movers",
-    "id": 141323759,
-    "image": "https://www.chartmill.com/images/uploads/CM_Top_Movers_Small_free_2b4ff2fc22.webp",
-    "related": "HOOD",
-    "source": "ChartMill",
-    "summary": "Curious about the S&P500 stocks that are in motion on Wednesday? Join us as we explore the top movers within the S&P500 index during today's session.",
-    "url": "https://finnhub.io/api/news?id=7db3f9fe470eeebfcfbb7e4f00a5ab8b8cea96f65ba562c97c0c267fdfca58cc"
-   },
-   {
-    "category": "company",
-    "datetime": 1787751318,
-    "headline": "4 Financials Stocks With Whale Alerts In Today’s Session",
-    "id": 141324717,
-    "image": "https://cdn.benzinga.com/files/images/story/2025/11/06/aggregated_options_2.jpg?width=2048&height=1536",
-    "related": "HOOD",
-    "source": "Benzinga",
-    "summary": "This whale alert can help traders discover the next big trading opportunities.\nWhales are entities with large sums of money and we track their transactions here at Benzinga on our options activity scanner.\nTraders often",
-    "url": "https://finnhub.io/api/news?id=7aa94882c2a183334793de90f77c15ddfa8b3564f0e588d83edcedb84d2c324c"
-   },
-   {
-    "category": "company",
-    "datetime": 1787740937,
-    "headline": "SHIB Joins XRP, Bitcoin on Japan's First New Crypto Exchange in 4 Years",
-    "id": 141323338,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/26/Kaufbeuren--Germany---November-17--2021-.jpg?width=2048&height=1536",
-    "related": "HOOD",
-    "source": "Benzinga",
-    "summary": "Shiba Inu joins Nomura-backed Laser Digital Japan as SHIB gains a rare regulated listing alongside Bitcoin, Ethereum and XRP.",
-    "url": "https://finnhub.io/api/news?id=a3837543fce25d44088e025841361cd20ea115d754d99a3efdb6bed1e5642140"
-   },
-   {
-    "category": "company",
-    "datetime": 1787727653,
-    "headline": "Cheaper Oil and a Chip Bid Set the Table Before Nvidia Speaks",
-    "id": 141321438,
-    "image": "https://www.chartmill.com/images/uploads/THUMBNAILS_CHARTMILL_1000_528_2026_08_26T091656_903_87182b8ecb.webp",
-    "related": "HOOD",
-    "source": "ChartMill",
-    "summary": "Wall Street clawed back ground on Tuesday, August 25, 2026, as Brent slipped under $90, Treasury yields eased, and the chip complex broke a seven-session losing streak in Nvidia ahead of its Wednesday print. Dick's Sporting Goods cratered on a guidance cut, Apple pushed its Macs deeper into the AI corner, and all eyes now turn to Nvidia earnings, PCE, and Warsh's first major speech at Jackson Hole.",
-    "url": "https://finnhub.io/api/news?id=bdd5ff242d5acf57f02c5b23519220e818af944279b3c1f3f5ab65b2e2fffb55"
    }
   ],
   "MU": [
+   {
+    "category": "company",
+    "datetime": 1788027309,
+    "headline": "Broadcom Stock Faces Valuation Test as Fiscal Q3 Earnings Approach",
+    "id": 141345947,
+    "image": "https://cdn.benzinga.com/files/images/story/2026/08/29/Broadcom-Headquarters-Main-Entrance-Sign.jpg?width=2048&height=1536",
+    "related": "MU",
+    "source": "Benzinga",
+    "summary": "Broadcom stock is in the spotlight as it prepares to publish its financial results. Here&#39;s what to expect when the numbers come out",
+    "url": "https://finnhub.io/api/news?id=57465e6b570887927c69c198fa50b0fec911d3b237cc3b4a0007f20fa1eb78e1"
+   },
    {
     "category": "company",
     "datetime": 1788012970,
@@ -3369,17 +3336,6 @@
     "source": "ChartMill",
     "summary": "Thursday, August 27, 2026 handed the AI trade the reset it needed. Nvidia's forward number lit the whole complex, Salesforce and CrowdStrike delivered outsized post-print moves, Marvell landed a record quarter that the tape still refused to reward, and rates drifted higher into Kevin Warsh's first Jackson Hole speech Friday.",
     "url": "https://finnhub.io/api/news?id=457bd7fc29d410106289bf72204c3d054ee7a43a67c755c3ca5fa615916a810e"
-   },
-   {
-    "category": "company",
-    "datetime": 1787911397,
-    "headline": "Micron Technology Consolidation: Soaring Memory Revenue Meets Fresh Policy Uncertainty",
-    "id": 141338770,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/28/Micron-Technology-Logo-Displayed-On-Sign.jpg?width=2048&height=1536",
-    "related": "MU",
-    "source": "Benzinga",
-    "summary": "Micron stock slips as investors balance surging AI memory pricing and $1T industry forecasts against profit-taking and semiconductor tariff risks.",
-    "url": "https://finnhub.io/api/news?id=f919eafbb4b7551174e208acd8b2db7227eb8a5bf9fb1d09093ca5579ea46059"
    }
   ],
   "RKLB": [
@@ -3426,50 +3382,6 @@
     "source": "Benzinga",
     "summary": "NASA Admin Jared Isaacman wants to move AI data centers to Earth orbit, using solar power to strengthen US&#39;s position in space and AI race.",
     "url": "https://finnhub.io/api/news?id=0bdb8fedeeb5ead4976ee0171f05a7b783136e67e2e15c32f5869343dfd8ae2c"
-   },
-   {
-    "category": "company",
-    "datetime": 1787752887,
-    "headline": "Why Is AST SpaceMobile Stock Falling on Wednesday?",
-    "id": 141324751,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/26/Los-Angeles--California---July-8-2025-As.jpg?width=2048&height=1536",
-    "related": "RKLB",
-    "source": "Benzinga",
-    "summary": "AST SpaceMobile stock fell Wednesday after SpaceX announced changes to its launch operations, raising market concerns.",
-    "url": "https://finnhub.io/api/news?id=8bc80989313ca0d53f9e16305de7d94faef11342bff5bb6361de6001a3ffbdc4"
-   },
-   {
-    "category": "company",
-    "datetime": 1787751057,
-    "headline": "Rocket Lab Is Becoming Much Bigger Than Neutron",
-    "id": 141324074,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/1355794289/image_1355794289.jpg?io=getty-c-w1536",
-    "related": "RKLB",
-    "source": "SeekingAlpha",
-    "summary": "Rocket Lab generated $234 million in Q2 revenue while its backlog reached $2.36 billion across increasingly integrated space programs. Learn more about RKLB stock here.",
-    "url": "https://finnhub.io/api/news?id=10bce86c1cc3499ccff489362466cee215c96cb189bb1a6ea8c711441adb79ce"
-   },
-   {
-    "category": "company",
-    "datetime": 1787739736,
-    "headline": "Rocket Lab Stock Pauses Wednesday: What's Happening?",
-    "id": 141324242,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/26/Rocket-Lab-Building-Sign--Auckland--New-.jpg?width=2048&height=1536",
-    "related": "RKLB",
-    "source": "Benzinga",
-    "summary": "Rocket Lab is trading flat Wednesday after a 10% weekly pullback as investors weigh high development costs against major defense wins.",
-    "url": "https://finnhub.io/api/news?id=2f069358f8034d774a61e452fe166cce7ef8901d480a51f4430285e7b5b88220"
-   },
-   {
-    "category": "company",
-    "datetime": 1787713546,
-    "headline": "SpaceX Ends Falcon 9 Starlink Launches From Florida As Starship Takes Over: 'End Of An Era'",
-    "id": 141324243,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/26/Paris--France---February-3--2026-A-Horiz.jpg?width=2048&height=1536",
-    "related": "RKLB",
-    "source": "Benzinga",
-    "summary": "SpaceX is winding down Starlink launches on Falcon 9 rocket on East Coast, shifting to Starship amid Louisiana spaceport talk.",
-    "url": "https://finnhub.io/api/news?id=07094902b59b2e2b533189eb97c9b4a6f339925eba9a46f64a8a67e56523b77f"
    }
   ],
   "COIN": [
@@ -3663,28 +3575,6 @@
     "source": "Benzinga",
     "summary": "Rivian Automotive, Inc. (NASDAQ: RIVN) today announced that Chief Financial Officer Claire McDonough has decided to step down from her role to pursue a new opportunity and relocate to the East Coast to be closer to her",
     "url": "https://finnhub.io/api/news?id=f74908971dbf9aa356aa792e15725b43cfc8de958a0c3cc8599f860bbc9def3a"
-   },
-   {
-    "category": "company",
-    "datetime": 1787751630,
-    "headline": "Tesla: Potential Merger Has Some Upside, But I'm Still Bearish (Upgrade)",
-    "id": 141324111,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/1140204814/image_1140204814.jpg?io=getty-c-w1536",
-    "related": "RIVN",
-    "source": "SeekingAlpha",
-    "summary": "Tesla continues to fund speculative projects with cash flow from the business that is losing market share and pricing power. Click for a TSLA update.",
-    "url": "https://finnhub.io/api/news?id=b382890d9c645179fedf5db41f4f6b4f29473bfc3286616827ab24d4f7656204"
-   },
-   {
-    "category": "company",
-    "datetime": 1787742355,
-    "headline": "Lucid: An EV Turnaround Play With Significant Upside",
-    "id": 141323222,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/1984506180/image_1984506180.jpg?io=getty-c-w1536",
-    "related": "RIVN",
-    "source": "SeekingAlpha",
-    "summary": "Lucid Group, Inc. eyes Q4 Gravity GT-S deliveries, but weak margins persist. Read more on LCID stock and why I remain bullish looking ahead.",
-    "url": "https://finnhub.io/api/news?id=523321b398bd9f0d23989b49334c1d44b5de5df1a75b2e711b6cdc03ddcee331"
    }
   ],
   "AAOI": [
@@ -3698,17 +3588,6 @@
     "source": "SeekingAlpha",
     "summary": "Applied Optoelectronics surges on AI-driven 800G/1.6T demand, but valuation looks stretched. Click for more on AAOI stock.",
     "url": "https://finnhub.io/api/news?id=22a163f4eb7af06ebe1b6dbd19faa7b25fd9a75a6a94c05aea0ed78d5cc65c04"
-   },
-   {
-    "category": "company",
-    "datetime": 1787746532,
-    "headline": "Here's How Much $100 Invested In Applied Optoelectronics 10 Years Ago Would Be Worth Today",
-    "id": 141325253,
-    "image": "https://cdn.benzinga.com/files/images/story/2025/07/10/valuestock_1.jpg?width=2048&height=1536",
-    "related": "AAOI",
-    "source": "Benzinga",
-    "summary": "Applied Optoelectronics (NASDAQ:AAOI) has outperformed the market over the past 10 years by 7.39% on an annualized basis producing an average annual return of 20.77%. Currently, Applied Optoelectronics has a market",
-    "url": "https://finnhub.io/api/news?id=5c62660a7adade4e6eeade91f2ad9ab1dd7d8251785780488f66259ca3590d46"
    }
   ],
   "SPCX": [
@@ -3744,6 +3623,17 @@
     "source": "Benzinga",
     "summary": "Trump signed an order establishing a U.S. Space Academy to train future astronauts, engineers and scientists amid growing talent shortages.",
     "url": "https://finnhub.io/api/news?id=c4754c6576e87b5308cfd20e93bbc32bd73646abad5305798583365706827de2"
+   },
+   {
+    "category": "company",
+    "datetime": 1787966769,
+    "headline": "Elon Musk’s SpaceX Faces OpenAI Snub as ChatGPT Maker Cuts Ties With Cursor Over Contract Compliance Concerns: 'Cannot Be Confident'",
+    "id": 141345900,
+    "image": "https://cdn.benzinga.com/files/images/story/2026/08/29/Paris--France---June-16--2023-Elon-Musk-.jpg?width=2048&height=1536",
+    "related": "SPCX",
+    "source": "Benzinga",
+    "summary": "OpenAI will cut off Cursor’s direct access to its AI models, giving developers until Nov. 12 to transition to other options.",
+    "url": "https://finnhub.io/api/news?id=43754097ad434bc7168c2357c46833016c3c90d42360030208bc89df695bf672"
    },
    {
     "category": "company",
@@ -3810,17 +3700,6 @@
     "source": "Benzinga",
     "summary": "SpaceX CEO Elon Musk announces discounted Starlink internet for residents near Louisiana launch site at 50% off.",
     "url": "https://finnhub.io/api/news?id=f7346eae46f633e4ee7989d1fd327f08e9ff3a4fc9e54b0a4ea61d244a8b8801"
-   },
-   {
-    "category": "company",
-    "datetime": 1787884711,
-    "headline": "SpaceX's Cursor AI Helped 'Russian-Speaking' Hackers Breach More Than 20 Companies Across Nine Countries",
-    "id": 141337952,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/28/The-Spacex-Logo-Is-Displayed-On-A-Mobile.jpg?width=2048&height=1536",
-    "related": "SPCX",
-    "source": "Benzinga",
-    "summary": "Elon Musk&#39;s SpaceX-owned AI coding assistant Cursor was used by a Russian-speaking ransomware group to hack dozens of organizations.",
-    "url": "https://finnhub.io/api/news?id=e276848c34e38958f9a6c9fb079870f42e38430b2bc9abeb403e1d92eb1e5f2a"
    }
   ],
   "LITE": [
@@ -3878,50 +3757,6 @@
     "source": "SeekingAlpha",
     "summary": "Kevin Warshâs Jackson Hole speech could sway bonds and the S&P 500 amid Treasury buybacks and hot inflation. Read what investors need to know.",
     "url": "https://finnhub.io/api/news?id=c8a8d2b1a883a10dd8c4f5c7366aa3dc199d10979b2009f220db2fc184e65f7b"
-   },
-   {
-    "category": "company",
-    "datetime": 1787760925,
-    "headline": "Lumentum Shares Rise Over 4% After Key Trading Signal",
-    "id": 141331448,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/26/image.png?width=2048&height=1536",
-    "related": "LITE",
-    "source": "Benzinga",
-    "summary": "A key trading signal flashed for Lumentum shares at a price of $901.72, after which LITE rose over 4% to an intraday high.",
-    "url": "https://finnhub.io/api/news?id=225e35391cfa67792915d833ab476a6a583c79722aa801abb64b665275bae37c"
-   },
-   {
-    "category": "company",
-    "datetime": 1787749114,
-    "headline": "Nasdaq 100 Falls as Hot PCE Inflation Stirs Rate-Hike Bets: Stock Market Today",
-    "id": 141323960,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/26/Stocks-Fall--Technology-Businesses-Do-No.jpg?width=2048&height=1536",
-    "related": "LITE",
-    "source": "Benzinga",
-    "summary": "Nasdaq 100 falls 0.6% as traders wait on Nvidia and hot July PCE revives September rate-hike bets. Energy leads, gold sinks 1.3% to $4,599.",
-    "url": "https://finnhub.io/api/news?id=cf087cbfcf6442c6f145fa7516f2c7ae3657b296cc038e226f8f91a561b7c4f8"
-   },
-   {
-    "category": "company",
-    "datetime": 1787745501,
-    "headline": "Nvidia Earnings: Top AI Stocks And What We Need To See For A Rally",
-    "id": 141323515,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2260260651/image_2260260651.jpg?io=getty-c-w1536",
-    "related": "LITE",
-    "source": "SeekingAlpha",
-    "summary": "The top AI stocks to watch after Nvidia earnings include infrastructure beneficiaries that have strategic connections to NVDA. Click here to see the top 3 stocks.",
-    "url": "https://finnhub.io/api/news?id=0476f7ef930de980f7966778d688764048769fe102d32ccca11e277073a8723b"
-   },
-   {
-    "category": "company",
-    "datetime": 1787743200,
-    "headline": "Q2 Earnings Season Confirmed The AI Infrastructure Thesis, And Revealed What May Come Next",
-    "id": 141323290,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2263211571/image_2263211571.jpg?io=getty-c-w1536",
-    "related": "LITE",
-    "source": "SeekingAlpha",
-    "summary": "S&P 500 IndexÂ earnings grew roughly 31% YoY in Q2 2026, and AI infrastructure companies contributed about half of that growth, with their own earnings rising around 54%. Read more here.",
-    "url": "https://finnhub.io/api/news?id=3043a64782e861938741cf46a220a3d6180567fd623cc1f61989a61fc51d4f93"
    }
   ],
   "INTC": [
@@ -4148,20 +3983,19 @@
     "url": "https://finnhub.io/api/news?id=1ad095896717e3ad97ed8cc50ffbcc20ff66c74146ca5b46cf3e4305e04c5bdb"
    }
   ],
-  "GLW": [
+  "GLW": [],
+  "CRWD": [
    {
     "category": "company",
-    "datetime": 1787734882,
-    "headline": "Trump's Solar Tariffs Could Spark The Next Intel-Style Government Deal: 2 Stocks To Watch",
-    "id": 141323139,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/26/Washington--Dc---April-27--2018-Presiden.jpg?width=2048&height=1536",
-    "related": "GLW",
-    "source": "Benzinga",
-    "summary": "rump&#39;s solar tariffs could trigger the next Intel-style deal. Kellogg expert reveals why First Solar (FSLR) and Corning (GLW) are key.",
-    "url": "https://finnhub.io/api/news?id=dbb852ca6d2cf765856c7cc5397d25bb96a7e711fe15795c2a907448fb59217c"
-   }
-  ],
-  "CRWD": [
+    "datetime": 1788083714,
+    "headline": "I Agree, 'Saaspocalypse Is Nonsense'- 3 Stocks I'm Buying",
+    "id": 141349026,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2220187455/image_2220187455.jpg?io=getty-c-w1536",
+    "related": "CRWD",
+    "source": "SeekingAlpha",
+    "summary": "Software stocks are leading: CRWD & CRM earnings lifted IGV above June highs. Read the full analysis here.",
+    "url": "https://finnhub.io/api/news?id=582b4c74c9f2238f57f7eae2391bc39cf37385ff43fc7fe6b3a6a1b9fb61f4d5"
+   },
    {
     "category": "company",
     "datetime": 1787994034,
@@ -4260,20 +4094,20 @@
     "source": "ChartMill",
     "summary": "Stay updated with the S&P500 gap up and gap down stocks on Friday. Get a glimpse of the market's movement during today's session.",
     "url": "https://finnhub.io/api/news?id=2475d4f0bf3820d4df188cf9c73fede62d6b646c997857e59ae8b8365a74fdba"
-   },
-   {
-    "category": "company",
-    "datetime": 1787925150,
-    "headline": "CID Holdco Sees FY26 Revenue $6M-$7.5M",
-    "id": 139947664,
-    "image": "",
-    "related": "CRWD",
-    "source": "Benzinga",
-    "summary": "",
-    "url": "https://finnhub.io/api/news?id=2137f19558c07d169079facdb58afc968c2702a2a0ec7e5bb41d3a5382a3c968"
    }
   ],
   "NOW": [
+   {
+    "category": "company",
+    "datetime": 1788083714,
+    "headline": "I Agree, 'Saaspocalypse Is Nonsense'- 3 Stocks I'm Buying",
+    "id": 141349026,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2220187455/image_2220187455.jpg?io=getty-c-w1536",
+    "related": "NOW",
+    "source": "SeekingAlpha",
+    "summary": "Software stocks are leading: CRWD & CRM earnings lifted IGV above June highs. Read the full analysis here.",
+    "url": "https://finnhub.io/api/news?id=582b4c74c9f2238f57f7eae2391bc39cf37385ff43fc7fe6b3a6a1b9fb61f4d5"
+   },
    {
     "category": "company",
     "datetime": 1787994000,
@@ -4372,17 +4206,6 @@
     "source": "SeekingAlpha",
     "summary": "ServiceNow, Inc. (NOW) Deutsche Bank 2026 Technology Conference August 27, 2026 2:40 PM EDTCompany ParticipantsGina Mastantuono - President &...",
     "url": "https://finnhub.io/api/news?id=5c1be21d63c77d2b695f89a461e6abfe98470c44fe9e35600654575128bae774"
-   },
-   {
-    "category": "company",
-    "datetime": 1787848501,
-    "headline": "Thursday's session: top gainers and losers in the S&P500 index",
-    "id": 141331061,
-    "image": "https://www.chartmill.com/images/uploads/CM_Top_Movers_Small_free_2b4ff2fc22.webp",
-    "related": "NOW",
-    "source": "ChartMill",
-    "summary": "Stay informed about the performance of the S&P500 index in the middle of the day on Thursday. Uncover the top gainers and losers in today's session for valuable insights.",
-    "url": "https://finnhub.io/api/news?id=dbe97060b57c6fcca42b09bac712bf7bcd8a4983c5dc92553f86f718d593e9cd"
    }
   ],
   "NBIS": [
@@ -4473,52 +4296,19 @@
     "source": "Benzinga",
     "summary": "Nebius (NBIS) stock surges 6% premarket after NVIDIA names it as the first customer for its upcoming Groq 3 LPX hardware.",
     "url": "https://finnhub.io/api/news?id=135f65db05bb2052b5db6363f28094c88586dabe556901e27b314f685dd0fcbb"
-   },
-   {
-    "category": "company",
-    "datetime": 1787764546,
-    "headline": "NVIDIA CFO Says Expect To Ship Groq 3 Lpx In Volume Later This Quarter To Early Adopters; Nebius To Be The First",
-    "id": 141330657,
-    "image": "",
-    "related": "NBIS",
-    "source": "Benzinga",
-    "summary": "-Conference Call",
-    "url": "https://finnhub.io/api/news?id=4e62d850dbeadeb910e17969e5f524693dacea244f50ae61b48103ec11a07e15"
-   },
-   {
-    "category": "company",
-    "datetime": 1787758356,
-    "headline": "Nebius: A Powerful 5-Year Opportunity",
-    "id": 141324659,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/1495370239/image_1495370239.jpg?io=getty-c-w1536",
-    "related": "NBIS",
-    "source": "SeekingAlpha",
-    "summary": "Nebius Group N.V. is rated Buy due to exceptional execution, robust demand, and strong earnings momentum in the neocloud sector. Click for my NBIS stock update.",
-    "url": "https://finnhub.io/api/news?id=6bf1f298156412f54cef64b4b8e2a78e0c6b805acad5e0f8968be16d78cdd182"
    }
   ],
   "ALAB": [
    {
     "category": "company",
-    "datetime": 1787745501,
-    "headline": "Nvidia Earnings: Top AI Stocks And What We Need To See For A Rally",
-    "id": 141323515,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2260260651/image_2260260651.jpg?io=getty-c-w1536",
+    "datetime": 1788070029,
+    "headline": "Astera Labs Has Found Its Next Growth Engine",
+    "id": 141348130,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/885294108/image_885294108.jpg?io=getty-c-w1536",
     "related": "ALAB",
     "source": "SeekingAlpha",
-    "summary": "The top AI stocks to watch after Nvidia earnings include infrastructure beneficiaries that have strategic connections to NVDA. Click here to see the top 3 stocks.",
-    "url": "https://finnhub.io/api/news?id=0476f7ef930de980f7966778d688764048769fe102d32ccca11e277073a8723b"
-   },
-   {
-    "category": "company",
-    "datetime": 1787743200,
-    "headline": "Q2 Earnings Season Confirmed The AI Infrastructure Thesis, And Revealed What May Come Next",
-    "id": 141323290,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2263211571/image_2263211571.jpg?io=getty-c-w1536",
-    "related": "ALAB",
-    "source": "SeekingAlpha",
-    "summary": "S&P 500 IndexÂ earnings grew roughly 31% YoY in Q2 2026, and AI infrastructure companies contributed about half of that growth, with their own earnings rising around 54%. Read more here.",
-    "url": "https://finnhub.io/api/news?id=3043a64782e861938741cf46a220a3d6180567fd623cc1f61989a61fc51d4f93"
+    "summary": "Astera Labs Q2 revenue is +104% YoY; Q3 guide signals ~40% growth as Scorpio ramps. Click for more on ALAB stock.",
+    "url": "https://finnhub.io/api/news?id=ecebd9434f44064882d26ac371e07f27366812771366407ca95dbbef5bc5b512"
    }
   ],
   "SMCI": [
@@ -4576,42 +4366,64 @@
     "source": "SeekingAlpha",
     "summary": "Super Micro Computer delivered a strong Q4 with revenue up 93% YoY and a dramatic margin rebound. Learn why SMCI stock is a buy.",
     "url": "https://finnhub.io/api/news?id=2064d509f9a198f9e2a4ab15ef70312f68a4be37a7a3eab6d7723f0e52e91134"
-   },
-   {
-    "category": "company",
-    "datetime": 1787767501,
-    "headline": "Explore the S&P500 index on Wednesday and find out which stocks are the most active in today's session.",
-    "id": 141324202,
-    "image": "https://www.chartmill.com/images/uploads/CM_Most_Active_Stocks_Small_free_fec0650b7f.webp",
-    "related": "SMCI",
-    "source": "ChartMill",
-    "summary": "Stay informed about the most active stocks in the S&P500 index on Wednesday's session. Discover the stocks that are generating the highest trading volume and driving market activity.",
-    "url": "https://finnhub.io/api/news?id=c710f4da94ba6b1816de5555e8b2151446aae51f52ce20fa254d5a2921bdc8fd"
-   },
-   {
-    "category": "company",
-    "datetime": 1787763625,
-    "headline": "Here’s How Much You Would Have Made Owning Super Micro Computer Stock In The Last 15 Years",
-    "id": 141332048,
-    "image": "https://cdn.benzinga.com/files/images/story/2025/07/10/valuestock_2.jpg?width=2048&height=1536",
-    "related": "SMCI",
-    "source": "Benzinga",
-    "summary": "Super Micro Computer (NASDAQ:SMCI) has outperformed the market over the past 15 years by 11.88% on an annualized basis producing an average annual return of 24.97%. Currently, Super Micro Computer has a market",
-    "url": "https://finnhub.io/api/news?id=d7f0e2921cb643e98b9a3ed7ce9c6dffb6894227432d3929f9ceba9adcde55e7"
-   },
-   {
-    "category": "company",
-    "datetime": 1787728877,
-    "headline": "Jim Cramer: 'Put This Stock Away, Give It to Your Kids'",
-    "id": 141323066,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/26/Jim-Cramer.png?width=2048&height=1536",
-    "related": "SMCI",
-    "source": "Benzinga",
-    "summary": "Reddit is &#34;such a buy,&#34; Cramer said. The &#34;Mad Money&#34; host also looked at ServiceNow, First Solar, Sunbelt Rentals and Super Micro Computer.",
-    "url": "https://finnhub.io/api/news?id=37fb0a75c619b1b6d6805dc7c117be56f4a23c3ab71e4616b7051cc6acf5563b"
    }
   ],
   "NVDA": [
+   {
+    "category": "company",
+    "datetime": 1788086353,
+    "headline": "NVDW: Collect High-Yield Income From Nvidia Swaps",
+    "id": 141349213,
+    "image": "",
+    "related": "NVDA",
+    "source": "SeekingAlpha",
+    "summary": "",
+    "url": "https://finnhub.io/api/news?id=96e828c7c49f6f18bfc529ad7b1f8552bb34bf64fad790fbf0ce91d9516e1278"
+   },
+   {
+    "category": "company",
+    "datetime": 1788084420,
+    "headline": "Wall Street Brunch: Jobs And More AI Litmus Test Earnings",
+    "id": 141349056,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/1299491248/image_1299491248.jpg?io=getty-c-w1536",
+    "related": "NVDA",
+    "source": "SeekingAlpha",
+    "summary": "Augustâs jobs report could cement a September rate hike. Broadcom earnings give another look at the AI spending. John Ternus takes the reins from Tim Cook at Apple.",
+    "url": "https://finnhub.io/api/news?id=b65dcfa0f8f8e542ff67693f72381cc5309af36902e5be4ba7bbc2a6c8f91e94"
+   },
+   {
+    "category": "company",
+    "datetime": 1788061836,
+    "headline": "Buy Nvidia: Thinking Differently About AI Value Creation",
+    "id": 141347631,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2275284146/image_2275284146.jpg?io=getty-c-w1536",
+    "related": "NVDA",
+    "source": "SeekingAlpha",
+    "summary": "Current valuations do not reflect the magnitude of Nvidia's business model or growth opportunities. Read why NVDA stock is a Buy.",
+    "url": "https://finnhub.io/api/news?id=5b6b6eead42c279ca3a8627a094755a102f7fe0643dba1993a7164bed2209cae"
+   },
+   {
+    "category": "company",
+    "datetime": 1788049800,
+    "headline": "Two Tech Stocks Take The Season",
+    "id": 141346912,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2290040711/image_2290040711.jpg?io=getty-c-w1536",
+    "related": "NVDA",
+    "source": "SeekingAlpha",
+    "summary": "The Tech sector accounted for about 80% of the S&P's increase in market cap by adding $1.392 trillion.",
+    "url": "https://finnhub.io/api/news?id=d3e222c8d53d06eaa41a882f4a3c9974ce47502133ed8c290135535a9e377606"
+   },
+   {
+    "category": "company",
+    "datetime": 1788027309,
+    "headline": "Broadcom Stock Faces Valuation Test as Fiscal Q3 Earnings Approach",
+    "id": 141345947,
+    "image": "https://cdn.benzinga.com/files/images/story/2026/08/29/Broadcom-Headquarters-Main-Entrance-Sign.jpg?width=2048&height=1536",
+    "related": "NVDA",
+    "source": "Benzinga",
+    "summary": "Broadcom stock is in the spotlight as it prepares to publish its financial results. Here&#39;s what to expect when the numbers come out",
+    "url": "https://finnhub.io/api/news?id=57465e6b570887927c69c198fa50b0fec911d3b237cc3b4a0007f20fa1eb78e1"
+   },
    {
     "category": "company",
     "datetime": 1788012970,
@@ -4666,61 +4478,6 @@
     "source": "SeekingAlpha",
     "summary": "SpaceX surged 92% YoY, but 42x forward sales and huge share unlocks could pressure shares. Click for more on SPCX.",
     "url": "https://finnhub.io/api/news?id=1eca922b5725cabba5b34434fc7297ac78abae5b58c2aed6172091448be463e8"
-   },
-   {
-    "category": "company",
-    "datetime": 1787990473,
-    "headline": "Benzinga Bulls and Bears: Nvidia, CrowdStrike, Intuit",
-    "id": 141344508,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/29/Bulls-and-Bears-1.jpg?width=2048&height=1536",
-    "related": "NVDA",
-    "source": "Benzinga",
-    "summary": "Benzinga examined the prospects for many investors’ favorite stocks over the last week — here’s a look at some of our top stories.",
-    "url": "https://finnhub.io/api/news?id=c966ec73cd6124ab90eb730714d71e2320603ef6ae3e322d04e9342bcccb0838"
-   },
-   {
-    "category": "company",
-    "datetime": 1787985434,
-    "headline": "What Moved Markets This Week",
-    "id": 141343025,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2280702330/image_2280702330.jpg?io=getty-c-w1536",
-    "related": "NVDA",
-    "source": "SeekingAlpha",
-    "summary": "U.S. stocks ended the week higher amid Nvidia (NVDA) earnings, policy signals from the Fed, and latest GDP data. Read more about this week's major events on Wall Street.",
-    "url": "https://finnhub.io/api/news?id=307fbeb44bfec41ba7f90d78131c5d0333daa8b7ef6d7b73e31981bca15907a3"
-   },
-   {
-    "category": "company",
-    "datetime": 1787978032,
-    "headline": "Hugging Face’s $399 Robot Ducks Racks Up $2.6 Million in Sales as Nvidia Deal Buzz Grows",
-    "id": 141344499,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/29/West-Bangal--India---July-5--2023--Huggi.jpg?width=2048&height=1536",
-    "related": "NVDA",
-    "source": "Benzinga",
-    "summary": "Hugging Face’s Microduck robot generated more than $2.6 million in orders within 24 hours, highlighting surging interest in AI robotics.",
-    "url": "https://finnhub.io/api/news?id=e3042e0226cb5d41520be22d077af0dd31777e3520d37905ee7f5afe0f6dd904"
-   },
-   {
-    "category": "company",
-    "datetime": 1787975893,
-    "headline": "The Memory Shortage Gets Worse In 2027",
-    "id": 141342424,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/1370479417/image_1370479417.jpg?io=getty-c-w1536",
-    "related": "NVDA",
-    "source": "SeekingAlpha",
-    "summary": "Memory demand is outpacing supply, with HBM and DRAM prices likely to remain elevated through at least 2027. Read more on the AI infrastructure expansion here.",
-    "url": "https://finnhub.io/api/news?id=dc7837e95d60e6b874c06d5d910a9d0cf2beeac227fe4f73144ccb0b016cf10a"
-   },
-   {
-    "category": "company",
-    "datetime": 1787963400,
-    "headline": "Strong Results, Sharper Scrutiny As The AI Trade Gets Tested",
-    "id": 141341681,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/1942357009/image_1942357009.jpg?io=getty-c-w1536",
-    "related": "NVDA",
-    "source": "SeekingAlpha",
-    "summary": "While tech stocks have had a strong run over the past few years, Vitali Mossounov says investors need to be more discerning as days of a rising tide lifting all boats in sector may be over.",
-    "url": "https://finnhub.io/api/news?id=8d0fa3b9adf4da3a506fe5a4279462d4454672f6f9339e813183a924e63df379"
    }
   ],
   "CRWV": [
@@ -4778,50 +4535,6 @@
     "source": "Benzinga",
     "summary": "CoreWeave Inc. (NASDAQ: CRWV) is trending Thursday after a busy stretch that included new partnerships with Hudson River Trading and Rescale.",
     "url": "https://finnhub.io/api/news?id=0d58131bfce8c3f6caa307f8c2766aabc4da2e4d1308d17389fb7f12bfc8b2a4"
-   },
-   {
-    "category": "company",
-    "datetime": 1787756966,
-    "headline": "CoreWeave's Hidden GPU Economics",
-    "id": 141324593,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2195684783/image_2195684783.jpg?io=getty-c-w1536",
-    "related": "CRWV",
-    "source": "SeekingAlpha",
-    "summary": "CoreWeave, Inc.âs $104B backlog, surging inference ARR, and higher GPU pricing boost margins and valuation. Click for this CRWV stock update.",
-    "url": "https://finnhub.io/api/news?id=1c4e68627eb572543df5d79ccd67bbe4c24845eb6afac96bf59e7197b838d155"
-   },
-   {
-    "category": "company",
-    "datetime": 1787743200,
-    "headline": "Q2 Earnings Season Confirmed The AI Infrastructure Thesis, And Revealed What May Come Next",
-    "id": 141323290,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2263211571/image_2263211571.jpg?io=getty-c-w1536",
-    "related": "CRWV",
-    "source": "SeekingAlpha",
-    "summary": "S&P 500 IndexÂ earnings grew roughly 31% YoY in Q2 2026, and AI infrastructure companies contributed about half of that growth, with their own earnings rising around 54%. Read more here.",
-    "url": "https://finnhub.io/api/news?id=3043a64782e861938741cf46a220a3d6180567fd623cc1f61989a61fc51d4f93"
-   },
-   {
-    "category": "company",
-    "datetime": 1787743200,
-    "headline": "CoreWeave: AI Demand Outstrips Supply, Yet The Stock Isn't A Buy",
-    "id": 141323289,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/863521230/image_863521230.jpg?io=getty-c-w1536",
-    "related": "CRWV",
-    "source": "SeekingAlpha",
-    "summary": "CoreWeave is tightly leveraged to Nvidia's AI compute cycle, with Q2 revenue up 112% and backlog at $104B. Learn more about CRWV stock here.",
-    "url": "https://finnhub.io/api/news?id=589c15675bfea9567a331132797ee8245252b6c2a196f2f83c4421001c83bb3f"
-   },
-   {
-    "category": "company",
-    "datetime": 1787741474,
-    "headline": "CoreWeave Stock Edges Lower: What's Happening?",
-    "id": 141323891,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/26/Stuttgart--Germany---06-07-2025-Smartpho.jpg?width=2048&height=1536",
-    "related": "CRWV",
-    "source": "Benzinga",
-    "summary": "CoreWeave stock is trading slightly lower Wednesday morning following a 25% gain over the past month driven by strong second-quarter earnings. Here&#39;s what investors need to know.",
-    "url": "https://finnhub.io/api/news?id=600de59c12d20b8ba78e8b0e7dda72fe43c9b0c3bf8382eb57724fd0b55f75ec"
    }
   ],
   "NET": [
@@ -4857,17 +4570,6 @@
     "source": "Benzinga",
     "summary": "On Wednesday, Aug. 26, 2026, Ark Invest sold CrowdStrike and AMD shares after CrowdStrike&#39;s record quarter.",
     "url": "https://finnhub.io/api/news?id=d832f5c6110d75c93888b1cee63ef4fe4d59b82fcdd87458bbd10cdc883b4d7b"
-   },
-   {
-    "category": "company",
-    "datetime": 1787743200,
-    "headline": "Q2 Earnings Season Confirmed The AI Infrastructure Thesis, And Revealed What May Come Next",
-    "id": 141323290,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2263211571/image_2263211571.jpg?io=getty-c-w1536",
-    "related": "NET",
-    "source": "SeekingAlpha",
-    "summary": "S&P 500 IndexÂ earnings grew roughly 31% YoY in Q2 2026, and AI infrastructure companies contributed about half of that growth, with their own earnings rising around 54%. Read more here.",
-    "url": "https://finnhub.io/api/news?id=3043a64782e861938741cf46a220a3d6180567fd623cc1f61989a61fc51d4f93"
    }
   ],
   "IREN": [
@@ -4985,6 +4687,17 @@
   "IGV": [
    {
     "category": "company",
+    "datetime": 1788083714,
+    "headline": "I Agree, 'Saaspocalypse Is Nonsense'- 3 Stocks I'm Buying",
+    "id": 141349026,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2220187455/image_2220187455.jpg?io=getty-c-w1536",
+    "related": "IGV",
+    "source": "SeekingAlpha",
+    "summary": "Software stocks are leading: CRWD & CRM earnings lifted IGV above June highs. Read the full analysis here.",
+    "url": "https://finnhub.io/api/news?id=582b4c74c9f2238f57f7eae2391bc39cf37385ff43fc7fe6b3a6a1b9fb61f4d5"
+   },
+   {
+    "category": "company",
     "datetime": 1787963400,
     "headline": "Strong Results, Sharper Scrutiny As The AI Trade Gets Tested",
     "id": 141341681,
@@ -5081,17 +4794,6 @@
     "source": "Benzinga",
     "summary": "Nvidia CEO Jensen Huang has learned that a single sentence from him can move billions in market value.",
     "url": "https://finnhub.io/api/news?id=4c686b94218dc10831e09c92bf705c397131b070a9fcd5327fee6f82a20c6a91"
-   },
-   {
-    "category": "company",
-    "datetime": 1787808817,
-    "headline": "Why Is Salesforce Stock Soaring Thursday?",
-    "id": 141330266,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/27/Salesforce.jpg?width=2048&height=1536",
-    "related": "IGV",
-    "source": "Benzinga",
-    "summary": "Salesforce shares surge 13% on Q2 earnings beat, soaring AI Agentforce usage, and an expanded Anthropic AI partnership.",
-    "url": "https://finnhub.io/api/news?id=11ff0d9bda93f10219d84258440bd9d3d5029e77f10103bdb7f827a2cd07fe6e"
    }
   ],
   "COHR": [
@@ -5138,28 +4840,6 @@
     "source": "Benzinga",
     "summary": "Coherent stock surged 2.8% premarket following Nvidia&#39;s upbeat AI outlook. Analysts maintain a Buy rating with a $402 average target.",
     "url": "https://finnhub.io/api/news?id=667c6215cd1228f41ddfe7d1fff724d05e1ef1aa595e3dafd76b4df14a5ae3bd"
-   },
-   {
-    "category": "company",
-    "datetime": 1787745501,
-    "headline": "Nvidia Earnings: Top AI Stocks And What We Need To See For A Rally",
-    "id": 141323515,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2260260651/image_2260260651.jpg?io=getty-c-w1536",
-    "related": "COHR",
-    "source": "SeekingAlpha",
-    "summary": "The top AI stocks to watch after Nvidia earnings include infrastructure beneficiaries that have strategic connections to NVDA. Click here to see the top 3 stocks.",
-    "url": "https://finnhub.io/api/news?id=0476f7ef930de980f7966778d688764048769fe102d32ccca11e277073a8723b"
-   },
-   {
-    "category": "company",
-    "datetime": 1787743200,
-    "headline": "Q2 Earnings Season Confirmed The AI Infrastructure Thesis, And Revealed What May Come Next",
-    "id": 141323290,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2263211571/image_2263211571.jpg?io=getty-c-w1536",
-    "related": "COHR",
-    "source": "SeekingAlpha",
-    "summary": "S&P 500 IndexÂ earnings grew roughly 31% YoY in Q2 2026, and AI infrastructure companies contributed about half of that growth, with their own earnings rising around 54%. Read more here.",
-    "url": "https://finnhub.io/api/news?id=3043a64782e861938741cf46a220a3d6180567fd623cc1f61989a61fc51d4f93"
    }
   ],
   "ABNB": [
@@ -5184,20 +4864,31 @@
     "source": "SeekingAlpha",
     "summary": "Airbnb has surged ~40% YTD, fueled by robust travel demand and strong bookings growth across core markets. Read more on ABNB stock here.",
     "url": "https://finnhub.io/api/news?id=327a00bb40776af03e7e17ff9305912b177386b2c7d4db294041fc401e3e49a8"
-   },
-   {
-    "category": "company",
-    "datetime": 1787751318,
-    "headline": "4 Consumer Discretionary Stocks With Whale Alerts In Today’s Session",
-    "id": 141330336,
-    "image": "https://cdn.benzinga.com/files/images/story/2025/11/06/aggregated_options_2.jpg?width=2048&height=1536",
-    "related": "ABNB",
-    "source": "Benzinga",
-    "summary": "This whale alert can help traders discover the next big trading opportunities.\nWhales are entities with large sums of money and we track their transactions here at Benzinga on our options activity scanner.\nTraders will",
-    "url": "https://finnhub.io/api/news?id=fe90731bae3119af35679f4b3c266de81fdb8350fcac0bf904c280e96e780092"
    }
   ],
   "PANW": [
+   {
+    "category": "company",
+    "datetime": 1788083714,
+    "headline": "I Agree, 'Saaspocalypse Is Nonsense'- 3 Stocks I'm Buying",
+    "id": 141349026,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2220187455/image_2220187455.jpg?io=getty-c-w1536",
+    "related": "PANW",
+    "source": "SeekingAlpha",
+    "summary": "Software stocks are leading: CRWD & CRM earnings lifted IGV above June highs. Read the full analysis here.",
+    "url": "https://finnhub.io/api/news?id=582b4c74c9f2238f57f7eae2391bc39cf37385ff43fc7fe6b3a6a1b9fb61f4d5"
+   },
+   {
+    "category": "company",
+    "datetime": 1788069518,
+    "headline": "Wall Street Week Ahead",
+    "id": 141348099,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2240083979/image_2240083979.jpg?io=getty-c-w1536",
+    "related": "PANW",
+    "source": "SeekingAlpha",
+    "summary": "Wall Street heads into September: August jobs report, AI chip earnings, and Teslaâs Cybercab launchâplus Fed Beige Book insights.",
+    "url": "https://finnhub.io/api/news?id=ba315618ffbe316cfaad6942270af6a92eed58515a9f13eba6d622c94ad24900"
+   },
    {
     "category": "company",
     "datetime": 1788001200,
@@ -5285,31 +4976,20 @@
     "source": "ChartMill",
     "summary": "After the conclusion of the US market's regular session on Thursday, let's examine the after-hours session and unveil the notable S&P500 performers among the top gainers and losers.",
     "url": "https://finnhub.io/api/news?id=5433b90d434ccadf5fa25840410d7ff01912ef51cbc03381fbdc7a0328c91add"
-   },
-   {
-    "category": "company",
-    "datetime": 1787864400,
-    "headline": "Stay updated with the stocks that are on the move in today's after-hours session.",
-    "id": 141332703,
-    "image": "https://www.chartmill.com/images/uploads/CM_Aftermarket_Movers_Small_free_e077945a19.webp",
-    "related": "PANW",
-    "source": "ChartMill",
-    "summary": "After the closing bell on Thursday, let's take a glimpse of the US markets and explore the top gainers and losers in today's after-hours session.",
-    "url": "https://finnhub.io/api/news?id=d854a50559f4c80953210ae0c5c722cc139602482c61ff4b2f8fc1ded4d1a701"
-   },
-   {
-    "category": "company",
-    "datetime": 1787857501,
-    "headline": "What's going on in today's session: S&P500 movers",
-    "id": 141332095,
-    "image": "https://www.chartmill.com/images/uploads/CM_Top_Movers_Small_free_2b4ff2fc22.webp",
-    "related": "PANW",
-    "source": "ChartMill",
-    "summary": "Uncover the latest developments among S&P500 stocks in today's session. Stay tuned to the S&P500 index's top gainers and losers on Thursday.",
-    "url": "https://finnhub.io/api/news?id=f563c106233d14ebb69586ee907707f00b570373de8f8e44db8bfd287e5b4889"
    }
   ],
   "SNOW": [
+   {
+    "category": "company",
+    "datetime": 1788069518,
+    "headline": "Wall Street Week Ahead",
+    "id": 141348099,
+    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2240083979/image_2240083979.jpg?io=getty-c-w1536",
+    "related": "SNOW",
+    "source": "SeekingAlpha",
+    "summary": "Wall Street heads into September: August jobs report, AI chip earnings, and Teslaâs Cybercab launchâplus Fed Beige Book insights.",
+    "url": "https://finnhub.io/api/news?id=ba315618ffbe316cfaad6942270af6a92eed58515a9f13eba6d622c94ad24900"
+   },
    {
     "category": "company",
     "datetime": 1788001200,
@@ -5386,28 +5066,6 @@
     "source": "Benzinga",
     "summary": "CRWD and OKTA ",
     "url": "https://finnhub.io/api/news?id=c49b06b0a5913c767c5bbbabb91bbd2c9305431e04e023b80139e7f59cc82582"
-   },
-   {
-    "category": "company",
-    "datetime": 1787744880,
-    "headline": "Citigroup Maintains Buy on Snowflake, Raises Price Target to $395",
-    "id": 141324696,
-    "image": "",
-    "related": "SNOW",
-    "source": "Benzinga",
-    "summary": "Citigroup  analyst Tyler Radke   maintains Snowflake (NYSE:SNOW) with a Buy and raises the price target from $320 to $395.",
-    "url": "https://finnhub.io/api/news?id=7c593af68c1ea05eb213cc98583a853c2c5b9bb8632dc9ce3e26408c8ecf46bc"
-   },
-   {
-    "category": "company",
-    "datetime": 1787743200,
-    "headline": "Q2 Earnings Season Confirmed The AI Infrastructure Thesis, And Revealed What May Come Next",
-    "id": 141323290,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2263211571/image_2263211571.jpg?io=getty-c-w1536",
-    "related": "SNOW",
-    "source": "SeekingAlpha",
-    "summary": "S&P 500 IndexÂ earnings grew roughly 31% YoY in Q2 2026, and AI infrastructure companies contributed about half of that growth, with their own earnings rising around 54%. Read more here.",
-    "url": "https://finnhub.io/api/news?id=3043a64782e861938741cf46a220a3d6180567fd623cc1f61989a61fc51d4f93"
    }
   ],
   "ASTS": [
@@ -5421,39 +5079,6 @@
     "source": "SeekingAlpha",
     "summary": "Crown Castle remains a Buy, with valuation underestimating its recovery potential and macro tailwinds supporting a re-rating. Read more on CCI stock here.",
     "url": "https://finnhub.io/api/news?id=d662318b839c89527b8564002269827367b068a79c61a22f9ac96dca6fcd6828"
-   },
-   {
-    "category": "company",
-    "datetime": 1787752887,
-    "headline": "Why Is AST SpaceMobile Stock Falling on Wednesday?",
-    "id": 141324751,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/26/Los-Angeles--California---July-8-2025-As.jpg?width=2048&height=1536",
-    "related": "ASTS",
-    "source": "Benzinga",
-    "summary": "AST SpaceMobile stock fell Wednesday after SpaceX announced changes to its launch operations, raising market concerns.",
-    "url": "https://finnhub.io/api/news?id=8bc80989313ca0d53f9e16305de7d94faef11342bff5bb6361de6001a3ffbdc4"
-   },
-   {
-    "category": "company",
-    "datetime": 1787742352,
-    "headline": "AST SpaceMobile: Bulls Are Ignoring The Biggest Red Flags",
-    "id": 141323223,
-    "image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/1221399048/image_1221399048.jpg?io=getty-c-w1536",
-    "related": "ASTS",
-    "source": "SeekingAlpha",
-    "summary": "AST SpaceMobile remains a Sell due to persistent overvaluation, mounting losses, and intensifying competition from SpaceX. Read more on ASTS stock here.",
-    "url": "https://finnhub.io/api/news?id=1e5e6b95cf8d4961fc9b049a216177a864286e7b1b1b79e5c73de3a29746dac8"
-   },
-   {
-    "category": "company",
-    "datetime": 1787713546,
-    "headline": "SpaceX Ends Falcon 9 Starlink Launches From Florida As Starship Takes Over: 'End Of An Era'",
-    "id": 141324243,
-    "image": "https://cdn.benzinga.com/files/images/story/2026/08/26/Paris--France---February-3--2026-A-Horiz.jpg?width=2048&height=1536",
-    "related": "ASTS",
-    "source": "Benzinga",
-    "summary": "SpaceX is winding down Starlink launches on Falcon 9 rocket on East Coast, shifting to Starship amid Louisiana spaceport talk.",
-    "url": "https://finnhub.io/api/news?id=07094902b59b2e2b533189eb97c9b4a6f339925eba9a46f64a8a67e56523b77f"
    }
   ]
  },

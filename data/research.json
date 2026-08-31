@@ -1,61 +1,12 @@
 {
- "updated_at": "2026-08-29T23:29:02+00:00",
+ "updated_at": "2026-08-30T23:45:08+00:00",
  "snapshots": {
-  "ASTS": {
-   "price": 58.09,
-   "chg": -3.3499999999999943,
-   "chg_pct": -5.452473958333324,
-   "day_vol": 9447997.0,
-   "prev_close": 61.44
-  },
-  "NOW": {
-   "price": 143.131,
-   "chg": 4.700999999999993,
-   "chg_pct": 3.395940186375781,
-   "day_vol": 29020703.0,
-   "prev_close": 138.43
-  },
-  "SNDK": {
-   "price": 1483.4244,
-   "chg": -1.5255999999999403,
-   "chg_pct": -0.102737465907939,
-   "day_vol": 8141358.0,
-   "prev_close": 1484.95
-  },
-  "IREN": {
-   "price": 35.6021,
-   "chg": -4.927900000000001,
-   "chg_pct": -12.158647915124602,
-   "day_vol": 89901264.0,
-   "prev_close": 40.53
-  },
-  "NBIS": {
-   "price": 208.7,
-   "chg": -9.780000000000001,
-   "chg_pct": -4.47638227755401,
-   "day_vol": 13212387.0,
-   "prev_close": 218.48
-  },
-  "HOOD": {
-   "price": 104.0899,
-   "chg": -5.670100000000005,
-   "chg_pct": -5.165907434402336,
-   "day_vol": 16293907.0,
-   "prev_close": 109.76
-  },
-  "SPCX": {
-   "price": 140.95,
-   "chg": 0.07999999999998408,
-   "chg_pct": 0.056789948179160984,
-   "day_vol": 55100460.0,
-   "prev_close": 140.87
-  },
-  "AMD": {
-   "price": 466.0423,
-   "chg": -10.627700000000004,
-   "chg_pct": -2.2295718211760764,
-   "day_vol": 15373950.0,
-   "prev_close": 476.67
+  "FIG": {
+   "price": 28.77,
+   "chg": -1.8500000000000014,
+   "chg_pct": -6.041802743305034,
+   "day_vol": 19101068.0,
+   "prev_close": 30.62
   },
   "COIN": {
    "price": 178.35,
@@ -64,61 +15,12 @@
    "day_vol": 10016717.0,
    "prev_close": 190.72
   },
-  "CRWV": {
-   "price": 84.05,
-   "chg": -2.75,
-   "chg_pct": -3.1682027649769586,
-   "day_vol": 17337824.0,
-   "prev_close": 86.8
-  },
-  "LITE": {
-   "price": 895.4408,
-   "chg": -60.69920000000002,
-   "chg_pct": -6.348359026920745,
-   "day_vol": 3447593.0,
-   "prev_close": 956.14
-  },
-  "NVDA": {
-   "price": 217.88,
-   "chg": -10.099999999999994,
-   "chg_pct": -4.430213176594436,
-   "day_vol": 195093291.0,
-   "prev_close": 227.98
-  },
-  "INTC": {
-   "price": 89.25,
-   "chg": -2.8400000000000034,
-   "chg_pct": -3.0839396242805983,
-   "day_vol": 86172349.0,
-   "prev_close": 92.09
-  },
-  "IGV": {
-   "price": 109.5,
-   "chg": -0.8199999999999932,
-   "chg_pct": -0.7432922407541636,
-   "day_vol": 15530582.0,
-   "prev_close": 110.32
-  },
-  "TSLA": {
-   "price": 348.1151,
-   "chg": -6.694900000000018,
-   "chg_pct": -1.8868972125926604,
-   "day_vol": 32965981.0,
-   "prev_close": 354.81
-  },
-  "AAOI": {
-   "price": 106.75,
-   "chg": -6.530000000000001,
-   "chg_pct": -5.764477401129945,
-   "day_vol": 5716918.0,
-   "prev_close": 113.28
-  },
-  "U": {
-   "price": 43.17,
-   "chg": -0.3200000000000003,
-   "chg_pct": -0.7358013336399178,
-   "day_vol": 7637446.0,
-   "prev_close": 43.49
+  "SNOW": {
+   "price": 329.5389,
+   "chg": 0.4288999999999987,
+   "chg_pct": 0.13032116921394024,
+   "day_vol": 3089925.0,
+   "prev_close": 329.11
   },
   "SMCI": {
    "price": 37.04,
@@ -127,61 +29,12 @@
    "day_vol": 29132861.0,
    "prev_close": 38.46
   },
-  "RKLB": {
-   "price": 64.52,
-   "chg": -3.010000000000005,
-   "chg_pct": -4.457278246705176,
-   "day_vol": 18547546.0,
-   "prev_close": 67.53
-  },
   "MU": {
    "price": 930.8,
    "chg": -4.590000000000032,
    "chg_pct": -0.49070441206342086,
    "day_vol": 22890089.0,
    "prev_close": 935.39
-  },
-  "FIG": {
-   "price": 28.77,
-   "chg": -1.8500000000000014,
-   "chg_pct": -6.041802743305034,
-   "day_vol": 19101068.0,
-   "prev_close": 30.62
-  },
-  "PANW": {
-   "price": 371.71,
-   "chg": -11.140000000000043,
-   "chg_pct": -2.909755779025739,
-   "day_vol": 5845767.0,
-   "prev_close": 382.85
-  },
-  "ALAB": {
-   "price": 290.3,
-   "chg": -13.789999999999964,
-   "chg_pct": -4.534841658719446,
-   "day_vol": 2639884.0,
-   "prev_close": 304.09
-  },
-  "RIVN": {
-   "price": 16.03,
-   "chg": -0.7699999999999996,
-   "chg_pct": -4.583333333333331,
-   "day_vol": 40916298.0,
-   "prev_close": 16.8
-  },
-  "CCL": {
-   "price": 24.885,
-   "chg": -0.06499999999999773,
-   "chg_pct": -0.2605210420841592,
-   "day_vol": 19187978.0,
-   "prev_close": 24.95
-  },
-  "SOXX": {
-   "price": 508.7859,
-   "chg": -16.644099999999924,
-   "chg_pct": -3.167710256361442,
-   "day_vol": 8468311.0,
-   "prev_close": 525.43
   },
   "COHR": {
    "price": 279.2,
@@ -190,26 +43,89 @@
    "day_vol": 5240088.0,
    "prev_close": 295.39
   },
-  "SNOW": {
-   "price": 329.5389,
-   "chg": 0.4288999999999987,
-   "chg_pct": 0.13032116921394024,
-   "day_vol": 3089925.0,
-   "prev_close": 329.11
-  },
-  "NET": {
-   "price": 299.47,
-   "chg": -8.759999999999991,
-   "chg_pct": -2.842033546377702,
-   "day_vol": 2549368.0,
-   "prev_close": 308.23
-  },
   "GLW": {
    "price": 148.75,
    "chg": -4.050000000000011,
    "chg_pct": -2.6505235602094315,
    "day_vol": 6147215.0,
    "prev_close": 152.8
+  },
+  "ABNB": {
+   "price": 189.43,
+   "chg": 5.030000000000001,
+   "chg_pct": 2.7277657266811284,
+   "day_vol": 4831671.0,
+   "prev_close": 184.4
+  },
+  "SNDK": {
+   "price": 1483.4244,
+   "chg": -1.5255999999999403,
+   "chg_pct": -0.102737465907939,
+   "day_vol": 8141358.0,
+   "prev_close": 1484.95
+  },
+  "SOXX": {
+   "price": 508.7859,
+   "chg": -16.644099999999924,
+   "chg_pct": -3.167710256361442,
+   "day_vol": 8468311.0,
+   "prev_close": 525.43
+  },
+  "HOOD": {
+   "price": 104.0899,
+   "chg": -5.670100000000005,
+   "chg_pct": -5.165907434402336,
+   "day_vol": 16293907.0,
+   "prev_close": 109.76
+  },
+  "AAOI": {
+   "price": 106.75,
+   "chg": -6.530000000000001,
+   "chg_pct": -5.764477401129945,
+   "day_vol": 5716918.0,
+   "prev_close": 113.28
+  },
+  "NOW": {
+   "price": 143.131,
+   "chg": 4.700999999999993,
+   "chg_pct": 3.395940186375781,
+   "day_vol": 29020703.0,
+   "prev_close": 138.43
+  },
+  "CRWV": {
+   "price": 84.05,
+   "chg": -2.75,
+   "chg_pct": -3.1682027649769586,
+   "day_vol": 17337824.0,
+   "prev_close": 86.8
+  },
+  "IGV": {
+   "price": 109.5,
+   "chg": -0.8199999999999932,
+   "chg_pct": -0.7432922407541636,
+   "day_vol": 15530582.0,
+   "prev_close": 110.32
+  },
+  "ASTS": {
+   "price": 58.09,
+   "chg": -3.3499999999999943,
+   "chg_pct": -5.452473958333324,
+   "day_vol": 9447997.0,
+   "prev_close": 61.44
+  },
+  "NVDA": {
+   "price": 217.88,
+   "chg": -10.099999999999994,
+   "chg_pct": -4.430213176594436,
+   "day_vol": 195093291.0,
+   "prev_close": 227.98
+  },
+  "SPCX": {
+   "price": 140.95,
+   "chg": 0.07999999999998408,
+   "chg_pct": 0.056789948179160984,
+   "day_vol": 55100460.0,
+   "prev_close": 140.87
   },
   "CRWD": {
    "price": 217.66,
@@ -218,27 +134,102 @@
    "day_vol": 14722802.0,
    "prev_close": 227.96
   },
-  "ABNB": {
-   "price": 189.43,
-   "chg": 5.030000000000001,
-   "chg_pct": 2.7277657266811284,
-   "day_vol": 4831671.0,
-   "prev_close": 184.4
+  "TSLA": {
+   "price": 348.1151,
+   "chg": -6.694900000000018,
+   "chg_pct": -1.8868972125926604,
+   "day_vol": 32965981.0,
+   "prev_close": 354.81
+  },
+  "RIVN": {
+   "price": 16.03,
+   "chg": -0.7699999999999996,
+   "chg_pct": -4.583333333333331,
+   "day_vol": 40916298.0,
+   "prev_close": 16.8
+  },
+  "NET": {
+   "price": 299.47,
+   "chg": -8.759999999999991,
+   "chg_pct": -2.842033546377702,
+   "day_vol": 2549368.0,
+   "prev_close": 308.23
+  },
+  "IREN": {
+   "price": 35.6021,
+   "chg": -4.927900000000001,
+   "chg_pct": -12.158647915124602,
+   "day_vol": 89901264.0,
+   "prev_close": 40.53
+  },
+  "CCL": {
+   "price": 24.885,
+   "chg": -0.06499999999999773,
+   "chg_pct": -0.2605210420841592,
+   "day_vol": 19187978.0,
+   "prev_close": 24.95
+  },
+  "INTC": {
+   "price": 89.25,
+   "chg": -2.8400000000000034,
+   "chg_pct": -3.0839396242805983,
+   "day_vol": 86172349.0,
+   "prev_close": 92.09
+  },
+  "LITE": {
+   "price": 895.4408,
+   "chg": -60.69920000000002,
+   "chg_pct": -6.348359026920745,
+   "day_vol": 3447593.0,
+   "prev_close": 956.14
+  },
+  "AMD": {
+   "price": 466.0423,
+   "chg": -10.627700000000004,
+   "chg_pct": -2.2295718211760764,
+   "day_vol": 15373950.0,
+   "prev_close": 476.67
+  },
+  "RKLB": {
+   "price": 64.52,
+   "chg": -3.010000000000005,
+   "chg_pct": -4.457278246705176,
+   "day_vol": 18547546.0,
+   "prev_close": 67.53
+  },
+  "ALAB": {
+   "price": 290.3,
+   "chg": -13.789999999999964,
+   "chg_pct": -4.534841658719446,
+   "day_vol": 2639884.0,
+   "prev_close": 304.09
+  },
+  "PANW": {
+   "price": 371.71,
+   "chg": -11.140000000000043,
+   "chg_pct": -2.909755779025739,
+   "day_vol": 5845767.0,
+   "prev_close": 382.85
+  },
+  "NBIS": {
+   "price": 208.7,
+   "chg": -9.780000000000001,
+   "chg_pct": -4.47638227755401,
+   "day_vol": 13212387.0,
+   "prev_close": 218.48
+  },
+  "U": {
+   "price": 43.17,
+   "chg": -0.3200000000000003,
+   "chg_pct": -0.7358013336399178,
+   "day_vol": 7637446.0,
+   "prev_close": 43.49
   }
  },
  "tickers": {
   "AMD": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     200.105,
-     201.89,
-     197.74,
-     200.21,
-     31312396.204817,
-     199.8105
-    ],
     [
      1772427600000,
      193.845,
@@ -1421,6 +1412,15 @@
    },
    "news": [
     {
+     "title": "Nvidia Just Delivered Bad News for AMD and Intel",
+     "url": "https://www.fool.com/investing/2026/08/30/nvidia-just-delivered-bad-news-for-amd-and-intel/?source=iedfolrf0000001",
+     "published": "2026-08-30T15:22:00Z",
+     "source": "The Motley Fool",
+     "summary": "Nvidia delivered strong Q2 earnings with 70% expected annual revenue growth for fiscal 2028, significantly exceeding Street expectations of 44%. The company is rapidly expanding into the CPU market with its new Vera CPU for AI agents, projecting $20 billion in CPU revenue for fiscal 2027 and expecti",
+     "sentiment": "negative",
+     "reason": "Nvidia's aggressive entry into the CPU market with superior performance metrics and $20+ billion revenue projections directly threatens AMD's data center CPU business. AMD's current data center revenue (~$6.7B) will face significant competition from Nvidia's rapidly scaling CPU division."
+    },
+    {
      "title": "ARM's Expanding AI Growth Opportunity Goes Beyond Market Hype",
      "url": "https://www.zacks.com/stock/news/2982106/arm-s-expanding-ai-growth-opportunity-goes-beyond-market-hype?cid=CS-ZC-FT-analyst_blog|quick_take-2982106",
      "published": "2026-08-28T18:30:00Z",
@@ -1446,43 +1446,16 @@
      "summary": "The iShares Semiconductor ETF (SOXX) has surged 70% in 2026, significantly outperforming the S&P 500 (12.1%) and Nasdaq-100 (15.6%), driven by strong performance in its top holdings Nvidia, Micron Technology, and AMD. While the ETF has historically beaten the market since 2001, the article cautions ",
      "sentiment": "positive",
      "reason": "Emerging as top competitor to Nvidia with newly launched Helios data center rack system offering viable alternative to Nvidia's offerings."
-    },
-    {
-     "title": "Stock Market Today, Aug. 27: Nvidia Surges on Blowout Results and Surprising Guidance",
-     "url": "https://www.fool.com/coverage/stock-market-today/2026/08/27/stock-market-today-aug-27-nvidia-surges-on-blowout-results-and-surprising-guidance/?source=iedfolrf0000001",
-     "published": "2026-08-27T21:01:26Z",
-     "source": "The Motley Fool",
-     "summary": "Nvidia surged 8.74% after reporting $96.2 billion in quarterly revenue (up 106% YoY) and providing surprisingly strong guidance for 70% revenue growth in 2027, nearly double analyst expectations. The results eased AI slowdown concerns and demonstrated sustained data center demand despite increasing ",
-     "sentiment": "neutral",
-     "reason": "Stock declined 0.89% despite Nvidia's strong results. While Nvidia's performance validates AI chip demand, AMD's slight decline suggests investors may be concerned about competitive positioning relative to Nvidia's dominant market position."
-    },
-    {
-     "title": "CBRS vs. AMD: Which Stock Leads the AI Infrastructure Boom?",
-     "url": "https://www.zacks.com/stock/news/2981404/cbrs-vs-amd-which-stock-leads-the-ai-infrastructure-boom?cid=CS-ZC-FT-analyst_blog|most_popular_stocks-2981404",
-     "published": "2026-08-27T18:07:00Z",
-     "source": "Zacks Investment Research",
-     "summary": "Cerebras Systems and Advanced Micro Devices are both benefiting from AI infrastructure growth. While AMD offers greater scale, profitability and diversification with Data Center revenues more than doubling, Cerebras appears to have an edge with faster growth expectations, $25.4B in remaining perform",
-     "sentiment": "positive",
-     "reason": "Established profitable company with strong financial base, Data Center revenues more than doubling, 27% operating margin, and broad AI portfolio spanning multiple products. Expected Data Center revenues to more than double in 2027. However, rated Zacks Rank #3 (Hold) with lower upside (30%) and near-term risks from weak Client/Gaming business and competitive pressures."
-    },
-    {
-     "title": "Broadcom Rides AI Semiconductor Growth: Can it Beat NVDA & AMD?",
-     "url": "https://www.zacks.com/stock/news/2981401/broadcom-rides-ai-semiconductor-growth-can-it-beat-nvda-amd?cid=CS-ZC-FT-analyst_blog|quick_take-2981401",
-     "published": "2026-08-27T18:03:00Z",
-     "source": "Zacks Investment Research",
-     "summary": "Broadcom's AI semiconductor revenues jumped 143% to $10.8B in Q2 fiscal 2026, with $16B expected in Q3, driven by custom XPU demand from hyperscalers and six core AI customers. However, the company faces intensifying competition from NVIDIA and AMD, which are expanding into complete AI infrastructur",
-     "sentiment": "negative",
-     "reason": "Becoming a stronger competitive alternative by expanding into rack-scale AI infrastructure with the Helios platform, integrating CPUs, GPUs, networking and software to compete for the same hyperscaler spending targeted by Broadcom."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 47.72,
     "rsi_d": 44.83,
     "ema9_m": 466.05,
     "ema21_m": 466.07
    },
-   "adv20": 20682581.764410846,
+   "adv20": 20682591.13317712,
    "options": {
     "call_premium": 59853291.84399998,
     "put_premium": 48407852.47400002,
@@ -1490,17 +1463,17 @@
     "put_vol": 97250,
     "call_oi": 145028,
     "put_oi": 165297,
-    "atm_iv": 0.4758,
+    "atm_iv": 0.4892,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.3843,
+    "atm_iv_front": 0.5427,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.4761,
+     "dte": 19,
+     "put_iv": 0.4883,
      "put_k": 435,
-     "call_iv": 0.4787,
+     "call_iv": 0.4916,
      "call_k": 497.5,
-     "rr": -0.0026
+     "rr": -0.0033
     },
     "pcr_vol": 1.14,
     "pcr_oi": 1.14,
@@ -1515,7 +1488,7 @@
       "put_vol": 21020,
       "call_oi": 11222,
       "put_oi": 11596,
-      "atm_iv": 0.3843
+      "atm_iv": 0.5427
      },
      {
       "exp": "2026-09-02",
@@ -1525,7 +1498,7 @@
       "put_vol": 5452,
       "call_oi": 3659,
       "put_oi": 4167,
-      "atm_iv": 0.4628
+      "atm_iv": 0.5349
      },
      {
       "exp": "2026-09-04",
@@ -1535,7 +1508,7 @@
       "put_vol": 31175,
       "call_oi": 36451,
       "put_oi": 47058,
-      "atm_iv": 0.4891
+      "atm_iv": 0.5358
      },
      {
       "exp": "2026-09-09",
@@ -1545,7 +1518,7 @@
       "put_vol": 796,
       "call_oi": 854,
       "put_oi": 852,
-      "atm_iv": 0.4394
+      "atm_iv": 0.4611
      },
      {
       "exp": "2026-09-11",
@@ -1555,7 +1528,7 @@
       "put_vol": 5684,
       "call_oi": 15734,
       "put_oi": 17588,
-      "atm_iv": 0.4634
+      "atm_iv": 0.4826
      },
      {
       "exp": "2026-09-18",
@@ -1565,7 +1538,7 @@
       "put_vol": 11254,
       "call_oi": 66454,
       "put_oi": 66625,
-      "atm_iv": 0.4758
+      "atm_iv": 0.4884
      }
     ],
     "by_strike": [
@@ -2212,32 +2185,23 @@
     "max_pain_exp": "2026-08-31",
     "oi_changes": [],
     "contracts": 1028,
-    "skew_rr": -0.0026,
-    "iv_term": -0.0915,
-    "vrp": -0.0851,
+    "skew_rr": -0.0033,
+    "iv_term": 0.0543,
+    "vrp": -0.0717,
     "rv20": 0.5609,
-    "maxpain_pin": 29,
+    "maxpain_pin": 26,
     "pcr_vol_pct": 100,
     "pcr_oi_pct": 73,
-    "atm_iv_pct": 0,
-    "skew_rr_pct": 44,
-    "iv_term_pct": 19,
-    "vrp_pct": 49,
+    "atm_iv_pct": 2,
+    "skew_rr_pct": 43,
+    "iv_term_pct": 41,
+    "vrp_pct": 52,
     "iv_vs_qqq_pct": null
    }
   },
   "CCL": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     31.38,
-     31.96,
-     31.215,
-     31.55,
-     19943510.74352,
-     31.4967
-    ],
     [
      1772427600000,
      28.85,
@@ -3419,14 +3383,14 @@
     "sic": "WATER TRANSPORTATION"
    },
    "news": [],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 53.68,
     "rsi_d": 34.02,
     "ema9_m": 24.88,
     "ema21_m": 24.87
    },
-   "adv20": 17675084.593456946,
+   "adv20": 17675145.225529607,
    "options": {
     "call_premium": 327016.985,
     "put_premium": 877694.0329999999,
@@ -3434,17 +3398,17 @@
     "put_vol": 19685,
     "call_oi": 43810,
     "put_oi": 160265,
-    "atm_iv": 0.3803,
+    "atm_iv": 0.3857,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.3813,
+    "atm_iv_front": 0.4179,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.3988,
+     "dte": 19,
+     "put_iv": 0.4091,
      "put_k": 23,
-     "call_iv": 0.3685,
+     "call_iv": 0.3783,
      "call_k": 27,
-     "rr": 0.0303
+     "rr": 0.0308
     },
     "pcr_vol": 2.69,
     "pcr_oi": 3.66,
@@ -3459,7 +3423,7 @@
       "put_vol": 4910,
       "call_oi": 5183,
       "put_oi": 5718,
-      "atm_iv": 0.3813
+      "atm_iv": 0.4179
      },
      {
       "exp": "2026-09-11",
@@ -3469,7 +3433,7 @@
       "put_vol": 811,
       "call_oi": 3305,
       "put_oi": 2182,
-      "atm_iv": 0.3562
+      "atm_iv": 0.3708
      },
      {
       "exp": "2026-09-18",
@@ -3479,7 +3443,7 @@
       "put_vol": 13671,
       "call_oi": 30505,
       "put_oi": 147513,
-      "atm_iv": 0.3803
+      "atm_iv": 0.3901
      },
      {
       "exp": "2026-09-25",
@@ -3489,7 +3453,7 @@
       "put_vol": 111,
       "call_oi": 2754,
       "put_oi": 1430,
-      "atm_iv": 0.359
+      "atm_iv": 0.3658
      },
      {
       "exp": "2026-10-02",
@@ -3499,7 +3463,7 @@
       "put_vol": 164,
       "call_oi": 2058,
       "put_oi": 3418,
-      "atm_iv": 0.4578
+      "atm_iv": 0.4648
      },
      {
       "exp": "2026-10-09",
@@ -3720,31 +3684,22 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 164,
-    "skew_rr": 0.0303,
-    "vrp": 0.0143,
+    "skew_rr": 0.0308,
+    "vrp": 0.0197,
     "rv20": 0.366,
     "maxpain_pin": 2,
-    "pcr_vol_pct": 95,
+    "pcr_vol_pct": 96,
     "pcr_oi_pct": 100,
-    "atm_iv_pct": 19,
-    "skew_rr_pct": 53,
+    "atm_iv_pct": 20,
+    "skew_rr_pct": 57,
     "iv_term_pct": null,
-    "vrp_pct": 33,
+    "vrp_pct": 34,
     "iv_vs_qqq_pct": null
    }
   },
   "SNDK": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     627.08,
-     661.2,
-     621.27,
-     635.36,
-     18208162.634264,
-     640.7613
-    ],
     [
      1772427600000,
      618.645,
@@ -4868,7 +4823,7 @@
      1456,
      1484.95,
      8854318.563924,
-     1491.9278
+     1491.9279
     ],
     [
      1787889600000,
@@ -4952,43 +4907,16 @@
      "summary": "The Computer-Storage Devices industry is experiencing strong growth driven by AI workloads, edge computing, and enterprise cloud adoption. The industry ranks #21 among 247 Zacks industries and has outperformed the S&P 500 by 396.1% over the past year. Three recommended stocks are Sandisk (SNDK), Sup",
      "sentiment": "positive",
      "reason": "Zacks Rank #1 (Strong Buy) with datacenter revenue rising 103% sequentially to $2.98B. Fiscal Q1 2027 revenues expected $10.3-$10.8B. Stock surged 2847.5% over past year. Strong demand for NAND storage and new business models with 8 customers representing 50% of bits in fiscal 2027."
-    },
-    {
-     "title": "KLAC vs. SNDK: Which Semiconductor Stock is a Better Buy Now?",
-     "url": "https://www.zacks.com/stock/news/2981405/klac-vs-sndk-which-semiconductor-stock-is-a-better-buy-now?cid=CS-ZC-FT-analyst_blog|most_popular_stocks-2981405",
-     "published": "2026-08-27T18:08:00Z",
-     "source": "Zacks Investment Research",
-     "summary": "Both KLA and SanDisk are benefiting from AI infrastructure spending, but SanDisk currently has the edge with stronger revenue and earnings momentum, higher margins, and improved visibility through multiyear customer deals. KLA offers solid process-control leadership but faces valuation concerns. San",
-     "sentiment": "positive",
-     "reason": "Exceptional growth driven by AI inference and datacenter demand, with revenues surging 372% YoY. Strong margins (83-85%), substantial free cash flow ($5.04B), and long-term customer visibility through $93.9B in signed NBM agreements provide durability. Outperforming KLA with superior growth profile and ranked #1 Strong Buy."
-    },
-    {
-     "title": "3 Storage Devices Stocks to Buy as the Industry Gains Momentum",
-     "url": "https://www.zacks.com/commentary/2980845/3-storage-devices-stocks-to-buy-as-the-industry-gains-momentum?cid=CS-ZC-FT-industry_outlook-2980845",
-     "published": "2026-08-27T15:37:00Z",
-     "source": "Zacks Investment Research",
-     "summary": "The Zacks Computer-Storage Devices industry is experiencing strong growth driven by AI workloads, cloud adoption, and data center expansion. The industry has outperformed the S&P 500 by 396.1% over the past year and trades at a favorable valuation of 9.98X forward P/E compared to the broader market.",
-     "sentiment": "positive",
-     "reason": "Strong revenue growth (372% YoY), datacenter revenues surging 103% sequentially, expanding to 38% of bits from 12% YoY. Zacks Rank #1 (Strong Buy), stock surged 2847.5% over past year. New business models with major customers provide revenue visibility."
-    },
-    {
-     "title": "3 Juggernaut Stocks to Hold for the Next 10 Years",
-     "url": "https://www.fool.com/investing/2026/08/27/3-juggernaut-stocks-to-hold-for-the-next-10-years/?source=iedfolrf0000001",
-     "published": "2026-08-27T09:20:00Z",
-     "source": "The Motley Fool",
-     "summary": "The article recommends three major tech companies as long-term buy-and-hold investments: Nvidia, benefiting from strong AI chip demand with 106% YoY revenue growth; Sandisk, growing faster than Nvidia with 51% sequential growth and secured multiyear customer partnerships; and Amazon, gaining market ",
-     "sentiment": "positive",
-     "reason": "Growing faster than Nvidia with 51% sequential growth, 91% sequential net income growth, 77% net profit margin, and multiyear customer partnerships providing revenue visibility through fiscal 2030."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 75.39,
     "rsi_d": 49.32,
     "ema9_m": 1482.83,
     "ema21_m": 1481.98
    },
-   "adv20": 13098084.456901953,
+   "adv20": 13098082.160286471,
    "options": {
     "call_premium": 142236850.22000003,
     "put_premium": 147062105.39,
@@ -4996,17 +4924,17 @@
     "put_vol": 30881,
     "call_oi": 39491,
     "put_oi": 56336,
-    "atm_iv": 0.664,
+    "atm_iv": 0.6829,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.6991,
+    "atm_iv_front": 0.7662,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.6627,
+     "dte": 19,
+     "put_iv": 0.6797,
      "put_k": 1380,
-     "call_iv": 0.6756,
+     "call_iv": 0.6937,
      "call_k": 1585,
-     "rr": -0.0129
+     "rr": -0.014
     },
     "pcr_vol": 1.13,
     "pcr_oi": 1.43,
@@ -5021,7 +4949,7 @@
       "put_vol": 21105,
       "call_oi": 13701,
       "put_oi": 16691,
-      "atm_iv": 0.6991
+      "atm_iv": 0.7662
      },
      {
       "exp": "2026-09-11",
@@ -5031,7 +4959,7 @@
       "put_vol": 2322,
       "call_oi": 3141,
       "put_oi": 5690,
-      "atm_iv": 0.6582
+      "atm_iv": 0.6852
      },
      {
       "exp": "2026-09-18",
@@ -5041,7 +4969,7 @@
       "put_vol": 3978,
       "call_oi": 18355,
       "put_oi": 26073,
-      "atm_iv": 0.664
+      "atm_iv": 0.6814
      },
      {
       "exp": "2026-09-25",
@@ -5051,7 +4979,7 @@
       "put_vol": 1774,
       "call_oi": 2336,
       "put_oi": 5120,
-      "atm_iv": 0.6765
+      "atm_iv": 0.6895
      },
      {
       "exp": "2026-10-02",
@@ -5061,7 +4989,7 @@
       "put_vol": 1434,
       "call_oi": 1947,
       "put_oi": 2738,
-      "atm_iv": 0.7024
+      "atm_iv": 0.7133
      },
      {
       "exp": "2026-10-09",
@@ -5071,7 +4999,7 @@
       "put_vol": 268,
       "call_oi": 11,
       "put_oi": 24,
-      "atm_iv": 0.7011
+      "atm_iv": 0.7097
      }
     ],
     "by_strike": [
@@ -6094,32 +6022,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 1264,
-    "skew_rr": -0.0129,
-    "iv_term": -0.002,
-    "vrp": -0.2986,
+    "skew_rr": -0.014,
+    "iv_term": 0.0565,
+    "vrp": -0.2797,
     "rv20": 0.9626,
-    "maxpain_pin": 17,
-    "pcr_vol_pct": 77,
-    "pcr_oi_pct": 55,
-    "atm_iv_pct": 0,
+    "maxpain_pin": 18,
+    "pcr_vol_pct": 78,
+    "pcr_oi_pct": 56,
+    "atm_iv_pct": 2,
     "skew_rr_pct": 30,
-    "iv_term_pct": 9,
-    "vrp_pct": 49,
+    "iv_term_pct": 18,
+    "vrp_pct": 52,
     "iv_vs_qqq_pct": null
    }
   },
   "TSLA": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     402.94,
-     407.12,
-     398.11,
-     402.51,
-     56890097.395043,
-     402.0339
-    ],
     [
      1772427600000,
      390.6,
@@ -7302,6 +7221,24 @@
    },
    "news": [
     {
+     "title": "The Biggest Risk Facing Tesla Stock Right Now",
+     "url": "https://www.fool.com/investing/2026/08/30/biggest-risk-tesla-stock-now-optimus-robotaxi/?source=iedfolrf0000001",
+     "published": "2026-08-30T19:14:00Z",
+     "source": "The Motley Fool",
+     "summary": "Tesla faces significant near-term risk from heavy capital spending on Cybercab/robotaxis and Optimus robots, with Wall Street projecting negative free cash flow from 2026-2028. While the company's strong balance sheet ($23B net cash expected by 2026) mitigates funding concerns, any delays in these v",
+     "sentiment": "neutral",
+     "reason": "Tesla has strong long-term potential and a fortress balance sheet, but faces near-term risks from heavy capital spending on unproven robotaxi and Optimus ventures. Wall Street expects negative free cash flow through 2028, creating volatility risk if these initiatives are delayed. The article suggests patience is required, indicating neither strong bullish nor bearish conviction."
+    },
+    {
+     "title": "Bitcoin Is Surging, But Investors Are Still Worried About Bitcoin Treasury Companies. Here's Why They're Right.",
+     "url": "https://www.fool.com/investing/2026/08/30/bitcoin-is-surging-but-investors-are-still-worried/?source=iedfolrf0000001",
+     "published": "2026-08-30T15:15:47Z",
+     "source": "The Motley Fool",
+     "summary": "While Bitcoin has surged 24% this month, Bitcoin treasury companies like Strategy (MSTR) face investor skepticism. Strategy's premium to its Bitcoin holdings has collapsed from 3.89 to 1.06, reflecting concerns about the business model. These companies, which exist solely to accumulate Bitcoin throu",
+     "sentiment": "neutral",
+     "reason": "Mentioned as a company that owns Bitcoin but is not classified as a Bitcoin treasury company since it has other business operations. No specific sentiment is expressed about Tesla."
+    },
+    {
      "title": "Tesla Stock in 2027: Why I Think TSLA Still Has Room to Run",
      "url": "https://www.fool.com/investing/2026/08/29/tesla-stock-in-2027-why-i-think-tsla-still-has-roo/?source=iedfolrf0000001",
      "published": "2026-08-29T21:30:00Z",
@@ -7363,88 +7300,16 @@
      "summary": "The S&P 500 is trading near record highs with a CAPE ratio at its highest level since the dot-com bubble, historically associated with market corrections. However, unlike the 1990s, today's AI-driven tech companies have substantial earnings, cash flow, and competitive advantages rather than speculat",
      "sentiment": "positive",
      "reason": "Tech-forward company with AI and autonomous driving capabilities, representing innovation-driven businesses with measurable productivity gains embedded in products."
-    },
-    {
-     "title": "Optimus Just Entered Production at Fremont. Here's What Changes for Tesla Investors.",
-     "url": "https://www.fool.com/investing/2026/08/27/optimus-just-entered-production-at-fremont-heres-w/?source=iedfolrf0000001",
-     "published": "2026-08-27T23:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "Tesla has begun Optimus robot production at its Fremont facility, a landmark milestone but not a pivotal moment. While Tesla claims Optimus will represent 80% of the company's future value, scaling production will be extremely challenging due to the need to build an entirely new supply chain. Initia",
-     "sentiment": "neutral",
-     "reason": "While Optimus production starting is a significant milestone and Tesla claims it will be 80% of future value, the article emphasizes substantial challenges ahead including lengthy production scaling, supply chain constraints, and a flat initial production ramp. The sentiment is neutral because the milestone is acknowledged but tempered by realistic expectations of difficulties and delayed financial visibility of improvements."
-    },
-    {
-     "title": "Should SpaceX Join the \"Magnificent Seven\"? Here's 1 Stock I'd Kick Out to Make Room.",
-     "url": "https://www.fool.com/investing/2026/08/27/should-spacex-join-the-magnificent-seven-heres-1-s/?source=iedfolrf0000001",
-     "published": "2026-08-27T20:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "An analyst argues that SpaceX should potentially replace Meta Platforms in the \"Magnificent Seven\" tech group. While SpaceX offers unique businesses in satellite internet (Starlink) and space transportation that aren't represented in the current group, Meta lacks tangible results from its AI initiat",
-     "sentiment": "neutral",
-     "reason": "Recommended to remain in the group despite recent struggles with falling margins and inconsistent sales; valued for providing exposure to a different consumer segment and potential future value from full self-driving capabilities."
-    },
-    {
-     "title": "Archer Aviation vs. Space Exploration Technologies: Which High Flying Stock Is a Better Buy in 2026?",
-     "url": "https://www.fool.com/coverage/better-buy/2026/08/27/archer-aviation-vs-space-exploration-technologies-which-high-flying-stock-is-a-better-buy-in-2026/?source=iedfolrf0000001",
-     "published": "2026-08-27T19:37:49Z",
-     "source": "The Motley Fool",
-     "summary": "Archer Aviation and SpaceX represent two different aerospace plays with vastly different maturity levels. Archer is pre-commercial with $300K revenue and $618M losses, pursuing FAA certification for eVTOL aircraft. SpaceX generates $18.7B in revenue but reported a $5B net loss in FY2025 due to massi",
-     "sentiment": "neutral",
-     "reason": "Referenced only as context for Elon Musk's track record of success, not analyzed as an investment opportunity in this article."
-    },
-    {
-     "title": "Tesla Announces Semi Event For September 24. Here's What Investors Need to Know",
-     "url": "https://www.fool.com/investing/2026/08/27/tesla-announces-semi-event-for-september-24-here-s-what-investors-need-to-know/?source=iedfolrf0000001",
-     "published": "2026-08-27T18:07:42Z",
-     "source": "The Motley Fool",
-     "summary": "Tesla is hosting an invite-only Semi truck event on September 24 to celebrate its new factory and showcase production scaling. While Semi sales have been disappointing since 2017, recent momentum from orders like Einride's 500-unit purchase shows potential. However, significant growth depends on aut",
-     "sentiment": "neutral",
-     "reason": "While Tesla is scaling Semi production and generating new orders, the article emphasizes that meaningful revenue impact won't occur until autonomous trucking becomes reality (2032). Current sales remain limited despite nearly a decade of availability, and high upfront costs continue to dampen demand. The sentiment is neither bullish nor bearish, but cautiously optimistic with significant caveats."
-    },
-    {
-     "title": "Oshkosh (OSK) Up 10.3% Since Last Earnings Report: Can It Continue?",
-     "url": "https://www.zacks.com/stock/news/2981189/oshkosh-osk-up-10-3-since-last-earnings-report-can-it-continue?cid=CS-ZC-FT-realtime_blog-2981189",
-     "published": "2026-08-27T15:30:19Z",
-     "source": "Zacks Investment Research",
-     "summary": "Oshkosh reported Q2 2026 adjusted EPS of $2.87, beating consensus estimates by 10.39%, with revenues rising 6.7% to $2.92 billion. However, the company cut full-year 2026 earnings guidance by ~$0.50 per share to $11.00 due to slower-than-expected fire truck production ramp, despite stronger Access s",
-     "sentiment": "neutral",
-     "reason": "Tesla reported 25.5% revenue growth but EPS declined year-over-year from $0.40 to $0.33. Current quarter EPS expected to decline 6% year-over-year. Stock gained 15.9% over the past month but has a Zacks Rank #3 (Hold) with minimal estimate revision changes (+0.3%), suggesting mixed investor sentiment."
-    },
-    {
-     "title": "MAGS Is Treading Water This Year. Here's Why the Smartest Investors Are Still Buying.",
-     "url": "https://www.fool.com/investing/2026/08/27/mags-treading-water-2026-why-smart-invest/?source=iedfolrf0000001",
-     "published": "2026-08-27T13:10:00Z",
-     "source": "The Motley Fool",
-     "summary": "The Roundhill Magnificent Seven ETF (MAGS) has underperformed major indexes year-to-date, up only 2% compared to the S&P 500 and Nasdaq's 12% gains. Despite this, investors remain interested due to five of the seven megacap stocks trading at below-average valuations. The concentrated portfolio carri",
-     "sentiment": "negative",
-     "reason": "Double-digit negative returns year-to-date and trading at an extremely high P/E ratio of 323, dragging down ETF performance."
-    },
-    {
-     "title": "Uber Stock Is 20% Off Its All-Time High, While the S&P 500 Index Is Up 14% Since Then: Here's Why the Market's Bearish View Is Wrong.",
-     "url": "https://www.fool.com/investing/2026/08/27/uber-stock-all-time-high-sp500-history-says-market/?source=iedfolrf0000001",
-     "published": "2026-08-27T10:14:00Z",
-     "source": "The Motley Fool",
-     "summary": "Uber shares have fallen 20% from their all-time high while the S&P 500 has risen 14%, driven by investor concerns about autonomous vehicle technology disrupting its business model. However, the author argues this bearish view is unwarranted, citing Uber's strong financial performance (24% gross book",
-     "sentiment": "neutral",
-     "reason": "Identified as a significant AV competitor with robotaxi service in six U.S. cities and 380,000 cumulative unsupervised miles. Presented as a potential threat to Uber's business model, but the article argues this risk is manageable and doesn't warrant Uber's current valuation discount."
-    },
-    {
-     "title": "Even Elon Musk Now Admits Natural Gas Isn't Going Away. Here's What That Means for Nuclear Energy Stocks, Including NuScale Power and Oklo",
-     "url": "https://www.fool.com/investing/2026/08/27/even-elon-musk-now-admits-natural-gas-isnt-going-a/?source=iedfolrf0000001",
-     "published": "2026-08-27T09:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "Elon Musk has reversed his stance on natural gas, acknowledging it will play a long-term role as a bridge fuel, particularly to support SpaceX's growing energy demands. This shift threatens the near-term growth prospects of small modular reactor (SMR) companies like NuScale Power and Oklo, as AI com",
-     "sentiment": "neutral",
-     "reason": "Mentioned as a company contributing to the energy transition through EV production and battery systems, but not directly impacted by the natural gas vs. nuclear debate discussed in the article."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 58.73,
     "rsi_d": 50.89,
     "ema9_m": 348.12,
     "ema21_m": 348.07
    },
-   "adv20": 35042712.91871474,
+   "adv20": 35042706.90671127,
    "options": {
     "call_premium": 222236619.39000016,
     "put_premium": 135969109.52700007,
@@ -7452,17 +7317,17 @@
     "put_vol": 298617,
     "call_oi": 354500,
     "put_oi": 322347,
-    "atm_iv": 0.3761,
+    "atm_iv": 0.3867,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.3106,
+    "atm_iv_front": 0.4398,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.3873,
+     "dte": 19,
+     "put_iv": 0.3971,
      "put_k": 322.5,
-     "call_iv": 0.3945,
+     "call_iv": 0.4052,
      "call_k": 372.5,
-     "rr": -0.0073
+     "rr": -0.0081
     },
     "pcr_vol": 0.56,
     "pcr_oi": 0.91,
@@ -7477,7 +7342,7 @@
       "put_vol": 157707,
       "call_oi": 47637,
       "put_oi": 24182,
-      "atm_iv": 0.3106
+      "atm_iv": 0.4398
      },
      {
       "exp": "2026-09-02",
@@ -7487,7 +7352,7 @@
       "put_vol": 37135,
       "call_oi": 16653,
       "put_oi": 10454,
-      "atm_iv": 0.369
+      "atm_iv": 0.4267
      },
      {
       "exp": "2026-09-04",
@@ -7497,7 +7362,7 @@
       "put_vol": 65483,
       "call_oi": 82680,
       "put_oi": 42274,
-      "atm_iv": 0.3977
+      "atm_iv": 0.4362
      },
      {
       "exp": "2026-09-09",
@@ -7507,7 +7372,7 @@
       "put_vol": 2955,
       "call_oi": 4663,
       "put_oi": 1668,
-      "atm_iv": 0.3515
+      "atm_iv": 0.3689
      },
      {
       "exp": "2026-09-11",
@@ -7517,7 +7382,7 @@
       "put_vol": 7328,
       "call_oi": 41773,
       "put_oi": 20198,
-      "atm_iv": 0.3745
+      "atm_iv": 0.3902
      },
      {
       "exp": "2026-09-18",
@@ -7527,7 +7392,7 @@
       "put_vol": 18310,
       "call_oi": 132436,
       "put_oi": 200959,
-      "atm_iv": 0.3761
+      "atm_iv": 0.3858
      }
     ],
     "by_strike": [
@@ -8022,32 +7887,23 @@
     "max_pain_exp": "2026-08-31",
     "oi_changes": [],
     "contracts": 778,
-    "skew_rr": -0.0073,
-    "iv_term": -0.0655,
-    "vrp": -0.0062,
+    "skew_rr": -0.0081,
+    "iv_term": 0.054,
+    "vrp": 0.0044,
     "rv20": 0.3823,
-    "maxpain_pin": 30,
-    "pcr_vol_pct": 23,
-    "pcr_oi_pct": 68,
-    "atm_iv_pct": 5,
-    "skew_rr_pct": 49,
-    "iv_term_pct": 7,
-    "vrp_pct": 67,
+    "maxpain_pin": 31,
+    "pcr_vol_pct": 24,
+    "pcr_oi_pct": 69,
+    "atm_iv_pct": 14,
+    "skew_rr_pct": 45,
+    "iv_term_pct": 41,
+    "vrp_pct": 70,
     "iv_vs_qqq_pct": null
    }
   },
   "U": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     18.65,
-     18.95,
-     18.04,
-     18.23,
-     15295190.615225,
-     18.3201
-    ],
     [
      1772427600000,
      17.65,
@@ -9237,25 +9093,16 @@
      "summary": "Unity Software's COO Alexander Blum sold 22,559 shares worth approximately $1 million on August 25-27, 2026. The sale was a non-discretionary tax withholding event under a pre-established Rule 10b5-1 plan adopted in May 2025, not indicative of a change in investment outlook. Blum retains 705,411 sha",
      "sentiment": "positive",
      "reason": "Despite the insider sale, the article emphasizes this was a routine non-discretionary tax event. The company shows strong fundamentals with 14% YoY revenue growth, record Q2 results, 63% growth in Strategic Growth business, and analyst expectations for EPS to grow from $0.84 (2025) to $2.29 (2028). The executive maintains substantial confidence with $30.7M in remaining holdings."
-    },
-    {
-     "title": "Unity Software CEO Sells Over 16,000 Shares Amid a Rising Stock Price",
-     "url": "https://www.fool.com/coverage/filings/2026/08/27/unity-software-ceo-sells-over-16-000-shares-amid-a-rising-stock-price/?source=iedfolrf0000001",
-     "published": "2026-08-27T05:08:31Z",
-     "source": "The Motley Fool",
-     "summary": "Unity Software CEO Matthew Bromberg sold 16,383 shares worth approximately $742,314 on August 25, 2026, through an automatic transaction to cover tax withholding obligations from RSU vesting. The sale is not indicative of insider concern, as Bromberg retains 1.5 million shares. Unity's stock has del",
-     "sentiment": "positive",
-     "reason": "The CEO's stock sale is characterized as non-discretionary and tax-related rather than a bearish signal. The company demonstrated strong fundamentals with 24% YoY revenue growth, significant net loss reduction from $107.4M to $22.7M, and $2.4B in cash reserves. The stock achieved a 13% one-year return, and the company is positioned to achieve profitability soon, indicating positive momentum and financial health."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 42.88,
     "rsi_d": 60.06,
     "ema9_m": 43.22,
     "ema21_m": 43.26
    },
-   "adv20": 10735782.6531512,
+   "adv20": 10735805.108959869,
    "options": {
     "call_premium": 600165.791,
     "put_premium": 383330.67500000005,
@@ -9263,17 +9110,17 @@
     "put_vol": 1943,
     "call_oi": 21109,
     "put_oi": 17546,
-    "atm_iv": 0.4757,
+    "atm_iv": 0.4935,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.5046,
+    "atm_iv_front": 0.553,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.4933,
+     "dte": 19,
+     "put_iv": 0.5059,
      "put_k": 40,
-     "call_iv": 0.4821,
+     "call_iv": 0.4951,
      "call_k": 46,
-     "rr": 0.0112
+     "rr": 0.0108
     },
     "pcr_vol": 0.43,
     "pcr_oi": 0.83,
@@ -9288,7 +9135,7 @@
       "put_vol": 471,
       "call_oi": 3944,
       "put_oi": 2447,
-      "atm_iv": 0.5046
+      "atm_iv": 0.553
      },
      {
       "exp": "2026-09-11",
@@ -9298,7 +9145,7 @@
       "put_vol": 351,
       "call_oi": 2008,
       "put_oi": 2761,
-      "atm_iv": 0.4777
+      "atm_iv": 0.4975
      },
      {
       "exp": "2026-09-18",
@@ -9308,7 +9155,7 @@
       "put_vol": 933,
       "call_oi": 13675,
       "put_oi": 11832,
-      "atm_iv": 0.4757
+      "atm_iv": 0.4879
      },
      {
       "exp": "2026-09-25",
@@ -9318,7 +9165,7 @@
       "put_vol": 61,
       "call_oi": 1330,
       "put_oi": 258,
-      "atm_iv": 0.5075
+      "atm_iv": 0.5175
      },
      {
       "exp": "2026-10-02",
@@ -9328,7 +9175,7 @@
       "put_vol": 125,
       "call_oi": 131,
       "put_oi": 248,
-      "atm_iv": 0.5055
+      "atm_iv": 0.5131
      },
      {
       "exp": "2026-10-09",
@@ -9338,7 +9185,7 @@
       "put_vol": 2,
       "call_oi": 21,
       "put_oi": 0,
-      "atm_iv": 0.5502
+      "atm_iv": 0.5575
      }
     ],
     "by_strike": [
@@ -9640,32 +9487,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 272,
-    "skew_rr": 0.0112,
-    "iv_term": -0.0456,
-    "vrp": -0.1276,
+    "skew_rr": 0.0108,
+    "iv_term": -0.0045,
+    "vrp": -0.1098,
     "rv20": 0.6033,
     "maxpain_pin": 2,
-    "pcr_vol_pct": 18,
+    "pcr_vol_pct": 20,
     "pcr_oi_pct": 73,
-    "atm_iv_pct": 0,
-    "skew_rr_pct": 56,
-    "iv_term_pct": 8,
-    "vrp_pct": 7,
+    "atm_iv_pct": 9,
+    "skew_rr_pct": 55,
+    "iv_term_pct": 32,
+    "vrp_pct": 14,
     "iv_vs_qqq_pct": null
    }
   },
   "HOOD": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     76.8,
-     77.79,
-     74.82,
-     75.85,
-     23485290.480316,
-     75.9251
-    ],
     [
      1772427600000,
      73.485,
@@ -10855,25 +10693,16 @@
      "summary": "Salesforce delivered a strong Q2 report with revenue of $11.34 billion (beating consensus) and raised full-year guidance. The stock rallied over 20% as investors gained confidence in the company's ability to leverage AI as a growth driver. Agentforce and Data 360 ARR reached $3.9 billion with 210% Y",
      "sentiment": "neutral",
      "reason": "Incorporating Salesforce's Slackbot AI agent across its workforce, but limited details on implementation scope or business impact."
-    },
-    {
-     "title": "SoFi Technologies' SoFi Plus: Can Paid Membership Drive Growth?",
-     "url": "https://www.zacks.com/stock/news/2981397/sofi-technologies-sofi-plus-can-paid-membership-drive-growth?cid=CS-ZC-FT-analyst_blog|quick_take-2981397",
-     "published": "2026-08-27T17:02:00Z",
-     "source": "Zacks Investment Research",
-     "summary": "SoFi Technologies relaunched its premium SoFi Plus membership in Q2 2026, reaching 206,000 paid subscribers with $24 million in annualized revenue. The subscription strategy is working, with 25% of subscribers adding additional products. Management aims for 1 million subscribers within a year, imply",
-     "sentiment": "positive",
-     "reason": "Emerging as a formidable competitor with diversified financial services expansion (banking, retirement, crypto, private markets), strategic acquisition of WonderFi, and record funded customers (28.4M in Q2 2026)."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 58.36,
     "rsi_d": 54.1,
     "ema9_m": 104.06,
     "ema21_m": 104.03
    },
-   "adv20": 19984663.526004516,
+   "adv20": 19984674.935716514,
    "options": {
     "call_premium": 18607036.969999984,
     "put_premium": 9185511.752999999,
@@ -10881,17 +10710,17 @@
     "put_vol": 38379,
     "call_oi": 128337,
     "put_oi": 85843,
-    "atm_iv": 0.5754,
+    "atm_iv": 0.5902,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.5859,
+    "atm_iv_front": 0.6422,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.562,
+     "dte": 19,
+     "put_iv": 0.5764,
      "put_k": 97,
-     "call_iv": 0.5929,
+     "call_iv": 0.6088,
      "call_k": 111,
-     "rr": -0.0309
+     "rr": -0.0325
     },
     "pcr_vol": 0.56,
     "pcr_oi": 0.67,
@@ -10906,7 +10735,7 @@
       "put_vol": 27889,
       "call_oi": 33597,
       "put_oi": 21036,
-      "atm_iv": 0.5859
+      "atm_iv": 0.6422
      },
      {
       "exp": "2026-09-11",
@@ -10916,7 +10745,7 @@
       "put_vol": 2290,
       "call_oi": 12391,
       "put_oi": 8809,
-      "atm_iv": 0.5639
+      "atm_iv": 0.5873
      },
      {
       "exp": "2026-09-18",
@@ -10926,7 +10755,7 @@
       "put_vol": 3920,
       "call_oi": 71097,
       "put_oi": 47495,
-      "atm_iv": 0.5754
+      "atm_iv": 0.5906
      },
      {
       "exp": "2026-09-25",
@@ -10936,7 +10765,7 @@
       "put_vol": 3026,
       "call_oi": 7859,
       "put_oi": 6085,
-      "atm_iv": 0.5769
+      "atm_iv": 0.5881
      },
      {
       "exp": "2026-10-02",
@@ -10946,7 +10775,7 @@
       "put_vol": 1032,
       "call_oi": 3215,
       "put_oi": 2366,
-      "atm_iv": 0.5845
+      "atm_iv": 0.5935
      },
      {
       "exp": "2026-10-09",
@@ -10956,7 +10785,7 @@
       "put_vol": 222,
       "call_oi": 178,
       "put_oi": 52,
-      "atm_iv": 0.5811
+      "atm_iv": 0.5884
      }
     ],
     "by_strike": [
@@ -11349,32 +11178,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 452,
-    "skew_rr": -0.0309,
-    "iv_term": 0.0048,
-    "vrp": -0.148,
+    "skew_rr": -0.0325,
+    "iv_term": 0.0538,
+    "vrp": -0.1332,
     "rv20": 0.7234,
-    "maxpain_pin": 30,
-    "pcr_vol_pct": 77,
-    "pcr_oi_pct": 23,
-    "atm_iv_pct": 9,
-    "skew_rr_pct": 19,
-    "iv_term_pct": 19,
-    "vrp_pct": 0,
+    "maxpain_pin": 31,
+    "pcr_vol_pct": 78,
+    "pcr_oi_pct": 24,
+    "atm_iv_pct": 20,
+    "skew_rr_pct": 18,
+    "iv_term_pct": 47,
+    "vrp_pct": 2,
     "iv_vs_qqq_pct": null
    }
   },
   "MU": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     401.81,
-     417.96,
-     401.1818,
-     412.37,
-     28653878.020892,
-     410.9228
-    ],
     [
      1772427600000,
      401.47,
@@ -12557,6 +12377,15 @@
    },
    "news": [
     {
+     "title": "Micron's Huge $250M AI Bet Signals a Critical Next Phase for Memory",
+     "url": "https://www.fool.com/investing/2026/08/30/microns-huge-250m-ai-bet-signals-a-critical-next-p/?source=iedfolrf0000001",
+     "published": "2026-08-30T14:30:00Z",
+     "source": "The Motley Fool",
+     "summary": "Micron Technology is investing $250 million across four strategic areas to position itself for future AI-driven memory demand. The investment signals the company's confidence in emerging memory-intensive technologies beyond the current HBM boom, offering investors insight into Micron's long-term gro",
+     "sentiment": "positive",
+     "reason": "The company is making a substantial $250M strategic investment in AI-related memory technologies, demonstrating confidence in future demand and positioning itself ahead of the curve in emerging AI applications. This proactive investment signals management's bullish outlook on long-term growth opportunities beyond current market trends."
+    },
+    {
      "title": "This Was Situational Awareness's Top 5 Holdings at the End of Q2. They're All on Sale Now",
      "url": "https://www.fool.com/investing/2026/08/28/this-was-situational-awarenesss-top-5-holdings-at/?source=iedfolrf0000001",
      "published": "2026-08-28T18:15:00Z",
@@ -12618,34 +12447,16 @@
      "summary": "The iShares Semiconductor ETF (SOXX) has surged 70% in 2026, significantly outperforming the S&P 500 (12.1%) and Nasdaq-100 (15.6%), driven by strong performance in its top holdings Nvidia, Micron Technology, and AMD. While the ETF has historically beaten the market since 2001, the article cautions ",
      "sentiment": "positive",
      "reason": "Critical supplier of high bandwidth memory (HBM) essential for GPU performance in AI systems; benefits from industry demand."
-    },
-    {
-     "title": "Earnings Growth & Price Strength Make Micron (MU) a Stock to Watch",
-     "url": "https://www.zacks.com/stock/news/2980895/earnings-growth-price-strength-make-micron-mu-a-stock-to-watch?cid=CS-ZC-FT-fundamental_analysis|zacks_education_focus_list-2980895",
-     "published": "2026-08-27T13:30:04Z",
-     "source": "Zacks Investment Research",
-     "summary": "Zacks presents its Focus List investment strategy, a curated portfolio of 50 stocks designed to outperform the market over 12 months. The strategy relies on earnings estimate revisions and the proprietary Zacks Rank system. Historical performance shows the Focus List returned 2,519.23% cumulatively ",
-     "sentiment": "positive",
-     "reason": "Micron is highlighted as a Focus List success story with exceptional performance (3,934.39% gain since December 2016), upward earnings estimate revisions, strong earnings surprises (21.1% average), and forecasted 791% earnings growth for the current fiscal year. Rated as #2 (Buy) by Zacks."
-    },
-    {
-     "title": "4 Large-Cap Value Mutual Funds to Buy Ahead of September",
-     "url": "https://www.zacks.com/stock/news/2981035/4-large-cap-value-mutual-funds-to-buy-ahead-of-september?cid=CS-ZC-FT-mutual_fund_commentary-2981035",
-     "published": "2026-08-27T13:02:00Z",
-     "source": "Zacks Investment Research",
-     "summary": "The U.S. economy shows mixed signals with strong manufacturing data but housing weakness and persistent inflation concerns. The article recommends four large-cap value mutual funds as safer investment options for risk-averse investors seeking moderate returns with lower volatility in the current unc",
-     "sentiment": "neutral",
-     "reason": "Mentioned as a top holding in two of the recommended funds (3.6% in MRLVX and SLVAX), indicating institutional confidence but no specific performance analysis provided."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 60.37,
     "rsi_d": 50.68,
     "ema9_m": 930.89,
     "ema21_m": 930.61
    },
-   "adv20": 30893447.184806995,
+   "adv20": 30893451.84062901,
    "options": {
     "call_premium": 237591503.7589999,
     "put_premium": 147308561.3050001,
@@ -12653,17 +12464,17 @@
     "put_vol": 98945,
     "call_oi": 162704,
     "put_oi": 139540,
-    "atm_iv": 0.5316,
+    "atm_iv": 0.5455,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.4289,
+    "atm_iv_front": 0.6078,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.525,
+     "dte": 19,
+     "put_iv": 0.5385,
      "put_k": 870,
-     "call_iv": 0.5416,
+     "call_iv": 0.5561,
      "call_k": 995,
-     "rr": -0.0165
+     "rr": -0.0177
     },
     "pcr_vol": 0.62,
     "pcr_oi": 0.86,
@@ -12678,7 +12489,7 @@
       "put_vol": 43766,
       "call_oi": 18363,
       "put_oi": 11950,
-      "atm_iv": 0.4289
+      "atm_iv": 0.6078
      },
      {
       "exp": "2026-09-02",
@@ -12688,7 +12499,7 @@
       "put_vol": 6243,
       "call_oi": 9446,
       "put_oi": 5738,
-      "atm_iv": 0.5066
+      "atm_iv": 0.5861
      },
      {
       "exp": "2026-09-04",
@@ -12698,7 +12509,7 @@
       "put_vol": 23342,
       "call_oi": 30094,
       "put_oi": 26347,
-      "atm_iv": 0.5453
+      "atm_iv": 0.5982
      },
      {
       "exp": "2026-09-09",
@@ -12708,7 +12519,7 @@
       "put_vol": 931,
       "call_oi": 3224,
       "put_oi": 1420,
-      "atm_iv": 0.499
+      "atm_iv": 0.5241
      },
      {
       "exp": "2026-09-11",
@@ -12718,7 +12529,7 @@
       "put_vol": 5815,
       "call_oi": 9502,
       "put_oi": 11082,
-      "atm_iv": 0.5146
+      "atm_iv": 0.5358
      },
      {
       "exp": "2026-09-18",
@@ -12728,7 +12539,7 @@
       "put_vol": 9953,
       "call_oi": 67268,
       "put_oi": 62699,
-      "atm_iv": 0.5316
+      "atm_iv": 0.5456
      }
     ],
     "by_strike": [
@@ -13439,32 +13250,23 @@
     "max_pain_exp": "2026-08-31",
     "oi_changes": [],
     "contracts": 1330,
-    "skew_rr": -0.0165,
-    "iv_term": -0.1027,
-    "vrp": -0.0161,
+    "skew_rr": -0.0177,
+    "iv_term": 0.0622,
+    "vrp": -0.0022,
     "rv20": 0.5477,
-    "maxpain_pin": 52,
-    "pcr_vol_pct": 25,
-    "pcr_oi_pct": 23,
-    "atm_iv_pct": 0,
-    "skew_rr_pct": 37,
-    "iv_term_pct": 21,
-    "vrp_pct": 65,
+    "maxpain_pin": 53,
+    "pcr_vol_pct": 27,
+    "pcr_oi_pct": 24,
+    "atm_iv_pct": 2,
+    "skew_rr_pct": 34,
+    "iv_term_pct": 43,
+    "vrp_pct": 70,
     "iv_vs_qqq_pct": null
    }
   },
   "RKLB": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     67.59,
-     69.59,
-     64.1,
-     69.1,
-     25729770.676666,
-     67.2768
-    ],
     [
      1772427600000,
      66.68,
@@ -14656,14 +14458,14 @@
      "reason": "Despite the insider sale, the analyst maintains a bullish outlook citing strong fundamentals: 62% quarterly sales growth, 137% backlog increase, improving adjusted EBITDA margins, successful Iridium acquisition providing $500M in adjusted EBITDA, and upcoming Neutron rocket launch. The insider sale is characterized as routine tax-related and non-indicative of negative sentiment. The analyst personally holds positions and plans continued purchases despite the 50% stock price decline since May."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 54.71,
     "rsi_d": 35.3,
     "ema9_m": 64.51,
     "ema21_m": 64.51
    },
-   "adv20": 16856297.84491471,
+   "adv20": 16856274.874043446,
    "options": {
     "call_premium": 3493102.3099999996,
     "put_premium": 4918482.531,
@@ -14671,17 +14473,17 @@
     "put_vol": 19877,
     "call_oi": 22234,
     "put_oi": 52947,
-    "atm_iv": 0.6598,
+    "atm_iv": 0.6799,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.6508,
+    "atm_iv_front": 0.7128,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.652,
+     "dte": 19,
+     "put_iv": 0.6688,
      "put_k": 60,
-     "call_iv": 0.6733,
+     "call_iv": 0.6914,
      "call_k": 69,
-     "rr": -0.0213
+     "rr": -0.0226
     },
     "pcr_vol": 0.86,
     "pcr_oi": 2.38,
@@ -14696,7 +14498,7 @@
       "put_vol": 9035,
       "call_oi": 5969,
       "put_oi": 11949,
-      "atm_iv": 0.6508
+      "atm_iv": 0.7128
      },
      {
       "exp": "2026-09-11",
@@ -14706,7 +14508,7 @@
       "put_vol": 2238,
       "call_oi": 4067,
       "put_oi": 6493,
-      "atm_iv": 0.6349
+      "atm_iv": 0.6606
      },
      {
       "exp": "2026-09-18",
@@ -14716,7 +14518,7 @@
       "put_vol": 4558,
       "call_oi": 7538,
       "put_oi": 22628,
-      "atm_iv": 0.6598
+      "atm_iv": 0.6767
      },
      {
       "exp": "2026-09-25",
@@ -14726,7 +14528,7 @@
       "put_vol": 2703,
       "call_oi": 3504,
       "put_oi": 9287,
-      "atm_iv": 0.6807
+      "atm_iv": 0.6935
      },
      {
       "exp": "2026-10-02",
@@ -14736,7 +14538,7 @@
       "put_vol": 556,
       "call_oi": 1012,
       "put_oi": 2369,
-      "atm_iv": 0.6773
+      "atm_iv": 0.6873
      },
      {
       "exp": "2026-10-09",
@@ -14746,7 +14548,7 @@
       "put_vol": 787,
       "call_oi": 144,
       "put_oi": 221,
-      "atm_iv": 0.7058
+      "atm_iv": 0.7143
      }
     ],
     "by_strike": [
@@ -15022,32 +14824,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 286,
-    "skew_rr": -0.0213,
-    "iv_term": -0.055,
-    "vrp": 0.0116,
+    "skew_rr": -0.0226,
+    "iv_term": -0.0015,
+    "vrp": 0.0317,
     "rv20": 0.6482,
     "maxpain_pin": 2,
     "pcr_vol_pct": 91,
-    "pcr_oi_pct": 95,
-    "atm_iv_pct": 2,
-    "skew_rr_pct": 53,
-    "iv_term_pct": 2,
-    "vrp_pct": 42,
+    "pcr_oi_pct": 96,
+    "atm_iv_pct": 5,
+    "skew_rr_pct": 52,
+    "iv_term_pct": 11,
+    "vrp_pct": 52,
     "iv_vs_qqq_pct": null
    }
   },
   "COIN": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     175.35,
-     179.0565,
-     171.81,
-     175.85,
-     11427866.62267,
-     175.5049
-    ],
     [
      1772427600000,
      172.495,
@@ -16230,6 +16023,15 @@
    },
    "news": [
     {
+     "title": "Billionaire Mark Cuban Is Not Impressed by Bitcoin's Recent Summer Rally. Here's What He's Not Telling You About Bitcoin.",
+     "url": "https://www.fool.com/investing/2026/08/29/billionaire-mark-cuban-is-not-impressed-by-bitcoin/?source=iedfolrf0000001",
+     "published": "2026-08-29T23:02:00Z",
+     "source": "The Motley Fool",
+     "summary": "Mark Cuban remains skeptical of Bitcoin despite its 25% August rally, arguing the price surge is unsustainable due to a short squeeze. He previously sold his Bitcoin holdings in May, claiming it failed as a financial hedge and safe haven asset. However, BlackRock argues Bitcoin functions as both a r",
+     "sentiment": "positive",
+     "reason": "Coinbase CEO Brian Armstrong is quoted with bullish Bitcoin predictions ($400,000 by 2030), and the company is recommended by The Motley Fool, indicating positive sentiment toward the cryptocurrency exchange."
+    },
+    {
      "title": "A Nationwide, Industry-Owned Blockchain Network for Banks Will Launch in 2027. Here's What Crypto Investors Need to Know.",
      "url": "https://www.fool.com/investing/2026/08/29/a-nationwide-industry-owned-blockchain-network-for/?source=iedfolrf0000001",
      "published": "2026-08-29T09:30:00Z",
@@ -16264,34 +16066,16 @@
      "summary": "President Trump announced that CFTC Chairman Mike Selig is working to bring Hyperliquid's HYPE token into the U.S. market as a fully compliant cryptocurrency. Hyperliquid is a Layer-1 blockchain and decentralized exchange that can process up to 200,000 orders per second, significantly faster than Et",
      "sentiment": "neutral",
      "reason": "Mentioned as a partnership with Hyperliquid on the AQAv2 framework for earning yield on USDC reserves. Partnership is collaborative rather than competitive, with no significant positive or negative implications."
-    },
-    {
-     "title": "Prediction Markets Explode as Billions Pour into a New Trading Frontier",
-     "url": "https://www.globenewswire.com/news-release/2026/08/27/3352023/0/en/prediction-markets-explode-as-billions-pour-into-a-new-trading-frontier.html",
-     "published": "2026-08-27T12:45:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "Prediction markets are rapidly transitioning into mainstream finance with institutional participation accelerating growth. Kalshi and Polymarket achieved $50.6 billion in combined trading volume in July 2026, while Cantor Fitzgerald's entry into institutional trading removes barriers for hedge funds",
-     "sentiment": "positive",
-     "reason": "Expanding Coinbase Business payments suite with AI agent integration, reusable payment links, and USDT support. Platform now serves 5,000+ companies with 100,000+ payments processed, indicating strong adoption and revenue diversification beyond core cryptocurrency trading."
-    },
-    {
-     "title": "Wall Street Is Now Backing the Clarity Act. Here's the Most Likely Scenario for What Happens Next With Crypto.",
-     "url": "https://www.fool.com/investing/2026/08/27/wall-street-is-now-backing-the-clarity-act-heres-t/?source=iedfolrf0000001",
-     "published": "2026-08-27T09:13:00Z",
-     "source": "The Motley Fool",
-     "summary": "Goldman Sachs has joined Wall Street in backing the Digital Asset Market Clarity Act, but prediction markets suggest final passage is unlikely until mid-2027 at the earliest due to Democratic concerns about ethics provisions. The crypto industry may need to rely on regulatory support from the SEC, C",
-     "sentiment": "positive",
-     "reason": "Highlighted as a top pick due to transformation into an 'everything exchange' and strong Wall Street relationships that should insulate it from political fallout regardless of Clarity Act passage"
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 56.51,
-    "rsi_d": 56.85,
+    "rsi_d": 56.84,
     "ema9_m": 178.19,
     "ema21_m": 178.14
    },
-   "adv20": 10137497.875512367,
+   "adv20": 10137500.808354871,
    "options": {
     "call_premium": 25014940.09999999,
     "put_premium": 16360460.82,
@@ -16299,17 +16083,17 @@
     "put_vol": 25881,
     "call_oi": 110028,
     "put_oi": 55533,
-    "atm_iv": 0.6131,
+    "atm_iv": 0.6294,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.6244,
+    "atm_iv_front": 0.6841,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.5997,
+     "dte": 19,
+     "put_iv": 0.6151,
      "put_k": 165,
-     "call_iv": 0.6347,
+     "call_iv": 0.6517,
      "call_k": 190,
-     "rr": -0.035
+     "rr": -0.0366
     },
     "pcr_vol": 0.49,
     "pcr_oi": 0.5,
@@ -16324,7 +16108,7 @@
       "put_vol": 13867,
       "call_oi": 44974,
       "put_oi": 13649,
-      "atm_iv": 0.6244
+      "atm_iv": 0.6841
      },
      {
       "exp": "2026-09-11",
@@ -16334,7 +16118,7 @@
       "put_vol": 2582,
       "call_oi": 9044,
       "put_oi": 3273,
-      "atm_iv": 0.5961
+      "atm_iv": 0.6209
      },
      {
       "exp": "2026-09-18",
@@ -16344,7 +16128,7 @@
       "put_vol": 2962,
       "call_oi": 48167,
       "put_oi": 30006,
-      "atm_iv": 0.6131
+      "atm_iv": 0.6294
      },
      {
       "exp": "2026-09-25",
@@ -16354,7 +16138,7 @@
       "put_vol": 649,
       "call_oi": 4686,
       "put_oi": 3298,
-      "atm_iv": 0.6177
+      "atm_iv": 0.6297
      },
      {
       "exp": "2026-10-02",
@@ -16364,7 +16148,7 @@
       "put_vol": 5495,
       "call_oi": 3117,
       "put_oi": 5157,
-      "atm_iv": 0.6254
+      "atm_iv": 0.6349
      },
      {
       "exp": "2026-10-09",
@@ -16374,7 +16158,7 @@
       "put_vol": 326,
       "call_oi": 40,
       "put_oi": 150,
-      "atm_iv": 0.6222
+      "atm_iv": 0.6296
      }
     ],
     "by_strike": [
@@ -16702,32 +16486,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 356,
-    "skew_rr": -0.035,
-    "iv_term": 0.0022,
-    "vrp": -0.0945,
+    "skew_rr": -0.0366,
+    "iv_term": 0.0545,
+    "vrp": -0.0782,
     "rv20": 0.7076,
-    "maxpain_pin": 39,
-    "pcr_vol_pct": 45,
-    "pcr_oi_pct": 20,
-    "atm_iv_pct": 12,
-    "skew_rr_pct": 35,
-    "iv_term_pct": 7,
-    "vrp_pct": 33,
+    "maxpain_pin": 41,
+    "pcr_vol_pct": 47,
+    "pcr_oi_pct": 22,
+    "atm_iv_pct": 25,
+    "skew_rr_pct": 34,
+    "iv_term_pct": 43,
+    "vrp_pct": 43,
     "iv_vs_qqq_pct": null
    }
   },
   "FIG": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     28.59,
-     29.97,
-     28.4965,
-     29.39,
-     13065841.322084,
-     29.2306
-    ],
     [
      1772427600000,
      28.5,
@@ -17909,14 +17684,14 @@
     "sic": "SERVICES-PREPACKAGED SOFTWARE"
    },
    "news": [],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 42.98,
     "rsi_d": 60.2,
     "ema9_m": 28.8,
     "ema21_m": 28.81
    },
-   "adv20": 18164100.826918636,
+   "adv20": 18164097.416330215,
    "options": {
     "call_premium": 1189848.2300000002,
     "put_premium": 432243.2859999999,
@@ -17924,17 +17699,17 @@
     "put_vol": 5227,
     "call_oi": 48150,
     "put_oi": 14244,
-    "atm_iv": 0.6804,
+    "atm_iv": 0.6985,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.6972,
+    "atm_iv_front": 0.7645,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.6793,
+     "dte": 19,
+     "put_iv": 0.6967,
      "put_k": 27,
-     "call_iv": 0.6689,
+     "call_iv": 0.6868,
      "call_k": 31,
-     "rr": 0.0104
+     "rr": 0.0099
     },
     "pcr_vol": 0.68,
     "pcr_oi": 0.3,
@@ -17949,7 +17724,7 @@
       "put_vol": 3481,
       "call_oi": 11990,
       "put_oi": 2619,
-      "atm_iv": 0.6972
+      "atm_iv": 0.7645
      },
      {
       "exp": "2026-09-11",
@@ -17959,7 +17734,7 @@
       "put_vol": 634,
       "call_oi": 5435,
       "put_oi": 2429,
-      "atm_iv": 0.708
+      "atm_iv": 0.7377
      },
      {
       "exp": "2026-09-18",
@@ -17969,7 +17744,7 @@
       "put_vol": 520,
       "call_oi": 27064,
       "put_oi": 7836,
-      "atm_iv": 0.6804
+      "atm_iv": 0.6984
      },
      {
       "exp": "2026-09-25",
@@ -17979,7 +17754,7 @@
       "put_vol": 311,
       "call_oi": 1903,
       "put_oi": 855,
-      "atm_iv": 0.6853
+      "atm_iv": 0.6988
      },
      {
       "exp": "2026-10-02",
@@ -17989,7 +17764,7 @@
       "put_vol": 158,
       "call_oi": 1745,
       "put_oi": 471,
-      "atm_iv": 0.7262
+      "atm_iv": 0.7375
      },
      {
       "exp": "2026-10-09",
@@ -17999,7 +17774,7 @@
       "put_vol": 123,
       "call_oi": 13,
       "put_oi": 34,
-      "atm_iv": 0.6273
+      "atm_iv": 0.6349
      }
     ],
     "by_strike": [
@@ -18247,32 +18022,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 250,
-    "skew_rr": 0.0104,
-    "iv_term": 0.0699,
-    "vrp": -0.3441,
+    "skew_rr": 0.0099,
+    "iv_term": 0.1296,
+    "vrp": -0.326,
     "rv20": 1.0245,
     "maxpain_pin": 26,
-    "pcr_vol_pct": 86,
-    "pcr_oi_pct": 50,
-    "atm_iv_pct": 2,
-    "skew_rr_pct": 74,
-    "iv_term_pct": 42,
-    "vrp_pct": 7,
+    "pcr_vol_pct": 87,
+    "pcr_oi_pct": 51,
+    "atm_iv_pct": 11,
+    "skew_rr_pct": 73,
+    "iv_term_pct": 59,
+    "vrp_pct": 9,
     "iv_vs_qqq_pct": null
    }
   },
   "RIVN": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     15.34,
-     15.54,
-     14.91,
-     15.33,
-     34214299.549746,
-     15.2626
-    ],
     [
      1772427600000,
      15,
@@ -19453,25 +19219,15 @@
     "market_cap": 23267120324.100002,
     "sic": "MOTOR VEHICLES & PASSENGER CAR BODIES"
    },
-   "news": [
-    {
-     "title": "Despite Its Flaws, Tesla Still Dominates the World in This Index. Is the Stock a Buy Now?",
-     "url": "https://www.fool.com/investing/2026/08/27/despite-its-flaws-tesla-still-dominates-the-world/?source=iedfolrf0000001",
-     "published": "2026-08-27T07:31:00Z",
-     "source": "The Motley Fool",
-     "summary": "Tesla ranks first in Gartner's Digital Automaker Index 2026 with a score of 82.7%, maintaining its dominance in AI and software technology. While legacy automakers like GM and Ford continue to fall behind, Tesla faces challenges with aging vehicle inventory and massive capital expenditures for robot",
-     "sentiment": "neutral",
-     "reason": "Ranks in top 6 of Digital Automaker Index (55.5-57.7% range) as a young U.S. EV maker, showing competitive digital capabilities but with lower scores than top competitors."
-    }
-   ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "news": [],
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 61.19,
     "rsi_d": 48.94,
     "ema9_m": 16.01,
     "ema21_m": 16.01
    },
-   "adv20": 24314390.670929786,
+   "adv20": 24314343.867654968,
    "options": {
     "call_premium": 1846717.0720000002,
     "put_premium": 920192.0749999998,
@@ -19479,17 +19235,17 @@
     "put_vol": 20551,
     "call_oi": 156460,
     "put_oi": 101884,
-    "atm_iv": 0.5427,
+    "atm_iv": 0.5532,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.548,
+    "atm_iv_front": 0.6011,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.5188,
+     "dte": 19,
+     "put_iv": 0.5321,
      "put_k": 15,
-     "call_iv": 0.5617,
+     "call_iv": 0.5769,
      "call_k": 17,
-     "rr": -0.0429
+     "rr": -0.0448
     },
     "pcr_vol": 0.48,
     "pcr_oi": 0.65,
@@ -19504,7 +19260,7 @@
       "put_vol": 10798,
       "call_oi": 27366,
       "put_oi": 17339,
-      "atm_iv": 0.548
+      "atm_iv": 0.6011
      },
      {
       "exp": "2026-09-11",
@@ -19514,7 +19270,7 @@
       "put_vol": 2587,
       "call_oi": 7391,
       "put_oi": 7853,
-      "atm_iv": 0.5161
+      "atm_iv": 0.5375
      },
      {
       "exp": "2026-09-18",
@@ -19524,7 +19280,7 @@
       "put_vol": 5214,
       "call_oi": 113684,
       "put_oi": 71378,
-      "atm_iv": 0.5427
+      "atm_iv": 0.5571
      },
      {
       "exp": "2026-09-25",
@@ -19534,7 +19290,7 @@
       "put_vol": 922,
       "call_oi": 4211,
       "put_oi": 3802,
-      "atm_iv": 0.5258
+      "atm_iv": 0.5358
      },
      {
       "exp": "2026-10-02",
@@ -19544,7 +19300,7 @@
       "put_vol": 638,
       "call_oi": 3805,
       "put_oi": 1510,
-      "atm_iv": 0.5671
+      "atm_iv": 0.5761
      },
      {
       "exp": "2026-10-09",
@@ -19554,7 +19310,7 @@
       "put_vol": 392,
       "call_oi": 3,
       "put_oi": 2,
-      "atm_iv": 0.5308
+      "atm_iv": 0.5378
      }
     ],
     "by_strike": [
@@ -19727,32 +19483,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 156,
-    "skew_rr": -0.0429,
-    "iv_term": 0.0172,
-    "vrp": 0.0637,
+    "skew_rr": -0.0448,
+    "iv_term": 0.0633,
+    "vrp": 0.0742,
     "rv20": 0.479,
-    "maxpain_pin": 55,
-    "pcr_vol_pct": 66,
-    "pcr_oi_pct": 52,
-    "atm_iv_pct": 33,
-    "skew_rr_pct": 21,
-    "iv_term_pct": 45,
+    "maxpain_pin": 58,
+    "pcr_vol_pct": 67,
+    "pcr_oi_pct": 53,
+    "atm_iv_pct": 36,
+    "skew_rr_pct": 20,
+    "iv_term_pct": 63,
     "vrp_pct": 93,
     "iv_vs_qqq_pct": null
    }
   },
   "AAOI": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     65.93,
-     84.31,
-     65.568,
-     84.23,
-     24886245.350381,
-     76.956
-    ],
     [
      1772427600000,
      107.55,
@@ -20944,14 +20691,14 @@
      "reason": "Q2 revenues up 86% to $191.9M with strengthening 800G ramp, showing rapid expansion from smaller base and benefiting from AI-optics demand tailwinds."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 51.71,
-    "rsi_d": 42.6,
+    "rsi_d": 42.59,
     "ema9_m": 106.77,
     "ema21_m": 106.73
    },
-   "adv20": 10534331.79909057,
+   "adv20": 10534339.228639008,
    "options": {
     "call_premium": 3822111.0599999996,
     "put_premium": 3865821.309999999,
@@ -20959,17 +20706,17 @@
     "put_vol": 7682,
     "call_oi": 12565,
     "put_oi": 22866,
-    "atm_iv": 0.8446,
+    "atm_iv": 0.8707,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.8736,
+    "atm_iv_front": 0.9578,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.8568,
+     "dte": 19,
+     "put_iv": 0.8789,
      "put_k": 100,
-     "call_iv": 0.9235,
+     "call_iv": 0.9481,
      "call_k": 114,
-     "rr": -0.0667
+     "rr": -0.0692
     },
     "pcr_vol": 1.36,
     "pcr_oi": 1.82,
@@ -20984,7 +20731,7 @@
       "put_vol": 4991,
       "call_oi": 3977,
       "put_oi": 5029,
-      "atm_iv": 0.8736
+      "atm_iv": 0.9578
      },
      {
       "exp": "2026-09-11",
@@ -20994,7 +20741,7 @@
       "put_vol": 720,
       "call_oi": 728,
       "put_oi": 2975,
-      "atm_iv": 0.8609
+      "atm_iv": 0.896
      },
      {
       "exp": "2026-09-18",
@@ -21004,7 +20751,7 @@
       "put_vol": 1066,
       "call_oi": 6437,
       "put_oi": 12063,
-      "atm_iv": 0.8446
+      "atm_iv": 0.8666
      },
      {
       "exp": "2026-09-25",
@@ -21014,7 +20761,7 @@
       "put_vol": 407,
       "call_oi": 460,
       "put_oi": 1525,
-      "atm_iv": 0.8719
+      "atm_iv": 0.8885
      },
      {
       "exp": "2026-10-02",
@@ -21024,7 +20771,7 @@
       "put_vol": 229,
       "call_oi": 958,
       "put_oi": 1252,
-      "atm_iv": 0.8937
+      "atm_iv": 0.9074
      },
      {
       "exp": "2026-10-09",
@@ -21034,7 +20781,7 @@
       "put_vol": 269,
       "call_oi": 5,
       "put_oi": 22,
-      "atm_iv": 0.9383
+      "atm_iv": 0.9497
      }
     ],
     "by_strike": [
@@ -21441,32 +21188,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 402,
-    "skew_rr": -0.0667,
-    "iv_term": -0.0647,
-    "vrp": -0.5952,
+    "skew_rr": -0.0692,
+    "iv_term": 0.0081,
+    "vrp": -0.5691,
     "rv20": 1.4398,
     "maxpain_pin": 2,
     "pcr_vol_pct": 100,
-    "pcr_oi_pct": 70,
-    "atm_iv_pct": 5,
-    "skew_rr_pct": 35,
-    "iv_term_pct": 5,
-    "vrp_pct": 9,
+    "pcr_oi_pct": 71,
+    "atm_iv_pct": 7,
+    "skew_rr_pct": 34,
+    "iv_term_pct": 14,
+    "vrp_pct": 11,
     "iv_vs_qqq_pct": null
    }
   },
   "SPCX": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     21.87,
-     21.87,
-     21.87,
-     21.87,
-     61.061932,
-     21.904
-    ],
     [
      1772427600000,
      22.14,
@@ -22226,6 +21964,42 @@
    },
    "news": [
     {
+     "title": "Prediction: This Is What a $5,000 Investment in SpaceX Will Be Worth by 2030",
+     "url": "https://www.fool.com/investing/2026/08/30/prediction-this-is-what-a-5000-investment-in-space/?source=iedfolrf0000001",
+     "published": "2026-08-30T14:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX is experiencing rapid growth in AI infrastructure and Starlink satellite internet, with management projecting $1 trillion in annual revenue by 2030. However, analyst Brett Schafer argues the stock appears overvalued at current levels, predicting it will trade around $100 per share by 2030, ma",
+     "sentiment": "negative",
+     "reason": "Despite strong revenue growth in AI and Starlink segments, the analyst believes the stock is overvalued at $140/share. The $1 trillion revenue target by 2030 is deemed unrealistic, and the company's massive capital expenditures may not translate to proportional profitability. The analyst predicts the stock will decline to $100 by 2030."
+    },
+    {
+     "title": "Elon Musk Owns 48.4% of SpaceX, a New Filing Shows. Here's Why That Matters for Everyone Else Holding the Stock.",
+     "url": "https://www.fool.com/investing/2026/08/30/elon-musk-owns-484-of-spacex-a-new-filing-shows-he/?source=iedfolrf0000001",
+     "published": "2026-08-30T13:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "A new SEC filing reveals that Elon Musk controls 48.4% of SpaceX's voting power, giving him effective control over major company decisions including mergers, acquisitions, and capital investments. The article compares this to The Hershey Foundation's 80% control of Hershey, noting that SpaceX invest",
+     "sentiment": "neutral",
+     "reason": "The article presents Musk's 48.4% stake as a double-edged sword—neither inherently positive nor negative. It depends on investor perspective: those who trust Musk's vision may view it positively, while those concerned about concentrated power may view it negatively. The article takes a balanced, informational stance without advocating for either position."
+    },
+    {
+     "title": "It's True. SpaceX Is Coming to Louisiana. Here's How You Can Profit From That.",
+     "url": "https://www.fool.com/investing/2026/08/30/spacex-coming-to-louisiana-heres-how-to-profit/?source=iedfolrf0000001",
+     "published": "2026-08-30T11:07:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX announced plans to build a $100 billion Starbase facility in Louisiana with 10 launch pads, beginning construction in 2027. The facility will be positioned near natural gas pipelines owned by ExxonMobil and Cheniere Energy, which will supply liquefied methane rocket fuel for Starship launches",
+     "sentiment": "negative",
+     "reason": "Author expresses zero interest in investing in SpaceX despite the Louisiana project, citing concerns about the AI side of the business burning over $50 billion in negative free cash flow annually and expects this to worsen next year."
+    },
+    {
+     "title": "Is the Trump Administration Slamming the Brakes on SpaceX's Roaring Rebound?",
+     "url": "https://www.fool.com/investing/2026/08/30/is-the-trump-administration-slamming-the-brakes-on-spacex-s-roaring-rebound/?source=iedfolrf0000001",
+     "published": "2026-08-30T08:24:01Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX's post-IPO rebound has stalled amid three Trump administration macroeconomic moves: economic sanctions on Iran (raising oil prices and inflation concerns), 50% tariffs on Canadian imports including steel and aluminum (increasing SpaceX's input costs), and Treasury bond buybacks (potentially d",
+     "sentiment": "negative",
+     "reason": "SpaceX faces headwinds from three Trump policies: Iran sanctions could raise oil prices and inflation (increasing discount rates for growth stocks), Canadian tariffs will directly increase input costs for steel and aluminum used in rockets, and Treasury bond buybacks could trigger a 'risk-off' market dynamic that hammers high-premium stocks. While the company's AI and Starlink businesses remain strong, macroeconomic pressures threaten to derail its post-IPO rebound momentum."
+    },
+    {
      "title": "SEC Filings Just Revealed the Smart Money Is Overweight SpaceX. Should You Buy It Now?",
      "url": "https://www.fool.com/investing/2026/08/29/sec-filings-just-revealed-smart-money-is-overweigh/?source=iedfolrf0000001",
      "published": "2026-08-29T15:15:00Z",
@@ -22251,52 +22025,16 @@
      "summary": "Prediction markets now give Anthropic a 63% chance of becoming 2026's largest IPO, surpassing SpaceX's $85.7 billion record. Anthropic's annual run rate sales surged from $9 billion to $65 billion, but the company faces valuation concerns and historical headwinds common to tech IPOs. The article war",
      "sentiment": "neutral",
      "reason": "SpaceX achieved a record $85.7 billion IPO but faces similar valuation concerns as Anthropic, trading at 100x sales. The article notes SpaceX has already experienced a 54% peak-to-trough drawdown, exemplifying the risks of hot tech IPOs despite its historical achievement."
-    },
-    {
-     "title": "Up Nearly 30% in August, Is SpaceX Stock Still a Buy?",
-     "url": "https://www.fool.com/investing/2026/08/27/up-nearly-30-in-august-is-spacex-stock-still-a-buy/?source=iedfolrf0000001",
-     "published": "2026-08-27T20:18:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX stock surged nearly 30% in August following strong Q2 results with 92% revenue growth, driven primarily by AI and Starlink connectivity businesses. However, the analyst remains skeptical due to the expensive 41x sales valuation, with too much growth already priced in. The first post-IPO insid",
-     "sentiment": "neutral",
-     "reason": "While the company delivered impressive Q2 results with 92% revenue growth and strong performance in AI ($2.56B) and Starlink ($4.29B) segments, the analyst expresses skepticism about the current valuation at 41x sales. The stock's 30% August surge is offset by concerns that too much growth is already priced in, making it risky relative to reward potential. The recommendation is to wait for better valuation or more trading history."
-    },
-    {
-     "title": "Should SpaceX Join the \"Magnificent Seven\"? Here's 1 Stock I'd Kick Out to Make Room.",
-     "url": "https://www.fool.com/investing/2026/08/27/should-spacex-join-the-magnificent-seven-heres-1-s/?source=iedfolrf0000001",
-     "published": "2026-08-27T20:15:00Z",
-     "source": "The Motley Fool",
-     "summary": "An analyst argues that SpaceX should potentially replace Meta Platforms in the \"Magnificent Seven\" tech group. While SpaceX offers unique businesses in satellite internet (Starlink) and space transportation that aren't represented in the current group, Meta lacks tangible results from its AI initiat",
-     "sentiment": "positive",
-     "reason": "Positioned as a strong candidate to join the Magnificent Seven with unique business segments (Starlink satellite internet and space transportation) not currently represented in the group; praised for exciting technology and rapid growth trajectory."
-    },
-    {
-     "title": "Archer Aviation vs. Space Exploration Technologies: Which High Flying Stock Is a Better Buy in 2026?",
-     "url": "https://www.fool.com/coverage/better-buy/2026/08/27/archer-aviation-vs-space-exploration-technologies-which-high-flying-stock-is-a-better-buy-in-2026/?source=iedfolrf0000001",
-     "published": "2026-08-27T19:37:49Z",
-     "source": "The Motley Fool",
-     "summary": "Archer Aviation and SpaceX represent two different aerospace plays with vastly different maturity levels. Archer is pre-commercial with $300K revenue and $618M losses, pursuing FAA certification for eVTOL aircraft. SpaceX generates $18.7B in revenue but reported a $5B net loss in FY2025 due to massi",
-     "sentiment": "positive",
-     "reason": "Established revenue base ($18.7B with 33% YoY growth), proven business model with Starlink serving 10M+ subscribers, strong market support ($85.7B IPO), and analyst projections for profitability by 2027. Despite massive losses and negative free cash flow, the company has more tangible near-term path to profitability than Archer."
-    },
-    {
-     "title": "SpaceX Stock Trades Near $140 While Wall Street's Average Target Sits Above $232. Who's Right?",
-     "url": "https://www.fool.com/investing/2026/08/27/spacex-stock-trades-near-140-while-wall-streets-av/?source=iedfolrf0000001",
-     "published": "2026-08-27T09:10:00Z",
-     "source": "The Motley Fool",
-     "summary": "SpaceX stock has fallen back to near its $135 IPO price after peaking at $225.64 in June. Wall Street analysts remain bullish with an average $232.35 price target (68% upside), though predictions range widely from $75 to $450. The key to SpaceX's valuation hinges almost entirely on the success of it",
-     "sentiment": "neutral",
-     "reason": "Mixed analyst sentiment with wide price target range ($75-$450) reflects significant uncertainty. While Wall Street is bullish on average, the stock's valuation depends almost entirely on unproven AI scaling success. Recent price decline and customer concentration risks warrant caution despite long-term growth potential."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 41.91,
     "rsi_d": 56.79,
     "ema9_m": 140.97,
     "ema21_m": 140.98
    },
-   "adv20": 90436408.34094669,
+   "adv20": 90436408.61549963,
    "options": {
     "call_premium": 59016129.739999965,
     "put_premium": 31476868.859000012,
@@ -22304,17 +22042,17 @@
     "put_vol": 125776,
     "call_oi": 364887,
     "put_oi": 349412,
-    "atm_iv": 0.4903,
+    "atm_iv": 0.5029,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.5253,
+    "atm_iv_front": 0.5761,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.4873,
+     "dte": 19,
+     "put_iv": 0.5,
      "put_k": 131,
-     "call_iv": 0.5023,
+     "call_iv": 0.5156,
      "call_k": 150,
-     "rr": -0.015
+     "rr": -0.0156
     },
     "pcr_vol": 0.66,
     "pcr_oi": 0.96,
@@ -22329,7 +22067,7 @@
       "put_vol": 75795,
       "call_oi": 102696,
       "put_oi": 74301,
-      "atm_iv": 0.5253
+      "atm_iv": 0.5761
      },
      {
       "exp": "2026-09-11",
@@ -22339,7 +22077,7 @@
       "put_vol": 20623,
       "call_oi": 25042,
       "put_oi": 22389,
-      "atm_iv": 0.4984
+      "atm_iv": 0.5191
      },
      {
       "exp": "2026-09-18",
@@ -22349,7 +22087,7 @@
       "put_vol": 20642,
       "call_oi": 220237,
       "put_oi": 226938,
-      "atm_iv": 0.4903
+      "atm_iv": 0.5032
      },
      {
       "exp": "2026-09-25",
@@ -22359,7 +22097,7 @@
       "put_vol": 4801,
       "call_oi": 11849,
       "put_oi": 19387,
-      "atm_iv": 0.4922
+      "atm_iv": 0.5016
      },
      {
       "exp": "2026-10-02",
@@ -22369,7 +22107,7 @@
       "put_vol": 2958,
       "call_oi": 4959,
       "put_oi": 6200,
-      "atm_iv": 0.5045
+      "atm_iv": 0.5122
      },
      {
       "exp": "2026-10-09",
@@ -22379,7 +22117,7 @@
       "put_vol": 957,
       "call_oi": 104,
       "put_oi": 197,
-      "atm_iv": 0.5098
+      "atm_iv": 0.5162
      }
     ],
     "by_strike": [
@@ -22804,32 +22542,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 478,
-    "skew_rr": -0.015,
-    "iv_term": 0.0155,
-    "vrp": -0.4956,
+    "skew_rr": -0.0156,
+    "iv_term": 0.0599,
+    "vrp": -0.483,
     "rv20": 0.9859,
-    "maxpain_pin": 32,
-    "pcr_vol_pct": 25,
-    "pcr_oi_pct": 18,
-    "atm_iv_pct": 0,
-    "skew_rr_pct": 49,
-    "iv_term_pct": 16,
-    "vrp_pct": 0,
+    "maxpain_pin": 33,
+    "pcr_vol_pct": 27,
+    "pcr_oi_pct": 20,
+    "atm_iv_pct": 2,
+    "skew_rr_pct": 48,
+    "iv_term_pct": 27,
+    "vrp_pct": 5,
     "iv_vs_qqq_pct": null
    }
   },
   "LITE": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     679.95,
-     720.0999,
-     672.01,
-     700.91,
-     8912170.446524,
-     697.7525
-    ],
     [
      1772427600000,
      742.895,
@@ -23953,7 +23682,7 @@
      918.0101,
      956.14,
      4127821.567278,
-     942.1009
+     942.1011
     ],
     [
      1787889600000,
@@ -24021,14 +23750,14 @@
      "reason": "Fiscal Q4 revenues more than doubled YoY to $1.01B with guidance for further sequential growth, demonstrating strong AI-optics demand and broader scale with stronger margins than competitors."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 50.37,
     "rsi_d": 53.1,
     "ema9_m": 895.52,
     "ema21_m": 895.41
    },
-   "adv20": 4623045.401173079,
+   "adv20": 4623038.649243309,
    "options": {
     "call_premium": 36471641.589999996,
     "put_premium": 43250702.55000001,
@@ -24036,17 +23765,17 @@
     "put_vol": 12483,
     "call_oi": 20452,
     "put_oi": 24357,
-    "atm_iv": 0.6976,
+    "atm_iv": 0.719,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.6877,
+    "atm_iv_front": 0.7538,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.7092,
+     "dte": 19,
+     "put_iv": 0.7275,
      "put_k": 835,
-     "call_iv": 0.6988,
+     "call_iv": 0.7176,
      "call_k": 960,
-     "rr": 0.0104
+     "rr": 0.0099
     },
     "pcr_vol": 1.13,
     "pcr_oi": 1.19,
@@ -24061,7 +23790,7 @@
       "put_vol": 5861,
       "call_oi": 9185,
       "put_oi": 7033,
-      "atm_iv": 0.6877
+      "atm_iv": 0.7538
      },
      {
       "exp": "2026-09-11",
@@ -24071,7 +23800,7 @@
       "put_vol": 707,
       "call_oi": 2253,
       "put_oi": 3894,
-      "atm_iv": 0.6688
+      "atm_iv": 0.6961
      },
      {
       "exp": "2026-09-18",
@@ -24081,7 +23810,7 @@
       "put_vol": 2274,
       "call_oi": 7787,
       "put_oi": 8750,
-      "atm_iv": 0.6976
+      "atm_iv": 0.7159
      },
      {
       "exp": "2026-09-25",
@@ -24091,7 +23820,7 @@
       "put_vol": 1430,
       "call_oi": 865,
       "put_oi": 2129,
-      "atm_iv": 0.7186
+      "atm_iv": 0.7323
      },
      {
       "exp": "2026-10-02",
@@ -24101,7 +23830,7 @@
       "put_vol": 1425,
       "call_oi": 345,
       "put_oi": 2142,
-      "atm_iv": 0.7221
+      "atm_iv": 0.7327
      },
      {
       "exp": "2026-10-09",
@@ -24111,7 +23840,7 @@
       "put_vol": 786,
       "call_oi": 17,
       "put_oi": 409,
-      "atm_iv": 0.73
+      "atm_iv": 0.7388
      }
     ],
     "by_strike": [
@@ -24833,32 +24562,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 854,
-    "skew_rr": 0.0104,
-    "iv_term": -0.0423,
-    "vrp": -0.3408,
+    "skew_rr": 0.0099,
+    "iv_term": 0.015,
+    "vrp": -0.3194,
     "rv20": 1.0384,
     "maxpain_pin": 6,
     "pcr_vol_pct": 64,
-    "pcr_oi_pct": 43,
-    "atm_iv_pct": 0,
-    "skew_rr_pct": 51,
-    "iv_term_pct": 2,
-    "vrp_pct": 28,
+    "pcr_oi_pct": 44,
+    "atm_iv_pct": 5,
+    "skew_rr_pct": 50,
+    "iv_term_pct": 9,
+    "vrp_pct": 32,
     "iv_vs_qqq_pct": null
    }
   },
   "INTC": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     44.46,
-     46.56,
-     44.4,
-     45.61,
-     79327248.963787,
-     45.5018
-    ],
     [
      1772427600000,
      44.2,
@@ -26041,6 +25761,15 @@
    },
    "news": [
     {
+     "title": "Nvidia Just Delivered Bad News for AMD and Intel",
+     "url": "https://www.fool.com/investing/2026/08/30/nvidia-just-delivered-bad-news-for-amd-and-intel/?source=iedfolrf0000001",
+     "published": "2026-08-30T15:22:00Z",
+     "source": "The Motley Fool",
+     "summary": "Nvidia delivered strong Q2 earnings with 70% expected annual revenue growth for fiscal 2028, significantly exceeding Street expectations of 44%. The company is rapidly expanding into the CPU market with its new Vera CPU for AI agents, projecting $20 billion in CPU revenue for fiscal 2027 and expecti",
+     "sentiment": "negative",
+     "reason": "Similar to AMD, Intel faces competitive pressure from Nvidia's new CPU offerings for AI agents. Nvidia's Vera CPU claims performance advantages, and Nvidia's projected $40+ billion CPU revenue by fiscal 2028 poses a major threat to Intel's data center CPU business (~$6.3B currently)."
+    },
+    {
      "title": "I'd Rather Bet on AI's Electric Bill Than Its Chips. Here's Why.",
      "url": "https://www.fool.com/investing/2026/08/29/id-rather-bet-on-ais-electric-bill-than-its-chips/?source=iedfolrf0000001",
      "published": "2026-08-29T16:15:00Z",
@@ -26077,14 +25806,14 @@
      "reason": "Mentioned as a participant in the AI chip market but receives no specific commentary or developments; appears as a background competitor without material impact on the narrative."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 44.09,
     "rsi_d": 41.5,
     "ema9_m": 89.28,
     "ema21_m": 89.29
    },
-   "adv20": 101537519.57811867,
+   "adv20": 101537457.4408326,
    "options": {
     "call_premium": 32599172.766999997,
     "put_premium": 16031098.764999999,
@@ -26092,17 +25821,17 @@
     "put_vol": 96841,
     "call_oi": 317283,
     "put_oi": 319954,
-    "atm_iv": 0.5388,
+    "atm_iv": 0.5551,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.401,
+    "atm_iv_front": 0.5672,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.5315,
+     "dte": 19,
+     "put_iv": 0.5451,
      "put_k": 83,
-     "call_iv": 0.5655,
+     "call_iv": 0.5808,
      "call_k": 95,
-     "rr": -0.0341
+     "rr": -0.0357
     },
     "pcr_vol": 0.55,
     "pcr_oi": 1.01,
@@ -26117,7 +25846,7 @@
       "put_vol": 27848,
       "call_oi": 27023,
       "put_oi": 17421,
-      "atm_iv": 0.401
+      "atm_iv": 0.5672
      },
      {
       "exp": "2026-09-02",
@@ -26127,7 +25856,7 @@
       "put_vol": 11885,
       "call_oi": 10639,
       "put_oi": 7026,
-      "atm_iv": 0.508
+      "atm_iv": 0.587
      },
      {
       "exp": "2026-09-04",
@@ -26137,7 +25866,7 @@
       "put_vol": 22462,
       "call_oi": 76706,
       "put_oi": 61018,
-      "atm_iv": 0.5642
+      "atm_iv": 0.619
      },
      {
       "exp": "2026-09-09",
@@ -26147,7 +25876,7 @@
       "put_vol": 1927,
       "call_oi": 2945,
       "put_oi": 932,
-      "atm_iv": 0.5259
+      "atm_iv": 0.5523
      },
      {
       "exp": "2026-09-11",
@@ -26157,7 +25886,7 @@
       "put_vol": 13467,
       "call_oi": 18877,
       "put_oi": 24164,
-      "atm_iv": 0.5279
+      "atm_iv": 0.5495
      },
      {
       "exp": "2026-09-18",
@@ -26167,7 +25896,7 @@
       "put_vol": 15155,
       "call_oi": 141176,
       "put_oi": 186721,
-      "atm_iv": 0.5388
+      "atm_iv": 0.5527
      }
     ],
     "by_strike": [
@@ -26562,32 +26291,23 @@
     "max_pain_exp": "2026-08-31",
     "oi_changes": [],
     "contracts": 620,
-    "skew_rr": -0.0341,
-    "iv_term": -0.1378,
-    "vrp": -0.0515,
+    "skew_rr": -0.0357,
+    "iv_term": 0.0145,
+    "vrp": -0.0352,
     "rv20": 0.5903,
-    "maxpain_pin": 12,
-    "pcr_vol_pct": 59,
-    "pcr_oi_pct": 52,
-    "atm_iv_pct": 0,
-    "skew_rr_pct": 30,
-    "iv_term_pct": 9,
-    "vrp_pct": 47,
+    "maxpain_pin": 13,
+    "pcr_vol_pct": 60,
+    "pcr_oi_pct": 53,
+    "atm_iv_pct": 2,
+    "skew_rr_pct": 27,
+    "iv_term_pct": 34,
+    "vrp_pct": 50,
     "iv_vs_qqq_pct": null
    }
   },
   "SOXX": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     349.6,
-     354.03,
-     348.34,
-     352.29,
-     6250166.65622,
-     351.2017
-    ],
     [
      1772427600000,
      343.79,
@@ -27764,7 +27484,7 @@
     }
    ],
    "ref": {
-    "shares_out": 81550000,
+    "shares_out": 82300000,
     "market_cap": null,
     "sic": null
    },
@@ -27788,14 +27508,14 @@
      "reason": "ETF has delivered exceptional 70% returns in 2026 and a 14.2% compound annual return since 2001, significantly outperforming broader market indices."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 51.35,
     "rsi_d": 43.14,
     "ema9_m": 508.76,
     "ema21_m": 508.76
    },
-   "adv20": 7921695.88603075,
+   "adv20": 7921699.3356862655,
    "options": {
     "call_premium": 7967521.49,
     "put_premium": 17575048.090000007,
@@ -27803,17 +27523,17 @@
     "put_vol": 23966,
     "call_oi": 61196,
     "put_oi": 91085,
-    "atm_iv": 0.3716,
+    "atm_iv": 0.3818,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.3644,
+    "atm_iv_front": 0.3988,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.4058,
+     "dte": 19,
+     "put_iv": 0.4162,
      "put_k": 475,
-     "call_iv": 0.3659,
+     "call_iv": 0.3758,
      "call_k": 545,
-     "rr": 0.0399
+     "rr": 0.0403
     },
     "pcr_vol": 1.66,
     "pcr_oi": 1.49,
@@ -27828,7 +27548,7 @@
       "put_vol": 5013,
       "call_oi": 17628,
       "put_oi": 12490,
-      "atm_iv": 0.3644
+      "atm_iv": 0.3988
      },
      {
       "exp": "2026-09-11",
@@ -27838,7 +27558,7 @@
       "put_vol": 4371,
       "call_oi": 1323,
       "put_oi": 10697,
-      "atm_iv": 0.3626
+      "atm_iv": 0.3771
      },
      {
       "exp": "2026-09-18",
@@ -27848,7 +27568,7 @@
       "put_vol": 13054,
       "call_oi": 39008,
       "put_oi": 64806,
-      "atm_iv": 0.3716
+      "atm_iv": 0.3811
      },
      {
       "exp": "2026-09-25",
@@ -27858,7 +27578,7 @@
       "put_vol": 475,
       "call_oi": 2560,
       "put_oi": 2479,
-      "atm_iv": 0.3781
+      "atm_iv": 0.3851
      },
      {
       "exp": "2026-10-02",
@@ -27868,7 +27588,7 @@
       "put_vol": 929,
       "call_oi": 666,
       "put_oi": 605,
-      "atm_iv": 0.3834
+      "atm_iv": 0.389
      },
      {
       "exp": "2026-10-09",
@@ -27878,7 +27598,7 @@
       "put_vol": 124,
       "call_oi": 11,
       "put_oi": 8,
-      "atm_iv": 0.3843
+      "atm_iv": 0.3889
      }
     ],
     "by_strike": [
@@ -28554,32 +28274,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 750,
-    "skew_rr": 0.0399,
-    "iv_term": -0.0199,
-    "vrp": -0.0331,
+    "skew_rr": 0.0403,
+    "iv_term": 0.0099,
+    "vrp": -0.0229,
     "rv20": 0.4047,
     "maxpain_pin": 3,
-    "pcr_vol_pct": 32,
-    "pcr_oi_pct": 50,
-    "atm_iv_pct": 2,
-    "skew_rr_pct": 37,
-    "iv_term_pct": 7,
-    "vrp_pct": 58,
+    "pcr_vol_pct": 33,
+    "pcr_oi_pct": 51,
+    "atm_iv_pct": 5,
+    "skew_rr_pct": 39,
+    "iv_term_pct": 14,
+    "vrp_pct": 61,
     "iv_vs_qqq_pct": null
    }
   },
   "GLW": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     148.99,
-     154.5,
-     146.61,
-     150.38,
-     14555439.196554,
-     150.1436
-    ],
     [
      1772427600000,
      153.45,
@@ -29761,14 +29472,14 @@
     "sic": "DRAWING & INSULATING OF NONFERROUS WIRE"
    },
    "news": [],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 53.47,
     "rsi_d": 44.57,
     "ema9_m": 148.51,
     "ema21_m": 148.55
    },
-   "adv20": 9815211.637303336,
+   "adv20": 9815214.250024945,
    "options": {
     "call_premium": 2955145.1,
     "put_premium": 3442592.177,
@@ -29776,17 +29487,17 @@
     "put_vol": 8533,
     "call_oi": 31804,
     "put_oi": 69742,
-    "atm_iv": 0.5586,
+    "atm_iv": 0.574,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.5742,
+    "atm_iv_front": 0.6293,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.5595,
+     "dte": 19,
+     "put_iv": 0.574,
      "put_k": 138,
-     "call_iv": 0.5569,
+     "call_iv": 0.5718,
      "call_k": 160,
-     "rr": 0.0026
+     "rr": 0.0022
     },
     "pcr_vol": 1.12,
     "pcr_oi": 2.19,
@@ -29801,7 +29512,7 @@
       "put_vol": 4160,
       "call_oi": 6685,
       "put_oi": 8506,
-      "atm_iv": 0.5742
+      "atm_iv": 0.6293
      },
      {
       "exp": "2026-09-11",
@@ -29811,7 +29522,7 @@
       "put_vol": 1131,
       "call_oi": 2073,
       "put_oi": 5288,
-      "atm_iv": 0.5396
+      "atm_iv": 0.5616
      },
      {
       "exp": "2026-09-18",
@@ -29821,7 +29532,7 @@
       "put_vol": 2063,
       "call_oi": 20657,
       "put_oi": 50917,
-      "atm_iv": 0.5586
+      "atm_iv": 0.573
      },
      {
       "exp": "2026-09-25",
@@ -29831,7 +29542,7 @@
       "put_vol": 437,
       "call_oi": 2078,
       "put_oi": 3680,
-      "atm_iv": 0.5677
+      "atm_iv": 0.5785
      },
      {
       "exp": "2026-10-02",
@@ -29841,7 +29552,7 @@
       "put_vol": 662,
       "call_oi": 304,
       "put_oi": 978,
-      "atm_iv": 0.5808
+      "atm_iv": 0.5896
      },
      {
       "exp": "2026-10-09",
@@ -29851,7 +29562,7 @@
       "put_vol": 80,
       "call_oi": 7,
       "put_oi": 373,
-      "atm_iv": 0.5896
+      "atm_iv": 0.5967
      }
     ],
     "by_strike": [
@@ -30254,32 +29965,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 302,
-    "skew_rr": 0.0026,
-    "iv_term": -0.0154,
-    "vrp": -0.1479,
+    "skew_rr": 0.0022,
+    "iv_term": 0.0326,
+    "vrp": -0.1325,
     "rv20": 0.7065,
-    "maxpain_pin": 2,
-    "pcr_vol_pct": 75,
+    "maxpain_pin": 3,
+    "pcr_vol_pct": 76,
     "pcr_oi_pct": 84,
-    "atm_iv_pct": 0,
-    "skew_rr_pct": 44,
-    "iv_term_pct": 5,
-    "vrp_pct": 49,
+    "atm_iv_pct": 2,
+    "skew_rr_pct": 43,
+    "iv_term_pct": 14,
+    "vrp_pct": 55,
     "iv_vs_qqq_pct": null
    }
   },
   "CRWD": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     92.265,
-     93.375,
-     89.8225,
-     92.995,
-     20503128.7361,
-     91.8406
-    ],
     [
      1772427600000,
      93.975,
@@ -31456,7 +31158,7 @@
     }
    ],
    "ref": {
-    "shares_out": 254564820,
+    "shares_out": 1023934842,
     "market_cap": 223627369492.80002,
     "sic": "SERVICES-PREPACKAGED SOFTWARE"
    },
@@ -31487,25 +31189,16 @@
      "summary": "SailPoint stock rose nearly 10% this week, gaining momentum from strong quarterly earnings reports by peers CrowdStrike and Okta. CrowdStrike reported 26% revenue growth and record adjusted net income, while Okta posted double-digit gains on both top and bottom lines. Both companies raised full-year",
      "sentiment": "positive",
      "reason": "Reported strong Q2 results with 26% revenue growth to $1.47B and record adjusted net income of $0.31 per share (34% improvement). Exceeded analyst estimates and raised full-year guidance, indicating robust business momentum."
-    },
-    {
-     "title": "CrowdStrike vs. Okta: Which Cybersecurity Stock Is the Better Buy After Q2 Earnings?",
-     "url": "https://www.zacks.com/commentary/2981439/crowdstrike-vs-okta-which-cybersecurity-stock-is-the-better-buy-after-q2-earnings?cid=CS-ZC-FT-investment_ideas-2981439",
-     "published": "2026-08-27T22:03:00Z",
-     "source": "Zacks Investment Research",
-     "summary": "Both CrowdStrike and Okta exceeded Q2 expectations and raised guidance, with CRWD surging 20% and OKTA soaring 30%. However, CrowdStrike's valuation has become stretched at 150X forward earnings compared to Okta's 76X. While CrowdStrike showed stronger growth, Okta offers better value with improving",
-     "sentiment": "neutral",
-     "reason": "Strong Q2 growth (26% YoY revenue increase) and record ARR metrics demonstrate solid business performance. However, the stock's lofty valuation at 150X forward earnings and 32X forward sales makes it less attractive at current levels despite being a premier long-term growth story."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 38.74,
     "rsi_d": 58.21,
     "ema9_m": 217.89,
     "ema21_m": 218.0
    },
-   "adv20": 10355687.97219221,
+   "adv20": 10355669.896768732,
    "options": {
     "call_premium": 21057362.249999993,
     "put_premium": 10767762.07300001,
@@ -31513,17 +31206,17 @@
     "put_vol": 21692,
     "call_oi": 91692,
     "put_oi": 44007,
-    "atm_iv": 0.523,
+    "atm_iv": 0.5344,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.602,
+    "atm_iv_front": 0.6603,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.5141,
+     "dte": 19,
+     "put_iv": 0.5273,
      "put_k": 202.5,
-     "call_iv": 0.5241,
+     "call_iv": 0.5382,
      "call_k": 232.5,
-     "rr": -0.0099
+     "rr": -0.0109
     },
     "pcr_vol": 0.59,
     "pcr_oi": 0.48,
@@ -31538,7 +31231,7 @@
       "put_vol": 12922,
       "call_oi": 31901,
       "put_oi": 12847,
-      "atm_iv": 0.602
+      "atm_iv": 0.6603
      },
      {
       "exp": "2026-09-11",
@@ -31548,7 +31241,7 @@
       "put_vol": 1893,
       "call_oi": 4701,
       "put_oi": 3082,
-      "atm_iv": 0.5165
+      "atm_iv": 0.5379
      },
      {
       "exp": "2026-09-18",
@@ -31558,7 +31251,7 @@
       "put_vol": 4522,
       "call_oi": 50636,
       "put_oi": 25245,
-      "atm_iv": 0.523
+      "atm_iv": 0.537
      },
      {
       "exp": "2026-09-25",
@@ -31568,7 +31261,7 @@
       "put_vol": 1100,
       "call_oi": 2915,
       "put_oi": 1631,
-      "atm_iv": 0.5128
+      "atm_iv": 0.5228
      },
      {
       "exp": "2026-10-02",
@@ -31578,7 +31271,7 @@
       "put_vol": 625,
       "call_oi": 1256,
       "put_oi": 815,
-      "atm_iv": 0.5042
+      "atm_iv": 0.5119
      },
      {
       "exp": "2026-10-09",
@@ -31588,7 +31281,7 @@
       "put_vol": 630,
       "call_oi": 283,
       "put_oi": 387,
-      "atm_iv": 0.5067
+      "atm_iv": 0.5128
      }
     ],
     "by_strike": [
@@ -31934,32 +31627,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 318,
-    "skew_rr": -0.0099,
-    "iv_term": 0.0953,
-    "vrp": -0.3272,
+    "skew_rr": -0.0109,
+    "iv_term": 0.1475,
+    "vrp": -0.3158,
     "rv20": 0.8502,
     "maxpain_pin": 40,
-    "pcr_vol_pct": 20,
-    "pcr_oi_pct": 9,
-    "atm_iv_pct": 2,
-    "skew_rr_pct": 33,
-    "iv_term_pct": 67,
-    "vrp_pct": 0,
+    "pcr_vol_pct": 22,
+    "pcr_oi_pct": 11,
+    "atm_iv_pct": 5,
+    "skew_rr_pct": 32,
+    "iv_term_pct": 73,
+    "vrp_pct": 2,
     "iv_vs_qqq_pct": null
    }
   },
   "NOW": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     105,
-     108.7,
-     104,
-     108.01,
-     19085185.077527,
-     107.0825
-    ],
     [
      1772427600000,
      105.98,
@@ -33149,43 +32833,16 @@
      "summary": "While Wall Street analysts show strong bullish sentiment on ServiceNow with an average brokerage recommendation of 1.35 (Strong Buy), the article cautions that brokerage recommendations often have a positive bias and may not reliably predict stock performance. The Zacks Rank system, which relies on ",
      "sentiment": "neutral",
      "reason": "Despite Wall Street's bullish average brokerage recommendation of 1.35 (Strong Buy with 82.6% Strong Buy ratings), the article advises caution. The Zacks Rank assigns a Hold rating (#3) based on unchanged earnings estimates, suggesting the stock should perform in line with the market. The article emphasizes that brokerage recommendations often have positive bias and are unreliable predictors of price movement, making the neutral Zacks Rank assessment more trustworthy than the bullish Wall Street consensus."
-    },
-    {
-     "title": "Stock Market Today, Aug. 27: Salesforce Surges 23% on Anthropic Partnership and Q2 Earnings Beat",
-     "url": "https://www.fool.com/coverage/stock-market-today/2026/08/27/stock-market-today-aug-27-salesforce-surges-23-on-anthropic-partnership-and-q2-earnings-beat/?source=iedfolrf0000001",
-     "published": "2026-08-27T21:27:47Z",
-     "source": "The Motley Fool",
-     "summary": "Salesforce stock surged 22.6% on August 27, 2026, following a strong Q2 earnings beat, raised full-year guidance, and announcement of a new AI partnership with Anthropic to develop Claudeforce. The company reported 11% sales growth and 14% growth in remaining performance obligations, while agentic w",
-     "sentiment": "positive",
-     "reason": "Stock gained 10.05% on the same day, benefiting from broad enthusiasm across enterprise software and CRM applications sector following Salesforce's strong results and AI partnership announcement."
-    },
-    {
-     "title": "Why ServiceNow Rallied Today",
-     "url": "https://www.fool.com/investing/2026/08/27/why-servicenow-rallied-today/?source=iedfolrf0000001",
-     "published": "2026-08-27T19:09:18Z",
-     "source": "The Motley Fool",
-     "summary": "ServiceNow stock rallied 9.2% following Salesforce's strong earnings report, which alleviated fears of a 'SaaS-pocalypse' from agentic AI. Salesforce reported 10.8% revenue growth, beat EPS estimates by 80%, and showed its AI-infused Agentforce features growing at 210% annualized revenue run rate. B",
-     "sentiment": "positive",
-     "reason": "Stock rallied 9.2% on positive sentiment from peer Salesforce's strong earnings. ServiceNow's AI offerings like AI Control Tower position it well to benefit from enterprise adoption of agentic AI, reducing disruption fears."
-    },
-    {
-     "title": "Agentic AI Adoption Boosts NOW's Growth Prospects Against MSFT & CRM",
-     "url": "https://www.zacks.com/stock/news/2981296/agentic-ai-adoption-boosts-now-s-growth-prospects-against-msft-crm?cid=CS-ZC-FT-analyst_blog|quick_take-2981296",
-     "published": "2026-08-27T16:04:00Z",
-     "source": "Zacks Investment Research",
-     "summary": "ServiceNow's AI annual contract value surpassed $1 billion in Q2 2026 with net new AI ACV growing over 40% sequentially, driven by rapid agentic AI adoption and new AI-native pricing models. However, the company faces intensifying competition from Microsoft and Salesforce, which are aggressively exp",
-     "sentiment": "positive",
-     "reason": "Strong AI ACV growth exceeding $1B with 40%+ sequential net new ACV growth, ninefold increase in agentic AI production customers, tripling of $1M+ AI deals, and 20-30% price uplifts from AI-native SKUs demonstrate robust monetization and market adoption."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 49.43,
     "rsi_d": 72.72,
     "ema9_m": 143.14,
     "ema21_m": 143.14
    },
-   "adv20": 19749151.87936603,
+   "adv20": 19749137.51578663,
    "options": {
     "call_premium": 25475685.93000002,
     "put_premium": 10106125.659999996,
@@ -33193,17 +32850,17 @@
     "put_vol": 30376,
     "call_oi": 99099,
     "put_oi": 42596,
-    "atm_iv": 0.5774,
+    "atm_iv": 0.5886,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.6453,
+    "atm_iv_front": 0.7082,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.5,
+     "dte": 19,
+     "put_iv": 0.5128,
      "put_k": 133,
-     "call_iv": 0.5741,
+     "call_iv": 0.5896,
      "call_k": 152.5,
-     "rr": -0.0741
+     "rr": -0.0768
     },
     "pcr_vol": 0.61,
     "pcr_oi": 0.43,
@@ -33218,7 +32875,7 @@
       "put_vol": 15528,
       "call_oi": 15934,
       "put_oi": 11520,
-      "atm_iv": 0.6453
+      "atm_iv": 0.7082
      },
      {
       "exp": "2026-09-11",
@@ -33228,7 +32885,7 @@
       "put_vol": 3385,
       "call_oi": 6295,
       "put_oi": 2643,
-      "atm_iv": 0.5983
+      "atm_iv": 0.6237
      },
      {
       "exp": "2026-09-18",
@@ -33238,7 +32895,7 @@
       "put_vol": 9125,
       "call_oi": 67133,
       "put_oi": 24187,
-      "atm_iv": 0.5774
+      "atm_iv": 0.5929
      },
      {
       "exp": "2026-09-25",
@@ -33248,7 +32905,7 @@
       "put_vol": 894,
       "call_oi": 4937,
       "put_oi": 3183,
-      "atm_iv": 0.5582
+      "atm_iv": 0.5692
      },
      {
       "exp": "2026-10-02",
@@ -33258,7 +32915,7 @@
       "put_vol": 957,
       "call_oi": 4749,
       "put_oi": 986,
-      "atm_iv": 0.5762
+      "atm_iv": 0.5853
      },
      {
       "exp": "2026-10-09",
@@ -33268,7 +32925,7 @@
       "put_vol": 487,
       "call_oi": 51,
       "put_oi": 77,
-      "atm_iv": 0.5155
+      "atm_iv": 0.522
      }
     ],
     "by_strike": [
@@ -33740,32 +33397,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 470,
-    "skew_rr": -0.0741,
-    "iv_term": 0.1298,
-    "vrp": 0.0276,
+    "skew_rr": -0.0768,
+    "iv_term": 0.1862,
+    "vrp": 0.0388,
     "rv20": 0.5498,
-    "maxpain_pin": 40,
-    "pcr_vol_pct": 84,
-    "pcr_oi_pct": 11,
-    "atm_iv_pct": 53,
-    "skew_rr_pct": 32,
-    "iv_term_pct": 53,
+    "maxpain_pin": 41,
+    "pcr_vol_pct": 85,
+    "pcr_oi_pct": 13,
+    "atm_iv_pct": 59,
+    "skew_rr_pct": 28,
+    "iv_term_pct": 62,
     "vrp_pct": 79,
     "iv_vs_qqq_pct": null
    }
   },
   "NBIS": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     98.7,
-     99.3,
-     88.4,
-     91.19,
-     22945166.686053,
-     92.7214
-    ],
     [
      1772427600000,
      88,
@@ -34955,25 +34603,16 @@
      "summary": "Leopold Aschenbrenner's Situational Awareness hedge fund collapsed in late July due to over-leveraged AI stock bets, forcing the sale of over $10 billion in holdings. However, the fund's top five AI stocks—which include memory chip makers, energy suppliers, and semiconductor manufacturers—remain att",
      "sentiment": "neutral",
      "reason": "Triple-digit revenue growth reflects strong AI compute demand, but carries significant risk due to massive losses, aggressive spending on data centers, and billions in debt. Highest risk in the portfolio."
-    },
-    {
-     "title": "Why the Summer Slump is Setting Up Wall Street's Next Rally",
-     "url": "https://www.zacks.com/commentary/2981018/why-the-summer-slump-is-setting-up-wall-street-s-next-rally?cid=CS-ZC-FT-investment_ideas-2981018",
-     "published": "2026-08-27T14:01:00Z",
-     "source": "Zacks Investment Research",
-     "summary": "Technical analysis shows QQQ is positioned for a rally, with historical data indicating positive returns following eight consecutive down closes. Bearish sentiment has reached extreme levels for six consecutive weeks, a contrarian indicator that preceded a multi-week rally in April. NVIDIA exceeded ",
-     "sentiment": "positive",
-     "reason": "Stock jumped on NVIDIA's Neocloud expansion announcement, benefiting from AI infrastructure growth"
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 54.44,
     "rsi_d": 47.16,
     "ema9_m": 208.63,
     "ema21_m": 208.56
    },
-   "adv20": 22479636.292911895,
+   "adv20": 22479596.600203864,
    "options": {
     "call_premium": 22954646.360000007,
     "put_premium": 30075477.88,
@@ -34981,17 +34620,17 @@
     "put_vol": 33248,
     "call_oi": 61423,
     "put_oi": 98247,
-    "atm_iv": 0.7818,
+    "atm_iv": 0.8053,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.8076,
+    "atm_iv_front": 0.8855,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.7923,
+     "dte": 19,
+     "put_iv": 0.8128,
      "put_k": 195,
-     "call_iv": 0.8153,
+     "call_iv": 0.8371,
      "call_k": 222.5,
-     "rr": -0.023
+     "rr": -0.0243
     },
     "pcr_vol": 0.96,
     "pcr_oi": 1.6,
@@ -35006,7 +34645,7 @@
       "put_vol": 21030,
       "call_oi": 20686,
       "put_oi": 19581,
-      "atm_iv": 0.8076
+      "atm_iv": 0.8855
      },
      {
       "exp": "2026-09-11",
@@ -35016,7 +34655,7 @@
       "put_vol": 3177,
       "call_oi": 3288,
       "put_oi": 6191,
-      "atm_iv": 0.7649
+      "atm_iv": 0.7962
      },
      {
       "exp": "2026-09-18",
@@ -35026,7 +34665,7 @@
       "put_vol": 4072,
       "call_oi": 33740,
       "put_oi": 65122,
-      "atm_iv": 0.7818
+      "atm_iv": 0.802
      },
      {
       "exp": "2026-09-25",
@@ -35036,7 +34675,7 @@
       "put_vol": 4179,
       "call_oi": 2590,
       "put_oi": 4651,
-      "atm_iv": 0.8041
+      "atm_iv": 0.8194
      },
      {
       "exp": "2026-10-02",
@@ -35046,7 +34685,7 @@
       "put_vol": 639,
       "call_oi": 1082,
       "put_oi": 2654,
-      "atm_iv": 0.8139
+      "atm_iv": 0.8262
      },
      {
       "exp": "2026-10-09",
@@ -35056,7 +34695,7 @@
       "put_vol": 151,
       "call_oi": 37,
       "put_oi": 48,
-      "atm_iv": 0.8505
+      "atm_iv": 0.8616
      }
     ],
     "by_strike": [
@@ -35394,32 +35033,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 294,
-    "skew_rr": -0.023,
-    "iv_term": -0.0429,
-    "vrp": -0.6721,
+    "skew_rr": -0.0243,
+    "iv_term": 0.0239,
+    "vrp": -0.6486,
     "rv20": 1.4539,
     "maxpain_pin": 6,
-    "pcr_vol_pct": 72,
-    "pcr_oi_pct": 64,
-    "atm_iv_pct": 0,
-    "skew_rr_pct": 33,
-    "iv_term_pct": 8,
-    "vrp_pct": 42,
+    "pcr_vol_pct": 73,
+    "pcr_oi_pct": 65,
+    "atm_iv_pct": 5,
+    "skew_rr_pct": 30,
+    "iv_term_pct": 19,
+    "vrp_pct": 43,
     "iv_vs_qqq_pct": null
    }
   },
   "ALAB": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     122.66,
-     124,
-     117.5,
-     118.83,
-     5156509.615674,
-     119.5229
-    ],
     [
      1772427600000,
      112.97,
@@ -36543,7 +36173,7 @@
      296.8,
      304.09,
      2749172.839046,
-     301.979
+     301.9791
     ],
     [
      1787889600000,
@@ -36601,14 +36231,14 @@
     "sic": "SEMICONDUCTORS & RELATED DEVICES"
    },
    "news": [],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 46.95,
     "rsi_d": 43.96,
     "ema9_m": 290.15,
     "ema21_m": 290.41
    },
-   "adv20": 3627529.0844535464,
+   "adv20": 3627527.4014965747,
    "options": {
     "call_premium": 3200750.0599999996,
     "put_premium": 3610370.6199999996,
@@ -36616,17 +36246,17 @@
     "put_vol": 4140,
     "call_oi": 15380,
     "put_oi": 10000,
-    "atm_iv": 0.7726,
+    "atm_iv": 0.7917,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.8301,
+    "atm_iv_front": 0.9104,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.7605,
+     "dte": 18,
+     "put_iv": 0.7801,
      "put_k": 270,
-     "call_iv": 0.8204,
+     "call_iv": 0.8423,
      "call_k": 310,
-     "rr": -0.0599
+     "rr": -0.0622
     },
     "pcr_vol": 1.34,
     "pcr_oi": 0.65,
@@ -36641,7 +36271,7 @@
       "put_vol": 2690,
       "call_oi": 6007,
       "put_oi": 2268,
-      "atm_iv": 0.8301
+      "atm_iv": 0.9104
      },
      {
       "exp": "2026-09-11",
@@ -36651,7 +36281,7 @@
       "put_vol": 420,
       "call_oi": 855,
       "put_oi": 961,
-      "atm_iv": 0.7587
+      "atm_iv": 0.7899
      },
      {
       "exp": "2026-09-18",
@@ -36661,7 +36291,7 @@
       "put_vol": 207,
       "call_oi": 7592,
       "put_oi": 5377,
-      "atm_iv": 0.7726
+      "atm_iv": 0.7928
      },
      {
       "exp": "2026-09-25",
@@ -36671,7 +36301,7 @@
       "put_vol": 378,
       "call_oi": 619,
       "put_oi": 1103,
-      "atm_iv": 0.775
+      "atm_iv": 0.7898
      },
      {
       "exp": "2026-10-02",
@@ -36681,7 +36311,7 @@
       "put_vol": 382,
       "call_oi": 306,
       "put_oi": 274,
-      "atm_iv": 0.7889
+      "atm_iv": 0.8011
      },
      {
       "exp": "2026-10-09",
@@ -36691,7 +36321,7 @@
       "put_vol": 63,
       "call_oi": 1,
       "put_oi": 17,
-      "atm_iv": 0.7497
+      "atm_iv": 0.7588
      }
     ],
     "by_strike": [
@@ -37118,32 +36748,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 390,
-    "skew_rr": -0.0599,
-    "iv_term": 0.0804,
-    "vrp": -0.0287,
+    "skew_rr": -0.0622,
+    "iv_term": 0.1516,
+    "vrp": -0.0096,
     "rv20": 0.8013,
-    "maxpain_pin": 8,
-    "pcr_vol_pct": 91,
-    "pcr_oi_pct": 43,
-    "atm_iv_pct": 0,
-    "skew_rr_pct": 23,
-    "iv_term_pct": 25,
-    "vrp_pct": 60,
+    "maxpain_pin": 9,
+    "pcr_vol_pct": 92,
+    "pcr_oi_pct": 44,
+    "atm_iv_pct": 3,
+    "skew_rr_pct": 22,
+    "iv_term_pct": 61,
+    "vrp_pct": 61,
     "iv_vs_qqq_pct": null
    }
   },
   "SMCI": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     31.86,
-     33.04,
-     31.38,
-     32.39,
-     27204820.433061,
-     32.3934
-    ],
     [
      1772427600000,
      30.9,
@@ -38333,25 +37954,16 @@
      "summary": "The Computer-Storage Devices industry is experiencing strong growth driven by AI workloads, edge computing, and enterprise cloud adoption. The industry ranks #21 among 247 Zacks industries and has outperformed the S&P 500 by 396.1% over the past year. Three recommended stocks are Sandisk (SNDK), Sup",
      "sentiment": "positive",
      "reason": "Zacks Rank #1 with Q4 FY2026 revenues up 93% YoY to $11.1B and over $60B in new orders received. Expanding manufacturing capacity to 6,000 racks/month. Management expects 80%+ of revenues tied to AI solutions. FY2027 Q1 guidance of $14.5-$15.5B indicates strong growth trajectory."
-    },
-    {
-     "title": "3 Storage Devices Stocks to Buy as the Industry Gains Momentum",
-     "url": "https://www.zacks.com/commentary/2980845/3-storage-devices-stocks-to-buy-as-the-industry-gains-momentum?cid=CS-ZC-FT-industry_outlook-2980845",
-     "published": "2026-08-27T15:37:00Z",
-     "source": "Zacks Investment Research",
-     "summary": "The Zacks Computer-Storage Devices industry is experiencing strong growth driven by AI workloads, cloud adoption, and data center expansion. The industry has outperformed the S&P 500 by 396.1% over the past year and trades at a favorable valuation of 9.98X forward P/E compared to the broader market.",
-     "sentiment": "positive",
-     "reason": "Significant revenue growth (93% YoY to $11.1B), strong order backlog exceeding $60B, expanding manufacturing capacity to 6,000+ racks/month. Zacks Rank #1 (Strong Buy) with 80%+ of future revenues tied to AI solutions. However, stock declined 15% in past year."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 50.69,
     "rsi_d": 56.88,
     "ema9_m": 37.03,
     "ema21_m": 37.03
    },
-   "adv20": 50026057.09233563,
+   "adv20": 50026062.181524865,
    "options": {
     "call_premium": 11178870.940000007,
     "put_premium": 2424608.9170000013,
@@ -38359,17 +37971,17 @@
     "put_vol": 20428,
     "call_oi": 191237,
     "put_oi": 78762,
-    "atm_iv": 0.6884,
+    "atm_iv": 0.7133,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.7329,
+    "atm_iv_front": 0.8038,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.6909,
+     "dte": 18,
+     "put_iv": 0.7087,
      "put_k": 34.5,
-     "call_iv": 0.7185,
+     "call_iv": 0.7378,
      "call_k": 39.5,
-     "rr": -0.0276
+     "rr": -0.0291
     },
     "pcr_vol": 0.17,
     "pcr_oi": 0.41,
@@ -38384,7 +37996,7 @@
       "put_vol": 10618,
       "call_oi": 43942,
       "put_oi": 13897,
-      "atm_iv": 0.7329
+      "atm_iv": 0.8038
      },
      {
       "exp": "2026-09-11",
@@ -38394,7 +38006,7 @@
       "put_vol": 1780,
       "call_oi": 9936,
       "put_oi": 5643,
-      "atm_iv": 0.6695
+      "atm_iv": 0.6972
      },
      {
       "exp": "2026-09-18",
@@ -38404,7 +38016,7 @@
       "put_vol": 6676,
       "call_oi": 127139,
       "put_oi": 52909,
-      "atm_iv": 0.6884
+      "atm_iv": 0.707
      },
      {
       "exp": "2026-09-25",
@@ -38414,7 +38026,7 @@
       "put_vol": 990,
       "call_oi": 7281,
       "put_oi": 4664,
-      "atm_iv": 0.7106
+      "atm_iv": 0.7245
      },
      {
       "exp": "2026-10-02",
@@ -38424,7 +38036,7 @@
       "put_vol": 281,
       "call_oi": 2858,
       "put_oi": 1588,
-      "atm_iv": 0.7027
+      "atm_iv": 0.7135
      },
      {
       "exp": "2026-10-09",
@@ -38434,7 +38046,7 @@
       "put_vol": 83,
       "call_oi": 81,
       "put_oi": 61,
-      "atm_iv": 0.7146
+      "atm_iv": 0.7238
      }
     ],
     "by_strike": [
@@ -38735,32 +38347,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 260,
-    "skew_rr": -0.0276,
-    "iv_term": 0.0183,
-    "vrp": -0.2232,
+    "skew_rr": -0.0291,
+    "iv_term": 0.08,
+    "vrp": -0.1983,
     "rv20": 0.9116,
     "maxpain_pin": 33,
-    "pcr_vol_pct": 6,
+    "pcr_vol_pct": 9,
     "pcr_oi_pct": 91,
-    "atm_iv_pct": 3,
-    "skew_rr_pct": 35,
-    "iv_term_pct": 27,
-    "vrp_pct": 35,
+    "atm_iv_pct": 14,
+    "skew_rr_pct": 31,
+    "iv_term_pct": 59,
+    "vrp_pct": 40,
     "iv_vs_qqq_pct": null
    }
   },
   "NVDA": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     181.25,
-     182.59,
-     176.38,
-     177.19,
-     311636494.282879,
-     179.3188
-    ],
     [
      1772427600000,
      175.01,
@@ -39937,11 +39540,65 @@
     }
    ],
    "ref": {
-    "shares_out": 24200000000,
+    "shares_out": 24100000000,
     "market_cap": 5253179850000.0,
     "sic": "SEMICONDUCTORS & RELATED DEVICES"
    },
    "news": [
+    {
+     "title": "This Newly Public Nuclear IPO Is Already Using AI to Speed Up Reactor Design. Is It a Buy?",
+     "url": "https://www.fool.com/investing/2026/08/30/this-newly-public-nuclear-ipo-is-already-using-ai/?source=iedfolrf0000001",
+     "published": "2026-08-30T20:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "X-Energy, a newly public nuclear company, is leveraging AI through Project Prometheus to accelerate reactor design, licensing, and manufacturing. With major customers like Amazon, Dow Inc., and Centrica, plus an 11.5-gigawatt pipeline, the company has strong tailwinds but faces significant execution",
+     "sentiment": "positive",
+     "reason": "Nvidia is a founding member of Project Prometheus, contributing expertise to integrate AI models into nuclear reactor development and operations."
+    },
+    {
+     "title": "Nvidia Just Delivered Bad News for AMD and Intel",
+     "url": "https://www.fool.com/investing/2026/08/30/nvidia-just-delivered-bad-news-for-amd-and-intel/?source=iedfolrf0000001",
+     "published": "2026-08-30T15:22:00Z",
+     "source": "The Motley Fool",
+     "summary": "Nvidia delivered strong Q2 earnings with 70% expected annual revenue growth for fiscal 2028, significantly exceeding Street expectations of 44%. The company is rapidly expanding into the CPU market with its new Vera CPU for AI agents, projecting $20 billion in CPU revenue for fiscal 2027 and expecti",
+     "sentiment": "positive",
+     "reason": "Nvidia exceeded earnings expectations, raised guidance significantly (70% vs 44% expected growth), and is successfully expanding into the high-growth CPU market for AI agents with competitive advantages (1.8x faster, 5x bandwidth per watt). Strong revenue projections for fiscal 2027-2028."
+    },
+    {
+     "title": "Nvidia Stock Won't Be Overvalued by 2028: My Case for Buying NVDA Today",
+     "url": "https://www.fool.com/investing/2026/08/30/nvidia-stock-overvalued-2028-buy-nvda/?source=iedfolrf0000001",
+     "published": "2026-08-30T11:15:00Z",
+     "source": "The Motley Fool",
+     "summary": "The author argues that Nvidia is richly valued but not overpriced, with valuation multiples below historical averages despite strong AI-driven growth. With $250B+ in revenue and 90% from data center/AI accelerators, analysts project revenue reaching $550B+ by 2028. If management delivers expected gr",
+     "sentiment": "positive",
+     "reason": "The author presents a bullish case for Nvidia, arguing that despite appearing expensive, the stock's valuation is reasonable relative to its historical levels and growth trajectory. The company's dominant 75% market share in AI accelerators, $250B+ revenue with 65% YoY growth, and projected 70% growth through 2028 support the investment thesis. While risks are acknowledged, the overall tone is constructive about long-term value."
+    },
+    {
+     "title": "Is This the Single Best Reason to Buy Amazon Stock Right Now?",
+     "url": "https://www.fool.com/investing/2026/08/30/is-amazons-this-the-single-best-reason-to-buy-the/?source=iedfolrf0000001",
+     "published": "2026-08-30T11:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "Amazon's AWS division is identified as the primary driver for future stock outperformance. With a 39% operating margin compared to 7.8% for e-commerce, AWS generates 5x more profit per dollar and accounts for 60% of operating income. AWS revenue grew 37% year-over-year in Q2, and with massive data c",
+     "sentiment": "neutral",
+     "reason": "Mentioned indirectly through Amazon's commitment to 2 million additional Nvidia GPUs for data centers. While this indicates strong demand for Nvidia's products, the article does not provide sentiment analysis on Nvidia itself."
+    },
+    {
+     "title": "VOO vs. RSP: If AI Stocks Get Too Concentrated, Here's Which One I'd Choose",
+     "url": "https://www.fool.com/investing/2026/08/30/voo-vs-rsp-if-ai-stocks-get-too-concentrated-heres/?source=iedfolrf0000001",
+     "published": "2026-08-30T10:24:00Z",
+     "source": "The Motley Fool",
+     "summary": "The Vanguard S&P 500 ETF (VOO) has become heavily concentrated in mega-cap tech stocks, with its top 10 holdings accounting for nearly 40% of assets and surpassing dot-com bubble concentration levels. The Invesco S&P 500 Equal Weight ETF (RSP) offers an alternative by weighting all 500 S&P 500 stock",
+     "sentiment": "neutral",
+     "reason": "Highlighted as VOO's largest holding at 7.6% weighting, exemplifying the concentration risk in AI stocks. While benefiting VOO's recent returns, it represents significant downside risk if the stock corrects."
+    },
+    {
+     "title": "History Says This Is What Happens to Nvidia Stock in September",
+     "url": "https://www.fool.com/investing/2026/08/30/history-says-what-happens-nvidia-stock-september/?source=iedfolrf0000001",
+     "published": "2026-08-30T10:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "September historically shows weakness for the S&P 500 (avg -1.3%) and Nvidia (avg -0.8%) over 2016-2025. Despite Nvidia's strong Q2 FY2027 results with 106% revenue growth and impressive fundamentals, the article advises focusing on long-term prospects rather than short-term seasonal trends. Key ris",
+     "sentiment": "positive",
+     "reason": "Strong Q2 FY2027 financial results (106% YoY revenue growth to $96.2B, 128% EPS growth), dominant AI market position, exceptional growth trajectory (901% over 5 years), high profitability (62% net margin), and attractive valuation (23.9x forward P/E, only 14% premium to S&P 500). However, sentiment is tempered by acknowledgment of execution risk related to AI spending durability."
+    },
     {
      "title": "I'd Rather Bet on AI's Electric Bill Than Its Chips. Here's Why.",
      "url": "https://www.fool.com/investing/2026/08/29/id-rather-bet-on-ais-electric-bill-than-its-chips/?source=iedfolrf0000001",
@@ -40022,70 +39679,16 @@
      "summary": "Dell Technologies ended fiscal Q1 2027 with a record $51.3B AI backlog and AI server revenues of $16.1B (up 757% YoY), driving ISG revenues to $29B. The company raised its fiscal 2027 AI server revenue guidance to approximately $60B, supported by a growing customer base exceeding 5,000. However, Del",
      "sentiment": "positive",
      "reason": "NVIDIA is capturing growing AI infrastructure spending through its full-stack platform, with AWS planning to deploy over 1 million Blackwell and Rubin GPUs, and Vera Rubin expected to deliver significantly higher inference throughput, strengthening its competitive position."
-    },
-    {
-     "title": "If I Could Invest in Just 1 ETF in 2026, Here's What I'd Buy",
-     "url": "https://www.fool.com/investing/2026/08/28/if-i-could-invest-in-just-1-etf-in-2026-heres-wher/?source=iedfolrf0000001",
-     "published": "2026-08-28T15:05:00Z",
-     "source": "The Motley Fool",
-     "summary": "The article recommends Invesco's NASDAQ 100 ETF (QQQM) as a single ETF choice for 2026 investors. QQQM tracks the 100 largest non-financial Nasdaq stocks with a low 0.15% expense ratio and has outperformed the S&P 500 over the past five years (98% vs 84% total return). The fund offers exposure to hi",
-     "sentiment": "positive",
-     "reason": "Listed as top holding (8.15%) in QQQM; included as example of high-growth tech stock driving the fund's outperformance."
-    },
-    {
-     "title": "Own VOO? Here's the Problem With Adding This Popular Growth ETF.",
-     "url": "https://www.fool.com/investing/2026/08/28/own-voo-problem-adding-popular-growth-etf-qqqm/?source=iedfolrf0000001",
-     "published": "2026-08-28T14:30:00Z",
-     "source": "The Motley Fool",
-     "summary": "While the Vanguard S&P 500 ETF (VOO) and Invesco NASDAQ 100 ETF (QQQM) are both strong performers, combining them creates excessive tech sector concentration with 53% portfolio overlap. Seven mega-cap stocks account for roughly one-third of both funds. A 50/50 split between these ETFs allocates abou",
-     "sentiment": "neutral",
-     "reason": "Mentioned as a top holding in both VOO and QQQM, exemplifying the concentration risk issue rather than being evaluated on company fundamentals."
-    },
-    {
-     "title": "Software-defined Commercial Vehicle Market worth $7.29 billion by 2035 — MarketsandMarkets™",
-     "url": "https://www.globenewswire.com/news-release/2026/08/28/3352734/0/en/software-defined-commercial-vehicle-market-worth-7-29-billion-by-2035-marketsandmarkets.html",
-     "published": "2026-08-28T14:00:00Z",
-     "source": "GlobeNewswire Inc.",
-     "summary": "The global software-defined commercial vehicle (SDCV) market is expected to reach USD 7.29 billion by 2035, representing approximately 19x growth from 2030. Growth is driven by centralized computing, electrification, cloud-based fleet management, autonomous driving, and recurring software-based reve",
-     "sentiment": "positive",
-     "reason": "Listed as a key player in the SDCV market, positioned to benefit from growing demand for high-performance computing and centralized control units in commercial vehicles."
-    },
-    {
-     "title": "Nvidia May Have Just Eliminated Its Biggest Risk",
-     "url": "https://www.fool.com/investing/2026/08/28/nvidia-may-have-just-eliminated-its-biggest-risk/?source=iedfolrf0000001",
-     "published": "2026-08-28T12:10:01Z",
-     "source": "The Motley Fool",
-     "summary": "Nvidia has addressed a major competitive risk by securing an expanded partnership with Amazon Web Services, which agreed to purchase an additional 2 million GPUs over two years. Despite Amazon's success with its own custom chips ($25 billion annual revenue run rate), the company continues to heavily",
-     "sentiment": "positive",
-     "reason": "Secured major expanded partnership with AWS for 2 million GPUs; demonstrated continued market dominance despite competition; entering CPU market with strong revenue projections ($20 billion); latest earnings showed 106% revenue growth and 126% profit surge."
-    },
-    {
-     "title": "Apple Is Launching Its First iPhone Under New CEO John Ternus on Sept. 9. Could AI Features and a Foldable iPhone Be in the Cards?",
-     "url": "https://www.fool.com/investing/2026/08/28/apple-is-launching-its-first-iphone-under-new-ceo-john-ternus-on-sept-9-could-ai-features-and-a-foldable-iphone-be-in-the-cards/?source=iedfolrf0000001",
-     "published": "2026-08-28T12:05:01Z",
-     "source": "The Motley Fool",
-     "summary": "Apple is set to launch its iPhone 18 family on September 9 under new CEO John Ternus. The event is expected to feature new chips (A20 Pro and C2), enhanced AI capabilities through Apple Intelligence and upgraded Siri, and potentially Apple's first foldable iPhone priced at $2,000+. Apple's AI strate",
-     "sentiment": "neutral",
-     "reason": "Mentioned only as the best-performing stock in the Magnificent Seven grouping. No direct connection to Apple's announcements or strategy."
-    },
-    {
-     "title": "Billionaire Ken Griffin Is Shifting His AI Bets. Here's What He's Buying and Selling.",
-     "url": "https://www.fool.com/investing/2026/08/28/billionaire-ken-griffin-is-shifting-his-ai-bets-he/?source=iedfolrf0000001",
-     "published": "2026-08-28T10:30:00Z",
-     "source": "The Motley Fool",
-     "summary": "Ken Griffin's Citadel hedge fund is shifting its AI investment strategy by selling positions in Nvidia, Broadcom, and Micron Technology while increasing exposure to Amazon and Microsoft. The moves reflect a market preference for companies demonstrating tangible results from their massive AI infrastr",
-     "sentiment": "neutral",
-     "reason": "Citadel sold 6.8M shares (36% reduction) but still maintains it as a top-5 holding, indicating Griffin remains bullish on AI overall but is rotating toward companies showing concrete results rather than pure infrastructure plays."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 33.16,
     "rsi_d": 52.34,
     "ema9_m": 217.98,
     "ema21_m": 217.99
    },
-   "adv20": 142238004.4681105,
+   "adv20": 142237662.31473985,
    "options": {
     "call_premium": 402709268.6339998,
     "put_premium": 242655355.68099988,
@@ -40093,17 +39696,17 @@
     "put_vol": 922948,
     "call_oi": 1684761,
     "put_oi": 855874,
-    "atm_iv": 0.3234,
+    "atm_iv": 0.3327,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.2953,
+    "atm_iv_front": 0.419,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.3538,
+     "dte": 18,
+     "put_iv": 0.3628,
      "put_k": 202.5,
-     "call_iv": 0.3222,
+     "call_iv": 0.3309,
      "call_k": 232.5,
-     "rr": 0.0316
+     "rr": 0.0318
     },
     "pcr_vol": 0.57,
     "pcr_oi": 0.51,
@@ -40118,7 +39721,7 @@
       "put_vol": 338490,
       "call_oi": 124037,
       "put_oi": 85479,
-      "atm_iv": 0.2953
+      "atm_iv": 0.419
      },
      {
       "exp": "2026-09-02",
@@ -40128,7 +39731,7 @@
       "put_vol": 65273,
       "call_oi": 52667,
       "put_oi": 42150,
-      "atm_iv": 0.3595
+      "atm_iv": 0.4155
      },
      {
       "exp": "2026-09-04",
@@ -40138,7 +39741,7 @@
       "put_vol": 300371,
       "call_oi": 543948,
       "put_oi": 196482,
-      "atm_iv": 0.3555
+      "atm_iv": 0.3899
      },
      {
       "exp": "2026-09-09",
@@ -40148,7 +39751,7 @@
       "put_vol": 11796,
       "call_oi": 43819,
       "put_oi": 8179,
-      "atm_iv": 0.3162
+      "atm_iv": 0.3318
      },
      {
       "exp": "2026-09-11",
@@ -40158,7 +39761,7 @@
       "put_vol": 35681,
       "call_oi": 92043,
       "put_oi": 56760,
-      "atm_iv": 0.3251
+      "atm_iv": 0.3387
      },
      {
       "exp": "2026-09-18",
@@ -40168,7 +39771,7 @@
       "put_vol": 66020,
       "call_oi": 736566,
       "put_oi": 405115,
-      "atm_iv": 0.3234
+      "atm_iv": 0.3321
      }
     ],
     "by_strike": [
@@ -40507,32 +40110,23 @@
     "max_pain_exp": "2026-08-31",
     "oi_changes": [],
     "contracts": 500,
-    "skew_rr": 0.0316,
-    "iv_term": -0.0281,
-    "vrp": -0.1393,
+    "skew_rr": 0.0318,
+    "iv_term": 0.0869,
+    "vrp": -0.13,
     "rv20": 0.4627,
-    "maxpain_pin": 75,
+    "maxpain_pin": 79,
     "pcr_vol_pct": 90,
-    "pcr_oi_pct": 27,
-    "atm_iv_pct": 0,
-    "skew_rr_pct": 70,
-    "iv_term_pct": 27,
-    "vrp_pct": 0,
+    "pcr_oi_pct": 29,
+    "atm_iv_pct": 3,
+    "skew_rr_pct": 71,
+    "iv_term_pct": 48,
+    "vrp_pct": 3,
     "iv_vs_qqq_pct": null
    }
   },
   "CRWV": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     84.22,
-     84.38,
-     75.66,
-     79.56,
-     67921276.907591,
-     79.7932
-    ],
     [
      1772427600000,
      76.61,
@@ -41731,34 +41325,16 @@
      "summary": "Leopold Aschenbrenner's Situational Awareness hedge fund collapsed in late July due to over-leveraged AI stock bets, forcing the sale of over $10 billion in holdings. However, the fund's top five AI stocks—which include memory chip makers, energy suppliers, and semiconductor manufacturers—remain att",
      "sentiment": "neutral",
      "reason": "Rapid growth with triple-digit revenue expansion but unprofitable with substantial losses and high debt levels. Represents explosive potential but carries the most downside risk if AI trade declines."
-    },
-    {
-     "title": "Dan Ives Says the AI Trade Is Only in the \"Third Inning.\" Should Investors Stay Long AI Stocks?",
-     "url": "https://www.fool.com/investing/2026/08/27/dan-ives-says-the-ai-trade-is-only-in-the-third-in/?source=iedfolrf0000001",
-     "published": "2026-08-27T19:31:00Z",
-     "source": "The Motley Fool",
-     "summary": "Dan Ives argues the AI revolution is still in early stages, comparing it to the third inning of baseball. The focus is shifting from GPU purchases to monetizing AI across infrastructure, cloud platforms, and software. Companies with real AI revenue, clear ecosystem roles, and strong customer bases a",
-     "sentiment": "positive",
-     "reason": "AI cloud provider building data centers around Nvidia GPUs; demonstrates spreading of AI spending beyond chips into cloud platforms"
-    },
-    {
-     "title": "Why the Summer Slump is Setting Up Wall Street's Next Rally",
-     "url": "https://www.zacks.com/commentary/2981018/why-the-summer-slump-is-setting-up-wall-street-s-next-rally?cid=CS-ZC-FT-investment_ideas-2981018",
-     "published": "2026-08-27T14:01:00Z",
-     "source": "Zacks Investment Research",
-     "summary": "Technical analysis shows QQQ is positioned for a rally, with historical data indicating positive returns following eight consecutive down closes. Bearish sentiment has reached extreme levels for six consecutive weeks, a contrarian indicator that preceded a multi-week rally in April. NVIDIA exceeded ",
-     "sentiment": "positive",
-     "reason": "Stock jumped on NVIDIA's announcement of Neocloud capacity expansion from 3GW to 8GW, indicating positive sentiment from AI infrastructure growth"
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 54.94,
     "rsi_d": 44.84,
     "ema9_m": 84.02,
     "ema21_m": 84.01
    },
-   "adv20": 26050345.96939773,
+   "adv20": 26050204.46783539,
    "options": {
     "call_premium": 7318203.03,
     "put_premium": 11414771.91599999,
@@ -41766,17 +41342,17 @@
     "put_vol": 39441,
     "call_oi": 89492,
     "put_oi": 150051,
-    "atm_iv": 0.684,
+    "atm_iv": 0.7009,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.6822,
+    "atm_iv_front": 0.7475,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.6772,
+     "dte": 18,
+     "put_iv": 0.6946,
      "put_k": 78,
-     "call_iv": 0.7059,
+     "call_iv": 0.7249,
      "call_k": 90,
-     "rr": -0.0288
+     "rr": -0.0303
     },
     "pcr_vol": 1.16,
     "pcr_oi": 1.68,
@@ -41791,7 +41367,7 @@
       "put_vol": 25057,
       "call_oi": 17134,
       "put_oi": 26626,
-      "atm_iv": 0.6822
+      "atm_iv": 0.7475
      },
      {
       "exp": "2026-09-11",
@@ -41801,7 +41377,7 @@
       "put_vol": 3606,
       "call_oi": 6041,
       "put_oi": 12576,
-      "atm_iv": 0.6524
+      "atm_iv": 0.679
      },
      {
       "exp": "2026-09-18",
@@ -41811,7 +41387,7 @@
       "put_vol": 7753,
       "call_oi": 57716,
       "put_oi": 90573,
-      "atm_iv": 0.684
+      "atm_iv": 0.7018
      },
      {
       "exp": "2026-09-25",
@@ -41821,7 +41397,7 @@
       "put_vol": 1554,
       "call_oi": 6680,
       "put_oi": 17937,
-      "atm_iv": 0.6864
+      "atm_iv": 0.6993
      },
      {
       "exp": "2026-10-02",
@@ -41831,7 +41407,7 @@
       "put_vol": 1263,
       "call_oi": 1878,
       "put_oi": 2229,
-      "atm_iv": 0.7093
+      "atm_iv": 0.7202
      },
      {
       "exp": "2026-10-09",
@@ -41841,7 +41417,7 @@
       "put_vol": 208,
       "call_oi": 43,
       "put_oi": 110,
-      "atm_iv": 0.7157
+      "atm_iv": 0.7243
      }
     ],
     "by_strike": [
@@ -42221,32 +41797,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 362,
-    "skew_rr": -0.0288,
-    "iv_term": -0.0335,
-    "vrp": -0.436,
+    "skew_rr": -0.0303,
+    "iv_term": 0.0232,
+    "vrp": -0.4191,
     "rv20": 1.12,
     "maxpain_pin": 2,
     "pcr_vol_pct": 100,
     "pcr_oi_pct": 96,
-    "atm_iv_pct": 0,
-    "skew_rr_pct": 33,
-    "iv_term_pct": 12,
-    "vrp_pct": 67,
+    "atm_iv_pct": 4,
+    "skew_rr_pct": 28,
+    "iv_term_pct": 24,
+    "vrp_pct": 68,
     "iv_vs_qqq_pct": null
    }
   },
   "NET": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     170,
-     172.25,
-     166.68,
-     172.19,
-     4441817.270418,
-     170.3002
-    ],
     [
      1772427600000,
      167.65,
@@ -43436,25 +43003,16 @@
      "summary": "Quantum computing threatens to break current encryption systems, prompting governments and standards bodies to mandate migration to post-quantum cryptography (PQC). Quantum Secure Encryption Corp. (QSE) announced a strategic partnership with Malaysia's Pos Digicert to help organizations assess and t",
      "sentiment": "neutral",
      "reason": "Referenced as market context. Early mover in deploying post-quantum cryptography across its infrastructure layer, but operates a different business model focused on network-level implementation rather than organizational readiness assessment."
-    },
-    {
-     "title": "Cathie Wood Goes Bargain Hunting: 3 Stocks She Just Bought",
-     "url": "https://www.fool.com/investing/2026/08/27/cathie-wood-goes-bargain-hunting-3-stocks-she-just/?source=iedfolrf0000001",
-     "published": "2026-08-27T14:22:00Z",
-     "source": "The Motley Fool",
-     "summary": "Cathie Wood's Ark Invest added to positions in Broadcom, Cerebras Systems, and Cloudflare on Wednesday, taking advantage of market pullbacks. All three stocks have declined 14-53% from recent all-time highs but show strong revenue growth and business fundamentals, with Broadcom expected to report 85",
-     "sentiment": "positive",
-     "reason": "14% pullback from recent all-time high is modest compared to peers. 36% revenue growth is strongest in 3 years with back-to-back accelerating growth. Strong market position blocking 300+ billion cyber threats daily provides competitive moat in essential cybersecurity segment."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 39.62,
     "rsi_d": 54.33,
     "ema9_m": 300.3,
     "ema21_m": 300.25
    },
-   "adv20": 3466631.0325073837,
+   "adv20": 3466627.410146469,
    "options": {
     "call_premium": 2170551.1300000004,
     "put_premium": 1857728.75,
@@ -43462,17 +43020,17 @@
     "put_vol": 3046,
     "call_oi": 27569,
     "put_oi": 14337,
-    "atm_iv": 0.509,
+    "atm_iv": 0.5226,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.5129,
+    "atm_iv_front": 0.563,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.5367,
+     "dte": 18,
+     "put_iv": 0.5505,
      "put_k": 277.5,
-     "call_iv": 0.5169,
+     "call_iv": 0.5309,
      "call_k": 320,
-     "rr": 0.0198
+     "rr": 0.0196
     },
     "pcr_vol": 1.09,
     "pcr_oi": 0.52,
@@ -43487,7 +43045,7 @@
       "put_vol": 1294,
       "call_oi": 2970,
       "put_oi": 1031,
-      "atm_iv": 0.5129
+      "atm_iv": 0.563
      },
      {
       "exp": "2026-09-11",
@@ -43497,7 +43055,7 @@
       "put_vol": 520,
       "call_oi": 997,
       "put_oi": 696,
-      "atm_iv": 0.5244
+      "atm_iv": 0.5461
      },
      {
       "exp": "2026-09-18",
@@ -43507,7 +43065,7 @@
       "put_vol": 782,
       "call_oi": 21615,
       "put_oi": 10846,
-      "atm_iv": 0.509
+      "atm_iv": 0.5227
      },
      {
       "exp": "2026-09-25",
@@ -43517,7 +43075,7 @@
       "put_vol": 162,
       "call_oi": 1052,
       "put_oi": 1324,
-      "atm_iv": 0.5122
+      "atm_iv": 0.5224
      },
      {
       "exp": "2026-10-02",
@@ -43527,7 +43085,7 @@
       "put_vol": 273,
       "call_oi": 861,
       "put_oi": 434,
-      "atm_iv": 0.522
+      "atm_iv": 0.5301
      },
      {
       "exp": "2026-10-09",
@@ -43537,7 +43095,7 @@
       "put_vol": 15,
       "call_oi": 74,
       "put_oi": 6,
-      "atm_iv": 0.5217
+      "atm_iv": 0.5285
      }
     ],
     "by_strike": [
@@ -43976,32 +43534,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 402,
-    "skew_rr": 0.0198,
-    "iv_term": -0.0088,
-    "vrp": -0.1456,
+    "skew_rr": 0.0196,
+    "iv_term": 0.0345,
+    "vrp": -0.132,
     "rv20": 0.6546,
-    "maxpain_pin": 53,
-    "pcr_vol_pct": 79,
-    "pcr_oi_pct": 58,
-    "atm_iv_pct": 21,
-    "skew_rr_pct": 46,
-    "iv_term_pct": 0,
-    "vrp_pct": 0,
+    "maxpain_pin": 55,
+    "pcr_vol_pct": 80,
+    "pcr_oi_pct": 60,
+    "atm_iv_pct": 48,
+    "skew_rr_pct": 44,
+    "iv_term_pct": 12,
+    "vrp_pct": 4,
     "iv_vs_qqq_pct": null
    }
   },
   "IREN": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     42.505,
-     43.0852,
-     39.54,
-     40.95,
-     52659329.657775,
-     40.9315
-    ],
     [
      1772427600000,
      39.07,
@@ -45178,29 +44727,19 @@
     }
    ],
    "ref": {
-    "shares_out": 357378674,
+    "shares_out": 394058648,
     "market_cap": 12669073993.300001,
     "sic": "FINANCE SERVICES"
    },
-   "news": [
-    {
-     "title": "Why the Summer Slump is Setting Up Wall Street's Next Rally",
-     "url": "https://www.zacks.com/commentary/2981018/why-the-summer-slump-is-setting-up-wall-street-s-next-rally?cid=CS-ZC-FT-investment_ideas-2981018",
-     "published": "2026-08-27T14:01:00Z",
-     "source": "Zacks Investment Research",
-     "summary": "Technical analysis shows QQQ is positioned for a rally, with historical data indicating positive returns following eight consecutive down closes. Bearish sentiment has reached extreme levels for six consecutive weeks, a contrarian indicator that preceded a multi-week rally in April. NVIDIA exceeded ",
-     "sentiment": "positive",
-     "reason": "Stock jumped on NVIDIA's Neocloud expansion announcement, benefiting from AI infrastructure growth"
-    }
-   ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "news": [],
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 42.64,
     "rsi_d": 40.24,
     "ema9_m": 35.62,
     "ema21_m": 35.62
    },
-   "adv20": 48631583.68049504,
+   "adv20": 48631499.84782536,
    "options": {
     "call_premium": 10737681.480000002,
     "put_premium": 14334700.338999998,
@@ -45208,17 +44747,17 @@
     "put_vol": 103430,
     "call_oi": 39767,
     "put_oi": 148867,
-    "atm_iv": 0.7926,
+    "atm_iv": 0.8111,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.8294,
+    "atm_iv_front": 0.9086,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.783,
+     "dte": 18,
+     "put_iv": 0.8031,
      "put_k": 33,
-     "call_iv": 0.7934,
+     "call_iv": 0.8146,
      "call_k": 38,
-     "rr": -0.0105
+     "rr": -0.0115
     },
     "pcr_vol": 1.25,
     "pcr_oi": 3.74,
@@ -45233,7 +44772,7 @@
       "put_vol": 55451,
       "call_oi": 10820,
       "put_oi": 30457,
-      "atm_iv": 0.8294
+      "atm_iv": 0.9086
      },
      {
       "exp": "2026-09-11",
@@ -45243,7 +44782,7 @@
       "put_vol": 9176,
       "call_oi": 3890,
       "put_oi": 18520,
-      "atm_iv": 0.757
+      "atm_iv": 0.7877
      },
      {
       "exp": "2026-09-18",
@@ -45253,7 +44792,7 @@
       "put_vol": 27452,
       "call_oi": 22413,
       "put_oi": 85368,
-      "atm_iv": 0.7926
+      "atm_iv": 0.813
      },
      {
       "exp": "2026-09-25",
@@ -45263,7 +44802,7 @@
       "put_vol": 6282,
       "call_oi": 1583,
       "put_oi": 10309,
-      "atm_iv": 0.7926
+      "atm_iv": 0.8075
      },
      {
       "exp": "2026-10-02",
@@ -45273,7 +44812,7 @@
       "put_vol": 4207,
       "call_oi": 973,
       "put_oi": 4169,
-      "atm_iv": 0.7957
+      "atm_iv": 0.8074
      },
      {
       "exp": "2026-10-09",
@@ -45283,7 +44822,7 @@
       "put_vol": 862,
       "call_oi": 88,
       "put_oi": 44,
-      "atm_iv": 0.8248
+      "atm_iv": 0.8348
      }
     ],
     "by_strike": [
@@ -45582,32 +45121,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 238,
-    "skew_rr": -0.0105,
-    "iv_term": 0.0046,
-    "vrp": -0.1361,
+    "skew_rr": -0.0115,
+    "iv_term": 0.0738,
+    "vrp": -0.1176,
     "rv20": 0.9287,
     "maxpain_pin": 2,
     "pcr_vol_pct": 100,
     "pcr_oi_pct": 100,
-    "atm_iv_pct": 0,
-    "skew_rr_pct": 39,
-    "iv_term_pct": 43,
+    "atm_iv_pct": 4,
+    "skew_rr_pct": 38,
+    "iv_term_pct": 58,
     "vrp_pct": 96,
     "iv_vs_qqq_pct": null
    }
   },
   "IGV": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     80.3,
-     81.63,
-     80,
-     81.57,
-     25153355.132215,
-     80.882
-    ],
     [
      1772427600000,
      80.722,
@@ -46784,19 +46314,19 @@
     }
    ],
    "ref": {
-    "shares_out": 137650000,
+    "shares_out": 135050000,
     "market_cap": null,
     "sic": null
    },
    "news": [],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 47.65,
     "rsi_d": 68.11,
     "ema9_m": 109.17,
     "ema21_m": 109.19
    },
-   "adv20": 12426680.874481706,
+   "adv20": 12426708.173698232,
    "options": {
     "call_premium": 3675878.7400000007,
     "put_premium": 2008782.2000000002,
@@ -46804,17 +46334,17 @@
     "put_vol": 30715,
     "call_oi": 129771,
     "put_oi": 86904,
-    "atm_iv": 0.2943,
+    "atm_iv": 0.3055,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.3181,
+    "atm_iv_front": 0.3489,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.3211,
+     "dte": 18,
+     "put_iv": 0.3292,
      "put_k": 103.5,
-     "call_iv": 0.2882,
+     "call_iv": 0.296,
      "call_k": 115,
-     "rr": 0.0329
+     "rr": 0.0332
     },
     "pcr_vol": 2.47,
     "pcr_oi": 0.67,
@@ -46829,7 +46359,7 @@
       "put_vol": 21257,
       "call_oi": 6602,
       "put_oi": 32035,
-      "atm_iv": 0.3181
+      "atm_iv": 0.3489
      },
      {
       "exp": "2026-09-11",
@@ -46839,7 +46369,7 @@
       "put_vol": 877,
       "call_oi": 3757,
       "put_oi": 1988,
-      "atm_iv": 0.2992
+      "atm_iv": 0.3121
      },
      {
       "exp": "2026-09-18",
@@ -46849,7 +46379,7 @@
       "put_vol": 3871,
       "call_oi": 100189,
       "put_oi": 48450,
-      "atm_iv": 0.2943
+      "atm_iv": 0.3025
      },
      {
       "exp": "2026-09-25",
@@ -46859,7 +46389,7 @@
       "put_vol": 3749,
       "call_oi": 18349,
       "put_oi": 3580,
-      "atm_iv": 0.3047
+      "atm_iv": 0.311
      },
      {
       "exp": "2026-10-02",
@@ -46869,7 +46399,7 @@
       "put_vol": 628,
       "call_oi": 854,
       "put_oi": 562,
-      "atm_iv": 0.3013
+      "atm_iv": 0.3063
      },
      {
       "exp": "2026-10-09",
@@ -46879,7 +46409,7 @@
       "put_vol": 333,
       "call_oi": 20,
       "put_oi": 289,
-      "atm_iv": 0.3132
+      "atm_iv": 0.3173
      }
     ],
     "by_strike": [
@@ -47347,32 +46877,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 492,
-    "skew_rr": 0.0329,
-    "iv_term": 0.0049,
-    "vrp": -0.1035,
+    "skew_rr": 0.0332,
+    "iv_term": 0.0316,
+    "vrp": -0.0923,
     "rv20": 0.3978,
-    "maxpain_pin": 60,
+    "maxpain_pin": 63,
     "pcr_vol_pct": 100,
-    "pcr_oi_pct": 0,
-    "atm_iv_pct": 0,
-    "skew_rr_pct": 87,
-    "iv_term_pct": 27,
-    "vrp_pct": 0,
+    "pcr_oi_pct": 6,
+    "atm_iv_pct": 38,
+    "skew_rr_pct": 88,
+    "iv_term_pct": 56,
+    "vrp_pct": 6,
     "iv_vs_qqq_pct": null
    }
   },
   "COHR": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     247.02,
-     260.91,
-     241.71,
-     258.93,
-     15226141.650701,
-     257.4776
-    ],
     [
      1772427600000,
      274.93,
@@ -48571,25 +48092,16 @@
      "summary": "Coherent Corp. (COHR) reported fiscal Q4 2026 revenues of $2.05B, up 34% year-over-year, with Datacenter & Communications segment surging 59% and representing 79% of total revenue. The company guided Q1 2027 revenues of $2.2-$2.4B with adjusted operating margins improving to 21.8%. However, Industri",
      "sentiment": "positive",
      "reason": "Strong 34% YoY revenue growth, exceptional 59% growth in high-margin Datacenter & Communications segment, improved profitability metrics (gross margin +277 bps, operating margin +381 bps), and positive forward guidance. Stock gained 226.5% over past year and carries Zacks Rank #2 (Buy)."
-    },
-    {
-     "title": "COHR vs. APP: Which AI Growth Stock Offers the Better Investment?",
-     "url": "https://www.zacks.com/stock/news/2981409/cohr-vs-app-which-ai-growth-stock-offers-the-better-investment?cid=CS-ZC-FT-analyst_blog|most_popular_stocks-2981409",
-     "published": "2026-08-27T18:15:00Z",
-     "source": "Zacks Investment Research",
-     "summary": "Coherent Corp. (COHR) and AppLovin Corporation (APP) are both high-growth AI-focused technology companies. Coherent, which supports AI infrastructure through optical networking, shows stronger earnings momentum and faster expected growth (50% sales, 67% EPS) with a more attractive valuation. AppLovi",
-     "sentiment": "positive",
-     "reason": "Strong fiscal Q4 results with 33.8% YoY revenue growth, 74% EPS growth, and improved profitability. Expects 50% sales and 67% EPS growth for fiscal 2027 with upward earnings estimate momentum. Lower valuation (5.01X forward P/S) and extended demand visibility support positive outlook. Zacks Rank #2 (Buy)."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 53.5,
     "rsi_d": 43.67,
     "ema9_m": 278.99,
     "ema21_m": 279.05
    },
-   "adv20": 6680041.562554537,
+   "adv20": 6680024.936351184,
    "options": {
     "call_premium": 4869929.08,
     "put_premium": 5154423.260000002,
@@ -48597,17 +48109,17 @@
     "put_vol": 6033,
     "call_oi": 17184,
     "put_oi": 30219,
-    "atm_iv": 0.698,
+    "atm_iv": 0.7152,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.7124,
+    "atm_iv_front": 0.7806,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.6818,
+     "dte": 18,
+     "put_iv": 0.6993,
      "put_k": 260,
-     "call_iv": 0.7101,
+     "call_iv": 0.7291,
      "call_k": 297.5,
-     "rr": -0.0283
+     "rr": -0.0299
     },
     "pcr_vol": 1.31,
     "pcr_oi": 1.76,
@@ -48622,7 +48134,7 @@
       "put_vol": 3758,
       "call_oi": 4319,
       "put_oi": 5147,
-      "atm_iv": 0.7124
+      "atm_iv": 0.7806
      },
      {
       "exp": "2026-09-11",
@@ -48632,7 +48144,7 @@
       "put_vol": 668,
       "call_oi": 928,
       "put_oi": 3528,
-      "atm_iv": 0.6437
+      "atm_iv": 0.6698
      },
      {
       "exp": "2026-09-18",
@@ -48642,7 +48154,7 @@
       "put_vol": 1002,
       "call_oi": 9798,
       "put_oi": 17066,
-      "atm_iv": 0.698
+      "atm_iv": 0.7162
      },
      {
       "exp": "2026-09-25",
@@ -48652,7 +48164,7 @@
       "put_vol": 349,
       "call_oi": 1701,
       "put_oi": 3706,
-      "atm_iv": 0.7004
+      "atm_iv": 0.7135
      },
      {
       "exp": "2026-10-02",
@@ -48662,7 +48174,7 @@
       "put_vol": 206,
       "call_oi": 426,
       "put_oi": 690,
-      "atm_iv": 0.7057
+      "atm_iv": 0.7162
      },
      {
       "exp": "2026-10-09",
@@ -48672,7 +48184,7 @@
       "put_vol": 50,
       "call_oi": 12,
       "put_oi": 82,
-      "atm_iv": 0.7212
+      "atm_iv": 0.7299
      }
     ],
     "by_strike": [
@@ -49089,32 +48601,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 382,
-    "skew_rr": -0.0283,
-    "iv_term": -0.0088,
-    "vrp": -0.5189,
+    "skew_rr": -0.0299,
+    "iv_term": 0.0507,
+    "vrp": -0.5017,
     "rv20": 1.2169,
     "maxpain_pin": 2,
-    "pcr_vol_pct": 80,
-    "pcr_oi_pct": 50,
-    "atm_iv_pct": 0,
-    "skew_rr_pct": 20,
-    "iv_term_pct": null,
-    "vrp_pct": 80,
+    "pcr_vol_pct": 82,
+    "pcr_oi_pct": 55,
+    "atm_iv_pct": 9,
+    "skew_rr_pct": 18,
+    "iv_term_pct": 20,
+    "vrp_pct": 82,
     "iv_vs_qqq_pct": null
    }
   },
   "ABNB": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     134.43,
-     136.97,
-     133.59,
-     135.11,
-     6498546.065198,
-     135.0832
-    ],
     [
      1772427600000,
      129.5,
@@ -50296,14 +49799,14 @@
     "sic": "SERVICES-TO DWELLINGS & OTHER BUILDINGS"
    },
    "news": [],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 52.89,
     "rsi_d": 67.79,
     "ema9_m": 189.26,
     "ema21_m": 189.27
    },
-   "adv20": 4930673.180561965,
+   "adv20": 4930667.579763978,
    "options": {
     "call_premium": 1850306.2299999995,
     "put_premium": 1035197.0269999999,
@@ -50311,17 +49814,17 @@
     "put_vol": 3589,
     "call_oi": 22162,
     "put_oi": 11572,
-    "atm_iv": 0.2803,
+    "atm_iv": 0.2918,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.2853,
+    "atm_iv_front": 0.3132,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.2913,
+     "dte": 18,
+     "put_iv": 0.2986,
      "put_k": 180,
-     "call_iv": 0.2694,
+     "call_iv": 0.2768,
      "call_k": 200,
-     "rr": 0.022
+     "rr": 0.0219
     },
     "pcr_vol": 1.09,
     "pcr_oi": 0.52,
@@ -50336,7 +49839,7 @@
       "put_vol": 1378,
       "call_oi": 2089,
       "put_oi": 2265,
-      "atm_iv": 0.2853
+      "atm_iv": 0.3132
      },
      {
       "exp": "2026-09-11",
@@ -50346,7 +49849,7 @@
       "put_vol": 200,
       "call_oi": 786,
       "put_oi": 773,
-      "atm_iv": 0.2683
+      "atm_iv": 0.2797
      },
      {
       "exp": "2026-09-18",
@@ -50356,7 +49859,7 @@
       "put_vol": 1302,
       "call_oi": 18252,
       "put_oi": 7571,
-      "atm_iv": 0.2803
+      "atm_iv": 0.2881
      },
      {
       "exp": "2026-09-25",
@@ -50366,7 +49869,7 @@
       "put_vol": 553,
       "call_oi": 621,
       "put_oi": 565,
-      "atm_iv": 0.2926
+      "atm_iv": 0.2984
      },
      {
       "exp": "2026-10-02",
@@ -50376,7 +49879,7 @@
       "put_vol": 127,
       "call_oi": 406,
       "put_oi": 391,
-      "atm_iv": 0.2982
+      "atm_iv": 0.3027
      },
      {
       "exp": "2026-10-09",
@@ -50386,7 +49889,7 @@
       "put_vol": 29,
       "call_oi": 8,
       "put_oi": 7,
-      "atm_iv": 0.2961
+      "atm_iv": 0.3002
      }
     ],
     "by_strike": [
@@ -50670,32 +50173,23 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 326,
-    "skew_rr": 0.022,
-    "iv_term": -0.0108,
-    "vrp": -0.3476,
+    "skew_rr": 0.0219,
+    "iv_term": 0.013,
+    "vrp": -0.3361,
     "rv20": 0.6279,
-    "maxpain_pin": 46,
-    "pcr_vol_pct": 70,
-    "pcr_oi_pct": 50,
-    "atm_iv_pct": 20,
-    "skew_rr_pct": 90,
-    "iv_term_pct": 10,
-    "vrp_pct": 40,
+    "maxpain_pin": 48,
+    "pcr_vol_pct": 73,
+    "pcr_oi_pct": 55,
+    "atm_iv_pct": 45,
+    "skew_rr_pct": 82,
+    "iv_term_pct": 36,
+    "vrp_pct": 64,
     "iv_vs_qqq_pct": null
    }
   },
   "PANW": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     147.165,
-     148.99,
-     143.6701,
-     148.92,
-     9430627.81457,
-     147.7322
-    ],
     [
      1772427600000,
      147.9,
@@ -51885,43 +51379,16 @@
      "summary": "A $1,000 investment in Fortinet (FTNT) made 10 years ago in August 2016 would be worth $24,198.88 as of August 28, 2026, representing a 2,319.89% gain. This significantly outperformed the S&P 500's 256.42% return over the same period. Fortinet, a cybersecurity leader, reported 2025 revenues of $6.8 ",
      "sentiment": "neutral",
      "reason": "Mentioned as a significant competitor in network security and cloud security, but no specific performance data or sentiment indicators provided in the article."
-    },
-    {
-     "title": "CrowdStrike vs. Okta: Which Cybersecurity Stock Is the Better Buy After Q2 Earnings?",
-     "url": "https://www.zacks.com/commentary/2981439/crowdstrike-vs-okta-which-cybersecurity-stock-is-the-better-buy-after-q2-earnings?cid=CS-ZC-FT-investment_ideas-2981439",
-     "published": "2026-08-27T22:03:00Z",
-     "source": "Zacks Investment Research",
-     "summary": "Both CrowdStrike and Okta exceeded Q2 expectations and raised guidance, with CRWD surging 20% and OKTA soaring 30%. However, CrowdStrike's valuation has become stretched at 150X forward earnings compared to Okta's 76X. While CrowdStrike showed stronger growth, Okta offers better value with improving",
-     "sentiment": "neutral",
-     "reason": "Referenced as a noteworthy cybersecurity industry peer with an average P/E multiple of 46X, but no specific performance metrics or analysis included in the article."
-    },
-    {
-     "title": "Why Palo Alto Networks Stock Just Popped",
-     "url": "https://www.fool.com/investing/2026/08/27/why-palo-alto-networks-stock-just-popped/?source=iedfolrf0000001",
-     "published": "2026-08-27T14:22:44Z",
-     "source": "The Motley Fool",
-     "summary": "Palo Alto Networks stock surged 11.1% on reports the cybersecurity company is shifting into acquisition mode. After failed attempts to acquire Okta and Datadog at lower valuations, Palo Alto is now targeting smaller companies Cribl and ClickHouse for potential acquisition.",
-     "sentiment": "positive",
-     "reason": "Stock jumped 11.1% on acquisition rumors showing market confidence in the company's growth strategy through consolidation in the AI cybersecurity space."
-    },
-    {
-     "title": "Curious about Palo Alto (PANW) Q4 Performance? Explore Wall Street Estimates for Key Metrics",
-     "url": "https://www.zacks.com/stock/news/2980864/curious-about-palo-alto-panw-q4-performance-explore-wall-street-estimates-for-key-metrics?cid=CS-ZC-FT-fundamental_analysis|nfm_preview-2980864",
-     "published": "2026-08-27T13:15:03Z",
-     "source": "Zacks Investment Research",
-     "summary": "Wall Street analysts expect Palo Alto Networks to report Q4 earnings of $0.98 per share (up 3.2% YoY) with revenues of $3.35 billion (up 32.1% YoY). Key metrics show strong subscription revenue growth of 45.6% YoY and RPO reaching $20.96 billion. The stock has outperformed the S&P 500 with +8% retur",
-     "sentiment": "positive",
-     "reason": "Strong revenue growth of 32.1% YoY, robust subscription revenue growth of 45.6% YoY, significant RPO increase to $20.96 billion, improved gross profit margins across both GAAP and Non-GAAP metrics, stock outperformance (+8% vs S&P 500's +3.7%), and Zacks Rank #2 (Buy) rating all indicate positive momentum and analyst confidence in the company's near-term performance."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 46.3,
     "rsi_d": 55.84,
     "ema9_m": 371.96,
     "ema21_m": 371.99
    },
-   "adv20": 5596987.709971084,
+   "adv20": 5596983.87504332,
    "options": {
     "call_premium": 14792505.73,
     "put_premium": 7591810.209999996,
@@ -51929,17 +51396,17 @@
     "put_vol": 6907,
     "call_oi": 36022,
     "put_oi": 20649,
-    "atm_iv": 0.6372,
+    "atm_iv": 0.6441,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.8989,
+    "atm_iv_front": 0.9855,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.647,
+     "dte": 18,
+     "put_iv": 0.6636,
      "put_k": 345,
-     "call_iv": 0.6255,
+     "call_iv": 0.6423,
      "call_k": 400,
-     "rr": 0.0215
+     "rr": 0.0213
     },
     "pcr_vol": 0.7,
     "pcr_oi": 0.57,
@@ -51954,7 +51421,7 @@
       "put_vol": 3529,
       "call_oi": 9904,
       "put_oi": 5782,
-      "atm_iv": 0.8989
+      "atm_iv": 0.9855
      },
      {
       "exp": "2026-09-11",
@@ -51964,7 +51431,7 @@
       "put_vol": 1121,
       "call_oi": 2619,
       "put_oi": 2474,
-      "atm_iv": 0.7132
+      "atm_iv": 0.7427
      },
      {
       "exp": "2026-09-18",
@@ -51974,7 +51441,7 @@
       "put_vol": 1672,
       "call_oi": 21694,
       "put_oi": 11231,
-      "atm_iv": 0.6372
+      "atm_iv": 0.6543
      },
      {
       "exp": "2026-09-25",
@@ -51984,7 +51451,7 @@
       "put_vol": 187,
       "call_oi": 1082,
       "put_oi": 732,
-      "atm_iv": 0.6132
+      "atm_iv": 0.6252
      },
      {
       "exp": "2026-10-02",
@@ -51994,7 +51461,7 @@
       "put_vol": 129,
       "call_oi": 697,
       "put_oi": 407,
-      "atm_iv": 0.5968
+      "atm_iv": 0.606
      },
      {
       "exp": "2026-10-09",
@@ -52004,7 +51471,7 @@
       "put_vol": 269,
       "call_oi": 26,
       "put_oi": 23,
-      "atm_iv": 0.5819
+      "atm_iv": 0.589
      }
     ],
     "by_strike": [
@@ -52541,11 +52008,11 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 494,
-    "skew_rr": 0.0215,
-    "iv_term": 0.317,
-    "vrp": 0.0102,
+    "skew_rr": 0.0213,
+    "iv_term": 0.3965,
+    "vrp": 0.0171,
     "rv20": 0.627,
-    "maxpain_pin": 51,
+    "maxpain_pin": 53,
     "pcr_vol_pct": null,
     "pcr_oi_pct": null,
     "atm_iv_pct": null,
@@ -52555,20 +52022,11 @@
     "iv_vs_qqq_pct": null
    },
    "earnings_date": "2026-09-01",
-   "earnings_days": 3
+   "earnings_days": 2
   },
   "SNOW": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     169.45,
-     171.52,
-     163.77,
-     168.41,
-     10251883.465415,
-     166.7606
-    ],
     [
      1772427600000,
      164.19,
@@ -53692,7 +53150,7 @@
      320,
      329.11,
      4069726.83033,
-     329.879
+     329.8791
     ],
     [
      1787889600000,
@@ -53769,14 +53227,14 @@
      "reason": "Strong earnings growth expectations (28.6% EPS growth, 28.8% revenue growth), robust expansion in key metrics including product revenue (+30% YoY), significant increase in high-value customers (818 vs 654 YoY), and improved gross profit margins. Stock has outperformed the market (+10.4% vs +4.3% for S&P 500) and carries a Zacks Rank #2 (Buy) rating, indicating expected outperformance."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 60.83,
     "rsi_d": 61.28,
     "ema9_m": 328.9,
     "ema21_m": 328.63
    },
-   "adv20": 4073160.2888124706,
+   "adv20": 4073142.019747004,
    "options": {
     "call_premium": 20563178.77999998,
     "put_premium": 6297512.219999999,
@@ -53784,17 +53242,17 @@
     "put_vol": 4619,
     "call_oi": 33248,
     "put_oi": 13266,
-    "atm_iv": 0.7593,
+    "atm_iv": 0.7552,
     "atm_iv_dte": 20,
-    "atm_iv_front": 1.202,
+    "atm_iv_front": 1.318,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.7917,
+     "dte": 18,
+     "put_iv": 0.8121,
      "put_k": 307.5,
-     "call_iv": 0.7483,
+     "call_iv": 0.7684,
      "call_k": 355,
-     "rr": 0.0433
+     "rr": 0.0437
     },
     "pcr_vol": 0.41,
     "pcr_oi": 0.4,
@@ -53809,7 +53267,7 @@
       "put_vol": 2715,
       "call_oi": 8684,
       "put_oi": 5491,
-      "atm_iv": 1.202
+      "atm_iv": 1.318
      },
      {
       "exp": "2026-09-11",
@@ -53819,7 +53277,7 @@
       "put_vol": 498,
       "call_oi": 2781,
       "put_oi": 1165,
-      "atm_iv": 0.8716
+      "atm_iv": 0.908
      },
      {
       "exp": "2026-09-18",
@@ -53829,7 +53287,7 @@
       "put_vol": 972,
       "call_oi": 20624,
       "put_oi": 5873,
-      "atm_iv": 0.7593
+      "atm_iv": 0.7796
      },
      {
       "exp": "2026-09-25",
@@ -53839,7 +53297,7 @@
       "put_vol": 184,
       "call_oi": 483,
       "put_oi": 452,
-      "atm_iv": 0.6957
+      "atm_iv": 0.7091
      },
      {
       "exp": "2026-10-02",
@@ -53849,7 +53307,7 @@
       "put_vol": 146,
       "call_oi": 654,
       "put_oi": 264,
-      "atm_iv": 0.6538
+      "atm_iv": 0.664
      },
      {
       "exp": "2026-10-09",
@@ -53859,7 +53317,7 @@
       "put_vol": 104,
       "call_oi": 22,
       "put_oi": 21,
-      "atm_iv": 0.6234
+      "atm_iv": 0.6316
      }
     ],
     "by_strike": [
@@ -54343,11 +53801,11 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 442,
-    "skew_rr": 0.0433,
-    "iv_term": 0.5786,
-    "vrp": 0.3992,
+    "skew_rr": 0.0437,
+    "iv_term": 0.6864,
+    "vrp": 0.3951,
     "rv20": 0.3601,
-    "maxpain_pin": 61,
+    "maxpain_pin": 64,
     "pcr_vol_pct": null,
     "pcr_oi_pct": null,
     "atm_iv_pct": null,
@@ -54357,20 +53815,11 @@
     "iv_vs_qqq_pct": null
    },
    "earnings_date": "2026-09-02",
-   "earnings_days": 4
+   "earnings_days": 3
   },
   "ASTS": {
-   "asof": "2026-08-29T23:29:02+00:00",
+   "asof": "2026-08-30T23:45:08+00:00",
    "bars_d": [
-    [
-     1772168400000,
-     82.72,
-     83.5,
-     77.17,
-     79.19,
-     24037696.875075,
-     79.4569
-    ],
     [
      1772427600000,
      78.845,
@@ -55553,6 +55002,15 @@
    },
    "news": [
     {
+     "title": "Prediction: This Is What a $5,000 Investment in SpaceX Will Be Worth by 2030",
+     "url": "https://www.fool.com/investing/2026/08/30/prediction-this-is-what-a-5000-investment-in-space/?source=iedfolrf0000001",
+     "published": "2026-08-30T14:05:00Z",
+     "source": "The Motley Fool",
+     "summary": "SpaceX is experiencing rapid growth in AI infrastructure and Starlink satellite internet, with management projecting $1 trillion in annual revenue by 2030. However, analyst Brett Schafer argues the stock appears overvalued at current levels, predicting it will trade around $100 per share by 2030, ma",
+     "sentiment": "neutral",
+     "reason": "Mentioned as a competitor in satellite internet services. Acknowledged as a competitive threat to Starlink's market dominance but no specific investment recommendation provided."
+    },
+    {
      "title": "Why Is AST SpaceMobile Stock Down This Week?",
      "url": "https://www.fool.com/investing/2026/08/28/why-is-ast-space-mobile-stock-down-this-week/?source=iedfolrf0000001",
      "published": "2026-08-28T18:22:18Z",
@@ -55560,25 +55018,16 @@
      "summary": "AST SpaceMobile stock fell 15.5% this week after Fed Chair Kevin Warsh signaled that inflation is the Federal Reserve's top priority, increasing the likelihood of interest rate hikes. The company, which relies heavily on borrowed money to build its satellite constellation, is particularly vulnerable",
      "sentiment": "negative",
      "reason": "Stock declined 15.5% due to increased probability of Fed rate hikes, which will raise borrowing costs for the heavily leveraged company. Additionally, widening net losses ($230.9M in Q2) despite revenue growth indicate deteriorating financial health and operational challenges."
-    },
-    {
-     "title": "AST SpaceMobile vs. Firefly Aerospace: Which Outer Space Upstart Is a Better Buy in 2026?",
-     "url": "https://www.fool.com/coverage/better-buy/2026/08/27/ast-spacemobile-vs-firefly-aerospace-which-outer-space-upstart-is-a-better-buy-in-2026/?source=iedfolrf0000001",
-     "published": "2026-08-27T20:34:01Z",
-     "source": "The Motley Fool",
-     "summary": "The article compares two space economy companies with different business models. AST SpaceMobile is building a satellite-based cellular broadband network with major carrier partnerships, while Firefly Aerospace provides launch services and lunar landers for government and commercial customers. Both ",
-     "sentiment": "neutral",
-     "reason": "Company shows strong revenue growth (16x increase from $4.4M to $70.9M) and has major carrier partnerships, but faces significant execution risks with massive satellite constellation deployment, high cash burn ($1.1B negative FCF), extreme valuation multiple (149x P/S), and concentrated founder control. Profitability not expected until 2027."
     }
    ],
-   "extras_asof": "2026-08-29T23:29:02+00:00",
+   "extras_asof": "2026-08-30T23:45:08+00:00",
    "ind": {
     "rsi_m": 48.91,
     "rsi_d": 39.24,
     "ema9_m": 58.09,
     "ema21_m": 58.1
    },
-   "adv20": 10649180.77915606,
+   "adv20": 10649145.823863596,
    "options": {
     "call_premium": 2672080.8699999996,
     "put_premium": 3421856.659000001,
@@ -55586,17 +55035,17 @@
     "put_vol": 20847,
     "call_oi": 13712,
     "put_oi": 50754,
-    "atm_iv": 0.6879,
+    "atm_iv": 0.685,
     "atm_iv_dte": 20,
-    "atm_iv_front": 0.6923,
+    "atm_iv_front": 0.7584,
     "iv_skew": {
      "exp": "2026-09-18",
-     "dte": 20,
-     "put_iv": 0.66,
+     "dte": 18,
+     "put_iv": 0.677,
      "put_k": 54,
-     "call_iv": 0.7239,
+     "call_iv": 0.7434,
      "call_k": 62,
-     "rr": -0.0639
+     "rr": -0.0664
     },
     "pcr_vol": 1.48,
     "pcr_oi": 3.7,
@@ -55611,7 +55060,7 @@
       "put_vol": 14128,
       "call_oi": 4469,
       "put_oi": 15388,
-      "atm_iv": 0.6923
+      "atm_iv": 0.7584
      },
      {
       "exp": "2026-09-11",
@@ -55621,7 +55070,7 @@
       "put_vol": 1692,
       "call_oi": 1638,
       "put_oi": 5661,
-      "atm_iv": 0.6767
+      "atm_iv": 0.7041
      },
      {
       "exp": "2026-09-18",
@@ -55631,7 +55080,7 @@
       "put_vol": 3243,
       "call_oi": 6299,
       "put_oi": 24244,
-      "atm_iv": 0.6879
+      "atm_iv": 0.7055
      },
      {
       "exp": "2026-09-25",
@@ -55641,7 +55090,7 @@
       "put_vol": 1025,
       "call_oi": 813,
       "put_oi": 3565,
-      "atm_iv": 0.6348
+      "atm_iv": 0.6467
      },
      {
       "exp": "2026-10-02",
@@ -55651,7 +55100,7 @@
       "put_vol": 344,
       "call_oi": 488,
       "put_oi": 1789,
-      "atm_iv": 0.657
+      "atm_iv": 0.6667
      },
      {
       "exp": "2026-10-09",
@@ -55661,7 +55110,7 @@
       "put_vol": 415,
       "call_oi": 5,
       "put_oi": 107,
-      "atm_iv": 0.7579
+      "atm_iv": 0.7675
      }
     ],
     "by_strike": [
@@ -55938,17 +55387,17 @@
     "max_pain_exp": "2026-09-04",
     "oi_changes": [],
     "contracts": 268,
-    "skew_rr": -0.0639,
-    "iv_term": -0.0656,
-    "vrp": -0.1183,
+    "skew_rr": -0.0664,
+    "iv_term": -0.0091,
+    "vrp": -0.1212,
     "rv20": 0.8062,
-    "maxpain_pin": 2,
+    "maxpain_pin": 1,
     "pcr_vol_pct": 100,
     "pcr_oi_pct": 100,
     "atm_iv_pct": 0,
-    "skew_rr_pct": 41,
-    "iv_term_pct": 7,
-    "vrp_pct": 22,
+    "skew_rr_pct": 39,
+    "iv_term_pct": 17,
+    "vrp_pct": 18,
     "iv_vs_qqq_pct": null
    }
   }
