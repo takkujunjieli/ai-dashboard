@@ -1,6 +1,70 @@
 /* 策略回测页(PR7):读 data/strategy_bt.json,渲染统计 + 指标 + 权益曲线(叠加基准)+ OOS + 交易。只读。 */
-import { $, esc, loadFreshJSON } from "./shared.js";
+import { $, esc, loadJSON, loadFreshJSON } from "./shared.js";
 const LWC = window.LightweightCharts;
+
+/* 账户风险控制 · 仓位计算器。读 config/risk_policy.json(固定参数,日后 agentic 读同一份)。
+   核心:单笔风险预算=净值×risk_pct;止损决定仓位 shares=budget/(entry−stop);仓位≤max_position_pct。 */
+async function renderRiskControl() {
+  const host = $("risk-control"); if (!host) return;
+  const P = (await loadJSON("config/risk_policy.json")) || {};
+  const tiers = P.risk_tiers || { normal: { label: "常规", risk_pct: 0.75 } };
+  const atr = P.atr || { period: 14, mult_default: 2.0 };
+  const maxPos = P.max_position_pct ?? 20;
+  const tierOpts = Object.entries(tiers).map(([k, t]) =>
+    `<option value="${k}"${k === (P.default_tier || "normal") ? " selected" : ""}>${esc(t.label)} · ${t.risk_pct}%</option>`).join("");
+  host.innerHTML = `
+    <div class="risk-form">
+      <label>账户净值 $<input id="rk-eq" type="number" value="${P.account_equity ?? 100000}" step="1000"></label>
+      <label>风险档<select id="rk-tier">${tierOpts}</select></label>
+      <label>买入价 $<input id="rk-entry" type="number" value="100" step="0.01"></label>
+      <label>止损法<select id="rk-mode"><option value="manual">手动止损价</option><option value="atr">ATR 法</option></select></label>
+      <label id="rk-stop-wrap">止损价 $<input id="rk-stop" type="number" value="94" step="0.01"></label>
+      <label id="rk-atr-wrap" style="display:none">ATR${atr.period} $<input id="rk-atr" type="number" value="3" step="0.01"> × 倍<input id="rk-mult" type="number" value="${atr.mult_default}" step="0.1" style="width:60px"></label>
+    </div>
+    <div id="rk-out" class="wb-statbar" style="margin-top:12px"></div>
+    <div id="rk-note" class="muted small" style="margin-top:6px"></div>
+    <div class="muted small" style="margin-top:10px"><b>止损放在 thesis 被证伪处</b>(不是"亏 X% 就卖"):${(P.stop_bases || []).map(esc).join(" · ")}。<br>核心:<b>止损位决定仓位</b>;仓位上限 ${maxPos}% 净值;越高波动 stop 越宽、仓位越小。</div>`;
+  const g = (id) => +$(id).value;
+  const T = (k, v, sb = "", cls = "") => `<div class="opt-tile"><div class="opt-k">${k}</div><div class="opt-v ${cls}">${v}${sb ? ` <span class="opt-sub">${sb}</span>` : ""}</div></div>`;
+  function compute() {
+    const eq = g("rk-eq"), entry = g("rk-entry");
+    const tier = tiers[$("rk-tier").value] || {};
+    const riskPct = tier.risk_pct || 0.75;
+    const mode = $("rk-mode").value;
+    $("rk-stop-wrap").style.display = mode === "manual" ? "" : "none";
+    $("rk-atr-wrap").style.display = mode === "atr" ? "" : "none";
+    const stop = mode === "manual" ? g("rk-stop") : entry - g("rk-mult") * g("rk-atr");
+    const budget = eq * riskPct / 100, perShare = entry - stop;
+    const out = $("rk-out"), note = $("rk-note");
+    if (!(eq > 0) || !(entry > 0) || !(perShare > 0)) {
+      out.innerHTML = T("提示", "—", "止损须在买入价下方");
+      note.textContent = mode === "atr" && entry > 0 ? `ATR 止损 = ${entry} − ${g("rk-mult")}×${g("rk-atr")} = ${stop.toFixed(2)}` : "";
+      return;
+    }
+    let shares = Math.floor(budget / perShare);
+    let posDollar = shares * entry, posPct = posDollar / eq * 100, capped = false;
+    if (posPct > maxPos) {
+      capped = true;
+      shares = Math.floor(eq * maxPos / 100 / entry);
+      posDollar = shares * entry; posPct = posDollar / eq * 100;
+    }
+    const actualRisk = shares * perShare;
+    out.innerHTML = [
+      T("风险预算", "$" + budget.toFixed(0), `${riskPct}% × 净值`, "down"),
+      T("止损价", "$" + stop.toFixed(2), `每股风险 $${perShare.toFixed(2)}`),
+      T("仓位股数", shares.toLocaleString(), capped ? `压到 ${maxPos}% 上限` : "", "up"),
+      T("仓位金额", "$" + posDollar.toFixed(0), `${posPct.toFixed(1)}% 净值`),
+      T("实际风险", "$" + actualRisk.toFixed(0), `${(actualRisk / eq * 100).toFixed(2)}% 净值`, "down"),
+    ].join("");
+    note.innerHTML = `${shares.toLocaleString()} 股 = 预算 $${budget.toFixed(0)} ÷ 每股风险 $${perShare.toFixed(2)}`
+      + (capped ? ` · <span class="down">触发 ${maxPos}% 仓位上限 → 压低股数(实际风险 < 预算)</span>` : "")
+      + (mode === "atr" ? ` · ATR 止损 = ${entry} − ${g("rk-mult")}×${g("rk-atr")} = ${stop.toFixed(2)}` : "");
+  }
+  ["rk-eq", "rk-tier", "rk-entry", "rk-mode", "rk-stop", "rk-atr", "rk-mult"].forEach((id) => {
+    const el = $(id); if (el) { el.addEventListener("input", compute); el.addEventListener("change", compute); }
+  });
+  compute();
+}
 
 const tile = (k, v, sub = "", cls = "") =>
   `<div class="opt-tile"><div class="opt-k">${k}</div><div class="opt-v ${cls}">${v}${sub ? ` <span class="opt-sub">${sub}</span>` : ""}</div></div>`;
@@ -20,6 +84,7 @@ function lineData(curve) {  // LWC 要求 time 严格递增且唯一
 
 async function main() {
   // 5Y 走势聚合 与 净 GEX→次日波动 研究 已迁移到 research 页(收益率×市场 / GEX→波动 两个 tab)
+  await renderRiskControl();   // 账户风险控制:独立于回测数据,始终显示
   const d = await loadFreshJSON("data/strategy_bt.json");
   if (!d || !Array.isArray(d.equity_curve) || !d.equity_curve.length) {
     $("bt-empty").style.display = "block";

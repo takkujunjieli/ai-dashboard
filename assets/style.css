@@ -227,6 +227,13 @@ footer { margin-top: 50px; text-align: center; }
 .rt-leg.off b { color: var(--muted); }
 .rt-sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
 .rt-leg b { color: var(--text); font-variant-numeric: tabular-nums; }
+/* 账户风险控制 · 仓位计算器表单 */
+.risk-form { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: flex-end; }
+.risk-form label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+.risk-form input, .risk-form select {
+  background: var(--card-hover); border: 1px solid var(--border); border-radius: 6px;
+  padding: 5px 8px; color: var(--text); font-size: 13px; font-variant-numeric: tabular-nums; width: 130px;
+}
 /* 悬停读数浮层(lightweight-charts 图通用,与 trading #chart-legend 同风格) */
 .chart-hover {
   position: absolute; display: none; z-index: 6; pointer-events: none; top: 8px; left: 8px;
