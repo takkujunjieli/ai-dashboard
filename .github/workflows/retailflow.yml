@@ -48,7 +48,7 @@ jobs:
         if: always()
         run: python scripts/fetch_trends.py || true
         env:
-          RF_SYMS: ${{ inputs.sym || 'HOOD,COIN,RKLB' }}
+          RF_SYMS: ${{ inputs.sym }}   # 空=fetch_trends 读 config/retail_syms.json,与引擎标的一致
 
       - name: 组装 retailflow.json
         if: always()
