@@ -508,8 +508,38 @@ async function renderRates() {
   }
 }
 
+/* Topic 4:净 GEX → 次日已实现波动(自 strategy 页迁入)。读 data/strategy_bt.json 的 study 字段。
+   纯预测力研究(无持仓/成本)→ 属 research。 */
+async function renderGexVol() {
+  const host = $("gx-study"); if (!host) return;
+  const d = await loadJSON("data/strategy_bt.json");
+  const s = d && d.study;
+  if (!s || s.insufficient) { host.innerHTML = '<span class="muted small">暂无研究数据(data/strategy_bt.json 的 study 字段)</span>'; return; }
+  const sub = $("gx-sub"); if (sub) sub.textContent = `${s.n} 天 · ${s.start}→${s.end}`;
+  const T = (k, v, sb = "", cls = "") =>
+    `<div class="opt-tile"><div class="opt-k">${esc(k)}</div><div class="opt-v ${cls}">${esc(v)}${sb ? ` <span class="opt-sub">${esc(sb)}</span>` : ""}</div></div>`;
+  const num = (v, dg = 2) => (v == null ? "—" : (+v).toFixed(dg));
+  const rg = s.regime || {}, ic = s.incr || {};
+  const q = s.quintiles_pct || [], qmax = Math.max(...q, 0.001);
+  const bars = q.map((v, i) =>
+    `<div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+       <div style="font-size:10px;color:var(--muted)">${v}%</div>
+       <div style="width:34px;height:${Math.round(v / qmax * 90)}px;background:var(--accent);border-radius:3px 3px 0 0"></div>
+       <div style="font-size:10px;color:var(--muted)">Q${i + 1}</div>
+     </div>`).join("");
+  host.innerHTML =
+    `<div class="wb-statbar">${[
+      T("GEX<0 vs >0 次日波动", (rg.ratio ?? "—") + "×", `${rg.neg_mean_pct}% / ${rg.pos_mean_pct}%`, "down"),
+      T("Spearman", num(s.spearman, 3), `CI [${(s.spearman_ci || []).join(", ")}]`, "down"),
+      T("增量 ΔR²", "+" + num((ic.delta_r2 ?? 0) * 100, 2) + "%", "控制|r_t|后", "up"),
+      T("子期", (s.subperiods || []).map((p) => `${p.label} ${p.spearman}`).join(" · ")),
+    ].join("")}</div>
+     <div style="display:flex;gap:14px;align-items:flex-end;margin:14px 0 4px;height:120px">${bars}</div>
+     <div class="muted small">${esc(s.label || "净 GEX → 次日已实现波动")}:按 GEX 五分位分组的次日 |r|——低 GEX(Q1)→ 高波动,高 GEX(Q5)→ 低波动(单调,符合 dealer-gamma 抑制/放大机制)。纯预测力研究(无持仓/成本)。</div>`;
+}
+
 /* ---------- Tab 调度 ---------- */
-const RENDER = { bearbull: renderBearbull, retailflow: renderRetailflow, rates: renderRates };
+const RENDER = { bearbull: renderBearbull, retailflow: renderRetailflow, rates: renderRates, gexvol: renderGexVol };
 const rendered = {};
 async function showTopic(topic) {
   if (!RENDER[topic]) return;

@@ -22,6 +22,7 @@
   <span class="tab active" data-topic="bearbull">🐻 熊/牛预测</span>
   <span class="tab" data-topic="retailflow">📊 散户订单流</span>
   <span class="tab" data-topic="rates">🏦 国债vs股市</span>
+  <span class="tab" data-topic="gexvol">🌀 GEX→波动</span>
 </nav>
 
 <div id="r-status" class="muted small" style="padding:8px 0"></div>
@@ -64,6 +65,12 @@
     <div id="rates-hover" class="chart-hover"></div>
   </div>
   <div class="muted small" style="margin-top:8px">研究国债收益率对股市的影响:利率(2/10/30Y)上行区间,成长(QQQ)相对小盘(IWM)/大盘(SPY)的相对表现。点击图例开关任意曲线;鼠标悬停显示该日所有已展示曲线的值。数据 FRED + Yahoo,近 5 年。</div>
+</section>
+
+<!-- ========== Topic 4:净 GEX → 次日已实现波动(自 strategy 页迁入) ========== -->
+<section data-topic-panel="gexvol" hidden>
+  <h2>🌀 净 GEX → 次日已实现波动 <span class="muted small" id="gx-sub"></span></h2>
+  <div id="gx-study" class="card"><span class="muted small">计算中…</span></div>
 </section>
 
 <footer class="muted small">

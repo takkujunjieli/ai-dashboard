@@ -18,38 +18,14 @@ function lineData(curve) {  // LWC 要求 time 严格递增且唯一
   return out.sort((a, b) => a.time - b.time);
 }
 
-function renderStudy(s) {  // 研究结论:净 GEX → 次日已实现波动
-  if (!s || s.insufficient) return;
-  $("bt-study-sec").style.display = "";
-  $("bt-study-sub").textContent = `${s.n} 天 · ${s.start}→${s.end}`;
-  const rg = s.regime || {}, ic = s.incr || {};
-  const q = s.quintiles_pct || [], qmax = Math.max(...q, 0.001);
-  const bars = q.map((v, i) =>
-    `<div style="display:flex;flex-direction:column;align-items:center;gap:3px">
-       <div style="font-size:10px;color:#8b96ad">${v}%</div>
-       <div style="width:34px;height:${Math.round(v / qmax * 90)}px;background:#60a5fa;border-radius:3px 3px 0 0"></div>
-       <div style="font-size:10px;color:#8b96ad">Q${i + 1}</div>
-     </div>`).join("");
-  $("bt-study").innerHTML =
-    `<div class="wb-statbar">${[
-      tile("GEX<0 vs >0 次日波动", (rg.ratio ?? "—") + "×", `${rg.neg_mean_pct}% / ${rg.pos_mean_pct}%`, "down"),
-      tile("Spearman", num(s.spearman, 3), `CI [${(s.spearman_ci || []).join(", ")}]`, "down"),
-      tile("增量 ΔR²", "+" + num((ic.delta_r2 ?? 0) * 100, 2) + "%", "控制|r_t|后", "up"),
-      tile("子期", (s.subperiods || []).map((p) => `${p.label} ${p.spearman}`).join(" · ")),
-    ].join("")}</div>
-     <div style="display:flex;gap:14px;align-items:flex-end;margin:14px 0 4px;height:120px">${bars}</div>
-     <div class="muted small">按 GEX 五分位分组的次日 |r|:低 GEX(Q1)→ 高波动,高 GEX(Q5)→ 低波动(单调,符合 dealer-gamma 抑制/放大机制)。</div>`;
-}
-
 async function main() {
-  // 5Y 走势聚合(收益率×市场)已迁移到 research 页的「收益率×市场」tab
+  // 5Y 走势聚合 与 净 GEX→次日波动 研究 已迁移到 research 页(收益率×市场 / GEX→波动 两个 tab)
   const d = await loadFreshJSON("data/strategy_bt.json");
   if (!d || !Array.isArray(d.equity_curve) || !d.equity_curve.length) {
     $("bt-empty").style.display = "block";
     $("bt-empty").textContent = "还没有回测结果 —— 由采集时的 strategy_run 生成(读 gex_daily)。先让样本攒够几天。";
     return;
   }
-  renderStudy(d.study);   // 上半:研究结论(有则显示)
   $("bt-sub").textContent = `${d.sym} · 信号 ${d.signal} · ${d.n_bars} bars`;
   $("bt-caveat").innerHTML = `<b>⚠️ 研究已验证机制,回测信号为示例</b> · ${esc(d.caveat || "以 OOS 为准。")}`;
 
