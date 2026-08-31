@@ -22,17 +22,25 @@ import bisect
 import json
 import os
 import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
 import requests
+from requests.adapters import HTTPAdapter
 
 ROOT = Path(__file__).resolve().parent.parent
 KEY = os.environ.get("MASSIVE_API_KEY", "").strip()
 BASE = os.environ.get("MASSIVE_BASE_URL", "https://api.massive.com").rstrip("/")
 HEADERS = {"Authorization": f"Bearer {KEY}"}
 OUT = ROOT / "data" / "retail_flow_raw.json"
+
+# 连接复用:keep-alive + 连接池,省掉每页重建 TCP 的冷启动开销(实测串行首请求被狠罚)
+SESSION = requests.Session()
+_adapter = HTTPAdapter(pool_connections=8, pool_maxsize=8)
+SESSION.mount("http://", _adapter)
+SESSION.mount("https://", _adapter)
 
 WINDOW = int(os.environ.get("RF_WINDOW", "30"))
 CAP = int(os.environ.get("RF_CAP", "400"))
@@ -56,7 +64,7 @@ def get(path):
     sep = "&" if "?" in url else "?"
     full = url + f"{sep}apiKey={KEY}"
     for attempt in range(5):                     # 429 退避(网关限流)
-        r = requests.get(full, headers=HEADERS, timeout=120)
+        r = SESSION.get(full, headers=HEADERS, timeout=120)
         if r.status_code == 429:
             time.sleep(3 * (attempt + 1))
             continue
@@ -156,10 +164,14 @@ def fetch_trades(sym, win):
 
 def flow_for(sym, day, verbose=False):
     """返回该票当日聚合 dict,或 None(数据不足)。
-    弱 HTTP 网关:trades/quotes/px 串行拉——并发会把网关压垮(实测 9 并发全 Read timeout)。"""
+    每票内 trades ‖ quotes 两条独立流 2 并发拉(实测甜区:聚合吞吐 0.57→2.65 MB/s,~2×+;
+    跨票仍串行,保证总并发 ≤2~3,不触网关上限——9 并发会全 Read timeout)。"""
     win = f"&timestamp.gte={day}T{RTH_GTE_H}Z&timestamp.lte={day}T{RTH_LTE_H}Z"
-    qts, qba, npq = fetch_quotes(sym, win)
-    rtrades, tot, npt = fetch_trades(sym, win)
+    with ThreadPoolExecutor(max_workers=2) as ex:
+        fq = ex.submit(fetch_quotes, sym, win)
+        ft = ex.submit(fetch_trades, sym, win)
+        qts, qba, npq = fq.result()
+        rtrades, tot, npt = ft.result()
     px = day_close(sym, day)
     total_vol, n_trades, n_off = tot
     # 中点签名(Barber):对散户候选逐笔按 prevailing NBBO 定向,价内落回 tick rule
