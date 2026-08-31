@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""散户订单流引擎(live, 逐日增量)。对 deep(D)集里的每只票,拉当日股票逐笔+逐报价,
+"""散户订单流引擎(live, 逐日增量)。对 research 页选取(config/retail_syms.json)的每只票,拉当日股票逐笔+逐报价,
 BJZZ 识别(场外 TRF + 次美分)→ Barber 中点签名 → 聚合成每票每天一个净买入数,丢弃原始 tick。
 
 方法(见 research.html 的散户订单流页,及 BJZZ 2021 / Barber 2024):
@@ -27,8 +27,6 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import requests
-
-from _cfg import load_tickers
 
 ROOT = Path(__file__).resolve().parent.parent
 KEY = os.environ.get("MASSIVE_API_KEY", "").strip()
@@ -200,6 +198,17 @@ def flow_for(sym, day, verbose=False):
     return out
 
 
+def load_retail_syms():
+    """散户流跑哪些票:config/retail_syms.json 的 symbols(由 research 页下拉编辑)。"""
+    p = ROOT / "config" / "retail_syms.json"
+    if p.exists():
+        try:
+            return [s.strip().upper() for s in json.loads(p.read_text()).get("symbols", []) if s.strip()]
+        except Exception:
+            pass
+    return []
+
+
 def load_store():
     if OUT.exists():
         try:
@@ -225,8 +234,8 @@ def write_store(store):
 
 def main():
     days = target_days()
-    _, deep = load_tickers()
-    syms = [s.strip().upper() for s in os.environ.get("RF_SYMS", "").split(",") if s.strip()] or deep
+    syms = ([s.strip().upper() for s in os.environ.get("RF_SYMS", "").split(",") if s.strip()]
+            or load_retail_syms() or ["HOOD", "COIN", "RKLB"])   # 空=读 retail_syms.json(独立于 D/Q)
     if SMALL:
         syms = syms[:1]
     maxn = int(os.environ.get("RF_MAX", "8"))     # 护栏:防 deep=32 时误跑全量

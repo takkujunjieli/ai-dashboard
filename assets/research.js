@@ -1,7 +1,7 @@
 /* Research 页 — 多 topic 研究台。Topic 1:熊/牛预测(v1 熊侧)。
    模型在浏览器里跑(approach A):L2 正则 logistic(IRLS)+ leave-one-bear-out。
    数据 data/research_bearbull.json(topic/方向/实体三层可扩展)。 */
-import { $, esc, loadJSON } from "./shared.js";
+import { $, esc, loadJSON, getPat, ghHeaders, REPO } from "./shared.js";
 
 const LAM = 10;            // L2 强度(与 factorlab/model.py 默认一致)
 /* 按"驱动机制"分簇(比 内生/政策/外生 更贴数据、名实相符):
@@ -327,7 +327,54 @@ function netbuyHeatmap(J) {
     <div class="muted small" style="margin-top:6px">每格=某票某日散户净买入(<span class="up">绿=净买</span>/<span class="down">红=净卖</span>,深浅随 |值|,饱和于 0.3)。</div>`;
 }
 
+/* 散户流跑批标的多选器:写回 config/retail_syms.json(独立于 D/Q)。下次跑批生效。 */
+async function saveRetailSyms(symbols) {
+  const pat = getPat();
+  if (!pat) return { ok: false, msg: "需要 fine-grained PAT(与交易台采集面板共用,存本机)" };
+  const url = `https://api.github.com/repos/${REPO}/contents/config/retail_syms.json`;
+  let sha;
+  try {
+    const cur = await fetch(url + "?ref=main", { headers: ghHeaders(pat) });
+    if (cur.ok) sha = (await cur.json()).sha;
+  } catch { /* 新建 */ }
+  const body = { _note: "散户订单流引擎跑哪些票(独立于 D/Q;research 页多选下拉编辑)。逐笔成本 ~2-15min/票。", symbols };
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(body, null, 2) + "\n")));
+  try {
+    const r = await fetch(url, { method: "PUT", headers: ghHeaders(pat),
+      body: JSON.stringify({ message: "chore: update retail_syms via research UI", content, sha, branch: "main" }) });
+    return r.ok ? { ok: true } : { ok: false, msg: "PUT 失败 " + r.status };
+  } catch (e) { return { ok: false, msg: String(e) }; }
+}
+
+async function renderPicker() {
+  const el = $("rf-picker"); if (!el) return;
+  const [cfg, rs] = await Promise.all([loadJSON("config/tickers.json"), loadJSON("config/retail_syms.json")]);
+  const wl = (cfg && cfg.watchlist) || [];
+  const sel = new Set(((rs && rs.symbols) || []).map((s) => s.toUpperCase()));
+  const label = (arr) => `⚙️ 跑批标的:${arr.length ? arr.join(", ") : "（无）"} (${arr.length}) — 点开选择`;
+  const chips = wl.map((t) => `<label class="rf-chip" style="display:inline-flex;align-items:center;gap:4px;font-size:12px">
+      <input type="checkbox" value="${esc(t)}"${sel.has(t.toUpperCase()) ? " checked" : ""}> ${esc(t)}</label>`).join("");
+  el.innerHTML = `<details>
+    <summary id="rf-pick-sum" style="cursor:pointer;font-weight:600">${esc(label([...sel]))}</summary>
+    <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px 14px">${chips}</div>
+    <div style="margin-top:10px;display:flex;align-items:center;gap:10px">
+      <button id="rf-save" class="tab">保存到 config/retail_syms.json</button>
+      <span id="rf-save-msg" class="muted small"></span>
+    </div>
+    <div class="muted small" style="margin-top:6px">改动写回仓库 config,<b>下次跑批(每日 cron / 手动)生效</b>,不影响已采集历史。逐笔 ~2-15min/票,别选太多。需 fine-grained PAT(Contents 读写)。</div>
+  </details>`;
+  const checked = () => [...el.querySelectorAll("input:checked")].map((i) => i.value.toUpperCase());
+  el.querySelectorAll("input[type=checkbox]").forEach((cb) => cb.addEventListener("change",
+    () => { $("rf-pick-sum").textContent = label(checked()); }));
+  $("rf-save").addEventListener("click", async () => {
+    const msg = $("rf-save-msg"); msg.textContent = "保存中…";
+    const r = await saveRetailSyms(checked());
+    msg.textContent = r.ok ? "✓ 已保存,下次跑批生效" : "✗ " + r.msg;
+  });
+}
+
 async function renderRetailflow() {
+  renderPicker();
   const J = await loadJSON("data/retailflow.json");
   const set = (id, html) => { const el = $(id); if (el) el.innerHTML = html; };
   if (!J) {

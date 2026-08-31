@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Attention 项:Google Trends 每日搜索量(SVI, Da-Engelberg-Gao 2011)。
-对 deep(D)集逐票拉近 3 个月日频 SVI,滚动并入 data/retail_trends.json。
+对 retail_syms(散户流选取)逐票拉近 3 个月日频 SVI,滚动并入 data/retail_trends.json。
 
 best-effort:Google 常对数据中心 IP 限流(429),失败/缺 pytrends 时静默跳过——
 build_retailflow 会自动退回 netbuy×intensity 两项信号。不阻塞主管线。
@@ -12,8 +12,6 @@ import os
 import time
 from datetime import date, timedelta
 from pathlib import Path
-
-from _cfg import load_tickers
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "retail_trends.json"
@@ -27,8 +25,10 @@ def main():
     except Exception:
         print("⚠️ 无 pytrends,跳过 Attention(信号退回 netbuy×intensity)"); return
 
-    _, deep = load_tickers()
-    syms = [s.strip().upper() for s in os.environ.get("RF_SYMS", "").split(",") if s.strip()] or deep
+    rp = ROOT / "config" / "retail_syms.json"
+    default = (json.loads(rp.read_text()).get("symbols", []) if rp.exists() else ["HOOD", "COIN", "RKLB"])
+    syms = ([s.strip().upper() for s in os.environ.get("RF_SYMS", "").split(",") if s.strip()]
+            or [s.strip().upper() for s in default if s and s.strip()])
     store = {"updated": None, "data": {}}
     if OUT.exists():
         try:

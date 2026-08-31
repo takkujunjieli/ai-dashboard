@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       sym:
-        description: "标的(逗号分隔;留空=D/deep 组=HOOD,COIN,RKLB。~2-15min/票)"
+        description: "标的(逗号分隔;留空=research 页选取 config/retail_syms.json。~2-15min/票)"
         required: false
         default: ""
       day:
@@ -39,7 +39,7 @@ jobs:
         env:
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
           MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
-          RF_SYMS: ${{ inputs.sym }}      # 空=D(deep)组;deep 已剪到 HOOD,COIN,RKLB,用交易台 D/Q 增减
+          RF_SYMS: ${{ inputs.sym }}      # 空=config/retail_syms.json(research 页多选下拉编辑,独立于 D/Q)
           RF_DAY: ${{ inputs.day }}
           RF_BACKFILL: ${{ inputs.backfill || '0' }}
           RF_DAYS: ${{ inputs.days }}
