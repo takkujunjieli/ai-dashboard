@@ -92,9 +92,57 @@ def probe_equity(sym):
         print(f"✗ 股票逐报价失败(中点签名不可得则退回 tick-rule): {exc}")
 
 
+def probe_concurrency(sym):
+    """诊断:网关是'按连接限速'(并发能叠加)还是'总出口封顶'(并发无用)。
+    同一票、不重叠时段各取一整页(50k),对比 1/2/3 路并发的聚合吞吐;并看是否 gzip。"""
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+    from datetime import date, timedelta
+    section("5) 并发吞吐诊断(按连接限速 vs 总出口封顶)")
+    day = date.today() - timedelta(days=1)
+    while day.weekday() >= 5:
+        day -= timedelta(days=1)
+    day = day.isoformat()
+    slots = [("13:30:00", "15:30:00"), ("15:30:00", "17:30:00"), ("17:30:00", "19:30:00")]
+
+    def fetch(slot):
+        g, l = slot
+        url = (f"{BASE}/v3/trades/{sym}?limit=50000&order=asc&sort=timestamp"
+               f"&timestamp.gte={day}T{g}Z&timestamp.lte={day}T{l}Z&apiKey={KEY}")
+        t0 = time.time()
+        try:
+            r = requests.get(url, headers=HEADERS, timeout=240)
+            dt = time.time() - t0
+            nb = len(r.content)
+            rows = len(r.json().get("results") or []) if r.status_code == 200 else 0
+            return nb, rows, dt, r.status_code, r.headers.get("content-encoding", "none")
+        except Exception as exc:
+            return 0, 0, time.time() - t0, f"ERR:{type(exc).__name__}", "?"
+
+    print(f"票={sym} 日={day}(每路一整页 50k;不重叠时段避免缓存)")
+    base_mbps = None
+    for C in (1, 2, 3):
+        use = slots[:C]
+        t0 = time.time()
+        with ThreadPoolExecutor(max_workers=C) as ex:
+            res = list(ex.map(fetch, use))
+        wall = max(time.time() - t0, 1e-6)
+        tot = sum(x[0] for x in res)
+        rows = sum(x[1] for x in res)
+        mbps = tot / 1e6 / wall
+        if C == 1:
+            base_mbps = mbps or 1e-9
+        per = " ".join(f"{x[2]:.0f}s/{x[0]/1e6:.1f}MB/{x[3]}" for x in res)
+        print(f"  并发{C}: wall {wall:5.0f}s · 总 {tot/1e6:5.1f}MB/{rows}行 · 聚合 {mbps:5.2f} MB/s "
+              f"(×{mbps/base_mbps:.1f}) · gzip={res[0][4]} · 每路[{per}]")
+    print("  判读:聚合 MB/s 随并发≈线性↑ → 按连接限速(并发有效);≈持平 → 总出口封顶(并发无用,得压数据/升网关)。"
+          " gzip=none 则开压缩是质变。")
+
+
 def main():
     print(f"BASE={BASE}  SYM={SYM}  key={'set' if KEY else 'MISSING'}")
     probe_equity(SYM)
+    probe_concurrency(SYM)
 
     # 1) 期权链快照:dump 一整张合约的所有字段(看有没有 last_quote / last_trade)
     section("1) /v3/snapshot/options/{SYM} — 一张合约的完整原始字段")
