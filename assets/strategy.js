@@ -41,53 +41,8 @@ function renderStudy(s) {  // 研究结论:净 GEX → 次日已实现波动
      <div class="muted small">按 GEX 五分位分组的次日 |r|:低 GEX(Q1)→ 高波动,高 GEX(Q5)→ 低波动(单调,符合 dealer-gamma 抑制/放大机制)。</div>`;
 }
 
-/* 5Y 走势聚合:左轴=SPY/QQQ/IWM 归一到100,右轴(虚线)=US 10/30Y 收益率%。独立于回测数据。 */
-async function renderRates() {
-  const el = $("rates-chart"); if (!el) return;
-  const r = await loadFreshJSON("data/rates.json");
-  if (!r || !r.series) return;
-  const meta = r.meta || {};
-  const chart = LWC.createChart(el, {
-    layout: { background: { color: "transparent" }, textColor: "#8b96ad" },
-    grid: { vertLines: { color: "#1e2941" }, horzLines: { color: "#1e2941" } },
-    leftPriceScale: { visible: true, borderColor: "#2a3550" },
-    rightPriceScale: { visible: true, borderColor: "#2a3550" },
-    timeScale: { borderColor: "#2a3550" },
-    height: 380,
-  });
-  const toLine = (arr) => {
-    const seen = new Set(), out = [];
-    for (const [d, v] of arr) if (!seen.has(d)) { seen.add(d); out.push({ time: d, value: v }); }
-    return out;
-  };
-  const legend = [];
-  for (const [key, arr] of Object.entries(r.series)) {
-    if (!arr || !arr.length) continue;
-    const m = meta[key] || {}, isYield = m.axis === "yield";
-    let data, latest;
-    if (isYield) {
-      data = toLine(arr);
-      latest = arr[arr.length - 1][1].toFixed(2) + "%";
-    } else {
-      const base = arr[0][1] || 1;
-      data = toLine(arr.map(([d, v]) => [d, v / base * 100]));
-      const chg = (arr[arr.length - 1][1] / base - 1) * 100;
-      latest = (chg >= 0 ? "+" : "") + chg.toFixed(0) + "%";
-    }
-    chart.addLineSeries({
-      color: m.color || "#60a5fa", lineWidth: 2,
-      lineStyle: isYield ? LWC.LineStyle.Dashed : LWC.LineStyle.Solid,
-      priceScaleId: isYield ? "right" : "left",
-      priceLineVisible: false, lastValueVisible: false,
-    }).setData(data);
-    legend.push(`<span class="rt-leg"><span class="rt-sw" style="background:${m.color || "#60a5fa"}"></span>${esc(m.label || key)} <b>${latest}</b></span>`);
-  }
-  chart.timeScale().fitContent();
-  if ($("rates-legend")) $("rates-legend").innerHTML = legend.join("");
-}
-
 async function main() {
-  await renderRates();   // 独立面板,回测数据缺失也显示
+  // 5Y 走势聚合(收益率×市场)已迁移到 research 页的「收益率×市场」tab
   const d = await loadFreshJSON("data/strategy_bt.json");
   if (!d || !Array.isArray(d.equity_curve) || !d.equity_curve.length) {
     $("bt-empty").style.display = "block";

@@ -21,7 +21,7 @@
 <nav>
   <span class="tab active" data-topic="bearbull">🐻 熊/牛预测</span>
   <span class="tab" data-topic="retailflow">📊 散户订单流</span>
-  <span class="tab" data-topic="deadtime" title="后续" style="opacity:.5;cursor:not-allowed">🕳️ 垃圾时间预测(即将)</span>
+  <span class="tab" data-topic="rates">📉 收益率×市场</span>
 </nav>
 
 <div id="r-status" class="muted small" style="padding:8px 0"></div>
@@ -55,10 +55,19 @@
   <div id="rf-series" class="card"><span class="muted small">计算中…</span></div>
 </section>
 
+<!-- ========== Topic 3:收益率×市场(债券收益率对市场的影响) ========== -->
+<section data-topic-panel="rates" hidden>
+  <h2>📉 收益率 × 市场 <span class="muted small">左轴:SPY/QQQ/IWM 归一100 · 右轴(虚线):US 10/30Y 收益率%</span></h2>
+  <div id="rates-legend" class="rt-legend"></div>
+  <div id="rates-chart" style="height:380px"></div>
+  <div class="muted small" style="margin-top:8px">研究债券收益率对市场的影响:利率上行区间成长(QQQ)相对小盘(IWM)/大盘(SPY)的相对表现。数据 FRED(DGS10/30)+ SPY/QQQ/IWM,近 5 年。</div>
+</section>
+
 <footer class="muted small">
   熊侧 v1 · 模型 L2-logistic 在浏览器实时计算 · 公开宏观数据(French/FRED/Welch-Goyal)· personal research only
 </footer>
 
+<script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
 <script type="module" src="assets/research.js"></script>
 </body>
 </html>
