@@ -94,10 +94,32 @@ def day_close(sym, day):
 
 
 def last_trading_day():
-    d = date.today() - timedelta(days=1)
-    while d.weekday() >= 5:                        # 六/日回退到周五
+    """最近一个已收盘交易日:UTC ≥21 点(美股收盘后)算当天已完,否则回退;跳周末。"""
+    now = datetime.now(timezone.utc)
+    d = now.date() - (timedelta(days=1) if now.hour < 21 else timedelta(0))
+    while d.weekday() >= 5:
         d -= timedelta(days=1)
     return d.isoformat()
+
+
+def weekdays_back(n):
+    """最近 n 个工作日(升序;不含今天)。忽略节假日——空数据日自动跳过。"""
+    out, d = [], date.today() - timedelta(days=1)
+    while len(out) < n:
+        if d.weekday() < 5:
+            out.append(d.isoformat())
+        d -= timedelta(days=1)
+    return sorted(out)
+
+
+def target_days():
+    """RF_DAYS(逗号列表)优先;否则 RF_BACKFILL=N(最近 N 工作日);否则单日 RF_DAY/最近工作日。"""
+    if os.environ.get("RF_DAYS", "").strip():
+        return sorted(s.strip() for s in os.environ["RF_DAYS"].split(",") if s.strip())
+    n = int(os.environ.get("RF_BACKFILL", "0"))
+    if n > 0:
+        return weekdays_back(n)
+    return [os.environ.get("RF_DAY", "").strip() or last_trading_day()]
 
 
 def fetch_quotes(sym, win):
@@ -193,32 +215,45 @@ def evict(store):
         del store["days"][d]
 
 
-def main():
-    day = os.environ.get("RF_DAY", "").strip() or last_trading_day()
-    _, deep = load_tickers()
-    syms = [s.strip().upper() for s in os.environ.get("RF_SYMS", "").split(",") if s.strip()] or deep
-    if SMALL:
-        syms = syms[:1]
-    print(f"BASE={BASE} day={day} 标的={len(syms)}只 {syms if len(syms)<=8 else syms[:8]+['…']} "
-          f"key={'set' if KEY else 'MISSING'} window={WINDOW}d cap={CAP}")
-
-    store = load_store()
-    dayrec = store["days"].get(day, {})
-    ok = 0
-    for s in syms:                                # 串行:弱网关扛不住并发
-        try:
-            r = flow_for(s, day, verbose=True)
-            if r:
-                dayrec[s] = r; ok += 1
-        except Exception as exc:
-            print(f"  ✗ {s} {day}: {exc}")
-    store["days"][day] = dayrec
+def write_store(store):
     store["window_days"] = WINDOW
     store["updated"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     evict(store)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(store, ensure_ascii=False, separators=(",", ":")))
-    print(f"\n{day}: {ok}/{len(syms)} 只写入 · 存 {len(store['days'])} 天 → {OUT.relative_to(ROOT)} "
+
+
+def main():
+    days = target_days()
+    _, deep = load_tickers()
+    syms = [s.strip().upper() for s in os.environ.get("RF_SYMS", "").split(",") if s.strip()] or deep
+    if SMALL:
+        syms = syms[:1]
+    maxn = int(os.environ.get("RF_MAX", "8"))     # 护栏:防 deep=32 时误跑全量
+    if len(syms) > maxn:
+        print(f"⚠️ 标的 {len(syms)} 超 RF_MAX={maxn},只跑前 {maxn}(deep 请用 D/Q 剪到想跑的几只)")
+        syms = syms[:maxn]
+    print(f"BASE={BASE} days={days[0]}…{days[-1]}({len(days)}) 标的={len(syms)}只 {syms} "
+          f"key={'set' if KEY else 'MISSING'} window={WINDOW}d cap={CAP}")
+
+    store = load_store()
+    t0 = time.time()
+    for day in days:                              # 逐日;每日写盘(即使后续超时也保住已完成)
+        dayrec = store["days"].get(day, {})
+        ok = 0
+        for s in syms:                            # 串行:弱网关扛不住并发
+            if s in dayrec and os.environ.get("RF_FORCE", "").lower() not in ("1", "true"):
+                ok += 1; continue                 # 断点续跑:已采集的 (day,票) 跳过
+            try:
+                r = flow_for(s, day, verbose=True)
+                if r:
+                    dayrec[s] = r; ok += 1
+            except Exception as exc:
+                print(f"  ✗ {s} {day}: {exc}")
+        store["days"][day] = dayrec
+        write_store(store)
+        print(f"  [{day}] {ok}/{len(syms)} 写入 · 累计 {len(store['days'])} 天 · 用时 {(time.time()-t0)/60:.0f}min")
+    print(f"\n完成 {len(days)} 天 · 存 {len(store['days'])} 天 → {OUT.relative_to(ROOT)} "
           f"({OUT.stat().st_size/1024:.0f} KB)")
 
 

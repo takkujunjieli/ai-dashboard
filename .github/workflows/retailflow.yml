@@ -3,13 +3,23 @@ on:
   workflow_dispatch:
     inputs:
       sym:
-        description: "标的(逗号分隔;留空=deep 集,注意成本 ~15min/票)"
+        description: "标的(逗号分隔;留空→兜底 HOOD,COIN,RKLB。跑 deep 全量请显式贴列表,~2-15min/票)"
         required: false
         default: "HOOD,COIN,RKLB"
       day:
-        description: "目标日 YYYY-MM-DD(留空=最近工作日)"
+        description: "单个目标日 YYYY-MM-DD(留空=最近收盘工作日)"
         required: false
         default: ""
+      backfill:
+        description: "回填最近 N 个工作日(0=不回填;断点续跑,可重复触发直到跑满)"
+        required: false
+        default: "0"
+      days:
+        description: "显式日期列表 逗号分隔(覆盖 backfill/day)"
+        required: false
+        default: ""
+  schedule:
+    - cron: "0 22 * * 1-5"        # 工作日 22:00 UTC(美股收盘后)增量跑当天
 
 permissions:
   contents: write
@@ -24,22 +34,28 @@ jobs:
       - run: pip install requests "urllib3<2" pytrends   # urllib3<2:修 pytrends method_whitelist
 
       - name: 逐笔散户流(场外次美分 + 中点签名)
+        timeout-minutes: 300       # 5h 上限;超时被杀后仍走 always() 提交已完成的天
         run: python scripts/fetch_tick_flow.py
         env:
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
           MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
-          RF_SYMS: ${{ inputs.sym }}
+          RF_SYMS: ${{ inputs.sym || 'HOOD,COIN,RKLB' }}      # schedule 无 inputs → 兜底小集(防误跑全 deep)
           RF_DAY: ${{ inputs.day }}
+          RF_BACKFILL: ${{ inputs.backfill || '0' }}
+          RF_DAYS: ${{ inputs.days }}
 
       - name: Attention(Google Trends, best-effort)
+        if: always()
         run: python scripts/fetch_trends.py || true
         env:
-          RF_SYMS: ${{ inputs.sym }}
+          RF_SYMS: ${{ inputs.sym || 'HOOD,COIN,RKLB' }}
 
       - name: 组装 retailflow.json
+        if: always()
         run: python scripts/build_retailflow.py
 
       - name: 提交数据到 main
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -54,6 +70,7 @@ jobs:
 
   deploy:
     needs: flow
+    if: always()
     runs-on: ubuntu-latest
     permissions:
       contents: read
