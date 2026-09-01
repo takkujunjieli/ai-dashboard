@@ -131,9 +131,86 @@ function lineData(curve) {  // LWC 要求 time 严格递增且唯一
   return out.sort((a, b) => a.time - b.time);
 }
 
+/* 风险敞口热力图(本地专用)。读 data/portfolio.json + data/atr.json + risk_policy 的 bundle。
+   现价口径:open risk=|股数|×|现价−止损|;止损=ATR法(现价∓bundle.ATR倍数×ATR14),可每仓手填覆盖。
+   多列绿→红:在险% / 在险÷预算 / 仓位%vs上限 / 距止损% / 浮盈%。+ 组合总在险 heat + 分 bundle 小计。
+   分组/止损/净值 存本机 localStorage(不上仓库,honors 隐私)。 */
+const rLS = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } };
+const rLSset = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private mode */ } };
+const heatBg = (lvl) => { const l = Math.max(0, Math.min(1, lvl || 0)); return `background:hsl(${Math.round(142 * (1 - l))} 65% 45% / ${(0.08 + l * 0.42).toFixed(2)})`; };
+
+async function renderRiskExposure() {
+  const host = $("risk-expo"), heatEl = $("risk-heat"); if (!host) return;
+  const [pf, atrJ, P] = await Promise.all([
+    loadJSON("data/portfolio.json"), loadJSON("data/atr.json"), loadJSON("config/risk_policy.json")]);
+  if (!pf || !Array.isArray(pf.positions) || !pf.positions.length) {
+    if (heatEl) heatEl.innerHTML = '<span class="muted small">本地专用:需 data/portfolio.json(gitignored,公开站不显示)。本地刷新持仓后可见。</span>';
+    host.innerHTML = ""; return;
+  }
+  const ATR = (atrJ && atrJ.atr14) || {};
+  const bundles = (P && P.bundles) || { "常规": { risk_pct: 0.75, atr_mult: 2.0, max_position_pct: 20 } };
+  const bnames = Object.keys(bundles);
+  const defB = (P && P.default_bundle && bundles[P.default_bundle]) ? P.default_bundle : bnames[0];
+  const maxHeat = (P && P.portfolio && P.portfolio.max_total_heat_pct) || 6;
+  const groups = rLS("riskGroups", {}), stops = rLS("riskStops", {});
+  const equity = +rLS("riskEquity", (P && P.account_equity) || 100000);
+
+  const rows = []; let totalHeat = 0; const heatByBundle = {};
+  for (const p of pf.positions) {
+    const sym = p.sym, qty = p.qty || 0; if (!qty) continue;
+    const isOpt = p.kind !== "equity", long = qty > 0, price = p.price;
+    const bundleName = groups[sym] || defB, b = bundles[bundleName] || bundles[defB];
+    const budget = equity * (b.risk_pct || 0.75) / 100, atr = ATR[sym];
+    let stop = stops[sym] != null ? +stops[sym]
+             : (atr != null && price != null ? (long ? price - b.atr_mult * atr : price + b.atr_mult * atr) : null);
+    const perShare = (stop != null && price != null) ? (long ? price - stop : stop - price) : null;
+    let openRisk = isOpt ? Math.abs(p.mkt_value || 0) : (perShare != null ? Math.abs(qty) * perShare : null);
+    if (openRisk != null && openRisk < 0) openRisk = 0;                 // 止损已锁利 → 不占风险
+    const posPct = Math.abs(p.mkt_value || 0) / equity * 100;
+    const riskPct = openRisk != null ? openRisk / equity * 100 : null;
+    const ratio = openRisk != null ? openRisk / budget : null;
+    const distPct = (perShare != null && price) ? perShare / price * 100 : null;
+    if (openRisk != null) { totalHeat += openRisk; heatByBundle[bundleName] = (heatByBundle[bundleName] || 0) + openRisk; }
+    rows.push({ sym, isOpt, long, qty, price, cost: p.avg_cost, stop, atr, bundleName, cap: b.max_position_pct || 20,
+                openRisk, riskPct, ratio, posPct, distPct, pnlPct: p.pnl_pct != null ? p.pnl_pct * 100 : null });
+  }
+  rows.sort((a, b) => (b.openRisk || 0) - (a.openRisk || 0));
+
+  const cell = (txt, lvl) => `<td class="sc-num"${lvl == null ? "" : ` style="${heatBg(lvl)}"`}>${txt}</td>`;
+  const pnlCell = (v) => { if (v == null) return "<td>—</td>"; const l = Math.min(Math.abs(v) / 40, 1), hue = v >= 0 ? 142 : 0; return `<td class="sc-num" style="background:hsl(${hue} 65% 45% / ${(0.06 + l * 0.34).toFixed(2)})">${v >= 0 ? "+" : ""}${v.toFixed(0)}%</td>`; };
+  const grpSel = (r) => `<select class="rk-grp" data-sym="${esc(r.sym)}">${bnames.map((k) => `<option${k === r.bundleName ? " selected" : ""}>${esc(k)}</option>`).join("")}</select>`;
+  const stopIn = (r) => `<input class="rk-stopin" data-sym="${esc(r.sym)}" type="number" step="0.01" value="${r.stop != null ? r.stop.toFixed(2) : ""}" placeholder="${r.isOpt ? "期权" : (r.atr != null ? "ATR" : "手填")}" style="width:70px">`;
+  const body = rows.map((r) => `<tr>
+    <td class="sc-tk"><b>${esc(r.sym)}</b> <span class="sc-dir ${r.long ? "up" : "down"}">${r.isOpt ? "期" : r.long ? "多" : "空"}</span></td>
+    <td>${grpSel(r)}</td><td>${r.qty}</td><td>$${r.price != null ? r.price.toFixed(2) : "—"}</td>
+    <td class="muted">$${r.cost != null ? r.cost.toFixed(2) : "—"}</td><td>${stopIn(r)}</td>
+    ${cell(r.riskPct != null ? r.riskPct.toFixed(2) + "%" : "—", r.riskPct == null ? null : Math.min(r.riskPct / 2, 1))}
+    ${cell(r.ratio != null ? r.ratio.toFixed(2) + "×" : "—", r.ratio == null ? null : Math.min(r.ratio / 1.5, 1))}
+    ${cell(r.posPct.toFixed(1) + "%", Math.min(r.posPct / r.cap, 1))}
+    ${cell(r.distPct != null ? r.distPct.toFixed(1) + "%" : "—", r.distPct == null ? null : Math.max(0, Math.min(1, 1 - r.distPct / 15)))}
+    ${pnlCell(r.pnlPct)}</tr>`).join("");
+
+  host.innerHTML = `<div class="sc-wrap"><table class="sc-table">
+    <tr><th>标的</th><th>组</th><th>股数</th><th>现价</th><th>成本</th><th>止损</th>
+        <th>在险%</th><th>在险/预算</th><th>仓位%</th><th>距止损%</th><th>浮盈%</th></tr>${body}</table></div>
+    <div class="muted small" style="margin-top:8px">在险%=|股数|×|现价−止损|÷净值 · 在险/预算=该仓在险÷所属 bundle 单笔预算(>1 超险)· 仓位%对比 bundle 上限 · 距止损%小=逼近止损 · 浮盈%仅参考(现价口径,成本不进风险)。止损默认 ATR 法,可每仓手填覆盖(存本机)。</div>`;
+
+  const totalPct = totalHeat / equity * 100;
+  heatEl.innerHTML = `<div class="wb-statbar">
+    <div class="opt-tile"><div class="opt-k">账户净值(本机)</div><div class="opt-v"><input id="rk-eq2" type="number" step="1000" value="${equity}" style="width:118px;background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text);font-size:13px"></div></div>
+    <div class="opt-tile"><div class="opt-k">组合总在险 heat</div><div class="opt-v" style="${heatBg(Math.min(totalPct / maxHeat, 1))};border-radius:6px;padding:1px 8px">$${Math.round(totalHeat).toLocaleString()} · ${totalPct.toFixed(2)}%</div><div class="opt-sub">上限 ${maxHeat}% 净值</div></div>
+    ${bnames.filter((k) => heatByBundle[k]).map((k) => `<div class="opt-tile"><div class="opt-k">${esc(k)} 在险</div><div class="opt-v">$${Math.round(heatByBundle[k]).toLocaleString()} · ${(heatByBundle[k] / equity * 100).toFixed(2)}%</div></div>`).join("")}</div>
+    <div class="muted small" style="margin-top:6px">组合总在险 = 所有持仓在险之和(若止损全被打的总亏损)。${totalPct > maxHeat ? `<span class="down">⚠️ 超总上限 ${maxHeat}%,考虑减仓/收紧止损</span>` : "在上限内。"}</div>`;
+
+  host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", () => { const g = rLS("riskGroups", {}); g[el.dataset.sym] = el.value; rLSset("riskGroups", g); renderRiskExposure(); }));
+  host.querySelectorAll(".rk-stopin").forEach((el) => el.addEventListener("change", () => { const s = rLS("riskStops", {}), v = el.value.trim(); if (v === "") delete s[el.dataset.sym]; else s[el.dataset.sym] = +v; rLSset("riskStops", s); renderRiskExposure(); }));
+  const eq2 = $("rk-eq2"); if (eq2) eq2.addEventListener("change", () => { rLSset("riskEquity", +eq2.value || 100000); renderRiskExposure(); });
+}
+
 async function main() {
   // 5Y 走势聚合 与 净 GEX→次日波动 研究 已迁移到 research 页(收益率×市场 / GEX→波动 两个 tab)
-  await renderRiskControl();   // 账户风险控制:独立于回测数据,始终显示
+  await renderRiskControl();     // 账户风险控制:独立于回测数据,始终显示
+  await renderRiskExposure();    // 风险敞口热力图:本地专用(读 portfolio.json)
   const d = await loadFreshJSON("data/strategy_bt.json");
   if (!d || !Array.isArray(d.equity_curve) || !d.equity_curve.length) {
     $("bt-empty").style.display = "block";
