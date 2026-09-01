@@ -1352,36 +1352,34 @@ function renderScorecards() {
   const rows = SCORES;
   if (!rows || rows.length < 2) { el.innerHTML = ""; return; }  // 公开站/无文件 → 不显示
   const head = rows[0];
-  const SCORE_COLS = new Set([2, 3, 4, 5, 6, 7, 8, 9, 10]);   // 8 features + Total,均 0–10
-  const heat = (v) => {
-    const s = parseFloat(v); if (isNaN(s)) return "";
-    const m = Math.min(Math.abs(s), 5) / 5;          // 0..1 深浅(幅度)
-    const hue = s >= 0 ? 142 : 0;                     // 正=绿 / 负=红,无黄
-    const a = (0.05 + m * 0.37).toFixed(2);           // 0≈透明 → ±5 最深
-    return ` style="background:hsl(${hue} 65% 45% / ${a})"`;
+  const SCORE_COLS = new Set([2, 3, 4, 5]);   // Operation / Leadership / Externality / Valuation
+  const heat = (s) => {
+    const m = Math.min(Math.abs(s), 5) / 5;           // 0..1 深浅(幅度)
+    const hue = s >= 0 ? 142 : 0;                     // 正=绿 / 负=红
+    return `background:hsl(${hue} 65% 45% / ${(0.05 + m * 0.37).toFixed(2)})`;
   };
-  const TH = { "Capital Allocation": "Capital", "Financial Health": "Financial", PositionCheck: "Position Check" };
-  const th = head.map((h) => `<th>${esc(TH[h] || h)}</th>`).join("");
-  let seenShort = false;
+  const TH = { Ticker: "标的", Direction: "", Operation: "经营", Leadership: "管理层", Externality: "外部", Valuation: "估值" };
+  const th = head.map((h) => `<th>${esc(TH[h] ?? h)}</th>`).join("");
   const body = rows.slice(1).filter((r) => r.length > 1 && r[0]).map((r) => {
     const dir = r[1];
-    const isShort = dir === "Short";
-    const split = isShort && !seenShort; if (isShort) seenShort = true;
     const dirCls = dir === "Short" ? "down" : dir === "Long" ? "up" : "muted";
     const dirTxt = dir === "Short" ? "空" : dir === "Long" ? "多" : "观";  // Watch=无仓位
-    const chk = r[11] || "";
-    const chkCls = chk.includes("弱") ? "down" : chk.startsWith("ok") ? "up" : "muted";
     const tds = r.map((v, i) => {
       if (i === 0) return `<td class="sc-tk"><b>${esc(v)}</b></td>`;
       if (i === 1) return `<td><span class="sc-dir ${dirCls}">${dirTxt}</span></td>`;
-      if (i === 11) return `<td class="${chkCls} sc-chk">${esc(v)}</td>`;
-      if (SCORE_COLS.has(i)) return `<td class="sc-num"${heat(v)}>${esc(v)}</td>`;
+      if (SCORE_COLS.has(i)) {
+        const mm = String(v).match(/^\s*(-?\d+(?:\.\d+)?)\s*\(([\s\S]*)\)\s*$/);   // "分 (理由)"
+        const s = mm ? parseFloat(mm[1]) : parseFloat(v);
+        const why = mm ? mm[2] : "";
+        const numTxt = isNaN(s) ? esc(v) : (s > 0 ? "+" + s : String(s));
+        return `<td class="sc-cell"${isNaN(s) ? "" : ` style="${heat(s)}"`}><b>${numTxt}</b>${why ? ` <span class="sc-why">${esc(why)}</span>` : ""}</td>`;
+      }
       return `<td>${esc(v)}</td>`;
     }).join("");
-    return `<tr${split ? ' class="sc-split"' : ""}>${tds}</tr>`;
+    return `<tr>${tds}</tr>`;
   }).join("");
   el.innerHTML = `<div class="card"><div class="sc-head"><b>📊 Scorecards</b> `
-    + `<span class="muted small">本地 · 8-feature 打分(-5~+5 看多吸引力,0=中性/正=好负=差,格式 现状/前瞻)。多头看高、空头看低;★项需当前数据校准</span></div>`
+    + `<span class="muted small">本地 · 4 维单分(-5~+5,0=中性/正好负差),括号=核心理由。经营/管理层/外部=质量,估值=裁决。多头看高、空头看低;★需数据校准 ⚠身份存疑</span></div>`
     + `<div class="sc-wrap"><table class="bt-table sc-table"><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table></div></div>`;
 }
 
