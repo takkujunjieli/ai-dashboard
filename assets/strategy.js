@@ -161,7 +161,19 @@ const rLSset = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } c
 const heatBg = (lvl) => { const l = Math.max(0, Math.min(1, lvl || 0)); return `background:hsl(${Math.round(142 * (1 - l))} 65% 45% / ${(0.08 + l * 0.42).toFixed(2)})`; };
 let ASSIGN = null;   // {sym: bundle} 内存态(含未保存改动),来源 risk_policy.json 的 assignments
 let MAXHEAT = null;  // 组合总在险上限%(内存态;本机 localStorage 即时持久化,「保存到 config」再推给 agent)
+let SORT = { key: "riskPct", dir: -1 };   // 热力表排序(点表头切换;文本默认升序、数值默认降序;null 永远排最后)
 let PRICE_OVERRIDE = null, PRICE_SYNCED_AT = null;   // 「同步现价」按钮从 K线快照拉到的最新价
+
+function sortRows(rows) {
+  const { key, dir } = SORT, strK = key === "sym" || key === "bundleName";
+  return rows.slice().sort((a, b) => {
+    const va = a[key], vb = b[key];
+    if (strK) return dir * String(va || "").localeCompare(String(vb || ""));
+    if (va == null && vb == null) return 0;
+    if (va == null) return 1; if (vb == null) return -1;   // 缺值排最后
+    return dir * (va - vb);
+  });
+}
 
 async function renderRiskExposure() {
   const host = $("risk-expo"), heatEl = $("risk-heat"); if (!host) return;
@@ -222,13 +234,15 @@ async function renderRiskExposure() {
     rows.push({ sym, isOpt, long, qty, price, cost: p.avg_cost, stop, atr, bundleName, cap: b.max_position_pct || 20,
                 openRisk, riskPct, ratio, posPct, distPct, pnlPct });
   }
-  rows.sort((a, b) => (b.openRisk || 0) - (a.openRisk || 0));
+  const disp = sortRows(rows);
 
   const cell = (txt, lvl) => `<td class="sc-num"${lvl == null ? "" : ` style="${heatBg(lvl)}"`}>${txt}</td>`;
   const pnlCell = (v) => { if (v == null) return "<td>—</td>"; const l = Math.min(Math.abs(v) / 40, 1), hue = v >= 0 ? 142 : 0; return `<td class="sc-num" style="background:hsl(${hue} 65% 45% / ${(0.06 + l * 0.34).toFixed(2)})">${v >= 0 ? "+" : ""}${v.toFixed(0)}%</td>`; };
   const grpSel = (r) => `<select class="rk-grp" data-sym="${esc(r.sym)}">${bnames.map((k) => `<option${k === r.bundleName ? " selected" : ""}>${esc(k)}</option>`).join("")}</select>`;
   const stopIn = (r) => `<input class="rk-stopin" data-sym="${esc(r.sym)}" type="number" step="0.01" value="${r.stop != null ? r.stop.toFixed(2) : ""}" placeholder="${r.isOpt ? "期权" : (r.atr != null ? "ATR" : "手填")}" style="width:70px">`;
-  const body = rows.map((r) => `<tr>
+  const arrow = (k) => SORT.key === k ? (SORT.dir < 0 ? " ↓" : " ↑") : "";
+  const sth = (k, label) => `<th class="rk-sort" data-k="${k}" style="cursor:pointer;user-select:none;white-space:nowrap">${label}${arrow(k)}</th>`;
+  const body = disp.map((r) => `<tr>
     <td class="sc-tk"><b>${esc(r.sym)}</b> <span class="sc-dir ${r.long ? "up" : "down"}">${r.isOpt ? "期" : r.long ? "多" : "空"}</span></td>
     <td>${grpSel(r)}</td><td>${r.qty}</td><td>$${r.price != null ? r.price.toFixed(2) : "—"}</td>
     <td class="muted">$${r.cost != null ? r.cost.toFixed(2) : "—"}</td><td>${stopIn(r)}</td>
@@ -239,8 +253,8 @@ async function renderRiskExposure() {
     ${pnlCell(r.pnlPct)}</tr>`).join("");
 
   host.innerHTML = `<div class="sc-wrap"><table class="sc-table">
-    <tr><th>标的</th><th>组</th><th>股数</th><th>现价</th><th>成本</th><th>止损</th>
-        <th>在险%</th><th>在险/预算</th><th>仓位%</th><th>距止损%</th><th>浮盈%</th></tr>${body}</table></div>
+    <tr>${sth("sym", "标的")}${sth("bundleName", "组")}<th>股数</th><th>现价</th><th>成本</th><th>止损</th>
+        ${sth("riskPct", "在险%")}${sth("ratio", "在险/预算")}${sth("posPct", "仓位%")}${sth("distPct", "距止损%")}${sth("pnlPct", "浮盈%")}</tr>${body}</table></div>
     <div class="muted small" style="margin-top:8px">在险%=|股数|×|现价−止损|÷净值 · 在险/预算=该仓在险÷所属 bundle 单笔预算(>1 超险)· 仓位%对比 bundle 上限 · 距止损%小=逼近止损 · 浮盈%仅参考(现价口径,成本不进风险)。止损默认 ATR 法,可每仓手填覆盖(存本机)。</div>`;
 
   const totalPct = totalHeat / equity * 100;
@@ -258,6 +272,11 @@ async function renderRiskExposure() {
 
   host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", () => { ASSIGN[el.dataset.sym] = el.value; const g = rLS("riskGroups", {}); g[el.dataset.sym] = el.value; rLSset("riskGroups", g); renderRiskExposure(); }));
   const mh = $("rk-maxheat"); if (mh) mh.addEventListener("change", () => { MAXHEAT = +mh.value || 0; rLSset("riskMaxHeat", MAXHEAT); renderRiskExposure(); });   // 本机即时持久化;「保存到 config」再推给 agent
+  host.querySelectorAll(".rk-sort").forEach((th) => th.addEventListener("click", () => {   // 点表头排序:同列切方向,换列文本升/数值降
+    const k = th.dataset.k;
+    SORT = SORT.key === k ? { key: k, dir: -SORT.dir } : { key: k, dir: (k === "sym" || k === "bundleName") ? 1 : -1 };
+    renderRiskExposure();
+  }));
   host.querySelectorAll(".rk-stopin").forEach((el) => el.addEventListener("change", () => { const s = rLS("riskStops", {}), v = el.value.trim(); if (v === "") delete s[el.dataset.sym]; else s[el.dataset.sym] = +v; rLSset("riskStops", s); renderRiskExposure(); }));
   const ac = $("rk-acct"); if (ac) ac.addEventListener("change", () => { rLSset("riskAccount", ac.value); renderRiskExposure(); });
   const sp = $("rk-syncpx"); if (sp) sp.addEventListener("click", async () => {
