@@ -3,7 +3,7 @@
 原料 data/_*_raw.json 与 portfolio_history.json 仍本地专用不提交。
 
 每个券商写一份已归一的原料 data/_<broker>_raw.json,形如
-  {"accounts":[{id,label}...],          # 可选;一个券商下的多个账户
+  {"accounts":[{id,label,equity}...],   # 可选;多账户。equity=账户 net liq(现金+持仓),供风险%基数
    "positions":[{account,kind,sym,qty,avg_cost,price,mkt_value,pnl,pnl_pct}...],
    "transactions":[{account,kind,ts,sym,side,qty,price,state}...]}
 kind: equity(正股,默认)/ option(期权);省略即 equity。做空仓位 qty<0、mkt_value<0。
@@ -97,7 +97,8 @@ def main() -> None:
             aid = a.get("id") or broker
             if aid not in seen_acct:
                 seen_acct.add(aid)
-                accounts.append({"id": aid, "label": a.get("label") or aid, "broker": broker})
+                accounts.append({"id": aid, "label": a.get("label") or aid, "broker": broker,
+                                 "equity": _num(a.get("equity"))})   # net liq(现金+持仓);缺则 None,前端回退持仓市值
         default_acct = file_accts[0].get("id") if len(file_accts) == 1 else broker
         for p in d.get("positions") or []:
             positions.append({"broker": broker, "account": p.get("account") or default_acct, **_pos(p)})
