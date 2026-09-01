@@ -160,11 +160,14 @@ const rLS = (k, d) => { try { const v = localStorage.getItem(k); return v == nul
 const rLSset = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private mode */ } };
 const heatBg = (lvl) => { const l = Math.max(0, Math.min(1, lvl || 0)); return `background:hsl(${Math.round(142 * (1 - l))} 65% 45% / ${(0.08 + l * 0.42).toFixed(2)})`; };
 let ASSIGN = null;   // {sym: bundle} 内存态(含未保存改动),来源 risk_policy.json 的 assignments
+let PRICE_OVERRIDE = null, PRICE_SYNCED_AT = null;   // 「同步现价」按钮从 K线快照拉到的最新价
 
 async function renderRiskExposure() {
   const host = $("risk-expo"), heatEl = $("risk-heat"); if (!host) return;
-  const [pf, atrJ, P] = await Promise.all([
-    loadJSON("data/portfolio.json"), loadJSON("data/atr.json"), loadJSON("config/risk_policy.json")]);
+  const [pf, atrJ, P, researchJ] = await Promise.all([
+    loadJSON("data/portfolio.json"), loadJSON("data/atr.json"), loadJSON("config/risk_policy.json"),
+    loadJSON("data/research.json")]);
+  const snap = (researchJ && researchJ.snapshots) || {};   // 每票 K线快照:{price,chg,...}
   if (!pf || !Array.isArray(pf.positions) || !pf.positions.length) {
     if (heatEl) heatEl.innerHTML = '<span class="muted small">本地专用:需 data/portfolio.json(gitignored,公开站不显示)。本地刷新持仓后可见。</span>';
     host.innerHTML = ""; return;
@@ -197,7 +200,10 @@ async function renderRiskExposure() {
   const rows = []; let totalHeat = 0; const heatByBundle = {};
   for (const p of positions) {
     const sym = p.sym, qty = p.qty || 0; if (!qty) continue;
-    const isOpt = p.kind !== "equity", long = qty > 0, price = p.price;
+    const isOpt = p.kind !== "equity", long = qty > 0;
+    // 现价优先级:同步按钮拉到的 K线价 > research.json 本地快照 > portfolio.json(期权无 K线快照,仍用原价)
+    const price = (!isOpt && PRICE_OVERRIDE && PRICE_OVERRIDE[sym] != null) ? PRICE_OVERRIDE[sym]
+                : (!isOpt && snap[sym] && snap[sym].price != null) ? snap[sym].price : p.price;
     const bundleName = ASSIGN[sym] || defB, b = bundles[bundleName] || bundles[defB];
     const budget = equity * (b.risk_pct || 0.75) / 100, atr = ATR[sym];
     let stop = stops[sym] != null ? +stops[sym]
@@ -210,8 +216,9 @@ async function renderRiskExposure() {
     const ratio = openRisk != null ? openRisk / budget : null;
     const distPct = (perShare != null && price) ? perShare / price * 100 : null;
     if (openRisk != null) { totalHeat += openRisk; heatByBundle[bundleName] = (heatByBundle[bundleName] || 0) + openRisk; }
+    const pnlPct = (!isOpt && long && p.avg_cost) ? (price / p.avg_cost - 1) * 100 : (p.pnl_pct != null ? p.pnl_pct * 100 : null);
     rows.push({ sym, isOpt, long, qty, price, cost: p.avg_cost, stop, atr, bundleName, cap: b.max_position_pct || 20,
-                openRisk, riskPct, ratio, posPct, distPct, pnlPct: p.pnl_pct != null ? p.pnl_pct * 100 : null });
+                openRisk, riskPct, ratio, posPct, distPct, pnlPct });
   }
   rows.sort((a, b) => (b.openRisk || 0) - (a.openRisk || 0));
 
@@ -241,11 +248,26 @@ async function renderRiskExposure() {
     <div class="opt-tile"><div class="opt-k">组合总在险 heat</div><div class="opt-v" style="${heatBg(Math.min(totalPct / maxHeat, 1))};border-radius:6px;padding:1px 8px">$${Math.round(totalHeat).toLocaleString()} · ${totalPct.toFixed(2)}%</div><div class="opt-sub">上限 ${maxHeat}% 净值</div></div>
     ${bnames.filter((k) => heatByBundle[k]).map((k) => `<div class="opt-tile"><div class="opt-k">${esc(k)} 在险</div><div class="opt-v">$${Math.round(heatByBundle[k]).toLocaleString()} · ${(heatByBundle[k] / equity * 100).toFixed(2)}%</div></div>`).join("")}</div>
     <div class="muted small" style="margin-top:6px">组合总在险 = 所有持仓在险之和(若止损全被打的总亏损)。${totalPct > maxHeat ? `<span class="down">⚠️ 超总上限 ${maxHeat}%,考虑减仓/收紧止损</span>` : "在上限内。"}</div>
-    <div class="muted small" style="margin-top:8px">分组改动已本地自动保存(localStorage);点顶部「💾 保存到 config」把 bundles + 分组一起发布给 agent(需 PAT)。</div>`;
+    <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button id="rk-syncpx" class="mini-btn">🔄 同步现价(K线)</button>
+      <span class="muted small">现价源:${PRICE_OVERRIDE ? `K线同步 @ ${(PRICE_SYNCED_AT || "").slice(5, 16).replace("T", " ")}` : (Object.keys(snap).length ? `research.json 快照 @ ${((researchJ && researchJ.updated_at) || "").slice(5, 16).replace("T", " ")}` : "portfolio.json")}</span>
+    </div>
+    <div class="muted small" style="margin-top:6px">分组改动已本地自动保存(localStorage);点顶部「💾 保存到 config」把 bundles + 分组一起发布给 agent(需 PAT)。</div>`;
 
   host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", () => { ASSIGN[el.dataset.sym] = el.value; const g = rLS("riskGroups", {}); g[el.dataset.sym] = el.value; rLSset("riskGroups", g); renderRiskExposure(); }));
   host.querySelectorAll(".rk-stopin").forEach((el) => el.addEventListener("change", () => { const s = rLS("riskStops", {}), v = el.value.trim(); if (v === "") delete s[el.dataset.sym]; else s[el.dataset.sym] = +v; rLSset("riskStops", s); renderRiskExposure(); }));
   const ac = $("rk-acct"); if (ac) ac.addEventListener("change", () => { rLSset("riskAccount", ac.value); renderRiskExposure(); });
+  const sp = $("rk-syncpx"); if (sp) sp.addEventListener("click", async () => {
+    sp.textContent = "同步中…";
+    const r = await loadFreshJSON("data/research.json");   // 从 data 分支拉最新 K线快照(比本地文件新)
+    const s = (r && r.snapshots) || {};
+    if (Object.keys(s).length) {
+      PRICE_OVERRIDE = {};
+      for (const k in s) if (s[k] && s[k].price != null) PRICE_OVERRIDE[k] = s[k].price;
+      PRICE_SYNCED_AT = r.updated_at || new Date().toISOString();
+    }
+    renderRiskExposure();
+  });
 }
 
 async function main() {
