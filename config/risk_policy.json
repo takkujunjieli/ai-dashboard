@@ -1,14 +1,13 @@
 {
-  "_note": "账户风险控制策略参数(固定;日后 agentic trading 读同一份)。核心:单笔风险预算=账户净值×risk_pct;止损位决定仓位 shares=budget/(entry−stop);止损放在 thesis 被证伪处;高波动用 ATR 放宽 stop,仓位相应变小。仓位不超过 max_position_pct。",
+  "_note": "账户风险控制 · 仓位 bundle(自由创建/命名/设值;strategy 页编辑并保存,日后 agentic 读同一份)。每个 bundle = 单笔风险% + ATR倍数 + 仓位上限%。止损位决定仓位:shares = 账户净值×risk_pct ÷ (entry−stop)。",
   "account_equity": 100000,
-  "default_tier": "normal",
-  "risk_tiers": {
-    "low_vol":  { "label": "低波动大盘", "risk_pct": 1.0,   "example": "KO / 大盘蓝筹" },
-    "normal":   { "label": "常规",       "risk_pct": 0.75,  "example": "多数个股" },
-    "high_vol": { "label": "高波动小盘", "risk_pct": 0.375, "example": "NVDA / ASTS / RKLB 等" }
+  "atr_period": 14,
+  "default_bundle": "常规",
+  "bundles": {
+    "常规": { "risk_pct": 0.75, "atr_mult": 2.0, "max_position_pct": 20 },
+    "高波动小盘": { "risk_pct": 0.375, "atr_mult": 2.5, "max_position_pct": 15 },
+    "低波动大盘": { "risk_pct": 1.0, "atr_mult": 1.5, "max_position_pct": 25 }
   },
-  "atr": { "period": 14, "mult_min": 1.5, "mult_max": 2.5, "mult_default": 2.0 },
-  "max_position_pct": 20,
   "stop_bases": [
     "前期 swing low / 关键支撑跌破",
     "breakout failure:重新跌回突破区间",
