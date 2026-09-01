@@ -51,7 +51,8 @@ async function renderRiskControl() {
       <input id="rk-newname" type="text" placeholder="新 bundle 名" style="width:110px">
       <button id="rk-new" class="mini-btn">＋新建</button>
       <button id="rk-del" class="mini-btn">删除</button>
-      <button id="rk-save" class="mini-btn">保存到 config</button>
+      <input id="rk-pat" type="password" value="${esc(getPat() || "")}" placeholder="fine-grained PAT(本机存)" style="width:180px;background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px">
+      <button id="rk-save" class="mini-btn">💾 保存到 config(bundles + 分组)</button>
       <span id="rk-msg" class="muted small"></span>
     </div>
     <div class="risk-form" style="margin-top:12px">
@@ -115,11 +116,12 @@ async function renderRiskControl() {
     delete POLICY.bundles[cur]; cur = Object.keys(POLICY.bundles)[0];
     $("rk-bundle").innerHTML = bundleOpts(); loadBundle(); compute(); $("rk-msg").textContent = "已删除(记得保存)";
   });
+  const pt = $("rk-pat"); if (pt) pt.addEventListener("change", () => { setPat(pt.value.trim()); $("rk-msg").textContent = pt.value.trim() ? "✓ PAT 已存本机" : "PAT 已清"; });
   $("rk-save").addEventListener("click", async () => {
     syncBundle(); POLICY.account_equity = g("rk-eq"); POLICY.default_bundle = cur;
     $("rk-msg").textContent = "保存中…";
-    const r = await putPolicy((L) => { const { assignments, ...rest } = POLICY; Object.assign(L, rest); });  // 写 bundles 等,保留 assignments
-    $("rk-msg").textContent = r.ok ? "✓ 已保存到 config/risk_policy.json(agentic 读同一份)" : "✗ " + r.msg;
+    const r = await putPolicy((L) => { const { assignments, ...rest } = POLICY; Object.assign(L, rest); if (ASSIGN) L.assignments = ASSIGN; });  // bundles + 分组 一起写
+    $("rk-msg").textContent = r.ok ? "✓ 已保存 bundles + 分组到 config(agent 读同一份)" : "✗ " + r.msg;
   });
 
   loadBundle(); compute();
@@ -149,10 +151,6 @@ const rLS = (k, d) => { try { const v = localStorage.getItem(k); return v == nul
 const rLSset = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private mode */ } };
 const heatBg = (lvl) => { const l = Math.max(0, Math.min(1, lvl || 0)); return `background:hsl(${Math.round(142 * (1 - l))} 65% 45% / ${(0.08 + l * 0.42).toFixed(2)})`; };
 let ASSIGN = null;   // {sym: bundle} 内存态(含未保存改动),来源 risk_policy.json 的 assignments
-
-async function saveAssignments(assign) {   // 只改 assignments 块,保留 bundles 等其它字段
-  return putPolicy((L) => { L.assignments = assign; });
-}
 
 async function renderRiskExposure() {
   const host = $("risk-expo"), heatEl = $("risk-heat"); if (!host) return;
@@ -234,17 +232,11 @@ async function renderRiskExposure() {
     <div class="opt-tile"><div class="opt-k">组合总在险 heat</div><div class="opt-v" style="${heatBg(Math.min(totalPct / maxHeat, 1))};border-radius:6px;padding:1px 8px">$${Math.round(totalHeat).toLocaleString()} · ${totalPct.toFixed(2)}%</div><div class="opt-sub">上限 ${maxHeat}% 净值</div></div>
     ${bnames.filter((k) => heatByBundle[k]).map((k) => `<div class="opt-tile"><div class="opt-k">${esc(k)} 在险</div><div class="opt-v">$${Math.round(heatByBundle[k]).toLocaleString()} · ${(heatByBundle[k] / equity * 100).toFixed(2)}%</div></div>`).join("")}</div>
     <div class="muted small" style="margin-top:6px">组合总在险 = 所有持仓在险之和(若止损全被打的总亏损)。${totalPct > maxHeat ? `<span class="down">⚠️ 超总上限 ${maxHeat}%,考虑减仓/收紧止损</span>` : "在上限内。"}</div>
-    <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-      <button id="rk-savegrp" class="mini-btn">💾 发布分组到 config(供 agent 读)</button>
-      <input id="rk-pat" type="password" value="${esc(getPat() || "")}" placeholder="fine-grained PAT(本机存)" style="width:200px;background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px">
-      <span id="rk-grpmsg" class="muted small">分组改动已本地自动保存(localStorage);发布到 config 才让 agent/别的机器读到(需 PAT)</span>
-    </div>`;
+    <div class="muted small" style="margin-top:8px">分组改动已本地自动保存(localStorage);点顶部「💾 保存到 config」把 bundles + 分组一起发布给 agent(需 PAT)。</div>`;
 
   host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", () => { ASSIGN[el.dataset.sym] = el.value; const g = rLS("riskGroups", {}); g[el.dataset.sym] = el.value; rLSset("riskGroups", g); renderRiskExposure(); }));
   host.querySelectorAll(".rk-stopin").forEach((el) => el.addEventListener("change", () => { const s = rLS("riskStops", {}), v = el.value.trim(); if (v === "") delete s[el.dataset.sym]; else s[el.dataset.sym] = +v; rLSset("riskStops", s); renderRiskExposure(); }));
   const ac = $("rk-acct"); if (ac) ac.addEventListener("change", () => { rLSset("riskAccount", ac.value); renderRiskExposure(); });
-  const pt = $("rk-pat"); if (pt) pt.addEventListener("change", () => { setPat(pt.value.trim()); $("rk-grpmsg").textContent = pt.value.trim() ? "✓ PAT 已存本机,可发布了" : "PAT 已清"; });
-  const sg = $("rk-savegrp"); if (sg) sg.addEventListener("click", async () => { const m = $("rk-grpmsg"); m.textContent = "发布中…"; const r = await saveAssignments(ASSIGN); m.textContent = r.ok ? "✓ 已发布到 config/risk_policy.json 的 assignments(agent 读同一份)" : "✗ " + r.msg; });
 }
 
 async function main() {
