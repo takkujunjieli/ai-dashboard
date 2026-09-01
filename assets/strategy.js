@@ -107,8 +107,8 @@ async function renderRiskControl() {
       + (mode === "atr" ? ` · ATR 止损 = ${entry} − ${mult}×${g("rk-atr")} = ${stop.toFixed(2)}` : "");
   }
 
-  $("rk-bundle").addEventListener("change", () => { cur = $("rk-bundle").value; loadBundle(); compute(); persistLocal(); });
-  ["rk-risk", "rk-mult", "rk-cap"].forEach((id) => $(id).addEventListener("input", () => { syncBundle(); compute(); persistLocal(); }));
+  $("rk-bundle").addEventListener("change", () => { cur = $("rk-bundle").value; loadBundle(); compute(); persistLocal(); renderRiskExposure(); });
+  ["rk-risk", "rk-mult", "rk-cap"].forEach((id) => { const el = $(id); el.addEventListener("input", () => { syncBundle(); compute(); persistLocal(); }); el.addEventListener("change", renderRiskExposure); });   // change(失焦/回车)时刷新热力表止损/在险
   ["rk-eq", "rk-entry", "rk-stop", "rk-atr"].forEach((id) => $(id).addEventListener("input", compute));
   $("rk-eq").addEventListener("input", persistLocal);
   $("rk-mode").addEventListener("change", compute);
@@ -186,9 +186,11 @@ async function renderRiskExposure() {
     host.innerHTML = ""; return;
   }
   const ATR = (atrJ && atrJ.atr14) || {};
-  const bundles = (P && P.bundles) || { "常规": { risk_pct: 0.75, atr_mult: 2.0, max_position_pct: 20 } };
+  const LP = rLS("riskPolicy", {});   // bundle 编辑器的本机即时态,优先于 config 文件,让改动立刻反映到热力表
+  const bundles = LP.bundles || (P && P.bundles) || { "常规": { risk_pct: 0.75, atr_mult: 2.0, max_position_pct: 20 } };
   const bnames = Object.keys(bundles);
-  const defB = (P && P.default_bundle && bundles[P.default_bundle]) ? P.default_bundle : bnames[0];
+  const dfb = LP.default_bundle || (P && P.default_bundle);
+  const defB = (dfb && bundles[dfb]) ? dfb : bnames[0];
   if (MAXHEAT === null) MAXHEAT = +rLS("riskMaxHeat", (P && P.portfolio && P.portfolio.max_total_heat_pct) ?? 6);
   const maxHeat = MAXHEAT;
   if (ASSIGN === null) ASSIGN = { ...((P && P.assignments) || {}), ...rLS("riskGroups", {}) };  // 本机 localStorage 覆盖(本地即时持久化,无需 PAT);「发布到 config」再推给 agent
