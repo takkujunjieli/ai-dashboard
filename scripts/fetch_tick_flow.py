@@ -43,7 +43,8 @@ SESSION.mount("http://", _adapter)
 SESSION.mount("https://", _adapter)
 
 WINDOW = int(os.environ.get("RF_WINDOW", "30"))
-CAP = int(os.environ.get("RF_CAP", "400"))
+CAP = int(os.environ.get("RF_CAP", "120"))            # 单流最多翻页(×50k);120 页=6M 行,足够任何单名一天
+TICKER_SEC = int(os.environ.get("RF_TICKER_SEC", "600"))  # 单票硬墙:超时跳过(防弱网关卡死整跑)
 SMALL = os.environ.get("RF_SMALL", "").lower() in ("1", "true")
 # 与实盘/回测口径一致:剔除的成交条件(odd-lot/衍生价/序外等)
 BAD_CONDITIONS = {201, 202, 203, 204, 205, 206, 207, 208, 210, 227, 228, 229, 230,
@@ -64,7 +65,7 @@ def get(path):
     sep = "&" if "?" in url else "?"
     full = url + f"{sep}apiKey={KEY}"
     for attempt in range(5):                     # 429 退避(网关限流)
-        r = SESSION.get(full, headers=HEADERS, timeout=120)
+        r = SESSION.get(full, headers=HEADERS, timeout=(15, 90))   # (连接, 每读块);无数据 90s 即断,防挂死
         if r.status_code == 429:
             time.sleep(3 * (attempt + 1))
             continue
@@ -73,10 +74,13 @@ def get(path):
     r.raise_for_status()
 
 
-def stream(path, on_row, cap=CAP):
-    """翻页流式处理:对每行调用 on_row,不整表保存(控内存)。返回翻页数。"""
+def stream(path, on_row, cap=CAP, deadline=None):
+    """翻页流式处理:对每行调用 on_row,不整表保存(控内存)。返回翻页数。
+    deadline(epoch 秒):超过则抛 TimeoutError → 上层跳过该票(防弱网关卡死整跑)。"""
     url, n = path, 0
     while url and n < cap:
+        if deadline and time.time() > deadline:
+            raise TimeoutError(f"per-ticker deadline({n}页)")
         d = get(url)
         for row in (d.get("results") or []):
             on_row(row)
@@ -128,21 +132,21 @@ def target_days():
     return [os.environ.get("RF_DAY", "").strip() or last_trading_day()]
 
 
-def fetch_quotes(sym, win):
+def fetch_quotes(sym, win, deadline=None):
     """→ 排序的 (qts[], qba[(bid,ask)]) + 翻页数。"""
     qts, qba = [], []
     def on_q(x):
         ts, b, a = x.get("sip_timestamp"), x.get("bid_price"), x.get("ask_price")
         if ts and b and a:
             qts.append(ts); qba.append((b, a))
-    npq = stream(f"/v3/quotes/{sym}?limit=50000&order=asc&sort=timestamp{win}", on_q)
+    npq = stream(f"/v3/quotes/{sym}?limit=50000&order=asc&sort=timestamp{win}", on_q, deadline=deadline)
     if qts and any(qts[i] > qts[i + 1] for i in range(min(len(qts) - 1, 5000))):
         order = sorted(range(len(qts)), key=lambda i: qts[i])
         qts = [qts[i] for i in order]; qba = [qba[i] for i in order]
     return qts, qba, npq
 
 
-def fetch_trades(sym, win):
+def fetch_trades(sym, win, deadline=None):
     """→ 精简逐笔 [(ts, price, size, off_retail_flag)] + total_vol + 场外笔占比 + 翻页数。
     只保留识别为散户候选(场外次美分)的笔用于签名;total_vol 统计全部有效成交。"""
     rows, tot = [], [0, 0, 0]   # total_vol, n_trades, n_off
@@ -158,7 +162,7 @@ def fetch_trades(sym, win):
         z = subpenny(price)
         if off and (0 < z < 0.4 or 0.6 < z < 1.0):        # BJZZ 识别:场外次美分
             rows.append((ts, price, size))
-    npt = stream(f"/v3/trades/{sym}?limit=50000&order=asc&sort=timestamp{win}", on_t)
+    npt = stream(f"/v3/trades/{sym}?limit=50000&order=asc&sort=timestamp{win}", on_t, deadline=deadline)
     return rows, tot, npt
 
 
@@ -167,9 +171,10 @@ def flow_for(sym, day, verbose=False):
     每票内 trades ‖ quotes 两条独立流 2 并发拉(实测甜区:聚合吞吐 0.57→2.65 MB/s,~2×+;
     跨票仍串行,保证总并发 ≤2~3,不触网关上限——9 并发会全 Read timeout)。"""
     win = f"&timestamp.gte={day}T{RTH_GTE_H}Z&timestamp.lte={day}T{RTH_LTE_H}Z"
+    dl = time.time() + TICKER_SEC                  # 单票硬墙:两条流都到点即抛,跳过该票不拖垮整跑
     with ThreadPoolExecutor(max_workers=2) as ex:
-        fq = ex.submit(fetch_quotes, sym, win)
-        ft = ex.submit(fetch_trades, sym, win)
+        fq = ex.submit(fetch_quotes, sym, win, dl)
+        ft = ex.submit(fetch_trades, sym, win, dl)
         qts, qba, npq = fq.result()
         rtrades, tot, npt = ft.result()
     px = day_close(sym, day)

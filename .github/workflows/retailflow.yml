@@ -35,7 +35,7 @@ jobs:
 
       - name: 逐笔散户流(场外次美分 + 中点签名)
         timeout-minutes: 300       # 5h 上限;超时被杀后仍走 always() 提交已完成的天
-        run: python scripts/fetch_tick_flow.py
+        run: python -u scripts/fetch_tick_flow.py   # -u:不缓冲,超时被杀也能看到已完成进度
         env:
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
           MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
