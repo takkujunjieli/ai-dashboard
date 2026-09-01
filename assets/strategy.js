@@ -138,6 +138,13 @@ function lineData(curve) {  // LWC 要求 time 严格递增且唯一
 const rLS = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } };
 const rLSset = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private mode */ } };
 const heatBg = (lvl) => { const l = Math.max(0, Math.min(1, lvl || 0)); return `background:hsl(${Math.round(142 * (1 - l))} 65% 45% / ${(0.08 + l * 0.42).toFixed(2)})`; };
+let ASSIGN = null;   // {sym: bundle} 内存态(含未保存改动),来源 risk_policy.json 的 assignments
+
+async function saveAssignments(assign) {   // 分组落进 risk_policy.json(agent 读同一份);先拉最新 merge,保留 bundles
+  const latest = (await loadJSON("config/risk_policy.json")) || {};
+  latest.assignments = assign;
+  return savePolicy(latest);
+}
 
 async function renderRiskExposure() {
   const host = $("risk-expo"), heatEl = $("risk-heat"); if (!host) return;
@@ -152,14 +159,15 @@ async function renderRiskExposure() {
   const bnames = Object.keys(bundles);
   const defB = (P && P.default_bundle && bundles[P.default_bundle]) ? P.default_bundle : bnames[0];
   const maxHeat = (P && P.portfolio && P.portfolio.max_total_heat_pct) || 6;
-  const groups = rLS("riskGroups", {}), stops = rLS("riskStops", {});
+  if (ASSIGN === null) ASSIGN = { ...rLS("riskGroups", {}), ...((P && P.assignments) || {}) };  // 文件为准,旧 localStorage 迁移兜底
+  const stops = rLS("riskStops", {});
   const equity = +rLS("riskEquity", (P && P.account_equity) || 100000);
 
   const rows = []; let totalHeat = 0; const heatByBundle = {};
   for (const p of pf.positions) {
     const sym = p.sym, qty = p.qty || 0; if (!qty) continue;
     const isOpt = p.kind !== "equity", long = qty > 0, price = p.price;
-    const bundleName = groups[sym] || defB, b = bundles[bundleName] || bundles[defB];
+    const bundleName = ASSIGN[sym] || defB, b = bundles[bundleName] || bundles[defB];
     const budget = equity * (b.risk_pct || 0.75) / 100, atr = ATR[sym];
     let stop = stops[sym] != null ? +stops[sym]
              : (atr != null && price != null ? (long ? price - b.atr_mult * atr : price + b.atr_mult * atr) : null);
@@ -200,11 +208,13 @@ async function renderRiskExposure() {
     <div class="opt-tile"><div class="opt-k">账户净值(本机)</div><div class="opt-v"><input id="rk-eq2" type="number" step="1000" value="${equity}" style="width:118px;background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text);font-size:13px"></div></div>
     <div class="opt-tile"><div class="opt-k">组合总在险 heat</div><div class="opt-v" style="${heatBg(Math.min(totalPct / maxHeat, 1))};border-radius:6px;padding:1px 8px">$${Math.round(totalHeat).toLocaleString()} · ${totalPct.toFixed(2)}%</div><div class="opt-sub">上限 ${maxHeat}% 净值</div></div>
     ${bnames.filter((k) => heatByBundle[k]).map((k) => `<div class="opt-tile"><div class="opt-k">${esc(k)} 在险</div><div class="opt-v">$${Math.round(heatByBundle[k]).toLocaleString()} · ${(heatByBundle[k] / equity * 100).toFixed(2)}%</div></div>`).join("")}</div>
-    <div class="muted small" style="margin-top:6px">组合总在险 = 所有持仓在险之和(若止损全被打的总亏损)。${totalPct > maxHeat ? `<span class="down">⚠️ 超总上限 ${maxHeat}%,考虑减仓/收紧止损</span>` : "在上限内。"}</div>`;
+    <div class="muted small" style="margin-top:6px">组合总在险 = 所有持仓在险之和(若止损全被打的总亏损)。${totalPct > maxHeat ? `<span class="down">⚠️ 超总上限 ${maxHeat}%,考虑减仓/收紧止损</span>` : "在上限内。"}</div>
+    <div style="margin-top:8px"><button id="rk-savegrp" class="mini-btn">💾 保存分组到 config(agent 读同一份)</button> <span id="rk-grpmsg" class="muted small"></span></div>`;
 
-  host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", () => { const g = rLS("riskGroups", {}); g[el.dataset.sym] = el.value; rLSset("riskGroups", g); renderRiskExposure(); }));
+  host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", () => { ASSIGN[el.dataset.sym] = el.value; renderRiskExposure(); }));
   host.querySelectorAll(".rk-stopin").forEach((el) => el.addEventListener("change", () => { const s = rLS("riskStops", {}), v = el.value.trim(); if (v === "") delete s[el.dataset.sym]; else s[el.dataset.sym] = +v; rLSset("riskStops", s); renderRiskExposure(); }));
   const eq2 = $("rk-eq2"); if (eq2) eq2.addEventListener("change", () => { rLSset("riskEquity", +eq2.value || 100000); renderRiskExposure(); });
+  const sg = $("rk-savegrp"); if (sg) sg.addEventListener("click", async () => { const m = $("rk-grpmsg"); m.textContent = "保存中…"; const r = await saveAssignments(ASSIGN); m.textContent = r.ok ? "✓ 已存 config/risk_policy.json 的 assignments(agent 读同一份)" : "✗ " + r.msg; });
 }
 
 async function main() {
