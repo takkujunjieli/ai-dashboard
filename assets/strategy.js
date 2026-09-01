@@ -60,7 +60,7 @@ async function renderRiskControl() {
       <button id="rk-new" class="mini-btn">＋新建</button>
       <button id="rk-del" class="mini-btn">删除</button>
       <input id="rk-pat" type="password" value="${esc(getPat() || "")}" placeholder="fine-grained PAT(本机存)" style="width:180px;background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px">
-      <button id="rk-save" class="mini-btn">💾 保存到 config(bundles + 分组)</button>
+      <button id="rk-save" class="mini-btn">💾 保存到 config(bundles + 分组 + 上限)</button>
       <span id="rk-msg" class="muted small"></span>
     </div>
     <div class="risk-form" style="margin-top:12px">
@@ -129,7 +129,7 @@ async function renderRiskControl() {
   $("rk-save").addEventListener("click", async () => {
     syncBundle(); POLICY.account_equity = g("rk-eq"); POLICY.default_bundle = cur;
     $("rk-msg").textContent = "保存中…";
-    const r = await putPolicy((L) => { const { assignments, ...rest } = POLICY; Object.assign(L, rest); if (ASSIGN) L.assignments = ASSIGN; });  // bundles + 分组 一起写
+    const r = await putPolicy((L) => { const { assignments, ...rest } = POLICY; Object.assign(L, rest); if (ASSIGN) L.assignments = ASSIGN; if (MAXHEAT != null) L.portfolio = { ...(L.portfolio || {}), max_total_heat_pct: MAXHEAT }; });  // bundles + 分组 + 组合上限 一起写
     $("rk-msg").textContent = r.ok ? "✓ 已保存 bundles + 分组到 config(agent 读同一份)" : "✗ " + r.msg;
   });
 
@@ -160,6 +160,7 @@ const rLS = (k, d) => { try { const v = localStorage.getItem(k); return v == nul
 const rLSset = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private mode */ } };
 const heatBg = (lvl) => { const l = Math.max(0, Math.min(1, lvl || 0)); return `background:hsl(${Math.round(142 * (1 - l))} 65% 45% / ${(0.08 + l * 0.42).toFixed(2)})`; };
 let ASSIGN = null;   // {sym: bundle} 内存态(含未保存改动),来源 risk_policy.json 的 assignments
+let MAXHEAT = null;  // 组合总在险上限%(内存态;本机 localStorage 即时持久化,「保存到 config」再推给 agent)
 let PRICE_OVERRIDE = null, PRICE_SYNCED_AT = null;   // 「同步现价」按钮从 K线快照拉到的最新价
 
 async function renderRiskExposure() {
@@ -176,7 +177,8 @@ async function renderRiskExposure() {
   const bundles = (P && P.bundles) || { "常规": { risk_pct: 0.75, atr_mult: 2.0, max_position_pct: 20 } };
   const bnames = Object.keys(bundles);
   const defB = (P && P.default_bundle && bundles[P.default_bundle]) ? P.default_bundle : bnames[0];
-  const maxHeat = (P && P.portfolio && P.portfolio.max_total_heat_pct) || 6;
+  if (MAXHEAT === null) MAXHEAT = +rLS("riskMaxHeat", (P && P.portfolio && P.portfolio.max_total_heat_pct) ?? 6);
+  const maxHeat = MAXHEAT;
   if (ASSIGN === null) ASSIGN = { ...((P && P.assignments) || {}), ...rLS("riskGroups", {}) };  // 本机 localStorage 覆盖(本地即时持久化,无需 PAT);「发布到 config」再推给 agent
   const stops = rLS("riskStops", {});
   // 账户净值直接从 portfolio.json 读:按账户(全部/各账户)汇总持仓市值
@@ -245,7 +247,7 @@ async function renderRiskExposure() {
   heatEl.innerHTML = `<div class="wb-statbar">
     <div class="opt-tile"><div class="opt-k">账户</div><div class="opt-v"><select id="rk-acct" style="background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text);font-size:13px">${["ALL", ...accounts.map((a) => a.id)].map((id) => `<option value="${esc(id)}"${id === acctSel ? " selected" : ""}>${esc(id === "ALL" ? "全部" : (accounts.find((a) => a.id === id) || {}).label || id)}</option>`).join("")}</select></div></div>
     <div class="opt-tile"><div class="opt-k">账户净值(portfolio)</div><div class="opt-v">$${Math.round(equity).toLocaleString()}</div><div class="opt-sub">${eqSrc}</div></div>
-    <div class="opt-tile"><div class="opt-k">组合总在险 heat</div><div class="opt-v" style="${heatBg(Math.min(totalPct / maxHeat, 1))};border-radius:6px;padding:1px 8px">$${Math.round(totalHeat).toLocaleString()} · ${totalPct.toFixed(2)}%</div><div class="opt-sub">上限 ${maxHeat}% 净值</div></div>
+    <div class="opt-tile"><div class="opt-k">组合总在险 heat</div><div class="opt-v" style="${heatBg(Math.min(totalPct / maxHeat, 1))};border-radius:6px;padding:1px 8px">$${Math.round(totalHeat).toLocaleString()} · ${totalPct.toFixed(2)}%</div><div class="opt-sub">上限 <input id="rk-maxheat" type="number" step="0.5" value="${maxHeat}" style="width:52px;background:var(--card-hover);border:1px solid var(--border);border-radius:5px;padding:1px 5px;color:var(--text);font-size:12px"> % 净值</div></div>
     ${bnames.filter((k) => heatByBundle[k]).map((k) => `<div class="opt-tile"><div class="opt-k">${esc(k)} 在险</div><div class="opt-v">$${Math.round(heatByBundle[k]).toLocaleString()} · ${(heatByBundle[k] / equity * 100).toFixed(2)}%</div></div>`).join("")}</div>
     <div class="muted small" style="margin-top:6px">组合总在险 = 所有持仓在险之和(若止损全被打的总亏损)。${totalPct > maxHeat ? `<span class="down">⚠️ 超总上限 ${maxHeat}%,考虑减仓/收紧止损</span>` : "在上限内。"}</div>
     <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
@@ -255,6 +257,7 @@ async function renderRiskExposure() {
     <div class="muted small" style="margin-top:6px">分组改动已本地自动保存(localStorage);点顶部「💾 保存到 config」把 bundles + 分组一起发布给 agent(需 PAT)。</div>`;
 
   host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", () => { ASSIGN[el.dataset.sym] = el.value; const g = rLS("riskGroups", {}); g[el.dataset.sym] = el.value; rLSset("riskGroups", g); renderRiskExposure(); }));
+  const mh = $("rk-maxheat"); if (mh) mh.addEventListener("change", () => { MAXHEAT = +mh.value || 0; rLSset("riskMaxHeat", MAXHEAT); renderRiskExposure(); });   // 本机即时持久化;「保存到 config」再推给 agent
   host.querySelectorAll(".rk-stopin").forEach((el) => el.addEventListener("change", () => { const s = rLS("riskStops", {}), v = el.value.trim(); if (v === "") delete s[el.dataset.sym]; else s[el.dataset.sym] = +v; rLSset("riskStops", s); renderRiskExposure(); }));
   const ac = $("rk-acct"); if (ac) ac.addEventListener("change", () => { rLSset("riskAccount", ac.value); renderRiskExposure(); });
   const sp = $("rk-syncpx"); if (sp) sp.addEventListener("click", async () => {
