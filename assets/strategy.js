@@ -4,16 +4,26 @@ const LWC = window.LightweightCharts;
 
 /* 账户风险控制 · 仓位计算器 + bundle 管理。读/写 config/risk_policy.json(日后 agentic 读同一份)。
    每个 bundle = 单笔风险% + ATR倍数 + 仓位上限%;止损决定仓位 shares=净值×risk%÷(entry−stop)。 */
-async function savePolicy(POLICY) {
+// 两个入口(bundles / assignments)都写同一个 risk_policy.json。为避免互相覆盖 + sha 冲突(409):
+// 每次都先拉「最新内容+sha」,只改自己那块(mutate),再 PUT;409(sha 过期)自动重取重试一次。
+async function putPolicy(mutate) {
   const pat = getPat();
   if (!pat) return { ok: false, msg: "需 fine-grained PAT(与采集面板共用,存本机);未写仓库" };
   const url = `https://api.github.com/repos/${REPO}/contents/config/risk_policy.json`;
-  let sha;
-  try { const c = await fetch(url + "?ref=main", { headers: ghHeaders(pat) }); if (c.ok) sha = (await c.json()).sha; } catch { /* 新建 */ }
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(POLICY, null, 2) + "\n")));
-  try {
-    const r = await fetch(url, { method: "PUT", headers: ghHeaders(pat),
+  async function once() {
+    let sha, latest = {};
+    try {
+      const c = await fetch(url + "?ref=main&t=" + Date.now(), { headers: ghHeaders(pat), cache: "no-store" });
+      if (c.ok) { const j = await c.json(); sha = j.sha; latest = JSON.parse(decodeURIComponent(escape(atob((j.content || "").replace(/\s/g, ""))))); }
+    } catch { /* 新建或解析失败 → 从空开始 */ }
+    mutate(latest);
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(latest, null, 2) + "\n")));
+    return fetch(url, { method: "PUT", headers: ghHeaders(pat),
       body: JSON.stringify({ message: "chore: update risk_policy via strategy UI", content, sha, branch: "main" }) });
+  }
+  try {
+    let r = await once();
+    if (r.status === 409) r = await once();   // sha 过期 → 重取最新再试一次
     return r.ok ? { ok: true } : { ok: false, msg: "PUT 失败 " + r.status };
   } catch (e) { return { ok: false, msg: String(e) }; }
 }
@@ -108,7 +118,7 @@ async function renderRiskControl() {
   $("rk-save").addEventListener("click", async () => {
     syncBundle(); POLICY.account_equity = g("rk-eq"); POLICY.default_bundle = cur;
     $("rk-msg").textContent = "保存中…";
-    const r = await savePolicy(POLICY);
+    const r = await putPolicy((L) => { const { assignments, ...rest } = POLICY; Object.assign(L, rest); });  // 写 bundles 等,保留 assignments
     $("rk-msg").textContent = r.ok ? "✓ 已保存到 config/risk_policy.json(agentic 读同一份)" : "✗ " + r.msg;
   });
 
@@ -140,10 +150,8 @@ const rLSset = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } c
 const heatBg = (lvl) => { const l = Math.max(0, Math.min(1, lvl || 0)); return `background:hsl(${Math.round(142 * (1 - l))} 65% 45% / ${(0.08 + l * 0.42).toFixed(2)})`; };
 let ASSIGN = null;   // {sym: bundle} 内存态(含未保存改动),来源 risk_policy.json 的 assignments
 
-async function saveAssignments(assign) {   // 分组落进 risk_policy.json(agent 读同一份);先拉最新 merge,保留 bundles
-  const latest = (await loadJSON("config/risk_policy.json")) || {};
-  latest.assignments = assign;
-  return savePolicy(latest);
+async function saveAssignments(assign) {   // 只改 assignments 块,保留 bundles 等其它字段
+  return putPolicy((L) => { L.assignments = assign; });
 }
 
 async function renderRiskExposure() {
