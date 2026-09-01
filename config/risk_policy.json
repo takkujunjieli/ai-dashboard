@@ -1,6 +1,6 @@
 {
   "_note": "账户风险控制 · 仓位 bundle(自由创建/命名/设值;strategy 页编辑并保存,日后 agentic 读同一份)。每个 bundle = 单笔风险% + ATR倍数 + 仓位上限%。止损位决定仓位:shares = 账户净值×risk_pct ÷ (entry−stop)。",
-  "account_equity": 100000,
+  "account_equity": 28000,
   "atr_period": 14,
   "default_bundle": "3m主力",
   "portfolio": {
@@ -10,24 +10,24 @@
     "SNDK": "3m主力",
     "MU": "3m主力",
     "SPCX": "3m空头",
-    "SNOW": "3m空头",
+    "SNOW": "1m趋势",
     "SKHY": "3m主力",
-    "FIG": "3m空头",
+    "FIG": "1m趋势",
     "COIN": "3m空头"
   },
   "bundles": {
     "3m主力": {
-      "risk_pct": 4,
+      "risk_pct": 2,
       "atr_mult": 3,
       "max_position_pct": 25
     },
     "3m空头": {
-      "risk_pct": 1,
+      "risk_pct": 0.75,
       "atr_mult": 4,
       "max_position_pct": 3
     },
     "1m趋势": {
-      "risk_pct": 0.75,
+      "risk_pct": 0.6,
       "atr_mult": 3,
       "max_position_pct": 5
     }
