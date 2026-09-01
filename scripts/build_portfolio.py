@@ -58,7 +58,7 @@ def _pos(p: dict) -> dict:
         pnl = qty * (price - cost)
     pct = _num(p.get("pnl_pct"))
     if pct is None and pnl is not None and cost and qty and cost * qty:
-        pct = pnl / (cost * qty)
+        pct = pnl / abs(cost * qty)   # abs:做空 qty<0,否则盈亏百分比符号会反
     return {"sym": p.get("sym"), "qty": qty, "avg_cost": cost, "price": price,
             "kind": p.get("kind") or "equity",
             "mkt_value": round(mv, 2) if mv is not None else None,

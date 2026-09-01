@@ -230,7 +230,10 @@ async function renderRiskExposure() {
     const ratio = openRisk != null ? openRisk / budget : null;
     const distPct = (perShare != null && price) ? perShare / price * 100 : null;
     if (openRisk != null) { totalHeat += openRisk; heatByBundle[bundleName] = (heatByBundle[bundleName] || 0) + openRisk; }
-    const pnlPct = (!isOpt && long && p.avg_cost) ? (price / p.avg_cost - 1) * 100 : (p.pnl_pct != null ? p.pnl_pct * 100 : null);
+    // 浮盈%:股票用现价算,做空取反(价跌为盈);期权回退 portfolio.json 的 pnl_pct
+    const pnlPct = (!isOpt && p.avg_cost && price != null)
+      ? (long ? (price / p.avg_cost - 1) : (1 - price / p.avg_cost)) * 100
+      : (p.pnl_pct != null ? p.pnl_pct * 100 : null);
     rows.push({ sym, isOpt, long, qty, price, cost: p.avg_cost, stop, atr, bundleName, cap: b.max_position_pct || 20,
                 openRisk, riskPct, ratio, posPct, distPct, pnlPct });
   }
