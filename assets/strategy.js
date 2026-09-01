@@ -36,9 +36,17 @@ async function renderRiskControl() {
       bundles: { "常规": { risk_pct: 0.75, atr_mult: 2.0, max_position_pct: 20 } },
       stop_bases: (POLICY && POLICY.stop_bases) || [] };
   }
+  // 本机 localStorage 覆盖(bundle 编辑即时本地持久化,免 PAT;刷新不丢);"保存到 config" 再发布给 agent
+  const loc = rLS("riskPolicy", null);
+  if (loc && loc.bundles && Object.keys(loc.bundles).length) {
+    POLICY.bundles = loc.bundles;
+    if (loc.default_bundle) POLICY.default_bundle = loc.default_bundle;
+    if (loc.account_equity != null) POLICY.account_equity = loc.account_equity;
+  }
   const atrP = POLICY.atr_period ?? 14;
   let cur = (POLICY.default_bundle && POLICY.bundles[POLICY.default_bundle]) ? POLICY.default_bundle : Object.keys(POLICY.bundles)[0];
   const g = (id) => +$(id).value;
+  const persistLocal = () => rLSset("riskPolicy", { bundles: POLICY.bundles, default_bundle: cur, account_equity: g("rk-eq") });
   const T = (k, v, sb = "", cls = "") => `<div class="opt-tile"><div class="opt-k">${k}</div><div class="opt-v ${cls}">${v}${sb ? ` <span class="opt-sub">${sb}</span>` : ""}</div></div>`;
   const bundleOpts = () => Object.keys(POLICY.bundles).map((k) => `<option value="${esc(k)}"${k === cur ? " selected" : ""}>${esc(k)}</option>`).join("");
 
@@ -99,9 +107,10 @@ async function renderRiskControl() {
       + (mode === "atr" ? ` · ATR 止损 = ${entry} − ${mult}×${g("rk-atr")} = ${stop.toFixed(2)}` : "");
   }
 
-  $("rk-bundle").addEventListener("change", () => { cur = $("rk-bundle").value; loadBundle(); compute(); });
-  ["rk-risk", "rk-mult", "rk-cap"].forEach((id) => $(id).addEventListener("input", () => { syncBundle(); compute(); }));
+  $("rk-bundle").addEventListener("change", () => { cur = $("rk-bundle").value; loadBundle(); compute(); persistLocal(); });
+  ["rk-risk", "rk-mult", "rk-cap"].forEach((id) => $(id).addEventListener("input", () => { syncBundle(); compute(); persistLocal(); }));
   ["rk-eq", "rk-entry", "rk-stop", "rk-atr"].forEach((id) => $(id).addEventListener("input", compute));
+  $("rk-eq").addEventListener("input", persistLocal);
   $("rk-mode").addEventListener("change", compute);
   $("rk-new").addEventListener("click", () => {
     const name = ($("rk-newname").value || "").trim();
@@ -109,12 +118,12 @@ async function renderRiskControl() {
     if (POLICY.bundles[name]) return void ($("rk-msg").textContent = "同名已存在");
     POLICY.bundles[name] = { risk_pct: 0.75, atr_mult: 2.0, max_position_pct: 20 };
     cur = name; $("rk-bundle").innerHTML = bundleOpts(); $("rk-newname").value = "";
-    loadBundle(); compute(); $("rk-msg").textContent = `已建「${name}」(记得保存)`;
+    loadBundle(); compute(); persistLocal(); $("rk-msg").textContent = `已建「${name}」· 本地已存,记得点保存发布给 agent`;
   });
   $("rk-del").addEventListener("click", () => {
     if (Object.keys(POLICY.bundles).length <= 1) return void ($("rk-msg").textContent = "至少保留 1 个 bundle");
     delete POLICY.bundles[cur]; cur = Object.keys(POLICY.bundles)[0];
-    $("rk-bundle").innerHTML = bundleOpts(); loadBundle(); compute(); $("rk-msg").textContent = "已删除(记得保存)";
+    $("rk-bundle").innerHTML = bundleOpts(); loadBundle(); compute(); persistLocal(); $("rk-msg").textContent = "已删除 · 本地已存,记得点保存发布给 agent";
   });
   const pt = $("rk-pat"); if (pt) pt.addEventListener("change", () => { setPat(pt.value.trim()); $("rk-msg").textContent = pt.value.trim() ? "✓ PAT 已存本机" : "PAT 已清"; });
   $("rk-save").addEventListener("click", async () => {
