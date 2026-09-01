@@ -161,10 +161,15 @@ async function renderRiskExposure() {
   const maxHeat = (P && P.portfolio && P.portfolio.max_total_heat_pct) || 6;
   if (ASSIGN === null) ASSIGN = { ...rLS("riskGroups", {}), ...((P && P.assignments) || {}) };  // 文件为准,旧 localStorage 迁移兜底
   const stops = rLS("riskStops", {});
-  const equity = +rLS("riskEquity", (P && P.account_equity) || 100000);
+  // 账户净值直接从 portfolio.json 读:按账户(全部/各账户)汇总持仓市值
+  const accounts = pf.accounts || [];
+  const acctSel = rLS("riskAccount", "ALL");
+  const positions = pf.positions.filter((p) => acctSel === "ALL" || p.account === acctSel);
+  let equity = positions.reduce((s, p) => s + (p.mkt_value || 0), 0);
+  if (equity <= 0) equity = positions.reduce((s, p) => s + Math.abs(p.mkt_value || 0), 0) || 1;
 
   const rows = []; let totalHeat = 0; const heatByBundle = {};
-  for (const p of pf.positions) {
+  for (const p of positions) {
     const sym = p.sym, qty = p.qty || 0; if (!qty) continue;
     const isOpt = p.kind !== "equity", long = qty > 0, price = p.price;
     const bundleName = ASSIGN[sym] || defB, b = bundles[bundleName] || bundles[defB];
@@ -205,7 +210,8 @@ async function renderRiskExposure() {
 
   const totalPct = totalHeat / equity * 100;
   heatEl.innerHTML = `<div class="wb-statbar">
-    <div class="opt-tile"><div class="opt-k">账户净值(本机)</div><div class="opt-v"><input id="rk-eq2" type="number" step="1000" value="${equity}" style="width:118px;background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text);font-size:13px"></div></div>
+    <div class="opt-tile"><div class="opt-k">账户</div><div class="opt-v"><select id="rk-acct" style="background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text);font-size:13px">${["ALL", ...accounts.map((a) => a.id)].map((id) => `<option value="${esc(id)}"${id === acctSel ? " selected" : ""}>${esc(id === "ALL" ? "全部" : (accounts.find((a) => a.id === id) || {}).label || id)}</option>`).join("")}</select></div></div>
+    <div class="opt-tile"><div class="opt-k">账户净值(portfolio)</div><div class="opt-v">$${Math.round(equity).toLocaleString()}</div><div class="opt-sub">持仓市值合计</div></div>
     <div class="opt-tile"><div class="opt-k">组合总在险 heat</div><div class="opt-v" style="${heatBg(Math.min(totalPct / maxHeat, 1))};border-radius:6px;padding:1px 8px">$${Math.round(totalHeat).toLocaleString()} · ${totalPct.toFixed(2)}%</div><div class="opt-sub">上限 ${maxHeat}% 净值</div></div>
     ${bnames.filter((k) => heatByBundle[k]).map((k) => `<div class="opt-tile"><div class="opt-k">${esc(k)} 在险</div><div class="opt-v">$${Math.round(heatByBundle[k]).toLocaleString()} · ${(heatByBundle[k] / equity * 100).toFixed(2)}%</div></div>`).join("")}</div>
     <div class="muted small" style="margin-top:6px">组合总在险 = 所有持仓在险之和(若止损全被打的总亏损)。${totalPct > maxHeat ? `<span class="down">⚠️ 超总上限 ${maxHeat}%,考虑减仓/收紧止损</span>` : "在上限内。"}</div>
@@ -213,7 +219,7 @@ async function renderRiskExposure() {
 
   host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", () => { ASSIGN[el.dataset.sym] = el.value; renderRiskExposure(); }));
   host.querySelectorAll(".rk-stopin").forEach((el) => el.addEventListener("change", () => { const s = rLS("riskStops", {}), v = el.value.trim(); if (v === "") delete s[el.dataset.sym]; else s[el.dataset.sym] = +v; rLSset("riskStops", s); renderRiskExposure(); }));
-  const eq2 = $("rk-eq2"); if (eq2) eq2.addEventListener("change", () => { rLSset("riskEquity", +eq2.value || 100000); renderRiskExposure(); });
+  const ac = $("rk-acct"); if (ac) ac.addEventListener("change", () => { rLSset("riskAccount", ac.value); renderRiskExposure(); });
   const sg = $("rk-savegrp"); if (sg) sg.addEventListener("click", async () => { const m = $("rk-grpmsg"); m.textContent = "保存中…"; const r = await saveAssignments(ASSIGN); m.textContent = r.ok ? "✓ 已存 config/risk_policy.json 的 assignments(agent 读同一份)" : "✗ " + r.msg; });
 }
 
