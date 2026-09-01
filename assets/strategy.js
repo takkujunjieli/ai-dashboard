@@ -1,5 +1,5 @@
 /* 策略回测页(PR7):读 data/strategy_bt.json,渲染统计 + 指标 + 权益曲线(叠加基准)+ OOS + 交易。只读。 */
-import { $, esc, loadJSON, loadFreshJSON, getPat, ghHeaders, REPO } from "./shared.js";
+import { $, esc, loadJSON, loadFreshJSON, getPat, setPat, ghHeaders, REPO } from "./shared.js";
 const LWC = window.LightweightCharts;
 
 /* 账户风险控制 · 仓位计算器 + bundle 管理。读/写 config/risk_policy.json(日后 agentic 读同一份)。
@@ -159,7 +159,7 @@ async function renderRiskExposure() {
   const bnames = Object.keys(bundles);
   const defB = (P && P.default_bundle && bundles[P.default_bundle]) ? P.default_bundle : bnames[0];
   const maxHeat = (P && P.portfolio && P.portfolio.max_total_heat_pct) || 6;
-  if (ASSIGN === null) ASSIGN = { ...rLS("riskGroups", {}), ...((P && P.assignments) || {}) };  // 文件为准,旧 localStorage 迁移兜底
+  if (ASSIGN === null) ASSIGN = { ...((P && P.assignments) || {}), ...rLS("riskGroups", {}) };  // 本机 localStorage 覆盖(本地即时持久化,无需 PAT);「发布到 config」再推给 agent
   const stops = rLS("riskStops", {});
   // 账户净值直接从 portfolio.json 读:按账户(全部/各账户)汇总持仓市值
   const accounts = pf.accounts || [];
@@ -226,12 +226,17 @@ async function renderRiskExposure() {
     <div class="opt-tile"><div class="opt-k">组合总在险 heat</div><div class="opt-v" style="${heatBg(Math.min(totalPct / maxHeat, 1))};border-radius:6px;padding:1px 8px">$${Math.round(totalHeat).toLocaleString()} · ${totalPct.toFixed(2)}%</div><div class="opt-sub">上限 ${maxHeat}% 净值</div></div>
     ${bnames.filter((k) => heatByBundle[k]).map((k) => `<div class="opt-tile"><div class="opt-k">${esc(k)} 在险</div><div class="opt-v">$${Math.round(heatByBundle[k]).toLocaleString()} · ${(heatByBundle[k] / equity * 100).toFixed(2)}%</div></div>`).join("")}</div>
     <div class="muted small" style="margin-top:6px">组合总在险 = 所有持仓在险之和(若止损全被打的总亏损)。${totalPct > maxHeat ? `<span class="down">⚠️ 超总上限 ${maxHeat}%,考虑减仓/收紧止损</span>` : "在上限内。"}</div>
-    <div style="margin-top:8px"><button id="rk-savegrp" class="mini-btn">💾 保存分组到 config(agent 读同一份)</button> <span id="rk-grpmsg" class="muted small"></span></div>`;
+    <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <button id="rk-savegrp" class="mini-btn">💾 发布分组到 config(供 agent 读)</button>
+      <input id="rk-pat" type="password" value="${esc(getPat() || "")}" placeholder="fine-grained PAT(本机存)" style="width:200px;background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px">
+      <span id="rk-grpmsg" class="muted small">分组改动已本地自动保存(localStorage);发布到 config 才让 agent/别的机器读到(需 PAT)</span>
+    </div>`;
 
-  host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", () => { ASSIGN[el.dataset.sym] = el.value; renderRiskExposure(); }));
+  host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", () => { ASSIGN[el.dataset.sym] = el.value; const g = rLS("riskGroups", {}); g[el.dataset.sym] = el.value; rLSset("riskGroups", g); renderRiskExposure(); }));
   host.querySelectorAll(".rk-stopin").forEach((el) => el.addEventListener("change", () => { const s = rLS("riskStops", {}), v = el.value.trim(); if (v === "") delete s[el.dataset.sym]; else s[el.dataset.sym] = +v; rLSset("riskStops", s); renderRiskExposure(); }));
   const ac = $("rk-acct"); if (ac) ac.addEventListener("change", () => { rLSset("riskAccount", ac.value); renderRiskExposure(); });
-  const sg = $("rk-savegrp"); if (sg) sg.addEventListener("click", async () => { const m = $("rk-grpmsg"); m.textContent = "保存中…"; const r = await saveAssignments(ASSIGN); m.textContent = r.ok ? "✓ 已存 config/risk_policy.json 的 assignments(agent 读同一份)" : "✗ " + r.msg; });
+  const pt = $("rk-pat"); if (pt) pt.addEventListener("change", () => { setPat(pt.value.trim()); $("rk-grpmsg").textContent = pt.value.trim() ? "✓ PAT 已存本机,可发布了" : "PAT 已清"; });
+  const sg = $("rk-savegrp"); if (sg) sg.addEventListener("click", async () => { const m = $("rk-grpmsg"); m.textContent = "发布中…"; const r = await saveAssignments(ASSIGN); m.textContent = r.ok ? "✓ 已发布到 config/risk_policy.json 的 assignments(agent 读同一份)" : "✗ " + r.msg; });
 }
 
 async function main() {
