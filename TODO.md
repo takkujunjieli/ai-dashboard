@@ -144,3 +144,8 @@ env:`SYM`(默认点数最多的票)· `SIG`(见下)· `BT_TP`/`BT_SL`/`BT_HOLD` 
 **看结果**:strategy.html(采集会自动产 `strategy_bt.json`);或本机看 `data/strategy_bt.json`。
 **判有没有 edge**:比 `random`(null)和 `benchmark`(Buy&Hold);**只信 `oos` 块**(walk-forward),别信样本内 total_return。
 **直接调库**:`from strategy_backtest import run_backtest` / `from strategy_walkforward import walk_forward`。自检:`python3 scripts/strategy_*.py`。
+
+## 13. 单票轻量 1m 端点 → VWAP/价格 ~20s 刷新 【数据新鲜度 / 前端】
+**动机**:现在 `bars_intraday.json` 把所有票×3周期塞一个 ~8.8MB 文件,前端 `BARS_MIN_MS=120s` 最多 2 分钟才拉一次 → 即便盘中 20s 轮询+PAT,VWAP 也 2 分钟才动一次。
+**做法**:采集侧额外为"当前重点票"写一份**按单票、只含最近 N 根 1m** 的轻量文件(几 KB),前端查看某票时单独高频拉它 → VWAP/价格 ~20s 更新,不必拖 8.8MB。可与 GEX 的 options_watchlist(≤5)复用"重点票"集。
+**关联**:VWAP 计算已统一到 1m 口径(2026-08,vwap1mSeries/vwapSampledTo);此项解决的是"多快拿到最新 1m",与 #5(websocket 秒级)是更轻的中间档。
