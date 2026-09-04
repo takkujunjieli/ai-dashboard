@@ -19,3 +19,7 @@ research/
 # 打分脚本内嵌私有评分/理由,不进公开库(实体可放私有库)
 scripts/build_scorecards.py
 data/atr.json
+
+# 组合稳健性(含仓位表现,私有)
+data/robustness.json
+data/.px_cache.json

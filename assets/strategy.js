@@ -297,10 +297,72 @@ async function renderRiskExposure() {
   });
 }
 
+/* 组合稳健性:累计 $P&L(M2M,含未实现)曲线 + 对 SPY 的 β/α。读 data/robustness.json(本地/私有)。
+   时间范围切换:曲线从窗口起点归零重画、统计只算该窗口。 */
+let ROBUST = null;
+const ROBUST_COL = { _all: "#60a5fa", "rh-7159": "#34d399", "takku-rh-2566": "#fbbf24" };
+
+async function renderRobust() {
+  const el = $("robust-chart"); if (!el) return;
+  const sec = $("sec-robust");
+  ROBUST = await loadFreshJSON("data/robustness.json");
+  if (!ROBUST || !ROBUST.accounts) { if (sec) sec.style.display = "none"; return; }
+  const rg = $("robust-range");
+  if (rg) rg.addEventListener("click", (ev) => {
+    const b = ev.target.closest("button"); if (!b) return;
+    [...rg.children].forEach((x) => x.classList.toggle("active", x === b));
+    drawRobust(b.dataset.w);
+  });
+  drawRobust("ytd");   // 默认 2026 以来
+}
+
+function drawRobust(win) {
+  const r = ROBUST, el = $("robust-chart"); if (!r || !el) return;
+  const start = (r.window_starts && r.window_starts[win]) || "1900-01-01";
+  el.innerHTML = "";   // 重画
+  const chart = LWC.createChart(el, {
+    layout: { background: { color: "transparent" }, textColor: "#8b96ad" },
+    grid: { vertLines: { color: "#1e2941" }, horzLines: { color: "#1e2941" } },
+    rightPriceScale: { borderColor: "#2a3550" }, timeScale: { borderColor: "#2a3550" }, height: 320,
+  });
+  const order = ["_all", ...Object.keys(r.accounts).filter((k) => k !== "_all")];
+  const legend = [];
+  order.forEach((k, i) => {
+    const o = r.accounts[k]; if (!o || !o.curve || !o.curve.length) return;
+    const sliced = o.curve.filter((row) => row[0] >= start);
+    if (!sliced.length) return;
+    const base = sliced[0][3];                       // 窗口起点归零(=窗口内累计 P&L)
+    const col = ROBUST_COL[k] || `hsl(${i * 70} 60% 60%)`;
+    const seen = new Set(), data = [];
+    for (const row of sliced) if (!seen.has(row[0])) { seen.add(row[0]); data.push({ time: row[0], value: row[3] - base }); }
+    chart.addLineSeries({ color: col, lineWidth: k === "_all" ? 2 : 1, priceLineVisible: false, lastValueVisible: false }).setData(data);
+    const last = sliced[sliced.length - 1][3] - base;
+    legend.push(`<span class="rt-leg"><span class="rt-sw" style="background:${col}"></span>${esc(o.label)} <b class="${last >= 0 ? "up" : "down"}">${last >= 0 ? "+" : "−"}$${Math.abs(Math.round(last)).toLocaleString()}</b></span>`);
+  });
+  chart.timeScale().fitContent();
+  $("robust-legend").innerHTML = legend.join("");
+  // 该窗口的 β/α 统计(每账户)
+  const c = (v, s = "") => (v == null ? "—" : v + s);
+  const a = (v) => `class="${(v ?? 0) >= 0 ? "up" : "down"}"`;
+  const trs = order.map((k) => {
+    const o = r.accounts[k], w = (o.windows && o.windows[win]) || {};
+    return `<tr><td><b>${esc(o.label)}</b></td><td>${c(w.beta)}</td><td ${a(w.alpha_annual_pct)}>${c(w.alpha_annual_pct, "%")}</td>`
+      + `<td>${c(w.r2)}</td><td ${a(w.sharpe)}>${c(w.sharpe)}</td><td ${a(w.ret_annual_pct)}>${c(w.ret_annual_pct, "%")}</td>`
+      + `<td>${c(w.avg_net_gross)}</td><td>${c(w.n)}</td></tr>`;
+  }).join("");
+  const wlabel = { all: "全部", ytd: "2026 以来", "1y": "近 1 年", "3m": "近 3 月" }[win] || win;
+  $("robust-stats").innerHTML =
+    `<table class="bt-table"><tr><th>账户</th><th>β</th><th>α年化</th><th>R²</th><th>Sharpe</th><th>年化收益</th><th>净/毛</th><th>n(日)</th></tr>${trs}</table>`
+    + `<div class="muted small" style="margin-top:8px">窗口 <b>${wlabel}</b>。曲线=窗口内累计 $P&L(M2M 含未实现;仅正股,排除期权/分红,起点归零)。`
+    + `β/α vs SPY;净/毛 越低越市场中性(≈1=净多头)。<b>α年化≈0 且 β&gt;1 → 收益主要是市场杠杆、非选股</b>。`
+    + `⚠ 交易史重建、小样本(n 小)勿过度解读。</div>`;
+}
+
 async function main() {
   // 5Y 走势聚合 与 净 GEX→次日波动 研究 已迁移到 research 页(收益率×市场 / GEX→波动 两个 tab)
   await renderRiskControl();     // 账户风险控制:独立于回测数据,始终显示
   await renderRiskExposure();    // 风险敞口热力图:本地专用(读 portfolio.json)
+  await renderRobust();          // 组合稳健性:M2M 收益曲线 + β/α(本地私有)
   const d = await loadFreshJSON("data/strategy_bt.json");
   if (!d || !Array.isArray(d.equity_curve) || !d.equity_curve.length) {
     $("bt-empty").style.display = "block";
