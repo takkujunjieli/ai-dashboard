@@ -327,35 +327,48 @@ function drawRobust(win) {
   });
   const order = ["_all", ...Object.keys(r.accounts).filter((k) => k !== "_all")];
   const legend = [];
-  order.forEach((k, i) => {
+  order.forEach((k, i) => {   // 曲线:各账户 总累计$P&L(curve[*][1]),窗口起点归零
     const o = r.accounts[k]; if (!o || !o.curve || !o.curve.length) return;
     const sliced = o.curve.filter((row) => row[0] >= start);
     if (!sliced.length) return;
-    const base = sliced[0][3];                       // 窗口起点归零(=窗口内累计 P&L)
+    const base = sliced[0][1];
     const col = ROBUST_COL[k] || `hsl(${i * 70} 60% 60%)`;
     const seen = new Set(), data = [];
-    for (const row of sliced) if (!seen.has(row[0])) { seen.add(row[0]); data.push({ time: row[0], value: row[3] - base }); }
+    for (const row of sliced) if (!seen.has(row[0])) { seen.add(row[0]); data.push({ time: row[0], value: row[1] - base }); }
     chart.addLineSeries({ color: col, lineWidth: k === "_all" ? 2 : 1, priceLineVisible: false, lastValueVisible: false }).setData(data);
-    const last = sliced[sliced.length - 1][3] - base;
+    const last = sliced[sliced.length - 1][1] - base;
     legend.push(`<span class="rt-leg"><span class="rt-sw" style="background:${col}"></span>${esc(o.label)} <b class="${last >= 0 ? "up" : "down"}">${last >= 0 ? "+" : "−"}$${Math.abs(Math.round(last)).toLocaleString()}</b></span>`);
   });
   chart.timeScale().fitContent();
   $("robust-legend").innerHTML = legend.join("");
-  // 该窗口的 β/α 统计(每账户)
+  // ── 统计:总收益 β/α/Sharpe + bootstrap CI + 显著性;多空腿归因 ──
   const c = (v, s = "") => (v == null ? "—" : v + s);
   const a = (v) => `class="${(v ?? 0) >= 0 ? "up" : "down"}"`;
+  const ciS = (ci) => (ci ? ` <span class="muted" style="font-size:10px">[${ci[0]},${ci[1]}]</span>` : "");
   const trs = order.map((k) => {
-    const o = r.accounts[k], w = (o.windows && o.windows[win]) || {};
-    return `<tr><td><b>${esc(o.label)}</b></td><td>${c(w.beta)}</td><td ${a(w.alpha_annual_pct)}>${c(w.alpha_annual_pct, "%")}</td>`
-      + `<td>${c(w.r2)}</td><td ${a(w.sharpe)}>${c(w.sharpe)}</td><td ${a(w.ret_annual_pct)}>${c(w.ret_annual_pct, "%")}</td>`
-      + `<td>${c(w.avg_net_gross)}</td><td>${c(w.n)}</td></tr>`;
+    const o = r.accounts[k], w = (o.windows && o.windows[win]) || {}, ci = w.ci || {};
+    const sig = w.alpha_annual_pct == null ? "" : (ci.alpha_sig
+      ? ' <span class="up" style="font-size:10px">✓显著</span>'
+      : ' <span class="muted" style="font-size:10px">≈0</span>');
+    return `<tr><td><b>${esc(o.label)}</b></td><td>${c(w.beta)}${ciS(ci.beta)}</td>`
+      + `<td ${a(w.alpha_annual_pct)}>${c(w.alpha_annual_pct, "%")}${ciS(ci.alpha)}${sig}</td>`
+      + `<td ${a(w.sharpe)}>${c(w.sharpe)}${ciS(ci.sharpe)}</td>`
+      + `<td ${a(w.ret_annual_pct)}>${c(w.ret_annual_pct, "%")}</td><td>${c(w.avg_net_gross)}</td><td>${c(w.n)}</td></tr>`;
+  }).join("");
+  const legCell = (x) => (x && x.ret_annual_pct != null
+    ? `<span class="${x.ret_annual_pct >= 0 ? "up" : "down"}">${x.ret_annual_pct}%</span>${ciS(x.ret_ci)} <span class="muted" style="font-size:10px">β${c(x.beta)}·n${c(x.n)}</span>`
+    : "—");
+  const legRows = order.map((k) => {
+    const w = (r.accounts[k].windows && r.accounts[k].windows[win]) || {};
+    return `<tr><td><b>${esc(r.accounts[k].label)}</b></td><td>${legCell(w.long)}</td><td>${legCell(w.short)}</td></tr>`;
   }).join("");
   const wlabel = { all: "全部", ytd: "2026 以来", "1y": "近 1 年", "3m": "近 3 月" }[win] || win;
   $("robust-stats").innerHTML =
-    `<table class="bt-table"><tr><th>账户</th><th>β</th><th>α年化</th><th>R²</th><th>Sharpe</th><th>年化收益</th><th>净/毛</th><th>n(日)</th></tr>${trs}</table>`
-    + `<div class="muted small" style="margin-top:8px">窗口 <b>${wlabel}</b>。曲线=窗口内累计 $P&L(M2M 含未实现;仅正股,排除期权/分红,起点归零)。`
-    + `β/α vs SPY;净/毛 越低越市场中性(≈1=净多头)。<b>α年化≈0 且 β&gt;1 → 收益主要是市场杠杆、非选股</b>。`
-    + `⚠ 交易史重建、小样本(n 小)勿过度解读。</div>`;
+    `<div class="sc-wrap"><table class="bt-table"><tr><th>账户</th><th>β</th><th>α年化(95%CI)</th><th>Sharpe</th><th>年化收益</th><th>净/毛</th><th>n</th></tr>${trs}</table></div>`
+    + `<div class="muted small" style="margin:10px 0 4px"><b>多空腿归因</b> · 年化收益[95%CI]·β·n(空头 β 应为负=真做空;CI 极宽=贡献是噪声)</div>`
+    + `<div class="sc-wrap"><table class="bt-table"><tr><th>账户</th><th>多头腿</th><th>空头腿</th></tr>${legRows}</table></div>`
+    + `<div class="muted small" style="margin-top:8px">窗口 <b>${wlabel}</b> · 曲线=累计$P&L(M2M 含未实现,仅正股,排除期权/分红,起点归零)。`
+    + `<b>α 的 95%CI 跨 0(标 ≈0)= 选股超额与运气不可区分,别当 skill</b>;净/毛≈1=净多头。⚠ 小样本 CI 很宽 = 数据不足,勿过度解读。</div>`;
 }
 
 async function main() {

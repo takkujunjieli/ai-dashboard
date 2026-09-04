@@ -11,6 +11,7 @@
 import json
 import glob
 import math
+import random
 import urllib.request
 from collections import defaultdict
 from statistics import median
@@ -118,7 +119,7 @@ def build_account(txs):
     prev_mv = defaultdict(float)       # sym -> 上一日 qty·close
     rows = []
     for d in cal:
-        pnl = gross = net = 0.0
+        pnl = gross = net = lpnl = spnl = lgross = sgross = 0.0
         # 今日先按 trade_price 计入建/平仓的现金腿,再 mark 到 close
         day_trades = trades_on.get(d, [])
         dqmap = defaultdict(float); prmap = {}
@@ -140,7 +141,11 @@ def build_account(txs):
             pnl += p
             prev_mv[sym] = mv1
             gross += abs(mv1); net += mv1
-        rows.append([d, pnl, gross, net])
+            if q1 >= 0:                # 按当日末持仓方向归多/空腿
+                lpnl += p; lgross += abs(mv1)
+            else:
+                spnl += p; sgross += abs(mv1)
+        rows.append([d, pnl, gross, net, lpnl, spnl, lgross, sgross])
     return rows
 
 
@@ -180,11 +185,13 @@ WINDOWS = {"all": "1900-01-01",
            "3m": (ad - timedelta(days=92)).isoformat()}
 
 accounts_out = {}
-all_rows_by_date = defaultdict(lambda: [0.0, 0.0, 0.0])   # date -> [pnl,gross,net] 合并
+all_rows_by_date = defaultdict(lambda: [0.0] * 7)   # date -> [pnl,gross,net,lpnl,spnl,lgross,sgross] 合并
 for acct, txs in tx_by_acct.items():
     rows = build_account(txs)
-    for d, pnl, gross, net in rows:
-        agg = all_rows_by_date[d]; agg[0] += pnl; agg[1] += gross; agg[2] += net
+    for r in rows:
+        agg = all_rows_by_date[r[0]]
+        for i in range(7):
+            agg[i] += r[i + 1]
     accounts_out[acct] = rows
 
 # 合并账户
@@ -193,53 +200,117 @@ all_rows = [[d, *all_rows_by_date[d]] for d in cal]
 
 CLIP = 0.12   # 日收益 winsorize(±12%),防残余的小分母/坏价 spike
 
+
+def _floor(vals):
+    v = [x for x in vals if x > 0]
+    return max(3000.0, 0.2 * median(v)) if v else 1e18   # 无仓 → floor 极大 → 该腿 r 恒 None
+
+
+def _clip(x):
+    return max(-CLIP, min(CLIP, x))
+
+
+# ---------- ② 分块 bootstrap 置信区间(moving-block,保留自相关;非参,肥尾友好)----------
+def _mbb(n, rng, block=5):
+    idx = []
+    while len(idx) < n:
+        s = rng.randrange(max(1, n - block + 1))
+        idx.extend(range(s, min(s + block, n)))
+    return idx[:n]
+
+
+def _ci(vals):
+    if not vals:
+        return None
+    v = sorted(vals)
+    lo = v[max(0, int(0.025 * len(v)))]
+    hi = v[min(len(v) - 1, int(0.975 * len(v)))]
+    return [round(lo, 2), round(hi, 2)]
+
+
+def bootstrap_reg(rp, rm, B=800, block=5):
+    """总收益序列对 SPY 回归的 β/α年化/Sharpe/年化收益 95% CI + α 是否显著(CI 不跨 0)。"""
+    n = len(rp)
+    if n < 25:
+        return None
+    rng = random.Random(42)
+    bs, als, shs, rts = [], [], [], []
+    for _ in range(B):
+        idx = _mbb(n, rng, block)
+        g = _regress([rp[i] for i in idx], [rm[i] for i in idx])
+        if not g:
+            continue
+        bs.append(g["beta"]); als.append(g["alpha_annual_pct"]); rts.append(g["ret_annual_pct"])
+        if g["sharpe"] is not None:
+            shs.append(g["sharpe"])
+    ac = _ci(als)
+    return {"beta": _ci(bs), "alpha": ac, "sharpe": _ci(shs), "ret": _ci(rts),
+            "alpha_sig": bool(ac and (ac[0] > 0 or ac[1] < 0))}
+
+
+def bootstrap_mean_annual(series, B=800, block=5):
+    """一条日收益序列的 年化收益(mean×252)95% CI。"""
+    n = len(series)
+    if n < 20:
+        return None
+    rng = random.Random(7)
+    out = [sum(series[i] for i in _mbb(n, rng, block)) / n * 252 * 100 for _ in range(B)]
+    return _ci(out)
+
+
 def summarize(rows, label):
-    """rows: [[date,pnl,gross,net]] → {label, curve, windows}。
-    日收益=pnl/前日毛敞口,但仅在毛敞口≥floor(=max($3k,0.2×中位毛敞口))时计,并 winsorize;
-    剔除小账户早期天文数字。曲线含累计$P&L(始终稳健)。"""
-    pos_gross = [g for _, _, g, _ in rows if g > 0]
-    if not pos_gross:
-        return {"label": label, "curve": [], "windows": {}, "floor_gross": 0}
-    floor = max(3000.0, 0.2 * median(pos_gross))
-    series = []       # (date, r_or_None, gross, net, cum_pnl)
-    prev_gross = 0.0; cum = 0.0
-    for d, pnl, gross, net in rows:
-        cum += pnl
-        r = max(-CLIP, min(CLIP, pnl / prev_gross)) if prev_gross >= floor else None
-        series.append((d, r, gross, net, cum))
-        prev_gross = gross
-    # 曲线:净值 index(仅有效收益日复利)+ SPY 同期对照 + 累计$P&L
-    curve = []
-    eq = spy_eq = 100.0; spy_prev = None; started = False
-    for d, r, gross, net, cum in series:
-        sr, spy_prev = spy_ret(d, spy_prev)
-        if r is not None:
+    """rows: [date,pnl,gross,net,lpnl,spnl,lgross,sgross] → {label,curve,windows}。
+    ① 总/多头/空头 三条日收益(各 =腿P&L/前日腿毛敞口,腿毛敞口≥floor 才计,winsorize)。
+    ② 每窗口 总收益 β/α/Sharpe 带 bootstrap CI;多/空腿 年化收益带 CI + β。曲线含累计$(总/多/空)。"""
+    if not any(r[2] > 0 for r in rows):
+        return {"label": label, "curve": [], "windows": {}}
+    gf, lf, sf = _floor([r[2] for r in rows]), _floor([r[6] for r in rows]), _floor([r[7] for r in rows])
+    series = []       # (date, rt, rl, rs, gross, net, cum, cum_l, cum_s)
+    pg = lg = sg = 0.0; cum = cl = cs = 0.0
+    for d, pnl, gross, net, lpnl, spnl, lgross, sgross in rows:
+        cum += pnl; cl += lpnl; cs += spnl
+        rt = _clip(pnl / pg) if pg >= gf else None
+        rl = _clip(lpnl / lg) if lg >= lf else None
+        rs = _clip(spnl / sg) if sg >= sf else None
+        series.append((d, rt, rl, rs, gross, net, cum, cl, cs))
+        pg, lg, sg = gross, lgross, sgross
+    # 曲线:累计 $P&L(总/多/空);仅从有有效总收益日起画
+    curve = []; started = False
+    for d, rt, rl, rs, gross, net, cum, cl, cs in series:
+        if rt is not None:
             started = True
-            eq *= (1 + r)
-            if sr is not None:
-                spy_eq *= (1 + sr)
         if started:
-            curve.append([d, round(eq, 2), round(spy_eq, 2), round(cum)])
-    # 各窗口 beta/alpha(对齐:组合有效收益日 ∩ SPY 有收益日)
+            curve.append([d, round(cum), round(cl), round(cs)])
+    # 各窗口
     wins = {}
     for wn, start in WINDOWS.items():
-        rp, rm, nets, grosses = [], [], [], []
-        sp_prev = None
-        for d, r, gross, net, cum in series:
-            sr, sp_prev = spy_ret(d, sp_prev)
-            if d >= start and r is not None and sr is not None:
-                rp.append(r); rm.append(sr); nets.append(net); grosses.append(gross)
+        rp, rm, nets, grosses, rl_, rml, rs_, rms = [], [], [], [], [], [], [], []
+        sp = None
+        for d, rt, rl, rs, gross, net, cum, cl, cs in series:
+            srr, sp = spy_ret(d, sp)   # sp 逐日推进(即使窗口外),保证相邻日 SPY 收益正确
+            if d < start or srr is None:
+                continue
+            if rt is not None: rp.append(rt); rm.append(srr); nets.append(net); grosses.append(gross)
+            if rl is not None: rl_.append(rl); rml.append(srr)
+            if rs is not None: rs_.append(rs); rms.append(srr)
         reg = _regress(rp, rm)
         if reg:
             reg["avg_net_gross"] = round(sum(n / g for n, g in zip(nets, grosses) if g) / len(nets), 2) if nets else None
+            reg["ci"] = bootstrap_reg(rp, rm)
+            lreg, sreg = _regress(rl_, rml), _regress(rs_, rms)
+            reg["long"] = {"n": len(rl_), "ret_annual_pct": lreg["ret_annual_pct"] if lreg else None,
+                           "beta": lreg["beta"] if lreg else None, "ret_ci": bootstrap_mean_annual(rl_)}
+            reg["short"] = {"n": len(rs_), "ret_annual_pct": sreg["ret_annual_pct"] if sreg else None,
+                            "beta": sreg["beta"] if sreg else None, "ret_ci": bootstrap_mean_annual(rs_)}
         wins[wn] = reg
-    return {"label": label, "curve": curve, "windows": wins, "floor_gross": round(floor)}
+    return {"label": label, "curve": curve, "windows": wins, "floor_gross": round(gf)}
 
 
 out = {
     "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     "benchmark": BENCH,
-    "note": "M2M(含未实现),仅 equity;日收益=P&L/前日毛敞口;beta/alpha 对 SPY;alpha 年化。avg_net_gross=净/毛敞口(越低越市场中性)。",
+    "note": "M2M(含未实现),仅 equity;日收益=腿P&L/前日腿毛敞口;β/α 对 SPY,α 年化。"
+            "曲线=累计$P&L[总,多头,空头]。ci=bootstrap 95%(α_sig=CI不跨0=显著)。long/short=多空腿归因。",
     "window_starts": WINDOWS,
     "missing_syms": missing,
     "accounts": {acct: summarize(rows, labels.get(acct, acct)) for acct, rows in accounts_out.items()},
@@ -247,9 +318,15 @@ out = {
 out["accounts"]["_all"] = summarize(all_rows, "全部账户")
 (DATA / "robustness.json").write_text(json.dumps(out, ensure_ascii=False))
 
-print(f"→ data/robustness.json")
+print("→ data/robustness.json")
 for acct, o in out["accounts"].items():
-    a = o["windows"].get("all") or {}
-    print(f"  {o['label']:22s} all: β={a.get('beta')} α年化={a.get('alpha_annual_pct')}% "
-          f"R²={a.get('r2')} Sharpe={a.get('sharpe')} 年化收益={a.get('ret_annual_pct')}% n={a.get('n')} "
-          f"净/毛={a.get('avg_net_gross')}")
+    for wn in ("ytd", "all"):
+        a = o["windows"].get(wn) or {}
+        if not a:
+            continue
+        ci = a.get("ci") or {}
+        lg, st = a.get("long") or {}, a.get("short") or {}
+        print(f"  {o['label']:16s} {wn:3s}: β={a.get('beta')} α={a.get('alpha_annual_pct')}%"
+              f" CI{ci.get('alpha')} sig={ci.get('alpha_sig')} Sharpe={a.get('sharpe')} n={a.get('n')}"
+              f" | 多头 {lg.get('ret_annual_pct')}%{lg.get('ret_ci')} β{lg.get('beta')}"
+              f" | 空头 {st.get('ret_annual_pct')}%{st.get('ret_ci')} β{st.get('beta')}")
