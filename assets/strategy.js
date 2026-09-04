@@ -28,7 +28,7 @@ async function putPolicy(mutate) {
   } catch (e) { return { ok: false, msg: String(e) }; }
 }
 
-async function renderRiskControl() {
+export async function renderRiskControl() {
   const host = $("risk-control"); if (!host) return;
   let POLICY = (await loadJSON("config/risk_policy.json")) || {};
   if (!POLICY.bundles || !Object.keys(POLICY.bundles).length) {
@@ -175,7 +175,7 @@ function sortRows(rows) {
   });
 }
 
-async function renderRiskExposure() {
+export async function renderRiskExposure() {
   const host = $("risk-expo"), heatEl = $("risk-heat"); if (!host) return;
   const [pf, atrJ, P, researchJ] = await Promise.all([
     loadJSON("data/portfolio.json"), loadJSON("data/atr.json"), loadJSON("config/risk_policy.json"),
@@ -302,7 +302,7 @@ async function renderRiskExposure() {
 let ROBUST = null;
 const ROBUST_COL = { _all: "#60a5fa", "rh-7159": "#34d399", "takku-rh-2566": "#fbbf24" };
 
-async function renderRobust() {
+export async function renderRobust() {
   const el = $("robust-chart"); if (!el) return;
   const sec = $("sec-robust");
   ROBUST = await loadFreshJSON("data/robustness.json");
@@ -359,10 +359,7 @@ function drawRobust(win) {
 }
 
 async function main() {
-  // 5Y 走势聚合 与 净 GEX→次日波动 研究 已迁移到 research 页(收益率×市场 / GEX→波动 两个 tab)
-  await renderRiskControl();     // 账户风险控制:独立于回测数据,始终显示
-  await renderRiskExposure();    // 风险敞口热力图:本地专用(读 portfolio.json)
-  await renderRobust();          // 组合稳健性:M2M 收益曲线 + β/α(本地私有)
+  // 仓位/风控/组合稳健性已迁到 portfolio 页(portfolio.js import 这三个函数);此页只留回测。
   const d = await loadFreshJSON("data/strategy_bt.json");
   if (!d || !Array.isArray(d.equity_curve) || !d.equity_curve.length) {
     $("bt-empty").style.display = "block";
@@ -428,4 +425,4 @@ async function main() {
   const tsec = $("bt-trades") && $("bt-trades").closest("section");
   if (tsec) tsec.style.display = "none";
 }
-main();
+if (document.getElementById("bt-chart")) main();   // 仅策略页自跑;被 portfolio.js import 时不跑

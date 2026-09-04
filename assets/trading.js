@@ -1327,10 +1327,7 @@ async function loadData(force = false) {
   ]);
   RESEARCH = research; GEX = gex; GEXH = gexh; WEEK = week;
   if (wantBars && bars) { BARS = bars; lastBarsAt = Date.now(); }  // 拉失败保留旧 bars,下轮重试
-  // 券商持仓:本地专用文件(gitignored)。用 loadJSON 相对路径 → localhost 有、公开站 404→null。
-  PORTFOLIO = await loadJSON("data/portfolio.json");
-  PNL = await loadJSON("data/pnl.json");   // 盈亏诊断(公开);缺失则面板不显示该块
-  SCORES = parseCSV(await loadText("research/scorecards/_summary.csv"));  // 打分总表(本地符号链接→私有库);公开站404→null
+  // Portfolio/盈亏/打分 已迁到 portfolio 页(见 initPortfolioPanel);交易台不再加载渲染。
 }
 
 /* 简易 fetch 文本 + CSV 解析(处理引号内逗号、BOM);失败→null */
@@ -1391,6 +1388,35 @@ function renderScorecards() {
     + `<div class="sc-wrap"><table class="bt-table sc-table"><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table></div></div>`;
 }
 
+/* Portfolio 页入口:portfolio.js import 调用。加载数据 + 渲染 Portfolio/Scorecards + 挂交互监听。 */
+export async function initPortfolioPanel() {
+  if (!$("portfolio")) return;
+  PORTFOLIO = await loadJSON("data/portfolio.json");
+  PNL = await loadJSON("data/pnl.json");
+  SCORES = parseCSV(await loadText("research/scorecards/_summary.csv"));
+  renderPortfolio();
+  renderScorecards();
+  // 饼图/图例点击→按票 filter;翻页;盈亏窗口切换。委托到常驻容器 #portfolio。
+  $("portfolio").addEventListener("click", (ev) => {
+    const pwBtn = ev.target.closest("#pf-pw button");
+    if (pwBtn) { pfPnlWin = pwBtn.dataset.pw; renderPortfolio(); return; }
+    const pageBtn = ev.target.closest("[data-pfpage]");
+    if (pageBtn) { pfTxPage += pageBtn.dataset.pfpage === "next" ? 1 : -1; renderPortfolio(); return; }
+    if (ev.target.closest("#pf-clear")) { pfFilter = null; pfTxPage = 0; renderPortfolio(); return; }
+    const hit = ev.target.closest("[data-sym]");
+    if (!hit) return;
+    pfFilter = (pfFilter === hit.dataset.sym) ? null : hit.dataset.sym;
+    pfTxPage = 0;
+    renderPortfolio();
+  });
+  $("portfolio").addEventListener("change", (ev) => {
+    if (!ev.target.closest("#pf-acct")) return;
+    pfAccount = ev.target.value || null;
+    pfFilter = null; pfTxPage = 0;
+    renderPortfolio();
+  });
+}
+
 function renderAll(keepRange = false) {
   const lr = keepRange ? chart.timeScale().getVisibleLogicalRange() : null;
   renderMiniCards();
@@ -1398,8 +1424,6 @@ function renderAll(keepRange = false) {
   renderChart();
   renderGexSub();
   renderOptPanel();
-  renderPortfolio();
-  renderScorecards();
   renderErrors();
   if (lr) chart.timeScale().setVisibleLogicalRange(lr);
   const upd = RESEARCH?.updated_at || GEX?.updated_at;
@@ -1536,28 +1560,6 @@ function initToolbar() {
     [...$("session-chips").children].forEach((b) => b.classList.toggle("active", b === btn));
     renderChart();
   });
-  // Portfolio 饼图/图例点击 → 交易明细按该票 filter(再点同块或 ✕ 清除);交易明细翻页。委托到常驻容器 #portfolio。
-  $("portfolio").addEventListener("click", (ev) => {
-    const pwBtn = ev.target.closest("#pf-pw button");
-    if (pwBtn) { pfPnlWin = pwBtn.dataset.pw; renderPortfolio(); return; }
-    const pageBtn = ev.target.closest("[data-pfpage]");
-    if (pageBtn) { pfTxPage += pageBtn.dataset.pfpage === "next" ? 1 : -1; renderPortfolio(); return; }
-    if (ev.target.closest("#pf-clear")) { pfFilter = null; pfTxPage = 0; renderPortfolio(); return; }
-    const hit = ev.target.closest("[data-sym]");
-    if (!hit) return;
-    const sym = hit.dataset.sym;
-    pfFilter = (pfFilter === sym) ? null : sym;   // 点已选中的 → 取消
-    pfTxPage = 0;                                 // 换筛选回到第 1 页
-    renderPortfolio();
-  });
-  // Portfolio 账户下拉 → 切换当前查看的账户(切账户时清掉个股 filter、回到第 1 页)
-  $("portfolio").addEventListener("change", (ev) => {
-    if (!ev.target.closest("#pf-acct")) return;
-    pfAccount = ev.target.value || null;
-    pfFilter = null;
-    pfTxPage = 0;
-    renderPortfolio();
-  });
   // 本周历史 GEX 快照:选某日看当日墙(当周到期);data-day="" = Live/最新
   $("gex-week-chips").addEventListener("click", (ev) => {
     const btn = ev.target.closest("button");
@@ -1575,6 +1577,7 @@ function initToolbar() {
 
 /* ---------- 入口 ---------- */
 (async function main() {
+  if (!$("chart")) return;   // 仅交易台页运行;被 portfolio.js import 取 initPortfolioPanel 时不跑
   initCharts();
   initToolbar();
   initControls();
