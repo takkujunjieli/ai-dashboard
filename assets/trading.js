@@ -587,7 +587,15 @@ function updateLadderTitle() {
     suffix = " · all expiries";
   }
   const merged = ladderMode === "gex" ? (histDay()?.merged_index ?? GEX?.tickers?.[SYM]?.merged_index) : null;  // SPY = SPX主池+SPY(历史日用当日)
-  $("ladder-title").textContent = `Strike Ladder · ${m}${suffix}${merged ? ` · +${merged}主池` : ""}`;
+  // 归因标签:GEX=做市商推断(非实测,靠符号假设/Lee-Ready);OI/Vol=全市场总量(不区分谁持有);Net Flow=全市场定向主动流
+  const attr = {
+    gex: ["做市商推断", "mm", "做市商净 gamma 是推断值:由全市场 OI × gamma × dealer 符号(Raw=假设 / Real=Lee-Ready 实测)得出,非实测持仓"],
+    oi: ["全市场持仓", "mkt", "全市场未平仓合约总量,不区分做市商/散户/机构——每张合约多空各一方,只数一次"],
+    vol: ["全市场成交", "mkt", "全市场当日成交总量,所有参与者,无方向、无归因"],
+    netflow: ["全市场·定向主动流", "flow", "全市场当日 Lee-Ready 净主动买卖(buy−sell),衡量客户主动方向 → 反推 dealer 累积方向"],
+  }[ladderMode];
+  $("ladder-title").innerHTML = `Strike Ladder · ${esc(m)}${esc(suffix)}${merged ? ` · +${esc(String(merged))}主池` : ""}`
+    + ` <span class="lad-attr lad-${attr[1]}" title="${esc(attr[2])}">${esc(attr[0])}</span>`;
   const gexOnlyOpacity = ladderMode === "gex" ? "1" : "0.4";
   ($("gex-exp").closest(".tb-group") || $("gex-exp")).style.opacity = gexOnlyOpacity;
   ($("gex-caliber").closest(".tb-group") || $("gex-caliber")).style.opacity = gexOnlyOpacity;

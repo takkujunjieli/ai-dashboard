@@ -220,6 +220,12 @@ footer { margin-top: 50px; text-align: center; }
 .wb-ladder { width: 260px; flex: 0 0 260px; }
 #ladder-box { position: relative; user-select: none; cursor: ns-resize; }  /* 纵向滚轮缩放/拖动平移 */
 /* 策略回测页交易表 */
+/* 阶梯归因标签:做市商推断 vs 全市场 */
+.lad-attr { font-size: 10px; padding: 1px 7px; border-radius: 8px; margin-left: 6px; font-weight: 600; vertical-align: middle; cursor: help; }
+.lad-attr.lad-mm { color: #fbbf24; background: hsl(38 92% 50% / .16); }
+.lad-attr.lad-mkt { color: var(--muted); background: hsl(220 12% 60% / .16); }
+.lad-attr.lad-flow { color: var(--accent); background: hsl(213 94% 68% / .16); }
+
 /* 5Y 走势聚合图例 */
 .rt-legend { display: flex; flex-wrap: wrap; gap: 16px; margin: 4px 0 8px; font-size: 12px; }
 .rt-leg { display: flex; align-items: center; gap: 6px; color: var(--muted); cursor: pointer; user-select: none; }

@@ -43,9 +43,9 @@
   <div class="tb-group">
     <span class="tb-label">阶梯</span>
     <div id="ladder-mode" class="chips seg">
-      <button data-m="gex" class="active">GEX</button>
-      <button data-m="oi">OI</button>
-      <button data-m="vol">Vol</button>
+      <button data-m="gex" class="active" title="做市商推断:全市场 OI×gamma 再乘 dealer 符号(Raw=call+/put− 假设,Real=Lee-Ready 实测)。非实测 MM 持仓。">GEX</button>
+      <button data-m="oi" title="全市场未平仓总量,不区分做市商/散户/机构(每张合约多空各一,只数一次)。">OI</button>
+      <button data-m="vol" title="全市场当日成交总量,所有参与者,无方向、无归因。">Vol</button>
       <button data-m="netflow" title="每档 Lee-Ready 净主动买卖(calls+puts 合计,buy−sell);绿=净主动买、红=净主动卖。当日流量、单名股才有。">Net Flow</button>
     </div>
   </div>
