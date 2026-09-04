@@ -1351,41 +1351,50 @@ function parseCSV(text) {
   return rows;
 }
 
-/* ---------- Scorecards(解析 _summary.csv,热力表;风格同交易台)---------- */
+/* ---------- Scorecards(解析 _summary.csv,紧凑热力表:数字+底色,悬停看理由)---------- */
 function renderScorecards() {
   const el = $("scorecards"); if (!el) return;
   const rows = SCORES;
   if (!rows || rows.length < 2) { el.innerHTML = ""; return; }  // 公开站/无文件 → 不显示
   const head = rows[0];
-  const SCORE_COLS = new Set([2, 3, 4, 5]);   // Operation / Leadership / Externality / Valuation
+  const SCORE_COLS = [2, 3, 4, 5];   // Operation / Leadership / Externality / Valuation
+  const TH = { Operation: "经营", Leadership: "管理层", Externality: "外部", Valuation: "估值" };
+  // 底色:0/无=中性无色;正=绿、负=红,深浅按 |分|/5。
   const heat = (s) => {
-    const m = Math.min(Math.abs(s), 5) / 5;           // 0..1 深浅(幅度)
-    const hue = s >= 0 ? 142 : 0;                     // 正=绿 / 负=红
-    return `background:hsl(${hue} 65% 45% / ${(0.05 + m * 0.37).toFixed(2)})`;
+    if (!s || isNaN(s)) return "";
+    const m = Math.min(Math.abs(s), 5) / 5;
+    return `background:hsl(${s > 0 ? 142 : 0} 65% 45% / ${(0.08 + m * 0.42).toFixed(2)})`;
   };
-  const TH = { Ticker: "标的", Direction: "", Operation: "经营", Leadership: "管理层", Externality: "外部", Valuation: "估值" };
-  const th = head.map((h) => `<th>${esc(TH[h] ?? h)}</th>`).join("");
+  const parse = (v) => {                                        // "分 (理由)" → {s, why}
+    const mm = String(v).match(/^\s*(-?\d+(?:\.\d+)?)\s*\(([\s\S]*)\)\s*$/);
+    return { s: mm ? parseFloat(mm[1]) : parseFloat(v), why: mm ? mm[2].trim() : "" };
+  };
+  const cell = (s, why, cls = "") => {                          // 紧凑数字格:底色 + 悬停理由 + ★/⚠ 角标
+    if (isNaN(s)) return `<td class="sc-num ${cls}">–</td>`;
+    const flag = /★/.test(why) ? "★" : /⚠/.test(why) ? "⚠" : "";
+    const t = s > 0 ? "+" + s : String(s);
+    return `<td class="sc-num ${cls}" style="${heat(s)}"${why ? ` title="${esc(why)}"` : ""}>`
+      + `<b>${t}</b>${flag ? `<sup class="sc-flag">${flag}</sup>` : ""}</td>`;
+  };
+  const th = `<th>标的</th><th></th>`
+    + `<th title="4 维等权均分 = scorecard→收益 IC 的预测变量">综合</th>`
+    + SCORE_COLS.map((i) => `<th>${esc(TH[head[i]] ?? head[i])}</th>`).join("");
   const body = rows.slice(1).filter((r) => r.length > 1 && r[0]).map((r) => {
     const dir = r[1];
     const dirCls = dir === "Short" ? "down" : dir === "Long" ? "up" : "muted";
     const dirTxt = dir === "Short" ? "空" : dir === "Long" ? "多" : "观";  // Watch=无仓位
-    const tds = r.map((v, i) => {
-      if (i === 0) return `<td class="sc-tk"><b>${esc(v)}</b></td>`;
-      if (i === 1) return `<td><span class="sc-dir ${dirCls}">${dirTxt}</span></td>`;
-      if (SCORE_COLS.has(i)) {
-        const mm = String(v).match(/^\s*(-?\d+(?:\.\d+)?)\s*\(([\s\S]*)\)\s*$/);   // "分 (理由)"
-        const s = mm ? parseFloat(mm[1]) : parseFloat(v);
-        const why = mm ? mm[2] : "";
-        const numTxt = isNaN(s) ? esc(v) : (s > 0 ? "+" + s : String(s));
-        return `<td class="sc-cell"${isNaN(s) ? "" : ` style="${heat(s)}"`}><b>${numTxt}</b>${why ? ` <span class="sc-why">${esc(why)}</span>` : ""}</td>`;
-      }
-      return `<td>${esc(v)}</td>`;
-    }).join("");
-    return `<tr>${tds}</tr>`;
+    const parsed = SCORE_COLS.map((i) => parse(r[i]));
+    const nums = parsed.map((p) => p.s).filter((x) => !isNaN(x));
+    const mean = nums.length ? Math.round(nums.reduce((a, b) => a + b, 0) / nums.length * 10) / 10 : NaN;
+    return `<tr><td class="sc-tk"><b>${esc(r[0])}</b></td>`
+      + `<td><span class="sc-dir ${dirCls}">${dirTxt}</span></td>`
+      + cell(mean, "4 维等权均分", "sc-mean")
+      + parsed.map((p) => cell(p.s, p.why)).join("")
+      + `</tr>`;
   }).join("");
   el.innerHTML = `<div class="card"><div class="sc-head"><b>📊 Scorecards</b> `
-    + `<span class="muted small">本地 · 4 维单分(-5~+5,0=中性/正好负差),括号=核心理由。经营/管理层/外部=质量,估值=裁决。多头看高、空头看低;★需数据校准 ⚠身份存疑</span></div>`
-    + `<div class="sc-wrap"><table class="bt-table sc-table"><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table></div></div>`;
+    + `<span class="muted small">本地 · 4 维单分(-5~+5,0=中性/正好负差),<b>悬停格子看理由</b>。综合=等权均分(=IC 预测变量);经营/管理层/外部=质量,估值=裁决。多头看高、空头看低;★需数据校准 ⚠身份存疑</span></div>`
+    + `<div class="sc-wrap"><table class="bt-table sc-table sc-heat"><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table></div></div>`;
 }
 
 /* Portfolio 页入口:portfolio.js import 调用。加载数据 + 渲染 Portfolio/Scorecards + 挂交互监听。 */

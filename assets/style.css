@@ -257,7 +257,11 @@ footer { margin-top: 50px; text-align: center; }
 .sc-table th { text-align: center; }
 .sc-table td { text-align: center; }
 .sc-table th:first-child, .sc-table td:first-child { text-align: left; }
-.sc-table .sc-num { font-weight: 600; border-radius: 3px; }
+.sc-heat td.sc-num { text-align: center; min-width: 46px; padding: 6px 6px; border-radius: 3px; white-space: nowrap; cursor: default; }
+.sc-heat td.sc-num b { font-weight: 700; }
+.sc-heat td.sc-num[title] { cursor: help; }
+.sc-heat td.sc-mean { font-weight: 800; border-left: 2px solid var(--accent); }
+.sc-flag { font-size: 9px; opacity: .85; margin-left: 1px; vertical-align: super; }
 .sc-table .sc-cell { text-align: left; white-space: normal; vertical-align: top; min-width: 170px; max-width: 300px; line-height: 1.35; border-radius: 3px; }
 .sc-cell b { font-weight: 700; }
 .sc-why { color: var(--muted); font-weight: 400; font-size: 11px; }
