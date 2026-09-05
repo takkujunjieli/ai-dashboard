@@ -265,7 +265,7 @@ footer { margin-top: 50px; text-align: center; }
 .sc-table .sc-cell { text-align: left; white-space: normal; vertical-align: top; min-width: 170px; max-width: 300px; line-height: 1.35; border-radius: 3px; }
 .sc-cell b { font-weight: 700; }
 .sc-why { color: var(--muted); font-weight: 400; font-size: 11px; }
-.sc-table .sc-tk { position: sticky; left: 0; background: var(--card); }
+.sc-table .sc-tk { position: sticky; left: 0; background: var(--card); width: 1%; white-space: nowrap; padding-right: 12px; }
 .sc-dir { font-size: 11px; padding: 0 7px; border-radius: 8px; }
 .sc-dir.up { color: var(--up); background: hsl(152 60% 45% / .18); }
 .sc-dir.down { color: var(--down); background: hsl(0 70% 62% / .18); }
