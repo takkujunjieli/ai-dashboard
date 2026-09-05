@@ -371,7 +371,76 @@ function drawRobust(win) {
     + `<b>α 的 95%CI 跨 0(标 ≈0)= 选股超额与运气不可区分,别当 skill</b>;净/毛≈1=净多头。⚠ 小样本 CI 很宽 = 数据不足,勿过度解读。</div>`;
 }
 
+/* 交易复盘:计划(事前登记 thesis+计划价+bundle)→ 归因(平仓后只判流程/守没守计划,不看结果)。
+   本机 localStorage(私有),导出 JSON 可给 agent。process>outcome:好交易=守计划,不管盈亏。 */
+async function renderJournal() {
+  const host = $("journal"); if (!host) return;
+  const pol = (await loadJSON("config/risk_policy.json")) || {};
+  const bopts = Object.keys(pol.bundles || {}).map((b) => `<option>${esc(b)}</option>`).join("");
+  const J = rLS("tradeJournal", []);
+  const closed = J.filter((e) => e.status === "closed"), open = J.filter((e) => e.status !== "closed");
+  const foll = closed.filter((e) => e.followed === "是").length;
+  const stat = `共 ${J.length} · 持仓中 ${open.length} · 已平 ${closed.length}${closed.length ? ` · 守计划 ${Math.round(foll / closed.length * 100)}%` : ""}`;
+  const form = `
+    <div class="risk-form" style="margin-bottom:8px">
+      <label>标的<input id="j-sym" style="width:78px" placeholder="TSLA"></label>
+      <label>方向<select id="j-dir"><option>多</option><option>空</option></select></label>
+      <label>Bundle<select id="j-bundle">${bopts}</select></label>
+      <label>进场<input id="j-entry" type="number" step="0.01" style="width:84px"></label>
+      <label>止损<input id="j-stop" type="number" step="0.01" style="width:84px"></label>
+      <label>目标<input id="j-target" type="number" step="0.01" style="width:84px"></label>
+      <label>股数<input id="j-size" type="number" style="width:72px"></label>
+    </div>
+    <div class="risk-form" style="margin-bottom:8px">
+      <label style="flex:1;min-width:260px">论点 edge(为什么进)<input id="j-thesis" style="width:100%" placeholder="突破前高 $96 变支撑 + HBM 卡位…"></label>
+      <label style="flex:1;min-width:260px">证伪条件(thesis 被推翻=离场,非"亏X%")<input id="j-invalid" style="width:100%" placeholder="跌回 $96 下方 / 指引下调…"></label>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+      <button id="j-add" class="mini-btn">＋记录计划</button>
+      <button id="j-export" class="mini-btn">导出 JSON</button>
+      <span class="muted small">${stat}</span>
+    </div>`;
+  const plan = (e) => `<b>${esc(e.sym)}</b> <span class="${e.dir === "空" ? "down" : "up"}">${e.dir}</span> · ${esc(e.bundle || "")} · 进 ${e.entry ?? "?"} / 止 ${e.stop ?? "?"} / 标 ${e.target ?? "?"} · ${e.size ?? "?"}股 <span class="muted small">${(e.ts || "").slice(0, 10)}</span><br><span class="muted small">edge: ${esc(e.thesis || "—")} | 证伪: ${esc(e.invalid || "—")}</span>`;
+  const openCard = (e) => `<div class="card" style="margin:6px 0" data-id="${e.id}">${plan(e)}
+    <div class="risk-form" style="margin-top:6px">
+      <label>平仓价<input class="jc-exit" type="number" step="0.01" style="width:84px"></label>
+      <label>守计划?<select class="jc-foll"><option>是</option><option>否</option></select></label>
+      <label style="flex:1;min-width:220px">归因(用当时信息判决策)<input class="jc-attrib" style="width:100%" placeholder="止损位对/进早了/该减仓…"></label>
+      <button class="jc-close mini-btn">平仓归因</button><button class="jc-del mini-btn">删</button>
+    </div></div>`;
+  const closedCard = (e) => `<div class="card" style="margin:6px 0;opacity:.85" data-id="${e.id}">${plan(e)}
+    <div class="muted small" style="margin-top:4px">平仓 ${e.exit ?? "?"} · 守计划 <b class="${e.followed === "是" ? "up" : "down"}">${e.followed || "?"}</b> · 归因: ${esc(e.attrib || "—")} <button class="jc-del mini-btn" style="float:right">删</button></div></div>`;
+  host.innerHTML = form
+    + (open.length ? `<div class="muted small">持仓中</div>${open.map(openCard).join("")}` : "")
+    + (closed.length ? `<div class="muted small" style="margin-top:8px">已平仓</div>${closed.map(closedCard).join("")}` : "");
+
+  const save = (arr) => { rLSset("tradeJournal", arr); renderJournal(); };
+  $("j-add").addEventListener("click", () => {
+    const sym = ($("j-sym").value || "").trim().toUpperCase(); if (!sym) return;
+    const e = { id: Date.now(), ts: new Date().toISOString(), status: "open", sym, dir: $("j-dir").value,
+      bundle: $("j-bundle").value, entry: +$("j-entry").value || null, stop: +$("j-stop").value || null,
+      target: +$("j-target").value || null, size: +$("j-size").value || null,
+      thesis: $("j-thesis").value.trim(), invalid: $("j-invalid").value.trim() };
+    save([e, ...J]);
+  });
+  $("j-export").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(J, null, 2)], { type: "application/json" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "trade_journal.json"; a.click();
+  });
+  host.querySelectorAll(".jc-close").forEach((btn) => btn.addEventListener("click", (ev) => {
+    const card = ev.target.closest("[data-id]"), id = +card.dataset.id;
+    const arr = J.map((e) => e.id !== id ? e : { ...e, status: "closed", ts_close: new Date().toISOString(),
+      exit: +card.querySelector(".jc-exit").value || null, followed: card.querySelector(".jc-foll").value,
+      attrib: card.querySelector(".jc-attrib").value.trim() });
+    save(arr);
+  }));
+  host.querySelectorAll(".jc-del").forEach((btn) => btn.addEventListener("click", (ev) => {
+    const id = +ev.target.closest("[data-id]").dataset.id; save(J.filter((e) => e.id !== id));
+  }));
+}
+
 async function main() {
+  await renderJournal();   // 复盘面板:本机私有,独立于回测数据(先渲染,避免下方 early-return 跳过)
   // 仓位/风控/组合稳健性已迁到 portfolio 页(portfolio.js import 这三个函数);此页只留回测。
   const d = await loadFreshJSON("data/strategy_bt.json");
   if (!d || !Array.isArray(d.equity_curve) || !d.equity_curve.length) {
