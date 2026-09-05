@@ -373,7 +373,7 @@ function drawRobust(win) {
 
 /* 交易复盘:计划(事前登记 thesis+计划价+bundle)→ 归因(平仓后只判流程/守没守计划,不看结果)。
    本机 localStorage(私有),导出 JSON 可给 agent。process>outcome:好交易=守计划,不管盈亏。 */
-async function renderJournal() {
+export async function renderJournal() {   // portfolio.js import 调用(交易复盘挂在 portfolio 页)
   const host = $("journal"); if (!host) return;
   const pol = (await loadJSON("config/risk_policy.json")) || {};
   const bopts = Object.keys(pol.bundles || {}).map((b) => `<option>${esc(b)}</option>`).join("");
@@ -440,8 +440,7 @@ async function renderJournal() {
 }
 
 async function main() {
-  await renderJournal();   // 复盘面板:本机私有,独立于回测数据(先渲染,避免下方 early-return 跳过)
-  // 仓位/风控/组合稳健性已迁到 portfolio 页(portfolio.js import 这三个函数);此页只留回测。
+  // 仓位/风控/组合稳健性/交易复盘已迁到 portfolio 页(portfolio.js import 这些函数);此页只留回测。
   const d = await loadFreshJSON("data/strategy_bt.json");
   if (!d || !Array.isArray(d.equity_curve) || !d.equity_curve.length) {
     $("bt-empty").style.display = "block";
