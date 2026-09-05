@@ -255,6 +255,33 @@ function tile(k, v, sub = "") {
   return `<div class="opt-tile"><div class="opt-k">${esc(k)}</div><div class="opt-v" style="font-size:13px">${esc(v)}</div>${sub ? `<div class="opt-sub">${esc(sub)}</div>` : ""}</div>`;
 }
 
+// 系数(特征)中文释义:16 宏观 + 7 市场技术,附在系数名后帮助解读
+const COEF_CN = {
+  term_10y3m: "期限利差 10Y−3M(倒挂=衰退前兆)",
+  term_10y3m_long: "期限利差 10Y−3M(长窗平滑)",
+  term_10y2y: "期限利差 10Y−2Y",
+  credit_baa_aaa: "信用利差 Baa−Aaa(企业债风险溢价)",
+  nfci: "NFCI 全国金融状况(>0=收紧)",
+  vix: "VIX 波动率(恐慌情绪)",
+  unrate: "失业率",
+  sahm: "Sahm 衰退指标(失业率上行触发)",
+  cfnai: "CFNAI 全国活动指数(<0=低于趋势)",
+  claims: "初请失业金人数",
+  cpi_yoy: "CPI 同比通胀",
+  bm: "账面市值比 B/M(高=便宜)",
+  ntis: "净股票发行率(高=供给过剩,看空)",
+  gz_spread: "GZ 信用利差(企业债超额利差)",
+  ebp: "超额债券溢价 EBP(升=避险)",
+  est_prob: "基线先验概率",
+  mkt_dd: "大盘回撤(距高点回落)",
+  mkt_ret_1m: "近 1 月收益",
+  mkt_mom_12m: "12 月动量",
+  mkt_dist_10ma: "距 10 月均线偏离",
+  mkt_rvol_3m: "近 3 月已实现波动",
+  def_minus_cyc_12m: "防御−周期 12 月相对强弱(避险)",
+  breadth_pct_above_10ma: "市场宽度(站上 10 月线个股占比)",
+};
+
 function coefBars(res) {
   const top = res.coef.slice(0, 14);
   const mx = Math.max(...top.map((c) => Math.abs(c[1]))) || 1;
@@ -264,7 +291,7 @@ function coefBars(res) {
       ? `<span style="display:inline-block;width:50%;text-align:right"></span><span style="display:inline-block;width:${w}%;height:10px;background:${col}"></span>`
       : `<span style="display:inline-block;width:${50 - w}%"></span><span style="display:inline-block;width:${w}%;height:10px;background:${col};float:right"></span>`;
     return `<div style="display:flex;align-items:center;gap:8px;margin:3px 0">
-      <span style="width:150px;text-align:right;font-size:12px" class="muted">${esc(f)}</span>
+      <span style="width:210px;text-align:right;font-size:12px;line-height:1.25" class="muted"><span style="font-weight:600">${esc(f)}</span>${COEF_CN[f] ? `<br><span style="font-size:10px;opacity:.8">${esc(COEF_CN[f])}</span>` : ""}</span>
       <span style="flex:1">${bar}</span>
       <span style="width:52px;font-size:11px" class="${c >= 0 ? "down" : "up"}">${c >= 0 ? "+" : ""}${c.toFixed(2)}</span></div>`;
   }).join("");
