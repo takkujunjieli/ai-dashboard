@@ -533,6 +533,55 @@ async function renderRates() {
       hov.style.display = "block";
     });
   }
+  renderRatesCorr(r);
+}
+
+function pearson(xs, ys) {
+  const n = xs.length; if (n < 3) return null;
+  let sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0;
+  for (let i = 0; i < n; i++) { const x = xs[i], y = ys[i]; sx += x; sy += y; sxx += x * x; syy += y * y; sxy += x * y; }
+  const cov = sxy - sx * sy / n, vx = sxx - sx * sx / n, vy = syy - sy * sy / n;
+  return (vx > 0 && vy > 0) ? cov / Math.sqrt(vx * vy) : null;
+}
+
+/* 收益率×股市 当日相关性:只算 |Δ收益率|≥阈值(bps)的交易日,同期 Pearson(不做预测)。
+   负=收益率↑当日股市↓(压制);正=同向。每对独立在共同交易日上算日度变化。 */
+function renderRatesCorr(r, bps) {
+  const host = $("rates-corr"); if (!host) return;
+  if (!r || !r.series) { host.innerHTML = '<span class="muted small">缺 data/rates.json</span>'; return; }
+  const meta = r.meta || {}, S = r.series;
+  const yks = ["DGS2", "DGS10", "DGS30"].filter((k) => S[k]);
+  const eks = ["SPY", "QQQ", "IWM"].filter((k) => S[k]);
+  if (bps == null) { const el = $("rc-thr"); bps = el ? +el.value : 5; }
+  const thr = (bps || 0) / 100;                    // bps → 收益率百分点
+  const map = {};
+  for (const k of [...yks, ...eks]) { const m = {}; for (const [d, v] of S[k]) if (v != null) m[d] = v; map[k] = m; }
+  const cell = (yk, ek) => {
+    const ds = Object.keys(map[yk]).filter((d) => map[ek][d] != null).sort();
+    const dy = [], re = [];
+    for (let i = 1; i < ds.length; i++) {
+      const d1 = map[yk][ds[i]] - map[yk][ds[i - 1]];
+      if (Math.abs(d1) < thr) continue;            // 只留 |Δ收益率|≥阈值 的日
+      dy.push(d1); re.push(map[ek][ds[i]] / map[ek][ds[i - 1]] - 1);
+    }
+    return { c: pearson(dy, re), n: dy.length };
+  };
+  const heat = (c) => { if (c == null) return ""; const m = Math.min(Math.abs(c), 1); const hue = c >= 0 ? 142 : 0; return `background:hsl(${hue} 65% 45% / ${(0.08 + m * 0.5).toFixed(2)})`; };
+  const lab = (k) => (meta[k] && meta[k].label) || k;
+  const thead = `<tr><th></th>${eks.map((e) => `<th>${esc(lab(e))}</th>`).join("")}<th class="muted">n</th></tr>`;
+  const rows = yks.map((y) => {
+    let nrow = 0;
+    const tds = eks.map((e) => { const { c, n } = cell(y, e); nrow = Math.max(nrow, n); return `<td class="sc-num" style="${heat(c)}">${c == null ? "—" : c.toFixed(2)}</td>`; }).join("");
+    return `<tr><td class="sc-tk"><b>${esc(lab(y))}</b></td>${tds}<td class="muted">${nrow}</td></tr>`;
+  }).join("");
+  host.innerHTML =
+    `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+       <label class="muted small">|Δ收益率| 阈值 <input id="rc-thr" type="number" step="1" min="0" value="${bps}" style="width:60px;background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text)"> bps/日</label>
+       <span class="muted small">同期日度相关(Pearson);n=达标交易日数</span>
+     </div>
+     <div class="sc-wrap"><table class="bt-table sc-table">${thead}${rows}</table></div>
+     <div class="muted small" style="margin-top:8px"><span class="down">负(红)</span>=收益率↑当日股市↓(压制)/ 收益率↓股市↑;<span class="up">正(绿)</span>=同向。只看<b>当日相关、非预测</b>;阈值越高→只留大幅变动日(样本变少)。</div>`;
+  const el = $("rc-thr"); if (el) el.addEventListener("change", () => renderRatesCorr(r, +el.value || 0));
 }
 
 /* Topic 4:净 GEX → 次日已实现波动(自 strategy 页迁入)。读 data/strategy_bt.json 的 study 字段。
