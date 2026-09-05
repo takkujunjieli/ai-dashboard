@@ -63,7 +63,7 @@ def yahoo_series(sym):
 
 series, errors = {}, []
 for label, fn, arg in [
-    ("DGS2", fred_series, "DGS2"), ("DGS10", fred_series, "DGS10"), ("DGS30", fred_series, "DGS30"),
+    ("DGS10", fred_series, "DGS10"), ("DGS30", fred_series, "DGS30"),
     ("SPY", yahoo_series, "SPY"), ("QQQ", yahoo_series, "QQQ"), ("IWM", yahoo_series, "IWM"),
 ]:
     try:
@@ -78,7 +78,6 @@ out = {
     "range_years": YEARS,
     # meta:画图用。yields=右轴(实际%);equities=左轴(归一到100)。IWM=Russell 2000 ETF。
     "meta": {
-        "DGS2": {"label": "US 2Y", "axis": "yield", "color": "#fbbf24"},
         "DGS10": {"label": "US 10Y", "axis": "yield", "color": "#f59e0b"},
         "DGS30": {"label": "US 30Y", "axis": "yield", "color": "#ef4444"},
         "SPY": {"label": "SPY", "axis": "equity", "color": "#60a5fa"},
