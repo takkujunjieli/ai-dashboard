@@ -161,67 +161,105 @@ function runModel(A, lam = LAM, embargo = 12) {
 }
 
 /* ---------- 渲染 ---------- */
-// 归一到起点=100(便于把量级差很大的两条指数放同一对数轴上比走势)
-function norm100(arr) {
-  const f = arr.find((v) => v != null && v > 0);
-  return f ? arr.map((v) => (v == null ? null : v / f * 100)) : arr;
-}
 
-// series:[{name,prob,color,w,dash}];prices:[{name,data,color}](已 norm100)
-function chartProbVsBears(J, dir, series, benchmarks) {
-  const dates = J.dates, eps = J.directions[dir].entities.market.episodes;
-  const W = 1000, H = 320, pl = 40, pr = 40, pt = 16, pb = 26, iw = W - pl - pr, ih = H - pt - pb;
-  const n = dates.length;
-  const x = (i) => pl + i / (n - 1) * iw;
-  const y = (v) => pt + (1 - v) * ih;                       // 左轴:概率 0..1
-  const di = {}; dates.forEach((d, i) => (di[d.slice(0, 7)] = i));
-  const dayi = (d) => di[d.slice(0, 7)] ?? null;
+/* 预警概率 vs 历史熊市 —— 交互式(lightweight-charts,与「国债 vs 股市」同款):
+   左轴=预警概率%,右轴=大盘指数(对数,起点100),半透明直方图=历史熊市阴影(按驱动着色)。
+   可点图例开关曲线、鼠标悬停读数、缩放/平移。series:[{name,prob,color,w,dash}]。 */
+function probBearsChart(host, J, dir, series, benchmarks) {
+  if (!host) return;
+  const LWC = window.LightweightCharts;
+  if (!LWC) { host.innerHTML = '<span class="muted small">图表库未加载</span>'; return; }
+  const dates = J.dates, eps = (J.directions[dir].entities.market.episodes) || [];
+  const cssVar = (c) => c && c.startsWith("var(")
+    ? (getComputedStyle(document.documentElement).getPropertyValue(c.slice(4, -1).trim()).trim() || "#60a5fa") : c;
+  const hexA = (h, a) => { const n = parseInt(h.slice(1), 16); return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`; };
 
-  // 右轴:大盘指数(对数,起点=100)
-  const prices = [
-    { name: "标普500", data: norm100(benchmarks.sp500 || []), color: "#94a3b8" },
-    { name: "纳斯达克", data: norm100(benchmarks.nasdaq || []), color: "#2dd4bf" },
-  ].filter((p) => p.data.some((v) => v != null));
-  const allP = prices.flatMap((p) => p.data).filter((v) => v != null && v > 0);
-  const loMin = allP.length ? Math.log10(Math.min(...allP)) : 2, loMax = allP.length ? Math.log10(Math.max(...allP)) : 4;
-  const yP = (v) => pt + (1 - (Math.log10(v) - loMin) / (loMax - loMin || 1)) * ih;
-  const priceLines = prices.map((p) => {
-    const pts = p.data.map((v, i) => (v == null || v <= 0) ? null : `${x(i).toFixed(1)},${yP(v).toFixed(1)}`).filter(Boolean).join(" ");
-    return `<polyline points="${pts}" fill="none" stroke="${p.color}" stroke-width="1" opacity="0.8"/>`;
-  }).join("");
-  const decades = [];
-  for (let e = Math.ceil(loMin); e <= Math.floor(loMax); e++) decades.push(10 ** e);
-  const rt = decades.map((v) => `<text x="${(pl + iw + 5).toFixed(1)}" y="${(yP(v) + 3).toFixed(1)}" font-size="9" fill="var(--muted)">${v >= 1000 ? v / 1000 + "k" : v}</text>`).join("");
+  host.innerHTML = "";
+  const leg = document.createElement("div"); leg.className = "rt-legend";
+  const wrap = document.createElement("div"); wrap.className = "chart-wrap";
+  const chartEl = document.createElement("div"); chartEl.style.height = "340px";
+  const hov = document.createElement("div"); hov.className = "chart-hover"; hov.style.display = "none";
+  wrap.append(chartEl, hov);
+  const cap = document.createElement("div"); cap.className = "muted small"; cap.style.marginTop = "8px";
+  cap.innerHTML = "左轴=模型全样本拟合的熊市预警概率%;右轴=大盘指数(对数,起点=100);阴影=历史熊市。"
+    + "3 变量=曲线(10Y-3M)+信用(GZ 利差)+估值(b/m)极简领先基准;23 特征=全信号。点击图例开关曲线,悬停看当月读数,可缩放/平移。";
+  host.append(leg, wrap, cap);
 
-  // 熊市阴影(峰→谷)按 class 着色
-  const shades = eps.map((e) => {
-    const a = dayi(e.peak), b = dayi(e.trough);
-    if (a == null || b == null) return "";
-    return `<rect x="${x(a).toFixed(1)}" y="${pt}" width="${(x(b) - x(a)).toFixed(1)}" height="${ih}" fill="${DRIVER_COLOR[driverOf(e)]}" opacity="0.16"><title>#${e.id} ${e.peak}→${e.trough} ${(e.dd * 100).toFixed(0)}% · ${DRIVER_LABEL[driverOf(e)]}(${DRIVER_NOTE[+e.peak.slice(0, 4)] || ""})</title></rect>`;
-  }).join("");
+  const LOG = (LWC.PriceScaleMode && LWC.PriceScaleMode.Logarithmic) ?? 1;
+  const chart = LWC.createChart(chartEl, {
+    autoSize: true, height: 340,
+    layout: { background: { color: "transparent" }, textColor: "#8b96ad" },
+    grid: { vertLines: { color: "#1e2941" }, horzLines: { color: "#1e2941" } },
+    leftPriceScale: { visible: true, borderColor: "#2a3550" },
+    rightPriceScale: { visible: true, borderColor: "#2a3550", mode: LOG },
+    timeScale: { borderColor: "#2a3550" },
+    crosshair: { mode: LWC.CrosshairMode.Normal },
+  });
 
-  // 概率线(左轴,主角,画在最上层)
-  const probLines = series.map((s) => {
-    const pts = s.prob.map((v, i) => v == null ? null : `${x(i).toFixed(1)},${y(v).toFixed(1)}`).filter(Boolean).join(" ");
-    return `<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="${s.w || 1.6}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ""}/>`;
-  }).join("");
+  // 熊市阴影:直方图(每月 value=1、按驱动着色),先建 → 置于线下层。峰早于数据起点则从头裁剪。
+  const monthIdx = {}; dates.forEach((d, i) => (monthIdx[d.slice(0, 7)] = i));
+  const bearInfo = new Array(dates.length).fill(null);
+  for (const e of eps) {
+    let lo = monthIdx[e.peak.slice(0, 7)], hi = monthIdx[e.trough.slice(0, 7)];
+    if (lo == null && hi == null) continue;
+    if (lo == null) lo = 0;
+    if (hi == null) hi = dates.length - 1;
+    const drv = driverOf(e);
+    for (let i = Math.min(lo, hi); i <= Math.max(lo, hi); i++)
+      bearInfo[i] = { driver: drv, id: e.id, dd: e.dd };
+  }
+  const bearSeries = chart.addHistogramSeries({ priceScaleId: "bear", base: 0, priceLineVisible: false, lastValueVisible: false });
+  bearSeries.priceScale().applyOptions({ scaleMargins: { top: 0, bottom: 0 }, visible: false });
+  bearSeries.setData(dates.map((d, i) => bearInfo[i]
+    ? { time: d, value: 1, color: hexA(DRIVER_COLOR[bearInfo[i].driver], 0.16) } : { time: d }));
 
-  const yt = [0, 0.25, 0.5, 0.75, 1].map((v) => `<line x1="${pl}" y1="${y(v).toFixed(1)}" x2="${pl + iw}" y2="${y(v).toFixed(1)}" stroke="var(--border)"/><text x="${pl - 6}" y="${(y(v) + 3).toFixed(1)}" text-anchor="end" font-size="10" fill="var(--muted)">${v}</text>`).join("");
-  const xt = dates.map((d, i) => (d.slice(5, 7) === "12" && +d.slice(0, 4) % 5 === 0) ? `<text x="${x(i).toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="10" fill="var(--muted)">${d.slice(0, 4)}</text>` : "").join("");
+  const S = [];   // {label,color,series,visible,latest,fmt}
+  for (const s of series) {                                  // 概率线(左轴,%)
+    const col = cssVar(s.color);
+    const ser = chart.addLineSeries({ color: col, lineWidth: s.w || 1.8,
+      lineStyle: s.dash ? LWC.LineStyle.Dashed : LWC.LineStyle.Solid,
+      priceScaleId: "left", priceLineVisible: false, lastValueVisible: false });
+    ser.setData(dates.map((d, i) => s.prob[i] == null ? { time: d } : { time: d, value: s.prob[i] * 100 }));
+    const last = [...s.prob].reverse().find((v) => v != null);
+    S.push({ label: s.name, color: col, series: ser, visible: true,
+      latest: last == null ? "—" : (last * 100).toFixed(0) + "%", fmt: (v) => v.toFixed(0) + "%" });
+  }
+  for (const m of [{ key: "sp500", label: "标普500", color: "#94a3b8" }, { key: "nasdaq", label: "纳斯达克", color: "#2dd4bf" }]) {
+    const arr = benchmarks[m.key]; if (!arr || !arr.length) continue;   // 基准指数(右轴,对数,归一 100)
+    const base = arr.find((v) => v != null && v > 0) || 1;
+    const ser = chart.addLineSeries({ color: m.color, lineWidth: 1, priceScaleId: "right", priceLineVisible: false, lastValueVisible: false });
+    ser.setData(arr.map((v, i) => (v == null || v <= 0) ? { time: dates[i] } : { time: dates[i], value: v / base * 100 }));
+    const last = [...arr].reverse().find((v) => v != null && v > 0), chg = (last / base - 1) * 100;
+    S.push({ label: m.label, color: m.color, series: ser, visible: true,
+      latest: (chg >= 0 ? "+" : "") + chg.toFixed(0) + "%", fmt: (v) => (v >= 100 ? "+" : "") + (v - 100).toFixed(0) + "%" });
+  }
+  chart.timeScale().fitContent();
 
-  const legend = [
-    ...series.map((s) => `<span style="white-space:nowrap"><span style="color:${s.color};font-weight:700">${s.dash ? "▬ ▬" : "▬▬"}</span> ${esc(s.name)}(当前 ${(s.prob[s.prob.length - 1] * 100).toFixed(0)}%)</span>`),
-    ...prices.map((p) => `<span style="white-space:nowrap"><span style="color:${p.color};font-weight:700">▬</span> ${esc(p.name)}</span>`),
-    `<span style="white-space:nowrap">阴影=历史熊市(<span style="color:${DRIVER_COLOR.imbalance}">信用/估值驱动</span>/<span style="color:${DRIVER_COLOR.shock}">冲击</span>)</span>`,
-  ].join("");
+  S.forEach((s) => {                                         // 可点图例:开关曲线
+    const chip = document.createElement("span"); chip.className = "rt-leg";
+    chip.innerHTML = `<span class="rt-sw" style="background:${s.color}"></span>${esc(s.label)} <b>${s.latest}</b>`;
+    chip.onclick = () => { s.visible = !s.visible; s.series.applyOptions({ visible: s.visible }); chip.classList.toggle("off", !s.visible); };
+    leg.appendChild(chip);
+  });
+  const shadeChip = document.createElement("span"); shadeChip.className = "rt-leg"; shadeChip.style.cursor = "default";
+  shadeChip.innerHTML = `阴影=历史熊市(<span style="color:${DRIVER_COLOR.imbalance}">信用/估值</span> / <span style="color:${DRIVER_COLOR.shock}">冲击</span>)`;
+  leg.appendChild(shadeChip);
 
-  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px">
-    ${yt}${shades}${priceLines}${probLines}${rt}${xt}
-    <text x="${pl - 6}" y="${pt - 4}" text-anchor="end" font-size="9" fill="var(--muted)">概率</text>
-    <text x="${(pl + iw + 5).toFixed(1)}" y="${pt - 4}" font-size="9" fill="var(--muted)">指数·log</text>
-  </svg>
-  <div class="muted small" style="display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px">${legend}</div>
-  <div class="muted small" style="margin-top:4px">左轴=模型全样本拟合的熊市预警概率;右轴=大盘指数(对数,各自起点=100)。3 变量=曲线(10Y-3M)+信用(GZ 利差)+估值(b/m),文献支持的极简领先基准;23 特征=全信号(含价格同步项)。</div>`;
+  chart.subscribeCrosshairMove((param) => {                 // 悬停:当月各可见曲线值 + 是否处于历史熊市
+    if (!param.point || !param.time) { hov.style.display = "none"; return; }
+    const rows = [];
+    for (const s of S) {
+      if (!s.visible) continue;
+      const d = param.seriesData.get(s.series);
+      if (!d || d.value == null) continue;
+      rows.push(`<span style="color:${s.color}">● ${esc(s.label)} ${s.fmt(d.value)}</span>`);
+    }
+    const bi = bearInfo[monthIdx[String(param.time).slice(0, 7)] ?? -1];
+    if (bi) rows.push(`<span style="color:${DRIVER_COLOR[bi.driver]}">▮ 熊市 #${bi.id} ${DRIVER_LABEL[bi.driver]}(${(bi.dd * 100).toFixed(0)}%)</span>`);
+    if (!rows.length) { hov.style.display = "none"; return; }
+    hov.innerHTML = `<div class="muted" style="margin-bottom:2px">${param.time}</div>` + rows.join("<br>");
+    hov.style.display = "block";
+  });
 }
 
 function scorecard(J, dir, res) {
@@ -310,7 +348,7 @@ async function renderBearbull() {
     { name: "预警概率·23特征", prob: res.probAll, color: "var(--accent)", w: 1.8 },
     { name: "预警概率·3变量", prob: res3.probAll, color: "#c084fc", w: 1.5, dash: "5 3" },
   ];
-  $("bb-chart").innerHTML = chartProbVsBears(J, "bear", series, J.benchmarks || {});
+  probBearsChart($("bb-chart"), J, "bear", series, J.benchmarks || {});
   $("bb-score").innerHTML = scorecard(J, "bear", res);
   $("bb-coef").innerHTML = coefBars(res);
 }
