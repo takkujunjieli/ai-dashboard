@@ -373,11 +373,27 @@ function drawRobust(win) {
 
 /* 交易复盘:计划(事前登记 thesis+计划价+bundle)→ 归因(平仓后只判流程/守没守计划,不看结果)。
    本机 localStorage(私有),导出 JSON 可给 agent。process>outcome:好交易=守计划,不管盈亏。 */
+const PRIV_REPO = "takkujunjieli/stock-dashboard-private";   // 私有库:持仓/复盘/止损等本地数据(换机器 clone 即在)
+async function putPrivate(path, obj, msg) {   // PAT PUT 到私有库(PAT 需含私有库写权限);merge sha + 409 重试
+  const pat = getPat();
+  if (!pat) return { ok: false, msg: "需 PAT(含私有库写权限)" };
+  const url = `https://api.github.com/repos/${PRIV_REPO}/contents/${path}`;
+  async function once() {
+    let sha;
+    try { const c = await fetch(url + "?ref=main&t=" + Date.now(), { headers: ghHeaders(pat), cache: "no-store" }); if (c.ok) sha = (await c.json()).sha; } catch { /* 新建 */ }
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(obj, null, 2) + "\n")));
+    return fetch(url, { method: "PUT", headers: ghHeaders(pat), body: JSON.stringify({ message: msg, content, sha, branch: "main" }) });
+  }
+  try { let r = await once(); if (r.status === 409) r = await once(); return r.ok ? { ok: true } : { ok: false, msg: "PUT " + r.status }; }
+  catch (e) { return { ok: false, msg: String(e) }; }
+}
+
 export async function renderJournal() {   // portfolio.js import 调用(交易复盘挂在 portfolio 页)
   const host = $("journal"); if (!host) return;
   const pol = (await loadJSON("config/risk_policy.json")) || {};
   const bopts = Object.keys(pol.bundles || {}).map((b) => `<option>${esc(b)}</option>`).join("");
-  const J = rLS("tradeJournal", []);
+  let J = rLS("tradeJournal", null);
+  if (!Array.isArray(J)) J = (await loadJSON("data/trade_journal.json")) || [];   // 新机器/浏览器:回落私有库文件
   const closed = J.filter((e) => e.status === "closed"), open = J.filter((e) => e.status !== "closed");
   const foll = closed.filter((e) => e.followed === "是").length;
   const stat = `共 ${J.length} · 持仓中 ${open.length} · 已平 ${closed.length}${closed.length ? ` · 守计划 ${Math.round(foll / closed.length * 100)}%` : ""}`;
@@ -397,8 +413,9 @@ export async function renderJournal() {   // portfolio.js import 调用(交易�
     </div>
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
       <button id="j-add" class="mini-btn">＋记录计划</button>
+      <button id="j-push" class="mini-btn">💾 存到私有库(换机器不丢)</button>
       <button id="j-export" class="mini-btn">导出 JSON</button>
-      <span class="muted small">${stat}</span>
+      <span id="j-msg" class="muted small">${stat}</span>
     </div>`;
   const plan = (e) => `<b>${esc(e.sym)}</b> <span class="${e.dir === "空" ? "down" : "up"}">${e.dir}</span> · ${esc(e.bundle || "")} · 进 ${e.entry ?? "?"} / 止 ${e.stop ?? "?"} / 标 ${e.target ?? "?"} · ${e.size ?? "?"}股 <span class="muted small">${(e.ts || "").slice(0, 10)}</span><br><span class="muted small">edge: ${esc(e.thesis || "—")} | 证伪: ${esc(e.invalid || "—")}</span>`;
   const openCard = (e) => `<div class="card" style="margin:6px 0" data-id="${e.id}">${plan(e)}
@@ -426,6 +443,11 @@ export async function renderJournal() {   // portfolio.js import 调用(交易�
   $("j-export").addEventListener("click", () => {
     const blob = new Blob([JSON.stringify(J, null, 2)], { type: "application/json" });
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "trade_journal.json"; a.click();
+  });
+  $("j-push").addEventListener("click", async () => {
+    const m = $("j-msg"); m.textContent = "存到私有库中…";
+    const r = await putPrivate("trade_journal.json", rLS("tradeJournal", []), "chore: trade journal via UI");
+    m.textContent = r.ok ? "✓ 已存私有库(换机器 clone 即在)" : "✗ " + r.msg;
   });
   host.querySelectorAll(".jc-close").forEach((btn) => btn.addEventListener("click", (ev) => {
     const card = ev.target.closest("[data-id]"), id = +card.dataset.id;

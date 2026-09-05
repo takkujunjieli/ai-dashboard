@@ -9,6 +9,8 @@ data/portfolio.json
 data/pnl.json
 data/portfolio_history.json
 data/_*_raw.json
+data/trade_journal.json
+data/risk_stops.json
 
 # 本地盈亏分析(含私人财务数据,绝不提交进公开 repo)
 analysis/
