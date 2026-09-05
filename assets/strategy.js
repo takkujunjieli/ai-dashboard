@@ -423,10 +423,27 @@ export async function renderJournal() {   // portfolio.js import 调用(交易�
       <button id="j-export" class="mini-btn">导出 JSON</button>
       <span id="j-msg" class="muted small">${stat}</span>
     </div>`;
-  const plan = (e) => `<b>${esc(e.sym)}</b> <span class="${e.dir === "空" ? "down" : "up"}">${e.dir}</span> · ${esc(e.bundle || "")} · 进 ${e.entry ?? "?"} / 止 ${e.stop ?? "?"} / 标 ${e.target ?? "?"} · ${e.size ?? "?"}股 <span class="muted small">${(e.ts || "").slice(0, 10)}</span><br><span class="muted small">edge: ${esc(e.thesis || "—")} | 证伪: ${esc(e.invalid || "—")}</span>`;
-  const openCard = (e) => `<div class="card" style="margin:6px 0" data-id="${e.id}">${plan(e)}
+  const plan = (e) => `<b>${esc(e.sym)}</b> <span class="${e.dir === "空" ? "down" : "up"}">${e.dir}</span> · ${esc(e.bundle || "")} · 进 ${e.entry ?? "?"} / 止 ${e.stop ?? "?"} / 标 ${e.target ?? "?"} · ${e.size ?? "?"}股${e.shelf ? ` · 保质期 ${e.shelf}` : ""} <span class="muted small">${(e.ts || "").slice(0, 10)}</span><br><span class="muted small">edge: ${esc(e.thesis || "—")} | 证伪: ${esc(e.invalid || "—")}</span>`;
+  // 持仓中的计划:所有字段直接可编辑(执行中随时改),「保存修改」落本机;平仓归因也会一并保存当前编辑。
+  const openCard = (e) => `<div class="card" style="margin:6px 0" data-id="${e.id}">
+    <div class="muted small" style="margin-bottom:6px">计划(执行中可随时改)· 建于 ${(e.ts || "").slice(0, 10)}${e.shelf ? ` · 保质期 ${e.shelf}${expired(e) ? ' <span class="down">⏰ 已过保质期</span>' : ""}` : ""}</div>
+    <div class="risk-form">
+      <label>标的<input class="je-sym" value="${esc(e.sym || "")}" style="width:78px"></label>
+      <label>方向<select class="je-dir">${dirOpts(e.dir)}</select></label>
+      <label>Thesis<select class="je-bundle">${bOpts(e.bundle)}</select></label>
+      <label>进场<input class="je-entry" type="number" step="0.01" value="${e.entry ?? ""}" style="width:84px" placeholder="可选"></label>
+      <label>止损<input class="je-stop" type="number" step="0.01" value="${e.stop ?? ""}" style="width:84px" placeholder="可选"></label>
+      <label>目标<input class="je-target" type="number" step="0.01" value="${e.target ?? ""}" style="width:84px" placeholder="可选"></label>
+      <label>股数<input class="je-size" type="number" value="${e.size ?? ""}" style="width:72px" placeholder="可选"></label>
+      <label>保质期<input class="je-shelf" type="date" value="${esc(e.shelf || "")}" style="width:140px"></label>
+    </div>
     <div class="risk-form" style="margin-top:6px">
-      <label>平仓价<input class="jc-exit" type="number" step="0.01" style="width:84px"></label>
+      <label style="flex:1;min-width:260px">论点 edge<input class="je-thesis" value="${esc(e.thesis || "")}" style="width:100%"></label>
+      <label style="flex:1;min-width:260px">证伪条件<input class="je-invalid" value="${esc(e.invalid || "")}" style="width:100%"></label>
+    </div>
+    <div class="risk-form" style="margin-top:6px;align-items:flex-end">
+      <button class="jc-edit mini-btn">💾 保存修改</button>
+      <label>平仓价<input class="jc-exit" type="number" step="0.01" style="width:84px" placeholder="可选"></label>
       <label>守计划?<select class="jc-foll"><option>是</option><option>否</option></select></label>
       <label style="flex:1;min-width:220px">归因(用当时信息判决策)<input class="jc-attrib" style="width:100%" placeholder="止损位对/进早了/该减仓…"></label>
       <button class="jc-close mini-btn">平仓归因</button><button class="jc-del mini-btn">删</button>
@@ -438,11 +455,18 @@ export async function renderJournal() {   // portfolio.js import 调用(交易�
     + (closed.length ? `<div class="muted small" style="margin-top:8px">已平仓</div>${closed.map(closedCard).join("")}` : "");
 
   const save = (arr) => { rLSset("tradeJournal", arr); renderJournal(); };
+  const readPlan = (card) => {   // 从可编辑卡片读回全部计划字段(进/止/标/股/保质期均可选)
+    const q = (c) => card.querySelector(c);
+    return { sym: (q(".je-sym").value || "").trim().toUpperCase(), dir: q(".je-dir").value, bundle: q(".je-bundle").value,
+      entry: +q(".je-entry").value || null, stop: +q(".je-stop").value || null, target: +q(".je-target").value || null,
+      size: +q(".je-size").value || null, shelf: q(".je-shelf").value || null,
+      thesis: q(".je-thesis").value.trim(), invalid: q(".je-invalid").value.trim() };
+  };
   $("j-add").addEventListener("click", () => {
     const sym = ($("j-sym").value || "").trim().toUpperCase(); if (!sym) return;
     const e = { id: Date.now(), ts: new Date().toISOString(), status: "open", sym, dir: $("j-dir").value,
       bundle: $("j-bundle").value, entry: +$("j-entry").value || null, stop: +$("j-stop").value || null,
-      target: +$("j-target").value || null, size: +$("j-size").value || null,
+      target: +$("j-target").value || null, size: +$("j-size").value || null, shelf: $("j-shelf").value || null,
       thesis: $("j-thesis").value.trim(), invalid: $("j-invalid").value.trim() };
     save([e, ...J]);
   });
@@ -455,9 +479,13 @@ export async function renderJournal() {   // portfolio.js import 调用(交易�
     const r = await putPrivate("trade_journal.json", rLS("tradeJournal", []), "chore: trade journal via UI");
     m.textContent = r.ok ? "✓ 已存私有库(换机器 clone 即在)" : "✗ " + r.msg;
   });
+  host.querySelectorAll(".jc-edit").forEach((btn) => btn.addEventListener("click", (ev) => {
+    const card = ev.target.closest("[data-id]"), id = +card.dataset.id, p = readPlan(card);
+    save(J.map((e) => e.id !== id ? e : { ...e, ...p, sym: p.sym || e.sym }));
+  }));
   host.querySelectorAll(".jc-close").forEach((btn) => btn.addEventListener("click", (ev) => {
-    const card = ev.target.closest("[data-id]"), id = +card.dataset.id;
-    const arr = J.map((e) => e.id !== id ? e : { ...e, status: "closed", ts_close: new Date().toISOString(),
+    const card = ev.target.closest("[data-id]"), id = +card.dataset.id, p = readPlan(card);   // 平仓时一并保存当前编辑
+    const arr = J.map((e) => e.id !== id ? e : { ...e, ...p, sym: p.sym || e.sym, status: "closed", ts_close: new Date().toISOString(),
       exit: +card.querySelector(".jc-exit").value || null, followed: card.querySelector(".jc-foll").value,
       attrib: card.querySelector(".jc-attrib").value.trim() });
     save(arr);
