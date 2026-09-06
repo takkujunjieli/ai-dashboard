@@ -1423,9 +1423,7 @@ export async function initPortfolioPanel() {
   if (!$("portfolio")) return;
   PORTFOLIO = await loadJSON("data/portfolio.json");
   PNL = await loadJSON("data/pnl.json");
-  SCORES = parseCSV(await loadText("research/scorecards/_summary.csv"));
   renderPortfolio();
-  renderScorecards();
   // 饼图/图例点击→按票 filter;翻页;盈亏窗口切换。委托到常驻容器 #portfolio。
   $("portfolio").addEventListener("click", (ev) => {
     const pwBtn = ev.target.closest("#pf-pw button");
@@ -1445,6 +1443,13 @@ export async function initPortfolioPanel() {
     pfFilter = null; pfTxPage = 0;
     renderPortfolio();
   });
+}
+
+/* 个股分析页入口:stock-analysis.js import 调用。加载打分 CSV(本地私有)+ 渲染 Scorecards。 */
+export async function initScorecards() {
+  if (!$("scorecards")) return;
+  SCORES = parseCSV(await loadText("research/scorecards/_summary.csv"));
+  renderScorecards();
 }
 
 function renderAll(keepRange = false) {
