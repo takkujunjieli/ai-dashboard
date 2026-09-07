@@ -310,6 +310,24 @@ def summarize(rows, label):
             started = True
         if started:
             curve.append([d, round(cum), round(cl), round(cs)])
+    # 月历:每月 净收益$(累计差)+ 收益率%(日收益复利)+ log 收益(Σ ln(1+r),可加、便于可视化)
+    monthly, mmap = [], {}
+    started = False; prev_cum = 0.0
+    for d, rt, rl, rs, gross, net, cum, cl, cs in series:
+        if rt is not None:
+            started = True
+        if not started:
+            prev_cum = cum; continue
+        m = mmap.get(d[:7])
+        if m is None:
+            m = mmap[d[:7]] = {"ym": d[:7], "pnl": 0.0, "logret": 0.0}; monthly.append(m)
+        m["pnl"] += cum - prev_cum; prev_cum = cum
+        if rt is not None:
+            m["logret"] += math.log(1.0 + rt)
+    for m in monthly:
+        m["pnl"] = round(m["pnl"])
+        m["ret_pct"] = round((math.exp(m["logret"]) - 1) * 100, 2)   # 复利月收益
+        m["logret"] = round(m["logret"], 4)
     # 各窗口
     wins = {}
     for wn, start in WINDOWS.items():
@@ -332,7 +350,7 @@ def summarize(rows, label):
             reg["short"] = {"n": len(rs_), "ret_annual_pct": sreg["ret_annual_pct"] if sreg else None,
                             "beta": sreg["beta"] if sreg else None, "ret_ci": bootstrap_mean_annual(rs_)}
         wins[wn] = reg
-    return {"label": label, "curve": curve, "windows": wins, "floor_gross": round(gf)}
+    return {"label": label, "curve": curve, "monthly": monthly, "windows": wins, "floor_gross": round(gf)}
 
 
 out = {

@@ -7,13 +7,12 @@ import {
 const LWC = window.LightweightCharts;
 const ET = "America/New_York";
 
-let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null, PORTFOLIO = null, PNL = null, SCORES = null;
-let pfFilter = null;          // Portfolio 饼图选中的 sym → 交易明细按它 filter
+let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null, PORTFOLIO = null, PNL = null, SCORES = null, ROBUST = null;
+let pfCalMode = localStorage.getItem("pfCalMode") || "ret";   // 月历显示:pnl 净收益$ / ret 收益率% / log 对数收益
+let pfFilter = null;          // Portfolio 饼图选中的 sym → 控制饼图中心显示
 let pfAccount = null;         // Portfolio 选中的账户 id(null=全部账户)
-let pfTxPage = 0;             // Portfolio 交易明细当前页(0 起,每页 PF_TX_PAGE 条)
 let pfPnlWin = "ytd";         // Portfolio 盈亏诊断窗口:ytd / 3m / 1m
 const PF_MIN_VALUE = 1000;    // 饼图只显示市值 ≥ 此的持仓
-const PF_TX_PAGE = 20;        // 交易明细每页条数
 let CFG = { watchlist: [], deep: [] };  // 标的分组,来自 config/tickers.json,卡片开关就地编辑
 let SYM = localStorage.getItem("wbSym") || null;
 let TF = localStorage.getItem("wbTf") || "5m";
@@ -1162,38 +1161,7 @@ function renderPortfolio() {
     tile("账户", curAcct),
     tile("更新", p.updated_at ? fmtDT(p.updated_at) : "—"),
   ].join("");
-  let txns = p.transactions || [];
-  if (pfAccount) txns = txns.filter((t) => t.account === pfAccount);
-  if (pfFilter) txns = txns.filter((t) => t.sym === pfFilter);
-  // 分页:每页 PF_TX_PAGE 条;filter 变化后当前页可能越界,夹回有效范围
-  const txTotal = txns.length;
-  const txPages = Math.max(1, Math.ceil(txTotal / PF_TX_PAGE));
-  pfTxPage = Math.min(Math.max(pfTxPage, 0), txPages - 1);
-  const pageStart = pfTxPage * PF_TX_PAGE;
-  const pageTxns = txns.slice(pageStart, pageStart + PF_TX_PAGE);
-  const chip = pfFilter
-    ? `<button id="pf-clear" class="pf-chip">筛选 ${esc(pfFilter)} <span class="muted">✕</span></button>`
-    : `<span class="muted small">点饼图某块 → 只看该票交易</span>`;
-  const txRows = pageTxns.map((t) => {
-    // 持仓变化:买入(含 buy_to_cover)+qty、卖出(含 sell_short)-qty,即该笔对仓位的净份额影响
-    const delta = t.side === "buy" ? t.qty : t.side === "sell" ? -t.qty : null;
-    return `<tr>
-      <td>${t.ts ? fmtDT(t.ts) : "—"}</td><td>${t.kind === "option" ? "期权" : "正股"}</td><td>${esc(t.sym || "")}</td>
-      <td class="${t.side === "buy" ? "up" : t.side === "sell" ? "down" : ""}">${esc(t.side || "—")}</td>
-      <td>${t.qty != null ? fmtNum(t.qty) : "—"}</td><td>${t.price != null ? "$" + t.price : "—"}</td>
-      <td class="${delta > 0 ? "up" : delta < 0 ? "down" : ""}">${delta != null ? (delta > 0 ? "+" : "") + fmtNum(delta) : "—"}</td></tr>`;
-  }).join("");
-  const pager = txPages > 1
-    ? `<div class="pf-pager">
-         <button class="mini-btn" data-pfpage="prev"${pfTxPage === 0 ? " disabled" : ""}>‹ 上一页</button>
-         <span class="muted small">${pageStart + 1}–${pageStart + pageTxns.length} / ${txTotal} · 第 ${pfTxPage + 1}/${txPages} 页</span>
-         <button class="mini-btn" data-pfpage="next"${pfTxPage >= txPages - 1 ? " disabled" : ""}>下一页 ›</button>
-       </div>`
-    : "";
-  const txTable = `<details><summary class="muted small">交易明细 (${txTotal})</summary>
-       <div class="pf-txhead">${chip}</div>
-       ${txTotal ? `<table class="bt-table"><tr><th>时间</th><th>种类</th><th>代码</th><th>方向</th><th>数量</th><th>价格</th><th>持仓变化</th></tr>${txRows}</table>${pager}`
-    : `<div class="muted small">${pfFilter ? esc(pfFilter) + " 无交易记录" : "无交易记录"}</div>`}</details>`;
+  // 交易明细已移除,改为月历(见 buildMonthlyCalendar)。pfFilter 仍由饼图点击驱动(控制饼图中心显示)。
   // 多头饼图(市值) + 空头饼图(按 |市值|,有做空仓位才显示)。标题右侧显示该饼图总仓位。
   // 全部账户时同一股票会来自多个账户 → 画饼前按 sym 合并(市值/盈亏/数量相加),避免同票裂成多块。
   const bySym = new Map();
@@ -1217,7 +1185,46 @@ function renderPortfolio() {
       + `${buildDonut(shorts, { value: (x) => -x.mkt_value, centerSub: K, emptyMsg: `无 ${K} 的做空仓位` })}</div>`
       + `</div>`
     : `<div class="pf-pies">${longBox}</div>`;
-  el.innerHTML = `<div class="card">${acctBar}<div class="opt-grid">${tiles}</div>${donuts}${buildPnlPanel()}${txTable}</div>`;
+  el.innerHTML = `<div class="card">${acctBar}<div class="opt-grid">${tiles}</div>${donuts}${buildPnlPanel()}${buildMonthlyCalendar()}</div>`;
+}
+
+/* 月历:每月 M2M 收益(读 data/robustness.json 的 monthly);模式 净收益$ / 收益率% / log 收益。
+   账户跟随 Portfolio 下拉(全部→_all)。年份为行、1–12 月为列 + 年度合计。绿正红负,深浅∝|值|。 */
+function buildMonthlyCalendar() {
+  const acctKey = pfAccount || "_all";
+  const months = ROBUST?.accounts?.[acctKey]?.monthly || [];
+  const modeChips = [["pnl", "净收益 $"], ["ret", "收益率 %"], ["log", "log r"]]
+    .map(([k, l]) => `<button data-cal="${k}"${k === pfCalMode ? ' class="active"' : ""}>${l}</button>`).join("");
+  const head = `<div class="pf-cal-head"><b>📅 月历</b> <span class="muted small">月度 M2M 收益(含未实现)</span>`
+    + `<div class="chips seg" id="pf-calmode" style="margin-left:auto">${modeChips}</div></div>`;
+  if (!months.length) return `<div class="pf-cal">${head}<div class="muted small">暂无月度数据 — 需 data/robustness.json(本地专用)。</div></div>`;
+  const byYm = {}; for (const m of months) byYm[m.ym] = m;
+  const years = [...new Set(months.map((m) => m.ym.slice(0, 4)))].sort();
+  const MM = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+  // 取值/格式化(按模式);log 用月度 logret,年度=Σlog;收益率年度=复利(exp(Σlog)−1);净收益年度=Σ
+  const raw = (m) => pfCalMode === "pnl" ? m.pnl : pfCalMode === "ret" ? m.ret_pct : m.logret;
+  const fmtCell = (v) => pfCalMode === "pnl" ? fmtMoney(v)
+    : pfCalMode === "ret" ? `${v >= 0 ? "+" : ""}${v.toFixed(1)}%`
+    : `${v >= 0 ? "+" : ""}${v.toFixed(3)}`;
+  const maxAbs = Math.max(1e-9, ...months.map((m) => Math.abs(raw(m))));
+  const heat = (v) => `background:hsl(${v >= 0 ? 142 : 0} 65% 45% / ${(0.08 + Math.min(Math.abs(v) / maxAbs, 1) * 0.42).toFixed(2)})`;
+  const yearAgg = (ms) => {
+    const logsum = ms.reduce((s, m) => s + m.logret, 0);
+    return pfCalMode === "pnl" ? ms.reduce((s, m) => s + m.pnl, 0)
+      : pfCalMode === "ret" ? (Math.exp(logsum) - 1) * 100 : logsum;
+  };
+  const body = years.map((y) => {
+    const cells = MM.map((mm) => {
+      const m = byYm[`${y}-${mm}`]; if (!m) return "<td></td>";
+      const v = raw(m);
+      return `<td style="${heat(v)}" title="${y}-${mm}">${fmtCell(v)}</td>`;
+    }).join("");
+    const yms = months.filter((m) => m.ym.slice(0, 4) === y);
+    const yv = yearAgg(yms);
+    return `<tr><td class="pf-cal-y">${y}</td>${cells}<td class="pf-cal-tot" style="${heat(yv)}">${fmtCell(yv)}</td></tr>`;
+  }).join("");
+  const th = `<tr><th></th>${MM.map((m) => `<th>${+m}</th>`).join("")}<th>年</th></tr>`;
+  return `<div class="pf-cal">${head}<div class="pf-cal-wrap"><table class="pf-cal-tbl"><thead>${th}</thead><tbody>${body}</tbody></table></div></div>`;
 }
 
 /* ---------- 错误 ---------- */
@@ -1423,24 +1430,23 @@ export async function initPortfolioPanel() {
   if (!$("portfolio")) return;
   PORTFOLIO = await loadJSON("data/portfolio.json");
   PNL = await loadJSON("data/pnl.json");
+  ROBUST = await loadJSON("data/robustness.json");   // 月历读月度 M2M 收益
   renderPortfolio();
-  // 饼图/图例点击→按票 filter;翻页;盈亏窗口切换。委托到常驻容器 #portfolio。
+  // 饼图/图例点击→按票 filter(控制饼图中心);月历模式切换;盈亏窗口切换。委托到常驻容器 #portfolio。
   $("portfolio").addEventListener("click", (ev) => {
     const pwBtn = ev.target.closest("#pf-pw button");
     if (pwBtn) { pfPnlWin = pwBtn.dataset.pw; renderPortfolio(); return; }
-    const pageBtn = ev.target.closest("[data-pfpage]");
-    if (pageBtn) { pfTxPage += pageBtn.dataset.pfpage === "next" ? 1 : -1; renderPortfolio(); return; }
-    if (ev.target.closest("#pf-clear")) { pfFilter = null; pfTxPage = 0; renderPortfolio(); return; }
+    const calBtn = ev.target.closest("#pf-calmode button");
+    if (calBtn) { pfCalMode = calBtn.dataset.cal; localStorage.setItem("pfCalMode", pfCalMode); renderPortfolio(); return; }
     const hit = ev.target.closest("[data-sym]");
     if (!hit) return;
     pfFilter = (pfFilter === hit.dataset.sym) ? null : hit.dataset.sym;
-    pfTxPage = 0;
     renderPortfolio();
   });
   $("portfolio").addEventListener("change", (ev) => {
     if (!ev.target.closest("#pf-acct")) return;
     pfAccount = ev.target.value || null;
-    pfFilter = null; pfTxPage = 0;
+    pfFilter = null;
     renderPortfolio();
   });
 }
