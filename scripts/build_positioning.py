@@ -16,9 +16,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 OUT = DATA / "positioning.json"
 CFG = json.loads((ROOT / "config" / "positioning.json").read_text())
-AUM = CFG.get("cta_aum_usd", 300e9)
 WIN = CFG.get("pctile_window_wk", 156)
-MAS = CFG.get("ma_days", [20, 50, 100, 200])
 YF = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range=3y&interval=1d"
 IDX = {"SP500": "%5EGSPC", "NDX100": "%5EIXIC"}
 
@@ -42,25 +40,6 @@ def zscore(window, v):
         return None
     sd = pstdev(w)
     return round((v - mean(w)) / sd, 2) if sd else 0.0
-
-
-def cta_model(closes):
-    """多均线趋势模型:position=各均线上下信号均值∈[-1,1];触发位=各均线价位(穿越翻转一档)。"""
-    px = closes[-1]
-    sigs, triggers = [], []
-    step_usd = AUM / len(MAS)                      # 每条均线翻转 → position 变 2/N → $ 变 AUM/N... 用 AUM/len 近似单档
-    for d in MAS:
-        if len(closes) < d:
-            continue
-        ma = mean(closes[-d:])
-        s = 1 if px >= ma else -1
-        sigs.append(s)
-        triggers.append({"ma": d, "level": round(ma, 1),
-                         "dir": "跌破→卖" if px >= ma else "升破→买",
-                         "usd": round(step_usd)})
-    pos = round(sum(sigs) / len(sigs), 2) if sigs else 0.0
-    return {"price": round(px, 1), "position": pos, "exposure_usd": round(pos * AUM),
-            "triggers": sorted(triggers, key=lambda t: t["level"], reverse=True)}
 
 
 def cohort_from_cot(rows, cohort, mult, px):
@@ -87,10 +66,10 @@ def main():
     cot = json.loads((DATA / "cot_raw.json").read_text()) if (DATA / "cot_raw.json").exists() else {"contracts": {}}
     mult = cot.get("mult", {"SP500": 50, "NDX100": 20})
     out = {"topic": "positioning", "updated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-           "window_wk": WIN, "cta_aum_usd": AUM, "markets": {}, "meta": {"caveats": [
+           "window_wk": WIN, "markets": {}, "meta": {"caveats": [
                "近似 JPM Positioning Intelligence,非原品",
                "COT 滞后:周二持仓、周五发布",
-               "CTA 触发为趋势模型 + 假设 AUM,方向性非精确",
+               "CTA 定位读自 DBMF(复制器 ETF)每日披露持仓,代理趋势跟随者总体定位",
                "COT 为指数期货持仓,代理现货 cohort 行为",
            ]}}
     # Dealer 略去:指数期货里它主要是客户盘的对手方/对冲残差(≈ -(am+lev) 镜像),无独立方向信息。
@@ -115,12 +94,6 @@ def main():
         div = [[d, round(amz[d] - z, 2)] for d, z in mkt["cohorts"]["lev"]["series_z"] if d in amz]
         mkt["divergence"] = {"series_z": div, "latest": div[-1][1] if div else None,
                              "label": "real−fast 背离(资管−杠杆)"}
-        # CTA 触发模型(用指数日线)
-        try:
-            closes = yahoo_closes(IDX[key])
-            mkt["cta"] = cta_model(closes)
-        except Exception as e:
-            print(f"⚠️ {key} CTA 模型跳过({e})")
         out["markets"][key] = mkt
 
     # 复合 TPM:各市场各 cohort 分位的均值(0-100;高=整体拥挤多)
@@ -138,14 +111,29 @@ def main():
         except Exception as e:
             print(f"⚠️ retail 折入跳过({e})")
 
+    # CTA 定位:DBMF 复制器每日披露持仓(真实多空,非假设)。equity 历史序列供画趋势。
+    dbmf = DATA / "dbmf_raw.json"
+    if dbmf.exists():
+        try:
+            D = json.loads(dbmf.read_text())
+            eq_hist = [[d, s.get("equity")] for d, s in sorted(D.get("history", {}).items()) if s.get("equity") is not None]
+            out["cta"] = {"source": D.get("source"), "asof": D.get("asof"),
+                          "buckets": D.get("latest", {}), "detail": D.get("detail", []),
+                          "equity_series": eq_hist}
+        except Exception as e:
+            print(f"⚠️ DBMF CTA 折入跳过({e})")
+
     OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")))
     comp = out["composite_pctile"]
     print(f"→ {OUT.relative_to(ROOT)} · 市场 {list(out['markets'])} · 复合分位 {comp} "
           f"({OUT.stat().st_size/1024:.0f} KB)")
     for k, mk in out["markets"].items():
         lev = mk["cohorts"]["lev"]
-        print(f"  {k}: HF/CTA net={lev['latest']:,} 分位{lev['pctile']} z{lev['z']} 拥挤${lev['crowd_usd']/1e9:.1f}B"
-              + (f" · CTA pos={mk['cta']['position']}" if mk.get("cta") else ""))
+        print(f"  {k}: HF/CTA net={lev['latest']:,} 分位{lev['pctile']} z{lev['z']} 拥挤${lev['crowd_usd']/1e9:.1f}B")
+    if out.get("cta"):
+        b = out["cta"]["buckets"]
+        print(f"  CTA(DBMF {out['cta']['asof']}): 股票净 {b.get('equity'):+.1f}% (S&P {b.get('sp500'):+.1f}%) "
+              f"利率 {b.get('rates'):+.1f}% 外汇 {b.get('fx'):+.1f}% 商品 {b.get('commodity'):+.1f}%")
 
 
 if __name__ == "__main__":

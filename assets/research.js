@@ -654,12 +654,13 @@ async function renderGexVol() {
 }
 
 /* Topic 5:仓位情报(免费版 JPM Positioning Intelligence)。COT-TFF 两大 cohort(HF/CTA 杠杆基金、
-   资管/共同基金)分位 + z-score + real−fast 背离(资管 z−杠杆 z),两种潜在买卖盘(拥挤度$ 回中位、
-   CTA 趋势模型机械触发$),折入散户(retailflow)。数据 data/positioning.json。
-   (Dealer 已弃:指数期货里它主要是对手方/对冲残差,≈ -(am+lev) 镜像,无独立方向信息。) */
+   资管/共同基金)分位 + z-score + real−fast 背离(资管 z−杠杆 z)+ COT 拥挤度$,CTA 定位读自 DBMF
+   复制器每日披露持仓(真实多空),折入散户(retailflow)。数据 data/positioning.json。
+   (Dealer 已弃:对手方/对冲残差,≈ -(am+lev) 镜像;CTA 触发表已弃:免费世界拿不到,改真实持仓。) */
 const POS_COH = [["lev", "#f87171"], ["am", "#60a5fa"]];
 const POS_DIV_COLOR = "#fbbf24";                    // real−fast 背离(第三条线)
 const fmtZ = (v) => v == null ? "—" : (v > 0 ? "+" : "") + v.toFixed(2);
+const fmtPct = (v) => v == null ? "—" : (v > 0 ? "+" : "") + v.toFixed(1) + "%";
 const POS_MLABEL = { SP500: "S&P 500", NDX100: "Nasdaq 100" };
 const fmtNum = (v) => v == null ? "—" : Math.round(v).toLocaleString();
 const fmtB = (v) => {
@@ -708,6 +709,7 @@ async function renderPositioning() {
   $("pos-gauge").innerHTML = `<div class="opt-grid">${gt.join("")}</div>
     <div class="muted small" style="margin-top:6px">分位 = 该 cohort 净持仓在近 ${yrs} 年的历史排名(高=相对拥挤多);z = 同窗标准分。散户:${rf && rf.avg_netbuy != null ? `近端净买入均值 ${(rf.avg_netbuy * 100).toFixed(1)}%(${rf.n} 票)` : "(缺 retailflow)"}。</div>`;
   $("pos-caveat").innerHTML = "⚠ " + ((J.meta && J.meta.caveats) || []).join(";");
+  renderCta(J);          // CTA(DBMF)市场无关,渲染一次
   drawPosMarket();
 }
 
@@ -768,7 +770,7 @@ function drawPosMarket() {
     });
   }
 
-  // ③ 潜在买卖盘:拥挤度$(回中位)+ CTA 机械触发$
+  // ③ 潜在买卖盘:COT 拥挤度$(回中位)
   const rows = POS_COH.map(([ck]) => {
     const c = mk.cohorts[ck];
     if (!c) return "";
@@ -777,15 +779,33 @@ function drawPosMarket() {
       <td class="sc-num ${cls}">${fmtUsd(s)}</td>
       <td class="muted small">${s > 0 ? "潜在买(偏轻/空)" : s < 0 ? "潜在卖(偏拥挤多)" : "—"}</td></tr>`;
   }).join("");
-  let cta = "";
-  if (mk.cta) {
-    const t = mk.cta.triggers.map((x) =>
-      `<tr><td>${x.ma}D</td><td class="sc-num">${x.level.toLocaleString()}</td><td>${esc(x.dir)}</td><td class="sc-num">${fmtUsd(x.usd)}</td></tr>`).join("");
-    cta = `<div class="muted small" style="margin-top:12px"><b>CTA 趋势模型</b> · 现价 ${mk.cta.price.toLocaleString()} · 仓位 ${mk.cta.position > 0 ? "+" : ""}${mk.cta.position}(${fmtUsd(mk.cta.exposure_usd)} 敞口)· 假设 AUM ${fmtUsd(J.cta_aum_usd)}</div>
-      <table class="bt-table"><tr><th>均线</th><th>触发价</th><th>方向</th><th>$ 量</th></tr>${t}</table>`;
-  }
-  $("pos-pressure").innerHTML = `<table class="bt-table"><tr><th>cohort</th><th>分位</th><th>拥挤$(回中位)</th><th>含义</th></tr>${rows}</table>${cta}
-    <div class="muted small" style="margin-top:6px">拥挤$ = (当前净−中位净)×合约乘数×指数,即回到历史中位需成交的名义 $(签名:+潜在买 / −潜在卖)。CTA = 多均线趋势模型在各均线翻转处的机械买卖(假设 AUM,方向性非精确)。</div>`;
+  $("pos-pressure").innerHTML = `<table class="bt-table"><tr><th>cohort</th><th>分位</th><th>拥挤$(回中位)</th><th>含义</th></tr>${rows}</table>
+    <div class="muted small" style="margin-top:6px">拥挤$ = (当前净−中位净)×合约乘数×指数,即回到历史中位需成交的名义 $(签名:+潜在买 / −潜在卖)。</div>`;
+}
+
+/* CTA 定位:DBMF 复制器每日披露持仓(真实多空,非假设)。市场无关,renderPositioning 调一次。 */
+function renderCta(J) {
+  const el = $("pos-cta"); if (!el) return;
+  const c = J.cta;
+  if (!c || !c.buckets) { el.innerHTML = '<span class="muted small">缺 DBMF 持仓(跑 scripts/fetch_dbmf.py)</span>'; return; }
+  const b = c.buckets;
+  const ROWS = [
+    ["股票 · S&P500", b.sp500, ""],
+    ["股票 · 国际(EAFE/EM)", b.intl, ""],
+    ["利率(2/10Y/长债)", b.rates, b.rates < 0 ? "做空久期" : "做多久期"],
+    ["外汇(JPY/EUR…)", b.fx, b.fx < 0 ? "空外币≈多美元" : "多外币≈空美元"],
+    ["商品(原油/黄金)", b.commodity, ""],
+  ];
+  const tr = ROWS.map(([k, v, note]) => {
+    if (v == null) return "";
+    const cls = v > 0 ? "up" : v < 0 ? "down" : "";
+    return `<tr><td>${esc(k)}</td><td class="sc-num ${cls}">${fmtPct(v)}</td>
+      <td class="muted small">${v > 0 ? "净多" : v < 0 ? "净空" : "—"}${note ? " · " + esc(note) : ""}</td></tr>`;
+  }).join("");
+  const eq = b.equity, eqCls = eq > 0 ? "up" : eq < 0 ? "down" : "";
+  el.innerHTML = `<div class="muted small" style="margin-bottom:6px">读自 <b>${esc(c.source || "DBMF")}</b> 每日披露持仓 · asof ${c.asof || "—"} · 股票总净敞口 <b class="${eqCls}">${fmtPct(eq)}</b></div>
+    <table class="bt-table"><tr><th>资产</th><th>DBMF 净敞口(占 NAV)</th><th>方向</th></tr>${tr}</table>
+    <div class="muted small" style="margin-top:6px">%=占 NAV 名义权重,符号=多空(读自持仓 sh 正负)。这是趋势跟随者(SG CTA 指数复制器,0.88 相关)当前<b>真实披露</b>的定位,非假设/触发价模型。DBMF 股票腿为 S&P500+国际,无单独 Nasdaq。</div>`;
 }
 
 /* ---------- Tab 调度 ---------- */
