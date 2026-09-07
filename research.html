@@ -11,7 +11,6 @@
   <a href="portfolio.html">💼 Portfolio</a>
   <a href="trading.html">⚡ Trading</a>
   <a href="research.html" class="active">🔬 Research</a>
-  <a href="stock-analysis.html">📊 个股分析</a>
   <a href="strategy.html">🧪 Strategy</a>
 </nav>
 <header>
@@ -25,6 +24,7 @@
   <span class="tab" data-topic="rates">🏦 国债vs股市</span>
   <span class="tab" data-topic="gexvol">🌀 GEX→波动</span>
   <span class="tab" data-topic="positioning">🧭 仓位情报</span>
+  <span class="tab" data-topic="stocks">📊 个股分析</span>
 </nav>
 
 <div id="r-status" class="muted small" style="padding:8px 0"></div>
@@ -100,6 +100,11 @@
   <div id="pos-pressure" class="card"><span class="muted small">计算中…</span></div>
 
   <div class="muted small" id="pos-caveat" style="margin-top:10px"></div>
+</section>
+
+<!-- ========== Topic 6:个股分析(Scorecards,本地私有) ========== -->
+<section data-topic-panel="stocks" hidden>
+  <div id="scorecards"><span class="muted small">加载打分…(本地专用 · 读 research/scorecards/_summary.csv,gitignored;公开站不显示)</span></div>
 </section>
 
 <footer class="muted small">

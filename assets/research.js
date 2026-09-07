@@ -2,6 +2,7 @@
    模型在浏览器里跑(approach A):L2 正则 logistic(IRLS)+ leave-one-bear-out。
    数据 data/research_bearbull.json(topic/方向/实体三层可扩展)。 */
 import { $, esc, loadJSON, getPat, ghHeaders, REPO } from "./shared.js";
+import { initScorecards } from "./trading.js";   // 个股分析 tab 复用交易台的 Scorecards 渲染(trading.js 自启动已守卫)
 
 const LAM = 10;            // L2 强度(与 factorlab/model.py 默认一致)
 /* 按"驱动机制"分簇(比 内生/政策/外生 更贴数据、名实相符):
@@ -775,7 +776,7 @@ function drawPosMarket() {
 }
 
 /* ---------- Tab 调度 ---------- */
-const RENDER = { bearbull: renderBearbull, retailflow: renderRetailflow, rates: renderRates, gexvol: renderGexVol, positioning: renderPositioning };
+const RENDER = { bearbull: renderBearbull, retailflow: renderRetailflow, rates: renderRates, gexvol: renderGexVol, positioning: renderPositioning, stocks: initScorecards };
 const rendered = {};
 async function showTopic(topic) {
   if (!RENDER[topic]) return;
