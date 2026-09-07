@@ -7,8 +7,8 @@ import {
 const LWC = window.LightweightCharts;
 const ET = "America/New_York";
 
-let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null, PORTFOLIO = null, PNL = null, SCORES = null, ROBUST = null;
-let pfCalMode = localStorage.getItem("pfCalMode") || "ret";   // 月历显示:pnl 净收益$ / ret 收益率% / log 对数收益
+let RESEARCH = null, GEX = null, GEXH = null, BARS = null, WEEK = null, PORTFOLIO = null, PNL = null, SCORES = null, ROBUST = null, MONTHLY = null;
+let pfCalMode = localStorage.getItem("pfCalMode") || "realized";   // 月历:realized 已实现$ / exact 总$(精确) / est 总$(M2M估) / log log(估)
 let pfFilter = null;          // Portfolio 饼图选中的 sym → 控制饼图中心显示
 let pfAccount = null;         // Portfolio 选中的账户 id(null=全部账户)
 let pfPnlWin = "ytd";         // Portfolio 盈亏诊断窗口:ytd / 3m / 1m
@@ -1188,41 +1188,61 @@ function renderPortfolio() {
   el.innerHTML = `<div class="card">${acctBar}<div class="opt-grid">${tiles}</div>${donuts}${buildPnlPanel()}${buildMonthlyCalendar()}</div>`;
 }
 
-/* 月历:每月 M2M 收益(读 data/robustness.json 的 monthly);模式 净收益$ / 收益率% / log 收益。
-   账户跟随 Portfolio 下拉(全部→_all)。年份为行、1–12 月为列 + 年度合计。绿正红负,深浅∝|值|。 */
+/* monthly_returns.json 的账户视图;_all = 各账户 realized/unreal 求和(前端聚合,新增账户自动纳入)。 */
+function monthlyExact(acctKey) {
+  const accts = MONTHLY?.accounts; if (!accts) return null;
+  if (acctKey !== "_all") return accts[acctKey] || null;
+  const realized = {}, snapshots = {};
+  for (const [k, a] of Object.entries(accts)) {
+    if (k === "_all") continue;
+    for (const [ym, v] of Object.entries(a.realized || {})) realized[ym] = (realized[ym] || 0) + v;
+    for (const [ym, s] of Object.entries(a.snapshots || {})) {
+      const t = snapshots[ym] || (snapshots[ym] = { netliq: 0, unreal: 0 });
+      t.netliq += s.netliq || 0; t.unreal += s.unreal || 0;
+    }
+  }
+  return { realized, snapshots };
+}
+
+/* 月历:账户跟随 Portfolio 下拉(全部→_all)。四种口径:
+   已实现$ = 券商精确(含期权,data/monthly_returns.json);总$(精确)= 已实现 + 未实现变化(需相邻月末快照);
+   总$(估)= M2M 重建(仅正股,robustness.json);log(估)= M2M 月度对数收益。绿正红负,深浅∝|值|。 */
 function buildMonthlyCalendar() {
   const acctKey = pfAccount || "_all";
-  const months = ROBUST?.accounts?.[acctKey]?.monthly || [];
-  const modeChips = [["pnl", "净收益 $"], ["ret", "收益率 %"], ["log", "log r"]]
-    .map(([k, l]) => `<button data-cal="${k}"${k === pfCalMode ? ' class="active"' : ""}>${l}</button>`).join("");
-  const head = `<div class="pf-cal-head"><b>📅 月历</b> <span class="muted small">月度 M2M 收益(含未实现)</span>`
+  const robMap = {}; for (const m of (ROBUST?.accounts?.[acctKey]?.monthly || [])) robMap[m.ym] = m;
+  const mr = monthlyExact(acctKey);
+  const realized = mr?.realized || {}, snaps = mr?.snapshots || {};
+  const MODES = { realized: { label: "已实现 $", money: true }, exact: { label: "总 $(精确)", money: true },
+    est: { label: "总 $(估)", money: true }, log: { label: "log(估)", money: false } };
+  const mode = MODES[pfCalMode] ? pfCalMode : "realized";
+  const modeChips = Object.entries(MODES).map(([k, m]) => `<button data-cal="${k}"${k === mode ? ' class="active"' : ""}>${m.label}</button>`).join("");
+  const head = `<div class="pf-cal-head"><b>📅 月历</b> <span class="muted small">已实现=券商精确(含期权);总(精确)=已实现+未实现变化(需相邻月末快照);总(估)=M2M重建(仅正股)</span>`
     + `<div class="chips seg" id="pf-calmode" style="margin-left:auto">${modeChips}</div></div>`;
-  if (!months.length) return `<div class="pf-cal">${head}<div class="muted small">暂无月度数据 — 需 data/robustness.json(本地专用)。</div></div>`;
-  const byYm = {}; for (const m of months) byYm[m.ym] = m;
-  const years = [...new Set(months.map((m) => m.ym.slice(0, 4)))].filter((y) => y >= "2026").sort();  // 月历只从 2026 起
-  const MM = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
-  // 取值/格式化(按模式);log 用月度 logret,年度=Σlog;收益率年度=复利(exp(Σlog)−1);净收益年度=Σ
-  const raw = (m) => pfCalMode === "pnl" ? m.pnl : pfCalMode === "ret" ? m.ret_pct : m.logret;
-  const fmtCell = (v) => pfCalMode === "pnl" ? fmtMoney(v)
-    : pfCalMode === "ret" ? `${v >= 0 ? "+" : ""}${v.toFixed(1)}%`
-    : `${v >= 0 ? "+" : ""}${v.toFixed(3)}`;
-  const maxAbs = Math.max(1e-9, ...months.map((m) => Math.abs(raw(m))));
-  const heat = (v) => `background:hsl(${v >= 0 ? 142 : 0} 65% 45% / ${(0.08 + Math.min(Math.abs(v) / maxAbs, 1) * 0.42).toFixed(2)})`;
-  const yearAgg = (ms) => {
-    const logsum = ms.reduce((s, m) => s + m.logret, 0);
-    return pfCalMode === "pnl" ? ms.reduce((s, m) => s + m.pnl, 0)
-      : pfCalMode === "ret" ? (Math.exp(logsum) - 1) * 100 : logsum;
+  const prevYm = (ym) => { let [y, mm] = ym.split("-").map(Number); mm--; if (mm < 1) { mm = 12; y--; } return `${y}-${String(mm).padStart(2, "0")}`; };
+  const val = (ym) => {
+    if (mode === "realized") return realized[ym] ?? null;
+    if (mode === "est") return robMap[ym]?.pnl ?? null;
+    if (mode === "log") return robMap[ym]?.logret ?? null;
+    const r = realized[ym], u = snaps[ym]?.unreal, pu = snaps[prevYm(ym)]?.unreal;   // exact
+    return (r != null && u != null && pu != null) ? r + (u - pu) : null;
   };
+  const money = MODES[mode].money;
+  const usd = (v) => (v < 0 ? "−$" : "$") + Math.round(Math.abs(v)).toLocaleString();   // 精确到元(不缩 K),不浪费券商精度
+  const fmtCell = (v) => v == null ? '<span class="muted">—</span>' : money ? usd(v) : `${v >= 0 ? "+" : ""}${v.toFixed(3)}`;
+  const MM = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+  const allYm = [...new Set([...Object.keys(realized), ...Object.keys(robMap)])].filter((ym) => ym >= "2026");
+  const years = [...new Set(allYm.map((ym) => ym.slice(0, 4)))].sort();
+  const maxAbs = Math.max(1e-9, ...allYm.map(val).filter((v) => v != null).map(Math.abs));
+  const heat = (v) => v == null ? "" : `background:hsl(${v >= 0 ? 142 : 0} 65% 45% / ${(0.08 + Math.min(Math.abs(v) / maxAbs, 1) * 0.42).toFixed(2)})`;
   const body = years.map((y) => {
+    let ysum = 0, yhas = false;
     const cells = MM.map((mm) => {
-      const m = byYm[`${y}-${mm}`]; if (!m) return "<td></td>";
-      const v = raw(m);
+      const v = val(`${y}-${mm}`); if (v != null) { ysum += v; yhas = true; }
       return `<td style="${heat(v)}" title="${y}-${mm}">${fmtCell(v)}</td>`;
     }).join("");
-    const yms = months.filter((m) => m.ym.slice(0, 4) === y);
-    const yv = yearAgg(yms);
-    return `<tr><td class="pf-cal-y">${y}</td>${cells}<td class="pf-cal-tot" style="${heat(yv)}">${fmtCell(yv)}</td></tr>`;
+    return `<tr><td class="pf-cal-y">${y}</td>${cells}<td class="pf-cal-tot" style="${yhas ? heat(ysum) : ""}">${yhas ? fmtCell(ysum) : '<span class="muted">—</span>'}</td></tr>`;
   }).join("");
+  if (!years.length) return `<div class="pf-cal">${head}<div class="muted small">暂无月度数据(需 data/monthly_returns.json / robustness.json,本地专用)。</div></div>`;
   const th = `<tr><th></th>${MM.map((m) => `<th>${+m}</th>`).join("")}<th>年</th></tr>`;
   return `<div class="pf-cal">${head}<div class="pf-cal-wrap"><table class="pf-cal-tbl"><thead>${th}</thead><tbody>${body}</tbody></table></div></div>`;
 }
@@ -1430,7 +1450,8 @@ export async function initPortfolioPanel() {
   if (!$("portfolio")) return;
   PORTFOLIO = await loadJSON("data/portfolio.json");
   PNL = await loadJSON("data/pnl.json");
-  ROBUST = await loadJSON("data/robustness.json");   // 月历读月度 M2M 收益
+  ROBUST = await loadJSON("data/robustness.json");   // 月历:M2M 估算(总收益)
+  MONTHLY = await loadJSON("data/monthly_returns.json");   // 月历:券商精确已实现 + 净值/未实现快照
   renderPortfolio();
   // 饼图/图例点击→按票 filter(控制饼图中心);月历模式切换;盈亏窗口切换。委托到常驻容器 #portfolio。
   $("portfolio").addEventListener("click", (ev) => {
