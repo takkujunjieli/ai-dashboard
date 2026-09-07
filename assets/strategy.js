@@ -80,7 +80,7 @@ export async function renderRiskControl() {
 
   const gt = (id) => { const v = $(id).value; return v === "" ? null : +v; };  // 数值,空→null
   host.innerHTML = `
-    <div class="risk-bundles" style="align-items:center">
+    <div class="risk-bundles">
       <label>Thesis<span id="rk-sel-wrap"><select id="rk-bundle">${bundleOpts()}</select></span></label>
       <input id="rk-newname" type="text" placeholder="新 thesis 名" style="width:130px">
       <button id="rk-new" class="mini-btn">＋ 新建</button>
@@ -164,8 +164,8 @@ export async function renderRiskControl() {
       : ""; };
 
   const rebuildSel = () => { $("rk-sel-wrap").innerHTML = `<select id="rk-bundle">${bundleOpts()}</select>`; };
-  // ---- 字段编辑:落本机 + 调度自动同步(input 防抖 / change 立刻 flush)----
-  const onEdit = (recompute, reheat) => () => { syncBundle(); if (recompute) compute(); persistLocal(); rpSchedule(); };
+  // ---- 字段编辑:落本机 + 调度自动同步(input 防抖);热力图在 change(失焦/回车)时刷新 ----
+  const onEdit = (recompute) => () => { syncBundle(); if (recompute) compute(); persistLocal(); rpSchedule(); };
   ["rk-risk", "rk-mult", "rk-cap"].forEach((id) => { const el = $(id); el.addEventListener("input", onEdit(true)); el.addEventListener("change", () => { renderRiskExposure(); rpSchedule(true); }); });
   ["rk-totrisk", "rk-goal"].forEach((id) => { const el = $(id); el.addEventListener("input", onEdit(false)); el.addEventListener("change", () => { renderRiskExposure(); rpSchedule(true); }); });
   ["rk-shelf", "rk-edge", "rk-invalid"].forEach((id) => { const el = $(id); el.addEventListener("input", onEdit(false)); el.addEventListener("change", () => rpSchedule(true)); });
