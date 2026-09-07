@@ -233,8 +233,19 @@ footer { margin-top: 50px; text-align: center; }
 .rt-leg.off b { color: var(--muted); }
 .rt-sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
 .rt-leg b { color: var(--text); font-variant-numeric: tabular-nums; }
-/* 账户风险控制 · 仓位计算器 + bundle 管理 */
+/* 账户风险控制 · thesis 管理 + 仓位计算器 */
 .risk-form, .risk-bundles { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: flex-end; }
+/* thesis ⋯ 操作菜单 */
+.rk-menu-wrap { position: relative; display: inline-block; }
+.rk-menu { position: absolute; top: calc(100% + 4px); left: 0; z-index: 20; min-width: 150px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 4px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35); display: flex; flex-direction: column; gap: 2px; }
+.rk-menu-item { text-align: left; background: transparent; border: 0; color: var(--text);
+  padding: 7px 10px; border-radius: 6px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+.rk-menu-item:hover { background: var(--card-hover); }
+.rk-menu-item.rk-danger { color: var(--down); }
+.rk-menu-item.rk-armed { background: hsl(0 70% 50% / .22); color: var(--down); font-weight: 600; }
+.rk-menu-item.rk-armed[data-act="complete"] { background: hsl(152 55% 45% / .22); color: var(--up); }
 .risk-bundles { padding-bottom: 10px; border-bottom: 1px solid var(--border); }
 .risk-form label, .risk-bundles label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
 .risk-form input, .risk-form select, .risk-bundles input, .risk-bundles select {

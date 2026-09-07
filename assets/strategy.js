@@ -10,7 +10,7 @@ const LWC = window.LightweightCharts;
 async function putPolicy(mutate) {
   const pat = getPat();
   if (!pat) return { ok: false, msg: "需 fine-grained PAT(与采集面板共用,存本机);未写仓库" };
-  const url = `https://api.github.com/repos/${REPO}/contents/config/risk_policy.json`;
+  const url = `https://api.github.com/repos/${PRIV_REPO}/contents/risk_policy.json`;   // 私有库(本地专用,公开站不含)
   async function once() {
     let sha, latest = {};
     try {
@@ -28,6 +28,33 @@ async function putPolicy(mutate) {
     return r.ok ? { ok: true } : { ok: false, msg: "PUT 失败 " + r.status };
   } catch (e) { return { ok: false, msg: String(e) }; }
 }
+
+/* 风险策略自动同步(hybrid):任何改动先落本机 localStorage(即时、免 PAT、离线不丢),
+   再 debounce 把整份 policy(theses + assignments + max-heat + equity)提交到私有库。
+   thesis 管理 + 风险敞口 两面板共用;状态显示在 #rk-sync。 */
+let rpSyncTimer = null;
+function rpStatus(txt, cls = "muted") { const el = document.getElementById("rk-sync"); if (el) el.innerHTML = `<span class="${cls}">${txt}</span>`; }
+async function rpSyncNow() {
+  clearTimeout(rpSyncTimer);
+  if (!getPat()) { rpStatus("⚠ 未设 PAT · 点此设置", "down"); return; }
+  rpStatus("syncing…");
+  const LP = rLS("riskPolicy", {}), groups = rLS("riskGroups", {}), mh = rLS("riskMaxHeat", null);
+  const r = await putPolicy((L) => {
+    if (LP.bundles) L.bundles = LP.bundles;
+    if (LP.default_bundle) L.default_bundle = LP.default_bundle;
+    if (LP.account_equity != null) L.account_equity = LP.account_equity;
+    L.assignments = ASSIGN ? { ...ASSIGN } : { ...(L.assignments || {}), ...groups };
+    if (mh != null && !Number.isNaN(+mh)) L.portfolio = { ...(L.portfolio || {}), max_total_heat_pct: +mh };
+  });
+  rpStatus(r.ok ? `✓ synced ${new Date().toTimeString().slice(0, 5)}` : "✗ 同步失败 · 点重试", r.ok ? "muted" : "down");
+}
+function rpSchedule(now = false) {   // 改动即调度:now=结构性动作/失焦立刻,否则 2.5s debounce
+  clearTimeout(rpSyncTimer);
+  if (!getPat()) { rpStatus("⚠ 未设 PAT · 点此设置", "down"); return; }
+  rpStatus("• 待同步…");
+  if (now) rpSyncNow(); else rpSyncTimer = setTimeout(rpSyncNow, 2500);
+}
+async function rpSyncCompleted() { if (getPat()) await putPrivate("completed_theses.json", rLS("completedTheses", []), "chore: completed theses via UI"); }
 
 export async function renderRiskControl() {
   const host = $("risk-control"); if (!host) return;
@@ -53,16 +80,18 @@ export async function renderRiskControl() {
 
   const gt = (id) => { const v = $(id).value; return v === "" ? null : +v; };  // 数值,空→null
   host.innerHTML = `
-    <div class="risk-bundles">
-      <label>Thesis<select id="rk-bundle">${bundleOpts()}</select></label>
-      <input id="rk-newname" type="text" placeholder="thesis 名(新建/重命名)" style="width:150px">
+    <div class="risk-bundles" style="align-items:center">
+      <label>Thesis<span id="rk-sel-wrap"><select id="rk-bundle">${bundleOpts()}</select></span></label>
+      <input id="rk-newname" type="text" placeholder="新 thesis 名" style="width:130px">
       <button id="rk-new" class="mini-btn">＋ 新建</button>
-      <button id="rk-rename" class="mini-btn" title="把当前选中 thesis 改名为输入框里的名字(同步持仓分组与 default)">✏️ 重命名</button>
-      <button id="rk-complete" class="mini-btn" title="标记完成:存档为 JSON(移出活跃列表,不删除),供交易复盘配套">✅ 完成</button>
-      <button id="rk-del" class="mini-btn" title="直接删除,不存档">🗑 删除</button>
-      <input id="rk-pat" type="password" value="${esc(getPat() || "")}" placeholder="fine-grained PAT(本机存)" style="width:170px;background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px">
-      <button id="rk-save" class="mini-btn">💾 保存到 config</button>
-      <button id="rk-push-done" class="mini-btn" title="把已完成 thesis 存档发布到私有库(换机器不丢)">📤 存已完成</button>
+      <span class="rk-menu-wrap"><button id="rk-menu-btn" class="mini-btn" title="当前 thesis 操作:重命名 / 完成 / 删除">⋯</button>
+        <div id="rk-menu" class="rk-menu" hidden>
+          <button class="rk-menu-item" data-act="rename">✏️ 重命名</button>
+          <button class="rk-menu-item" data-act="complete">✅ 完成并归档</button>
+          <button class="rk-menu-item rk-danger" data-act="delete">🗑 删除</button>
+        </div></span>
+      <input id="rk-pat" type="password" value="${esc(getPat() || "")}" placeholder="粘贴 fine-grained PAT(含私有库写权限)" hidden style="width:230px;background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px">
+      <span id="rk-sync" class="muted small" style="margin-left:auto;cursor:pointer" title="点击:未设 PAT→设置;失败→重试">同步就绪</span>
       <span id="rk-msg" class="muted small"></span>
     </div>
     <div class="risk-form" style="margin-top:10px">
@@ -87,7 +116,7 @@ export async function renderRiskControl() {
     <div id="rk-out" class="wb-statbar" style="margin-top:12px"></div>
     <div id="rk-note" class="muted small" style="margin-top:6px"></div>
     <div id="rk-done" class="muted small" style="margin-top:10px"></div>
-    <div class="muted small" style="margin-top:10px"><b>止损放在 thesis 被证伪处</b>(不是"亏 X% 就卖"):${(POLICY.stop_bases || []).map(esc).join(" · ")}。<br>核心:<b>止损位决定仓位</b>;每个 thesis 自带 单笔风险%/ATR倍数/仓位上限/总风险约束/Target Profit/Shelf life/Edge/Invalidation。改字段即更新(本机自动存),点『保存到 config』发布给 agent。ATR 法:止损=买入−倍数×ATR${atrP}。</div>`;
+    <div class="muted small" style="margin-top:10px"><b>止损放在 thesis 被证伪处</b>(不是"亏 X% 就卖"):${(POLICY.stop_bases || []).map(esc).join(" · ")}。<br>核心:<b>止损位决定仓位</b>;每个 thesis 自带 单笔风险%/ATR倍数/仓位上限/总风险约束/Target Profit/Shelf life/Edge/Invalidation。改字段即自动同步到私有库(见右上状态),无需手动保存。ATR 法:止损=买入−倍数×ATR${atrP}。</div>`;
 
   const loadBundle = () => { const b = POLICY.bundles[cur] || {};
     $("rk-risk").value = b.risk_pct ?? 0.75; $("rk-mult").value = b.atr_mult ?? 2.0; $("rk-cap").value = b.max_position_pct ?? 20;
@@ -134,25 +163,21 @@ export async function renderRiskControl() {
       ? `<b>已完成 ${done.length}</b>(存档,不计入活跃):` + done.map((d) => `<span class="sc-dir muted" style="margin:2px 3px;display:inline-block">${esc(d.name)}${d.target_profit_pct != null ? ` · Target ${d.target_profit_pct}%` : ""} <span class="muted">${(d.completed_at || "").slice(0, 10)}</span></span>`).join("")
       : ""; };
 
-  $("rk-bundle").addEventListener("change", () => { cur = $("rk-bundle").value; loadBundle(); compute(); persistLocal(); renderRiskExposure(); });
-  ["rk-risk", "rk-mult", "rk-cap"].forEach((id) => { const el = $(id); el.addEventListener("input", () => { syncBundle(); compute(); persistLocal(); }); el.addEventListener("change", renderRiskExposure); });   // change(失焦/回车)时刷新热力表止损/在险
-  ["rk-totrisk", "rk-goal"].forEach((id) => { const el = $(id); el.addEventListener("input", () => { syncBundle(); persistLocal(); }); el.addEventListener("change", renderRiskExposure); });   // 总风险约束/目标 → 热力图判超险
-  ["rk-shelf", "rk-edge", "rk-invalid"].forEach((id) => $(id).addEventListener("input", () => { syncBundle(); persistLocal(); }));
+  const rebuildSel = () => { $("rk-sel-wrap").innerHTML = `<select id="rk-bundle">${bundleOpts()}</select>`; };
+  // ---- 字段编辑:落本机 + 调度自动同步(input 防抖 / change 立刻 flush)----
+  const onEdit = (recompute, reheat) => () => { syncBundle(); if (recompute) compute(); persistLocal(); rpSchedule(); };
+  ["rk-risk", "rk-mult", "rk-cap"].forEach((id) => { const el = $(id); el.addEventListener("input", onEdit(true)); el.addEventListener("change", () => { renderRiskExposure(); rpSchedule(true); }); });
+  ["rk-totrisk", "rk-goal"].forEach((id) => { const el = $(id); el.addEventListener("input", onEdit(false)); el.addEventListener("change", () => { renderRiskExposure(); rpSchedule(true); }); });
+  ["rk-shelf", "rk-edge", "rk-invalid"].forEach((id) => { const el = $(id); el.addEventListener("input", onEdit(false)); el.addEventListener("change", () => rpSchedule(true)); });
   ["rk-eq", "rk-entry", "rk-stop", "rk-atr"].forEach((id) => $(id).addEventListener("input", compute));
-  $("rk-eq").addEventListener("input", persistLocal);
+  $("rk-eq").addEventListener("input", () => { persistLocal(); rpSchedule(); });
+  $("rk-eq").addEventListener("change", () => rpSchedule(true));
   $("rk-mode").addEventListener("change", compute);
-  $("rk-new").addEventListener("click", () => {
-    const name = ($("rk-newname").value || "").trim();
-    if (!name) return void ($("rk-msg").textContent = "先填 thesis 名");
-    if (POLICY.bundles[name]) return void ($("rk-msg").textContent = "同名已存在");
-    POLICY.bundles[name] = { risk_pct: 0.75, atr_mult: 2.0, max_position_pct: 20, total_risk_pct: null, target_profit_pct: null, shelf: null, edge: "", invalid: "" };
-    cur = name; $("rk-bundle").innerHTML = bundleOpts(); $("rk-newname").value = "";
-    loadBundle(); compute(); persistLocal(); $("rk-msg").textContent = `已建「${name}」· 本地已存,记得点『保存到 config』发布给 agent`;
-  });
-  $("rk-rename").addEventListener("click", () => {   // 重命名当前 thesis:换键 + 同步 default + 持仓分组
-    const name = ($("rk-newname").value || "").trim();
-    if (!name) return void ($("rk-msg").textContent = "先在输入框填新名");
-    if (name === cur) return void ($("rk-msg").textContent = "名称未变");
+  // ---- thesis 选择(委托,重建 select 后仍有效)+ 内联重命名 ----
+  const startRename = () => { $("rk-sel-wrap").innerHTML = `<input id="rk-ren" value="${esc(cur)}" style="width:150px"><button id="rk-ren-ok" class="mini-btn">✓</button><button id="rk-ren-x" class="mini-btn">✕</button>`; const inp = $("rk-ren"); inp.focus(); inp.select(); };
+  const applyRename = () => {
+    const name = ($("rk-ren") ? $("rk-ren").value : "").trim();
+    if (!name || name === cur) return void rebuildSel();
     if (POLICY.bundles[name]) return void ($("rk-msg").textContent = "同名已存在");
     const old = cur;
     const nb = {}; for (const [k, v] of Object.entries(POLICY.bundles)) nb[k === old ? name : k] = v;  // 保序换键
@@ -163,41 +188,61 @@ export async function renderRiskControl() {
     const rg = rLS("riskGroups", {}); let ch = false;
     for (const s of Object.keys(rg)) if (rg[s] === old) { rg[s] = name; ch = true; }             // 本机分组跟随
     if (ch) rLSset("riskGroups", rg);
-    $("rk-bundle").innerHTML = bundleOpts(); $("rk-newname").value = "";
-    loadBundle(); compute(); persistLocal(); renderRiskExposure();
-    $("rk-msg").textContent = `已重命名「${old}」→「${name}」· 本地已存,记得点『保存到 config』发布`;
+    rebuildSel(); loadBundle(); compute(); persistLocal(); renderRiskExposure(); rpSchedule(true);
+    $("rk-msg").textContent = `已重命名「${old}」→「${name}」`;
+  };
+  $("rk-sel-wrap").addEventListener("change", (e) => { if (e.target.id === "rk-bundle") { cur = e.target.value; loadBundle(); compute(); persistLocal(); renderRiskExposure(); rpSchedule(true); } });
+  $("rk-sel-wrap").addEventListener("click", (e) => { if (e.target.id === "rk-ren-ok") applyRename(); else if (e.target.id === "rk-ren-x") rebuildSel(); });
+  $("rk-sel-wrap").addEventListener("keydown", (e) => { if (e.target.id === "rk-ren") { if (e.key === "Enter") applyRename(); else if (e.key === "Escape") rebuildSel(); } });
+  // ---- 新建 ----
+  $("rk-new").addEventListener("click", () => {
+    const name = ($("rk-newname").value || "").trim();
+    if (!name) return void ($("rk-msg").textContent = "先填 thesis 名");
+    if (POLICY.bundles[name]) return void ($("rk-msg").textContent = "同名已存在");
+    POLICY.bundles[name] = { risk_pct: 0.75, atr_mult: 2.0, max_position_pct: 20, total_risk_pct: null, target_profit_pct: null, shelf: null, edge: "", invalid: "" };
+    cur = name; rebuildSel(); $("rk-newname").value = "";
+    loadBundle(); compute(); persistLocal(); rpSchedule(true); $("rk-msg").textContent = `已建「${name}」`;
   });
-  $("rk-complete").addEventListener("click", () => {   // 完成 = 存档为 JSON + 移出活跃(区别于删除)
-    if (Object.keys(POLICY.bundles).length <= 1) return void ($("rk-msg").textContent = "至少保留 1 个活跃 thesis;先新建再完成");
+  // ---- ⋯ 菜单:重命名 / 完成(单确认)/ 删除(两步红色 arm)----
+  const menu = $("rk-menu");
+  const resetMenu = () => { const c = menu.querySelector('[data-act="complete"]'), d = menu.querySelector('[data-act="delete"]'); if (c) { c.textContent = "✅ 完成并归档"; c.classList.remove("rk-armed"); } if (d) { d.textContent = "🗑 删除"; d.classList.remove("rk-armed"); } };
+  const closeMenu = () => { menu.hidden = true; resetMenu(); };
+  const doDelete = () => {
+    if (Object.keys(POLICY.bundles).length <= 1) return void ($("rk-msg").textContent = "至少保留 1 个 thesis");
+    delete POLICY.bundles[cur]; cur = Object.keys(POLICY.bundles)[0];
+    rebuildSel(); loadBundle(); compute(); persistLocal(); renderRiskExposure(); rpSchedule(true); $("rk-msg").textContent = "🗑 已删除";
+  };
+  const doComplete = () => {
+    if (Object.keys(POLICY.bundles).length <= 1) return void ($("rk-msg").textContent = "至少保留 1 个活跃 thesis");
     syncBundle();
     const name = cur, done = rLS(DONE, []);
     done.unshift({ name, ...POLICY.bundles[cur], completed_at: new Date().toISOString() });
     rLSset(DONE, done);
     delete POLICY.bundles[cur]; cur = Object.keys(POLICY.bundles)[0];
-    $("rk-bundle").innerHTML = bundleOpts(); loadBundle(); compute(); persistLocal(); renderDone(); renderRiskExposure();
-    $("rk-msg").textContent = `✅ 已完成「${name}」并存档(本机)· 点『📤 存已完成』发布私有库,『💾 保存到 config』同步活跃列表`;
+    rebuildSel(); loadBundle(); compute(); persistLocal(); renderDone(); renderRiskExposure();
+    rpSchedule(true); rpSyncCompleted();   // 活跃列表 + 已完成存档 都同步私有库
+    $("rk-msg").textContent = `✅ 已完成「${name}」并归档`;
+  };
+  $("rk-menu-btn").addEventListener("click", (e) => { e.stopPropagation(); menu.hidden = !menu.hidden; if (menu.hidden) resetMenu(); });
+  menu.addEventListener("click", (e) => {
+    const btn = e.target.closest(".rk-menu-item"); if (!btn) return;
+    const act = btn.dataset.act;
+    if (act === "rename") { closeMenu(); startRename(); return; }
+    if (!btn.classList.contains("rk-armed")) {   // 第一次点 = 武装确认(4s 自动解除)
+      resetMenu(); btn.classList.add("rk-armed");
+      btn.textContent = act === "delete" ? `确认删除「${cur}」?` : `确认完成「${cur}」?`;
+      setTimeout(() => { if (btn.classList.contains("rk-armed")) resetMenu(); }, 4000);
+      return;
+    }
+    closeMenu(); act === "delete" ? doDelete() : doComplete();
   });
-  $("rk-del").addEventListener("click", () => {
-    if (Object.keys(POLICY.bundles).length <= 1) return void ($("rk-msg").textContent = "至少保留 1 个 thesis");
-    delete POLICY.bundles[cur]; cur = Object.keys(POLICY.bundles)[0];
-    $("rk-bundle").innerHTML = bundleOpts(); loadBundle(); compute(); persistLocal(); renderRiskExposure(); $("rk-msg").textContent = "🗑 已删除(未存档)· 记得点『保存到 config』";
-  });
-  const pt = $("rk-pat"); if (pt) pt.addEventListener("change", () => { setPat(pt.value.trim()); $("rk-msg").textContent = pt.value.trim() ? "✓ PAT 已存本机" : "PAT 已清"; });
-  $("rk-save").addEventListener("click", async () => {
-    syncBundle(); POLICY.account_equity = g("rk-eq"); POLICY.default_bundle = cur;
-    $("rk-msg").textContent = "保存中…";
-    const r = await putPolicy((L) => { const { assignments, ...rest } = POLICY; Object.assign(L, rest); if (ASSIGN) L.assignments = ASSIGN; if (MAXHEAT != null) L.portfolio = { ...(L.portfolio || {}), max_total_heat_pct: MAXHEAT }; });  // thesis 参数 + 分组 + 组合上限 一起写
-    $("rk-msg").textContent = r.ok ? "✓ 已保存 thesis + 分组到 config(agent 读同一份)" : "✗ " + r.msg;
-  });
-  $("rk-push-done").addEventListener("click", async () => {   // 发布已完成存档到私有库(供后续交易复盘读)
-    const done = rLS(DONE, []);
-    if (!done.length) return void ($("rk-msg").textContent = "暂无已完成 thesis");
-    $("rk-msg").textContent = "存已完成到私有库…";
-    const r = await putPrivate("completed_theses.json", done, "chore: completed theses via UI");
-    $("rk-msg").textContent = r.ok ? `✓ 已把 ${done.length} 个完成 thesis 存档到私有库` : "✗ " + r.msg;
-  });
+  document.addEventListener("click", (e) => { if (!menu.hidden && !e.target.closest(".rk-menu-wrap")) closeMenu(); });
+  // ---- 同步状态 / PAT ----
+  $("rk-sync").addEventListener("click", () => { if (!getPat()) { const p = $("rk-pat"); p.hidden = false; p.focus(); } else rpSyncNow(); });
+  $("rk-pat").addEventListener("change", () => { const v = $("rk-pat").value.trim(); setPat(v); $("rk-pat").hidden = true; if (v) rpSchedule(true); else rpStatus("⚠ 未设 PAT · 点此设置", "down"); });
 
   loadBundle(); compute(); renderDone();
+  rpStatus(getPat() ? "✓ 就绪 · 改动自动同步" : "⚠ 未设 PAT · 点此设置", getPat() ? "muted" : "down");
 }
 
 const tile = (k, v, sub = "", cls = "") =>
@@ -357,8 +402,8 @@ export async function renderRiskExposure() {
     </div>
     <div class="muted small" style="margin-top:6px">分组改动已本地自动保存(localStorage);点顶部「💾 保存到 config」把 thesis + 分组一起发布给 agent(需 PAT)。</div>`;
 
-  host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", () => { ASSIGN[el.dataset.sym] = el.value; const g = rLS("riskGroups", {}); g[el.dataset.sym] = el.value; rLSset("riskGroups", g); renderRiskExposure(); }));
-  const mh = $("rk-maxheat"); if (mh) mh.addEventListener("change", () => { MAXHEAT = +mh.value || 0; rLSset("riskMaxHeat", MAXHEAT); renderRiskExposure(); });   // 本机即时持久化;「保存到 config」再推给 agent
+  host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", () => { ASSIGN[el.dataset.sym] = el.value; const g = rLS("riskGroups", {}); g[el.dataset.sym] = el.value; rLSset("riskGroups", g); renderRiskExposure(); rpSchedule(true); }));   // 分组改动 → 自动同步私有库
+  const mh = $("rk-maxheat"); if (mh) mh.addEventListener("change", () => { MAXHEAT = +mh.value || 0; rLSset("riskMaxHeat", MAXHEAT); renderRiskExposure(); rpSchedule(true); });   // 本机即时持久化 + 自动同步私有库
   host.querySelectorAll(".rk-sort").forEach((th) => th.addEventListener("click", () => {   // 点表头排序:同列切方向,换列文本升/数值降
     const k = th.dataset.k;
     SORT = SORT.key === k ? { key: k, dir: -SORT.dir } : { key: k, dir: (k === "sym" || k === "bundleName") ? 1 : -1 };
