@@ -6,6 +6,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8642", "--directory", "."],
       "port": 8642
+    },
+    {
+      "name": "ai-dashboard-8000",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8000", "--directory", "."],
+      "port": 8000
     }
   ]
 }
