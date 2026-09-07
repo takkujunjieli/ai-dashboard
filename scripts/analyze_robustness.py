@@ -22,10 +22,13 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 UA = {"User-Agent": "Mozilla/5.0 (research-dashboard robustness)"}
 BENCH = "SPY"
+SPLIT_K = 3.0     # 单日 >3 倍价格跳变几乎必是(反)拆股口径错配,不是真实收益 → 触发保护(见 build_account)
 
 
 def yahoo_daily(sym):
-    """Yahoo v8 chart(5y,1d)→ {date: adjclose}。Yahoo 代码 '.'→'-'(BRK.B→BRK-B)。"""
+    """Yahoo v8 chart(5y,1d)→ {date: close}(拆股复权收盘)。Yahoo 代码 '.'→'-'(BRK.B→BRK-B)。
+    quote.close 已按拆股复权(与 adjclose 差别仅在分红);成交记录则未复权,故 1b 把成交按比例
+    归一到此复权基准,避免 UVIX/SOXS 等反拆股 ETF 的巨额虚假 M2M(6 月假暴涨即此)。"""
     ysym = sym.replace(".", "-")
     url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ysym}?range=5y&interval=1d"
     req = urllib.request.Request(url, headers=UA)
@@ -33,10 +36,7 @@ def yahoo_daily(sym):
         d = json.loads(r.read())
     res = d["chart"]["result"][0]
     ts = res["timestamp"]
-    ind = res["indicators"]
-    adj = (ind.get("adjclose") or [{}])[0].get("adjclose")
-    close = ind["quote"][0]["close"]
-    vals = adj if adj else close
+    vals = res["indicators"]["quote"][0]["close"]   # 原始未复权收盘(不用 adjclose)
     out = {}
     for t, v in zip(ts, vals):
         if v is not None:
@@ -96,6 +96,35 @@ print(f"价格:{len(prices)}/{len(syms) + 1} 成功(缓存 {len(_cache)});缺失
 cal = sorted(prices.get(BENCH, {}).keys())     # 用 SPY 交易日历
 cal_set = set(cal)
 
+# ---------- 1b) 拆股口径归一(把成交记录换算到 Yahoo 复权价基准) ----------
+# Yahoo 历史价按累计(反)拆股复权,而成交记录是「未复权 qty/成交价」。二者相乘会产生巨额虚假 M2M
+# —— 如 SOXS 频繁反拆股使 2023 复权价达 $58 万(成交 $20)、UVIX $80(成交 $4),乘未复权 qty → 假暴涨。
+# 修正(对全部标的通用,保留真实盈亏,含 NVDA 等正常拆股):任一笔成交价与其当日(或最近已知)
+# 复权收盘背离 >SPLIT_K 倍 → 视为拆股口径差,按比例把该笔换算到复权基准(现金 qty×price 不变)。
+def _nearest_close(sym, d):
+    px = prices.get(sym)
+    if not px:
+        return None
+    if d in px:
+        return px[d]
+    ks = [k for k in px if k <= d]
+    return px[max(ks)] if ks else None
+
+_adj_syms = set()
+for acct, _txs in tx_by_acct.items():
+    fixed = []
+    for dt, sym, dq, pr in _txs:
+        c = _nearest_close(sym, dt)
+        if c and c > 0 and pr > 0 and (c / pr > SPLIT_K or pr / c > SPLIT_K):
+            f = pr / c              # 成交价/复权收盘 ≈ 该笔的累计拆股因子
+            dq = dq * f             # qty 换算到复权基准(现金 dq*pr 保持不变)
+            pr = c
+            _adj_syms.add(sym)
+        fixed.append((dt, sym, dq, pr))
+    tx_by_acct[acct] = fixed
+if _adj_syms:
+    print(f"拆股口径归一(成交价与复权收盘背离 >{SPLIT_K}x → 按比例把该笔换算到复权基准,现金不变):{sorted(_adj_syms)}")
+
 
 def fwd_close(sym, d, last):
     """取 sym 在 d 的收盘;缺则沿用上一个已知(forward-fill)。返回 (close_or_None, new_last)。"""
@@ -126,7 +155,7 @@ def build_account(txs):
         for sym, dq, pr in day_trades:
             dqmap[sym] += dq; prmap[sym] = pr
         touched = set(qty) | set(dqmap)
-        for sym in touched:
+        for sym in touched:                          # 成交已在 1b 归一到复权价基准,故此处直接用复权收盘 mark
             c, prev_close[sym] = fwd_close(sym, d, prev_close.get(sym))
             q0 = qty[sym]
             dq = dqmap.get(sym, 0.0)
