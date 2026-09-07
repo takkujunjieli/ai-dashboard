@@ -1,0 +1,6 @@
+{
+  "_note": "仓位情报页参数(build_positioning.py 读)。cta_aum_usd=趋势 CTA 配到美股指数的假设 AUM(用于估 $-to-buy/sell,粗略);pctile_window_wk=z/分位的回看周数;ma_days=CTA 趋势模型用的均线。",
+  "cta_aum_usd": 300000000000,
+  "pctile_window_wk": 156,
+  "ma_days": [20, 50, 100, 200]
+}

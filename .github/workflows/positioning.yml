@@ -1,0 +1,62 @@
+name: 仓位情报(COT + CTA)
+# 免费版 JPM Positioning Intelligence:CFTC COT-TFF 各 cohort 分位 + CTA 趋势模型触发。
+# COT 每周五 15:30 ET 发布 → 周五晚 cron;组装时折入已有 retailflow/13F。
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 22 * * 5"        # 周五 22:00 UTC(COT 15:30 ET 发布之后)
+
+permissions:
+  contents: write
+
+jobs:
+  positioning:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install requests
+
+      - name: 抓 CFTC COT-TFF(免 key,全历史周频)
+        run: python scripts/fetch_cot.py
+
+      - name: 组装 positioning.json(COT z/分位 + CTA + 折入散户/13F)
+        run: python scripts/build_positioning.py
+
+      - name: 提交数据到 main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/cot_raw.json data/positioning.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: 仓位情报 $(date -u +%F\ %R)"
+            git pull --rebase -X theirs origin main
+            git push || { git pull --rebase -X theirs origin main && git push; }
+          else
+            echo "无数据变化"
+          fi
+
+      - name: 镜像数据到 data 分支(前端主数据源)
+        run: python scripts/push_data.py data "chore: 仓位情报 $(date -u +%F\ %R)"
+
+  deploy:
+    needs: positioning
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - run: bash scripts/cache_bust.sh
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -24,6 +24,7 @@
   <span class="tab" data-topic="retailflow">📊 散户订单流</span>
   <span class="tab" data-topic="rates">🏦 国债vs股市</span>
   <span class="tab" data-topic="gexvol">🌀 GEX→波动</span>
+  <span class="tab" data-topic="positioning">🧭 仓位情报</span>
 </nav>
 
 <div id="r-status" class="muted small" style="padding:8px 0"></div>
@@ -75,6 +76,30 @@
 <section data-topic-panel="gexvol" hidden>
   <h2>🌀 净 GEX → 次日已实现波动 <span class="muted small" id="gx-sub"></span></h2>
   <div id="gx-study" class="card"><span class="muted small">计算中…</span></div>
+</section>
+
+<!-- ========== Topic 5:仓位情报(免费版 JPM Positioning Intelligence) ========== -->
+<section data-topic-panel="positioning" hidden>
+  <h2>🧭 仓位情报 <span class="muted small">免费版 JPM Positioning Intelligence · 各 cohort 分位 + 潜在买卖盘(COT/CTA/散户)</span></h2>
+  <div id="pos-gauge" class="card"><span class="muted small">计算中…</span></div>
+
+  <div style="margin:12px 0 4px">
+    <label class="muted small">市场
+      <select id="pos-mkt" style="background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:4px 8px;color:var(--text)"></select>
+    </label>
+  </div>
+
+  <h2>各 cohort 净持仓(周频,回看窗) <span class="muted small">点击图例开关曲线</span></h2>
+  <div id="pos-legend" class="rt-legend"></div>
+  <div class="chart-wrap">
+    <div id="pos-chart" style="height:340px"></div>
+    <div id="pos-hover" class="chart-hover"></div>
+  </div>
+
+  <h2>潜在买卖盘</h2>
+  <div id="pos-pressure" class="card"><span class="muted small">计算中…</span></div>
+
+  <div class="muted small" id="pos-caveat" style="margin-top:10px"></div>
 </section>
 
 <footer class="muted small">

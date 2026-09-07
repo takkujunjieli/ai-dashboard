@@ -652,8 +652,130 @@ async function renderGexVol() {
      <div class="muted small">${esc(s.label || "净 GEX → 次日已实现波动")}:按 GEX 五分位分组的次日 |r|——低 GEX(Q1)→ 高波动,高 GEX(Q5)→ 低波动(单调,符合 dealer-gamma 抑制/放大机制)。纯预测力研究(无持仓/成本)。</div>`;
 }
 
+/* Topic 5:仓位情报(免费版 JPM Positioning Intelligence)。COT-TFF 各 cohort(HF/CTA 杠杆基金、
+   资管/共同基金、Dealer)分位 + z-score + 两种潜在买卖盘(拥挤度$ 回中位、CTA 趋势模型机械触发$),
+   折入散户(retailflow)。数据 data/positioning.json(fetch_cot + build_positioning 产出)。 */
+const POS_COH = [["lev", "#f87171"], ["am", "#60a5fa"], ["dealer", "#a78bfa"]];
+const POS_MLABEL = { SP500: "S&P 500", NDX100: "Nasdaq 100" };
+const fmtNum = (v) => v == null ? "—" : Math.round(v).toLocaleString();
+const fmtB = (v) => {
+  if (v == null) return "—";
+  const a = Math.abs(v);
+  return a >= 1e9 ? (v / 1e9).toFixed(1) + "B" : a >= 1e6 ? (v / 1e6).toFixed(0) + "M" : Math.round(v).toLocaleString();
+};
+const fmtUsd = (v) => v == null ? "—" : (v < 0 ? "-$" : "$") + fmtB(Math.abs(v));
+let POS_J = null, POS_MKT = null;
+
+async function renderPositioning() {
+  const J = await loadJSON("data/positioning.json");
+  if (!J || !J.markets || !Object.keys(J.markets).length) {
+    $("pos-gauge").innerHTML = '<span class="muted small">缺 data/positioning.json(跑 scripts/fetch_cot.py + scripts/build_positioning.py)</span>';
+    return;
+  }
+  POS_J = J;
+  const mkeys = Object.keys(J.markets);
+  if (!POS_MKT || !J.markets[POS_MKT]) POS_MKT = mkeys[0];
+
+  // 市场下拉(切换图表 + 潜在买卖盘)
+  const sel = $("pos-mkt");
+  sel.innerHTML = mkeys.map((k) => `<option value="${k}"${k === POS_MKT ? " selected" : ""}>${POS_MLABEL[k] || k}</option>`).join("");
+  sel.onchange = () => { POS_MKT = sel.value; drawPosMarket(); };
+
+  // ① 复合 TPM + 各市场各 cohort 分位 tiles
+  const comp = J.composite_pctile;
+  const gt = [tile("复合分位 TPM", comp == null ? "—" : comp + " pct",
+    comp == null ? "" : (comp >= 70 ? "整体偏拥挤多" : comp <= 30 ? "整体偏轻/空" : "中性"))];
+  for (const mk of mkeys) {
+    for (const [ck] of POS_COH) {
+      const c = J.markets[mk].cohorts[ck];
+      if (!c) continue;
+      gt.push(tile(`${POS_MLABEL[mk] || mk}·${c.label}`,
+        c.pctile == null ? "—" : c.pctile + " pct",
+        `z${c.z} · Δ周 ${(c.weekly_chg || 0) > 0 ? "+" : ""}${fmtNum(c.weekly_chg)}`));
+    }
+  }
+  const yrs = Math.round((J.window_wk || 156) / 52);
+  const rf = J.retail;
+  $("pos-gauge").innerHTML = `<div class="opt-grid">${gt.join("")}</div>
+    <div class="muted small" style="margin-top:6px">分位 = 该 cohort 净持仓在近 ${yrs} 年的历史排名(高=相对拥挤多);z = 同窗标准分。散户:${rf && rf.avg_netbuy != null ? `近端净买入均值 ${(rf.avg_netbuy * 100).toFixed(1)}%(${rf.n} 票)` : "(缺 retailflow)"}${J.has_13f ? " · 已接 13F" : ""}。</div>`;
+  $("pos-caveat").innerHTML = "⚠ " + ((J.meta && J.meta.caveats) || []).join(";");
+  drawPosMarket();
+}
+
+function drawPosMarket() {
+  const J = POS_J, mk = J.markets[POS_MKT];
+  if (!mk) return;
+
+  // ② 各 cohort 净持仓时序(lightweight-charts,与国债页同框架)
+  const el = $("pos-chart"), LWC = window.LightweightCharts;
+  if (LWC && el) {
+    el.innerHTML = "";
+    const chart = LWC.createChart(el, {
+      layout: { background: { color: "transparent" }, textColor: "#8b96ad" },
+      grid: { vertLines: { color: "#1e2941" }, horzLines: { color: "#1e2941" } },
+      rightPriceScale: { borderColor: "#2a3550" },
+      timeScale: { borderColor: "#2a3550" },
+      crosshair: { mode: LWC.CrosshairMode.Normal },
+      height: 340,
+    });
+    const S = [];
+    for (const [ck, color] of POS_COH) {
+      const c = mk.cohorts[ck];
+      if (!c || !c.series) continue;
+      const series = chart.addLineSeries({ color, lineWidth: 2, priceLineVisible: false, lastValueVisible: false });
+      series.setData(c.series.map(([d, v]) => ({ time: d, value: v })));
+      S.push({ label: c.label, color, series, visible: true });
+    }
+    chart.timeScale().fitContent();
+    const leg = $("pos-legend");
+    if (leg) {
+      leg.innerHTML = "";
+      S.forEach((s) => {
+        const chip = document.createElement("span");
+        chip.className = "rt-leg";
+        chip.innerHTML = `<span class="rt-sw" style="background:${s.color}"></span>${esc(s.label)}`;
+        chip.onclick = () => { s.visible = !s.visible; s.series.applyOptions({ visible: s.visible }); chip.classList.toggle("off", !s.visible); };
+        leg.appendChild(chip);
+      });
+    }
+    const hov = $("pos-hover");
+    if (hov) chart.subscribeCrosshairMove((p) => {
+      if (!p.point || !p.time) { hov.style.display = "none"; return; }
+      const rows = [];
+      for (const s of S) {
+        if (!s.visible) continue;
+        const d = p.seriesData.get(s.series);
+        if (!d || d.value == null) continue;
+        rows.push(`<span style="color:${s.color}">● ${esc(s.label)} ${fmtNum(d.value)}</span>`);
+      }
+      if (!rows.length) { hov.style.display = "none"; return; }
+      hov.innerHTML = `<div class="muted" style="margin-bottom:2px">${p.time}</div>` + rows.join("<br>");
+      hov.style.display = "block";
+    });
+  }
+
+  // ③ 潜在买卖盘:拥挤度$(回中位)+ CTA 机械触发$
+  const rows = POS_COH.map(([ck]) => {
+    const c = mk.cohorts[ck];
+    if (!c) return "";
+    const s = c.crowd_usd, cls = s > 0 ? "up" : s < 0 ? "down" : "";
+    return `<tr><td>${esc(c.label)}</td><td class="sc-num">${c.pctile == null ? "—" : c.pctile}</td>
+      <td class="sc-num ${cls}">${fmtUsd(s)}</td>
+      <td class="muted small">${s > 0 ? "潜在买(偏轻/空)" : s < 0 ? "潜在卖(偏拥挤多)" : "—"}</td></tr>`;
+  }).join("");
+  let cta = "";
+  if (mk.cta) {
+    const t = mk.cta.triggers.map((x) =>
+      `<tr><td>${x.ma}D</td><td class="sc-num">${x.level.toLocaleString()}</td><td>${esc(x.dir)}</td><td class="sc-num">${fmtUsd(x.usd)}</td></tr>`).join("");
+    cta = `<div class="muted small" style="margin-top:12px"><b>CTA 趋势模型</b> · 现价 ${mk.cta.price.toLocaleString()} · 仓位 ${mk.cta.position > 0 ? "+" : ""}${mk.cta.position}(${fmtUsd(mk.cta.exposure_usd)} 敞口)· 假设 AUM ${fmtUsd(J.cta_aum_usd)}</div>
+      <table class="bt-table"><tr><th>均线</th><th>触发价</th><th>方向</th><th>$ 量</th></tr>${t}</table>`;
+  }
+  $("pos-pressure").innerHTML = `<table class="bt-table"><tr><th>cohort</th><th>分位</th><th>拥挤$(回中位)</th><th>含义</th></tr>${rows}</table>${cta}
+    <div class="muted small" style="margin-top:6px">拥挤$ = (当前净−中位净)×合约乘数×指数,即回到历史中位需成交的名义 $(签名:+潜在买 / −潜在卖)。CTA = 多均线趋势模型在各均线翻转处的机械买卖(假设 AUM,方向性非精确)。</div>`;
+}
+
 /* ---------- Tab 调度 ---------- */
-const RENDER = { bearbull: renderBearbull, retailflow: renderRetailflow, rates: renderRates, gexvol: renderGexVol };
+const RENDER = { bearbull: renderBearbull, retailflow: renderRetailflow, rates: renderRates, gexvol: renderGexVol, positioning: renderPositioning };
 const rendered = {};
 async function showTopic(topic) {
   if (!RENDER[topic]) return;
