@@ -55,8 +55,9 @@ export async function renderRiskControl() {
   host.innerHTML = `
     <div class="risk-bundles">
       <label>Thesis<select id="rk-bundle">${bundleOpts()}</select></label>
-      <input id="rk-newname" type="text" placeholder="新 thesis 名" style="width:120px">
+      <input id="rk-newname" type="text" placeholder="thesis 名(新建/重命名)" style="width:150px">
       <button id="rk-new" class="mini-btn">＋ 新建</button>
+      <button id="rk-rename" class="mini-btn" title="把当前选中 thesis 改名为输入框里的名字(同步持仓分组与 default)">✏️ 重命名</button>
       <button id="rk-complete" class="mini-btn" title="标记完成:存档为 JSON(移出活跃列表,不删除),供交易复盘配套">✅ 完成</button>
       <button id="rk-del" class="mini-btn" title="直接删除,不存档">🗑 删除</button>
       <input id="rk-pat" type="password" value="${esc(getPat() || "")}" placeholder="fine-grained PAT(本机存)" style="width:170px;background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px">
@@ -147,6 +148,24 @@ export async function renderRiskControl() {
     POLICY.bundles[name] = { risk_pct: 0.75, atr_mult: 2.0, max_position_pct: 20, total_risk_pct: null, target_profit_pct: null, shelf: null, edge: "", invalid: "" };
     cur = name; $("rk-bundle").innerHTML = bundleOpts(); $("rk-newname").value = "";
     loadBundle(); compute(); persistLocal(); $("rk-msg").textContent = `已建「${name}」· 本地已存,记得点『保存到 config』发布给 agent`;
+  });
+  $("rk-rename").addEventListener("click", () => {   // 重命名当前 thesis:换键 + 同步 default + 持仓分组
+    const name = ($("rk-newname").value || "").trim();
+    if (!name) return void ($("rk-msg").textContent = "先在输入框填新名");
+    if (name === cur) return void ($("rk-msg").textContent = "名称未变");
+    if (POLICY.bundles[name]) return void ($("rk-msg").textContent = "同名已存在");
+    const old = cur;
+    const nb = {}; for (const [k, v] of Object.entries(POLICY.bundles)) nb[k === old ? name : k] = v;  // 保序换键
+    POLICY.bundles = nb;
+    if (POLICY.default_bundle === old) POLICY.default_bundle = name;
+    cur = name;
+    if (ASSIGN) for (const s of Object.keys(ASSIGN)) if (ASSIGN[s] === old) ASSIGN[s] = name;   // 内存分组跟随
+    const rg = rLS("riskGroups", {}); let ch = false;
+    for (const s of Object.keys(rg)) if (rg[s] === old) { rg[s] = name; ch = true; }             // 本机分组跟随
+    if (ch) rLSset("riskGroups", rg);
+    $("rk-bundle").innerHTML = bundleOpts(); $("rk-newname").value = "";
+    loadBundle(); compute(); persistLocal(); renderRiskExposure();
+    $("rk-msg").textContent = `已重命名「${old}」→「${name}」· 本地已存,记得点『保存到 config』发布`;
   });
   $("rk-complete").addEventListener("click", () => {   // 完成 = 存档为 JSON + 移出活跃(区别于删除)
     if (Object.keys(POLICY.bundles).length <= 1) return void ($("rk-msg").textContent = "至少保留 1 个活跃 thesis;先新建再完成");
