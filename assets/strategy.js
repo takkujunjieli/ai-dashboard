@@ -238,8 +238,16 @@ export async function renderRiskExposure() {
     const pnlPct = (!isOpt && p.avg_cost && price != null)
       ? (long ? (price / p.avg_cost - 1) : (1 - price / p.avg_cost)) * 100
       : (p.pnl_pct != null ? p.pnl_pct * 100 : null);
+    // 到风控目标的股数调整:目标 |qty| = min(在险=预算 → budget/每股风险, 仓位=上限 → 净值×上限%/现价);
+    // toTarget = 目标|qty| − 当前|qty|:>0 还可加(买/空),<0 需减(卖/补)。期权按张(100股)不适用,置空。
+    let toTarget = null;
+    if (!isOpt && price > 0) {
+      const capQ = equity * (b.max_position_pct || 20) / 100 / price;
+      const riskQ = (perShare != null && perShare > 0) ? budget / perShare : Infinity;   // 止损锁利(perShare<=0)则风险不约束,只看上限
+      toTarget = Math.min(riskQ, capQ) - Math.abs(qty);
+    }
     rows.push({ sym, isOpt, long, qty, price, cost: p.avg_cost, stop, atr, bundleName, cap: b.max_position_pct || 20,
-                openRisk, riskPct, ratio, posPct, distPct, pnlPct });
+                openRisk, riskPct, ratio, posPct, distPct, pnlPct, toTarget });
   }
   const sorted = sortRows(rows);
   const disp = [...sorted.filter((r) => !r.isOpt), ...sorted.filter((r) => r.isOpt)];   // 期权统一排到最下方(各组内仍按当前排序)
@@ -248,6 +256,13 @@ export async function renderRiskExposure() {
   const pnlCell = (v) => { if (v == null) return "<td>—</td>"; const l = Math.min(Math.abs(v) / 40, 1), hue = v >= 0 ? 142 : 0; return `<td class="sc-num" style="background:hsl(${hue} 65% 45% / ${(0.06 + l * 0.34).toFixed(2)})">${v >= 0 ? "+" : ""}${v.toFixed(0)}%</td>`; };
   const grpSel = (r) => `<select class="rk-grp" data-sym="${esc(r.sym)}">${bnames.map((k) => `<option${k === r.bundleName ? " selected" : ""}>${esc(k)}</option>`).join("")}</select>`;
   const stopIn = (r) => `<input class="rk-stopin" data-sym="${esc(r.sym)}" type="number" step="0.01" value="${r.stop != null ? r.stop.toFixed(2) : ""}" placeholder="${r.isOpt ? "期权" : (r.atr != null ? "ATR" : "手填")}" style="width:70px">`;
+  const tgtCell = (r) => {   // 距风控目标的股数:卖/补=需减仓,可买/可空=还有空间
+    if (r.toTarget == null || !isFinite(r.toTarget)) return "<td>—</td>";
+    const n = Math.round(r.toTarget);
+    if (n === 0) return `<td class="sc-num" title="已在目标仓位">✓</td>`;
+    const reduce = n < 0, act = reduce ? (r.long ? "卖" : "补") : (r.long ? "可买" : "可空");
+    return `<td class="sc-num ${reduce ? "down" : "up"}" title="到风控目标(在险=thesis预算且≤仓位上限)需${act} ${Math.abs(n)} 股">${act} ${Math.abs(n)}</td>`;
+  };
   const arrow = (k) => SORT.key === k ? (SORT.dir < 0 ? " ↓" : " ↑") : "";
   const sth = (k, label) => `<th class="rk-sort" data-k="${k}" style="cursor:pointer;user-select:none;white-space:nowrap">${label}${arrow(k)}</th>`;
   const body = disp.map((r) => `<tr>
@@ -256,14 +271,15 @@ export async function renderRiskExposure() {
     <td class="muted">$${r.cost != null ? r.cost.toFixed(2) : "—"}</td><td>${stopIn(r)}</td>
     ${cell(r.riskPct != null ? r.riskPct.toFixed(2) + "%" : "—", r.riskPct == null ? null : Math.min(r.riskPct / 2, 1))}
     ${cell(r.ratio != null ? r.ratio.toFixed(2) + "×" : "—", r.ratio == null ? null : Math.min(r.ratio / 1.5, 1))}
+    ${tgtCell(r)}
     ${cell(r.posPct.toFixed(1) + "%", Math.min(r.posPct / r.cap, 1))}
     ${cell(r.distPct != null ? r.distPct.toFixed(1) + "%" : "—", r.distPct == null ? null : Math.max(0, Math.min(1, 1 - r.distPct / 15)))}
     ${pnlCell(r.pnlPct)}</tr>`).join("");
 
   host.innerHTML = `<div class="sc-wrap"><table class="sc-table">
     <tr>${sth("sym", "标的")}${sth("bundleName", "Thesis")}<th>股数</th><th>现价</th><th>成本</th><th>止损</th>
-        ${sth("riskPct", "在险%")}${sth("ratio", "在险/预算")}${sth("posPct", "仓位%")}${sth("distPct", "距止损%")}${sth("pnlPct", "浮盈%")}</tr>${body}</table></div>
-    <div class="muted small" style="margin-top:8px">在险%=|股数|×|现价−止损|÷净值 · 在险/预算=该仓在险÷所属 thesis 单笔预算(>1 超险)· 仓位%对比 thesis 上限 · 距止损%小=逼近止损 · 浮盈%仅参考(现价口径,成本不进风险)。止损默认 ATR 法,可每仓手填覆盖(存本机)。</div>`;
+        ${sth("riskPct", "在险%")}${sth("ratio", "在险/预算")}${sth("toTarget", "距目标")}${sth("posPct", "仓位%")}${sth("distPct", "距止损%")}${sth("pnlPct", "浮盈%")}</tr>${body}</table></div>
+    <div class="muted small" style="margin-top:8px">在险%=|股数|×|现价−止损|÷净值 · 在险/预算=该仓在险÷所属 thesis 单笔预算(>1 超险)· <b>距目标</b>=到风控目标(在险=预算 且 ≤仓位上限,取更紧者)还需<span class="down">卖/补</span>或<span class="up">可买/可空</span>多少股 · 仓位%对比 thesis 上限 · 距止损%小=逼近止损 · 浮盈%仅参考(现价口径,成本不进风险)。止损默认 ATR 法,可每仓手填覆盖(存本机)。</div>`;
 
   const totalPct = totalHeat / equity * 100;
   heatEl.innerHTML = `<div class="wb-statbar">
