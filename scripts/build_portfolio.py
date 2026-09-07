@@ -132,6 +132,14 @@ def main() -> None:
     except Exception as e:  # noqa: BLE001
         print(f"pnl.json 生成跳过: {e}")
 
+    # 顺带刷新 ATR14(本地专用 data/atr.json,供风险敞口 ATR 止损/在险)。读同一份 portfolio.json;
+    # 网络慢/失败不影响持仓构建。新加的票从此自动带 ATR,不必再单独跑 fetch_atr.py。
+    try:
+        import fetch_atr
+        fetch_atr.main()
+    except Exception as e:  # noqa: BLE001
+        print(f"atr.json 生成跳过: {e}")
+
 
 if __name__ == "__main__":
     main()
