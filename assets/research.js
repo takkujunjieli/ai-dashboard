@@ -653,10 +653,13 @@ async function renderGexVol() {
      <div class="muted small">${esc(s.label || "净 GEX → 次日已实现波动")}:按 GEX 五分位分组的次日 |r|——低 GEX(Q1)→ 高波动,高 GEX(Q5)→ 低波动(单调,符合 dealer-gamma 抑制/放大机制)。纯预测力研究(无持仓/成本)。</div>`;
 }
 
-/* Topic 5:仓位情报(免费版 JPM Positioning Intelligence)。COT-TFF 各 cohort(HF/CTA 杠杆基金、
-   资管/共同基金、Dealer)分位 + z-score + 两种潜在买卖盘(拥挤度$ 回中位、CTA 趋势模型机械触发$),
-   折入散户(retailflow)。数据 data/positioning.json(fetch_cot + build_positioning 产出)。 */
-const POS_COH = [["lev", "#f87171"], ["am", "#60a5fa"], ["dealer", "#a78bfa"]];
+/* Topic 5:仓位情报(免费版 JPM Positioning Intelligence)。COT-TFF 两大 cohort(HF/CTA 杠杆基金、
+   资管/共同基金)分位 + z-score + real−fast 背离(资管 z−杠杆 z),两种潜在买卖盘(拥挤度$ 回中位、
+   CTA 趋势模型机械触发$),折入散户(retailflow)。数据 data/positioning.json。
+   (Dealer 已弃:指数期货里它主要是对手方/对冲残差,≈ -(am+lev) 镜像,无独立方向信息。) */
+const POS_COH = [["lev", "#f87171"], ["am", "#60a5fa"]];
+const POS_DIV_COLOR = "#fbbf24";                    // real−fast 背离(第三条线)
+const fmtZ = (v) => v == null ? "—" : (v > 0 ? "+" : "") + v.toFixed(2);
 const POS_MLABEL = { SP500: "S&P 500", NDX100: "Nasdaq 100" };
 const fmtNum = (v) => v == null ? "—" : Math.round(v).toLocaleString();
 const fmtB = (v) => {
@@ -694,6 +697,11 @@ async function renderPositioning() {
         c.pctile == null ? "—" : c.pctile + " pct",
         `z${c.z} · Δ周 ${(c.weekly_chg || 0) > 0 ? "+" : ""}${fmtNum(c.weekly_chg)}`));
     }
+    const dv = J.markets[mk].divergence;
+    if (dv && dv.latest != null) {
+      gt.push(tile(`${POS_MLABEL[mk] || mk}·real−fast 背离`, fmtZ(dv.latest) + "σ",
+        dv.latest > 0.5 ? "real money 更拥挤多" : dv.latest < -0.5 ? "fast money 更拥挤多" : "两者步调一致"));
+    }
   }
   const yrs = Math.round((J.window_wk || 156) / 52);
   const rf = J.retail;
@@ -720,13 +728,18 @@ function drawPosMarket() {
       height: 340,
     });
     const S = [];
+    const addLine = (label, color, data, opts = {}) => {
+      if (!data || !data.length) return;
+      const series = chart.addLineSeries({ color, lineWidth: opts.w || 2, lineStyle: opts.dash ? LWC.LineStyle.Dashed : LWC.LineStyle.Solid, priceLineVisible: false, lastValueVisible: false });
+      series.setData(data.map(([d, v]) => ({ time: d, value: v })));
+      S.push({ label, color, series, visible: true });
+    };
     for (const [ck, color] of POS_COH) {
       const c = mk.cohorts[ck];
-      if (!c || !c.series) continue;
-      const series = chart.addLineSeries({ color, lineWidth: 2, priceLineVisible: false, lastValueVisible: false });
-      series.setData(c.series.map(([d, v]) => ({ time: d, value: v })));
-      S.push({ label: c.label, color, series, visible: true });
+      if (c) addLine(c.label + " (z)", color, c.series_z);
     }
+    if (mk.divergence) addLine(mk.divergence.label, POS_DIV_COLOR, mk.divergence.series_z, { w: 2 });
+    if (S.length) S[0].series.createPriceLine({ price: 0, color: "#3a4560", lineStyle: LWC.LineStyle.Dashed, lineWidth: 1, axisLabelVisible: false });   // 0=3年均值基线
     chart.timeScale().fitContent();
     const leg = $("pos-legend");
     if (leg) {
@@ -747,7 +760,7 @@ function drawPosMarket() {
         if (!s.visible) continue;
         const d = p.seriesData.get(s.series);
         if (!d || d.value == null) continue;
-        rows.push(`<span style="color:${s.color}">● ${esc(s.label)} ${fmtNum(d.value)}</span>`);
+        rows.push(`<span style="color:${s.color}">● ${esc(s.label)} ${fmtZ(d.value)}</span>`);
       }
       if (!rows.length) { hov.style.display = "none"; return; }
       hov.innerHTML = `<div class="muted" style="margin-bottom:2px">${p.time}</div>` + rows.join("<br>");

@@ -89,12 +89,13 @@
     </label>
   </div>
 
-  <h2>各 cohort 净持仓(周频,回看窗) <span class="muted small">点击图例开关曲线</span></h2>
+  <h2>各 cohort 定位(z 分数,周频) <span class="muted small">点击图例开关曲线</span></h2>
   <div id="pos-legend" class="rt-legend"></div>
   <div class="chart-wrap">
     <div id="pos-chart" style="height:340px"></div>
     <div id="pos-hover" class="chart-hover"></div>
   </div>
+  <div class="muted small" style="margin-top:6px">纵轴 = z 分数(相对近 3 年均值的标准差,0=均值=虚线基线);<span style="color:#fbbf24">real−fast 背离</span> = 资管 z − 杠杆 z(real money 与 fast money 的定位差,极值常见于转折前)。</div>
 
   <h2>潜在买卖盘</h2>
   <div id="pos-pressure" class="card"><span class="muted small">计算中…</span></div>

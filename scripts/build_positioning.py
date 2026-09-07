@@ -64,18 +64,20 @@ def cta_model(closes):
 
 
 def cohort_from_cot(rows, cohort, mult, px):
-    """cohort in {'lev','am','dealer'} → 时序 + 最新 z/分位 + 拥挤$ + 周变。"""
+    """cohort in {'lev','am'} → z 分数时序 + 最新 z/分位 + 拥挤$ + 周变。
+    纵轴用 z(=(净−回看窗均值)/标准差,单位=σ,0=3 年均值),比原始合约数有意义且各 cohort 可比。"""
     net_key, chg_key = cohort + "_net", cohort + "_chg"
-    series = [[r["date"], r[net_key]] for r in rows if r.get(net_key) is not None]
+    series = [[r["date"], r[net_key]] for r in rows if r.get(net_key) is not None][-WIN:]
     nets = [v for _, v in series]
     cur = nets[-1]
-    window = nets[-WIN:]
-    med = median(window)
+    med = median(nets)
+    m, sd = mean(nets), (pstdev(nets) or 1)
+    series_z = [[d, round((v - m) / sd, 2)] for d, v in series]   # 仿射变换:形状不变,单位有意义
     crowd_usd = round(-(cur - med) * mult * px)    # 拥挤多(cur>med)→负=潜在卖;拥挤空→正=潜在买
     return {
-        "series": series[-WIN:],                    # 存回看窗(画图)
+        "series_z": series_z,                       # z 分数时序(画图,纵轴=σ)
         "latest": cur, "median": round(med),
-        "z": zscore(window, cur), "pctile": pctile(window, cur),
+        "z": round((cur - m) / sd, 2), "pctile": pctile(nets, cur),
         "weekly_chg": rows[-1].get(chg_key),
         "crowd_usd": crowd_usd,
     }
@@ -91,7 +93,9 @@ def main():
                "CTA 触发为趋势模型 + 假设 AUM,方向性非精确",
                "COT 为指数期货持仓,代理现货 cohort 行为",
            ]}}
-    COHORTS = [("lev", "杠杆基金 HF/CTA"), ("am", "资管/共同基金"), ("dealer", "交易商 Dealer")]
+    # Dealer 略去:指数期货里它主要是客户盘的对手方/对冲残差(≈ -(am+lev) 镜像),无独立方向信息。
+    # 改用 real−fast 背离(资管 z − 杠杆 z)作为第三条:real money 与 fast money 的定位差,极值常见于转折前。
+    COHORTS = [("lev", "杠杆基金 HF/CTA"), ("am", "资管/共同基金")]
     for key, rows in cot.get("contracts", {}).items():
         if not rows:
             continue
@@ -106,6 +110,11 @@ def main():
             c = cohort_from_cot(rows, ck, m, idxpx)
             c["label"] = clabel
             mkt["cohorts"][ck] = c
+        # real−fast 背离:资管 z − 杠杆 z(逐周对齐;正=real money 比 fast money 更拥挤多)
+        amz = dict(mkt["cohorts"]["am"]["series_z"])
+        div = [[d, round(amz[d] - z, 2)] for d, z in mkt["cohorts"]["lev"]["series_z"] if d in amz]
+        mkt["divergence"] = {"series_z": div, "latest": div[-1][1] if div else None,
+                             "label": "real−fast 背离(资管−杠杆)"}
         # CTA 触发模型(用指数日线)
         try:
             closes = yahoo_closes(IDX[key])
