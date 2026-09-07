@@ -1199,7 +1199,7 @@ function buildMonthlyCalendar() {
     + `<div class="chips seg" id="pf-calmode" style="margin-left:auto">${modeChips}</div></div>`;
   if (!months.length) return `<div class="pf-cal">${head}<div class="muted small">暂无月度数据 — 需 data/robustness.json(本地专用)。</div></div>`;
   const byYm = {}; for (const m of months) byYm[m.ym] = m;
-  const years = [...new Set(months.map((m) => m.ym.slice(0, 4)))].sort();
+  const years = [...new Set(months.map((m) => m.ym.slice(0, 4)))].filter((y) => y >= "2026").sort();  // 月历只从 2026 起
   const MM = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
   // 取值/格式化(按模式);log 用月度 logret,年度=Σlog;收益率年度=复利(exp(Σlog)−1);净收益年度=Σ
   const raw = (m) => pfCalMode === "pnl" ? m.pnl : pfCalMode === "ret" ? m.ret_pct : m.logret;

@@ -310,7 +310,8 @@ def summarize(rows, label):
             started = True
         if started:
             curve.append([d, round(cum), round(cl), round(cs)])
-    # 月历:每月 净收益$(累计差)+ 收益率%(日收益复利)+ log 收益(Σ ln(1+r),可加、便于可视化)
+    # 月历:每月 净收益$(累计差)+ 收益率%(日收益复利)+ log 收益(Σ ln(1+r),可加、便于可视化)。
+    # 只从 2026 起(prev_cum 跨年继续累加,故 2026-01 = 1月末累计 − 2025年末累计,跨年 P&L 正确)。
     monthly, mmap = [], {}
     started = False; prev_cum = 0.0
     for d, rt, rl, rs, gross, net, cum, cl, cs in series:
@@ -318,12 +319,14 @@ def summarize(rows, label):
             started = True
         if not started:
             prev_cum = cum; continue
-        m = mmap.get(d[:7])
-        if m is None:
-            m = mmap[d[:7]] = {"ym": d[:7], "pnl": 0.0, "logret": 0.0}; monthly.append(m)
-        m["pnl"] += cum - prev_cum; prev_cum = cum
-        if rt is not None:
-            m["logret"] += math.log(1.0 + rt)
+        if d[:4] >= "2026":
+            m = mmap.get(d[:7])
+            if m is None:
+                m = mmap[d[:7]] = {"ym": d[:7], "pnl": 0.0, "logret": 0.0}; monthly.append(m)
+            m["pnl"] += cum - prev_cum
+            if rt is not None:
+                m["logret"] += math.log(1.0 + rt)
+        prev_cum = cum
     for m in monthly:
         m["pnl"] = round(m["pnl"])
         m["ret_pct"] = round((math.exp(m["logret"]) - 1) * 100, 2)   # 复利月收益
