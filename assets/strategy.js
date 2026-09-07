@@ -218,6 +218,7 @@ export async function renderRiskExposure() {
   for (const p of positions) {
     const sym = p.sym, qty = p.qty || 0; if (!qty) continue;
     const isOpt = p.kind !== "equity", long = qty > 0;
+    if (!isOpt && Math.abs(qty) <= 1) continue;   // 去掉 |持股|<=1 的正股(±1 股噪声);期权不受此限(1 张=100 股敞口)
     // 现价优先级:同步按钮拉到的 K线价 > research.json 本地快照 > portfolio.json(期权无 K线快照,仍用原价)
     const price = (!isOpt && PRICE_OVERRIDE && PRICE_OVERRIDE[sym] != null) ? PRICE_OVERRIDE[sym]
                 : (!isOpt && snap[sym] && snap[sym].price != null) ? snap[sym].price : p.price;
@@ -240,7 +241,8 @@ export async function renderRiskExposure() {
     rows.push({ sym, isOpt, long, qty, price, cost: p.avg_cost, stop, atr, bundleName, cap: b.max_position_pct || 20,
                 openRisk, riskPct, ratio, posPct, distPct, pnlPct });
   }
-  const disp = sortRows(rows);
+  const sorted = sortRows(rows);
+  const disp = [...sorted.filter((r) => !r.isOpt), ...sorted.filter((r) => r.isOpt)];   // 期权统一排到最下方(各组内仍按当前排序)
 
   const cell = (txt, lvl) => `<td class="sc-num"${lvl == null ? "" : ` style="${heatBg(lvl)}"`}>${txt}</td>`;
   const pnlCell = (v) => { if (v == null) return "<td>—</td>"; const l = Math.min(Math.abs(v) / 40, 1), hue = v >= 0 ? 142 : 0; return `<td class="sc-num" style="background:hsl(${hue} 65% 45% / ${(0.06 + l * 0.34).toFixed(2)})">${v >= 0 ? "+" : ""}${v.toFixed(0)}%</td>`; };
