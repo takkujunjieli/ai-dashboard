@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """组装仓位情报 → data/positioning.json(供 research 页「仓位情报」tab)。
-读 data/cot_raw.json(CFTC COT)+ 指数日线(Yahoo ^GSPC/^IXIC)+ 可选 data/retailflow.json、
-data/holdings13f.json、data/flows_raw.json。每 cohort 算 JPM 式 z-score + 历史分位;两种潜在买卖盘:
+读 data/cot_raw.json(CFTC COT,周频)+ 指数日线(Yahoo ^GSPC/^IXIC)+ 可选 data/retailflow.json。
+每 cohort 算 JPM 式 z-score + 历史分位;两种潜在买卖盘:
   ① 拥挤度 $:(当前净 − 中位净)×合约乘数×指数点位 —— 回到中位需成交的 $(签名:拥挤多→负=潜在卖)。
   ② CTA 机械触发 $:趋势模型(多均线)在各均线价位翻转 → 假设 AUM 下的 $-to-buy/sell。
 纯计算 + Yahoo(免 key)。缺某源则该 cohort 优雅省略。"""
@@ -127,7 +127,7 @@ def main():
     pcts = [c["pctile"] for mk in out["markets"].values() for c in mk["cohorts"].values() if c.get("pctile") is not None]
     out["composite_pctile"] = round(mean(pcts), 1) if pcts else None
 
-    # 折入现有:散户(retailflow 市场级净买入均值)、13F(HF vs 被动 最新)
+    # 折入现有:散户(retailflow 市场级净买入均值)。13F 不用:季度数据滞后太多(45 天披露),对周频定位无意义。
     rf = DATA / "retailflow.json"
     if rf.exists():
         try:
@@ -137,9 +137,6 @@ def main():
                              "updated": J.get("updated")}
         except Exception as e:
             print(f"⚠️ retail 折入跳过({e})")
-    h13 = DATA / "holdings13f.json"
-    if h13.exists():
-        out["has_13f"] = True
 
     OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")))
     comp = out["composite_pctile"]

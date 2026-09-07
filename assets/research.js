@@ -706,7 +706,7 @@ async function renderPositioning() {
   const yrs = Math.round((J.window_wk || 156) / 52);
   const rf = J.retail;
   $("pos-gauge").innerHTML = `<div class="opt-grid">${gt.join("")}</div>
-    <div class="muted small" style="margin-top:6px">分位 = 该 cohort 净持仓在近 ${yrs} 年的历史排名(高=相对拥挤多);z = 同窗标准分。散户:${rf && rf.avg_netbuy != null ? `近端净买入均值 ${(rf.avg_netbuy * 100).toFixed(1)}%(${rf.n} 票)` : "(缺 retailflow)"}${J.has_13f ? " · 已接 13F" : ""}。</div>`;
+    <div class="muted small" style="margin-top:6px">分位 = 该 cohort 净持仓在近 ${yrs} 年的历史排名(高=相对拥挤多);z = 同窗标准分。散户:${rf && rf.avg_netbuy != null ? `近端净买入均值 ${(rf.avg_netbuy * 100).toFixed(1)}%(${rf.n} 票)` : "(缺 retailflow)"}。</div>`;
   $("pos-caveat").innerHTML = "⚠ " + ((J.meta && J.meta.caveats) || []).join(";");
   drawPosMarket();
 }
