@@ -38,7 +38,8 @@ jobs:
           fi
 
       - name: 镜像数据到 data 分支(前端主数据源)
-        run: python scripts/push_data.py data "chore: 仓位情报 $(date -u +%F\ %R)"
+        run: |
+          python scripts/push_data.py data "chore: 仓位情报 $(date -u +%F\ %R)"
 
   deploy:
     needs: positioning
