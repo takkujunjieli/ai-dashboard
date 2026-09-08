@@ -1,4 +1,4 @@
-/* Research 页 — 多 topic 研究台。Topic 1:熊/牛预测(v1 熊侧)。
+/* Research 页 — 多 topic 研究台。Topic 1:熊市预测(v1 熊侧)。
    模型在浏览器里跑(approach A):L2 正则 logistic(IRLS)+ leave-one-bear-out。
    数据 data/research_bearbull.json(topic/方向/实体三层可扩展)。 */
 import { $, esc, loadJSON, getPat, ghHeaders, REPO } from "./shared.js";
@@ -337,11 +337,11 @@ function coefBars(res) {
   return `${rows}<div class="muted small" style="margin-top:6px">标准化系数:<span class="down">红=推高</span>预警 / <span class="up">绿=压低</span>。⚠️ 特征相关时个别系数符号可能翻转,别单独解读。</div>`;
 }
 
-/* ---------- Topic 1:熊/牛预测 ---------- */
+/* ---------- Topic 1:熊市预测 ---------- */
 async function renderBearbull() {
   const J = await loadJSON("data/research_bearbull.json");
   if (!J) { $("r-status").textContent = "缺 data/research_bearbull.json(在 factor-research 跑 export_web.py 生成)"; return; }
-  $("r-status").textContent = `Topic: 熊/牛预测 · 熊侧 · ${J.dates[0]}→${J.dates[J.dates.length - 1]} · ${J.dates.length} 月 · 模型在浏览器实时计算(L2-logistic, λ=${LAM})`;
+  $("r-status").textContent = `Topic: 熊市预测 · 熊侧 · ${J.dates[0]}→${J.dates[J.dates.length - 1]} · ${J.dates.length} 月 · 模型在浏览器实时计算(L2-logistic, λ=${LAM})`;
   const A = assemble(J, "bear", "market");
   const res = runModel(A, LAM);
   const res3 = runModel(assembleFeats(J, LEADING3, "bear", "market"), LAM);   // 3 变量领先基准
