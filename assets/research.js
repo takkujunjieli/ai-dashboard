@@ -1,7 +1,7 @@
 /* Research 页 — 多 topic 研究台。Topic 1:熊市预测(v1 熊侧)。
    模型在浏览器里跑(approach A):L2 正则 logistic(IRLS)+ leave-one-bear-out。
    数据 data/research_bearbull.json(topic/方向/实体三层可扩展)。 */
-import { $, esc, loadJSON, getPat, ghHeaders, REPO } from "./shared.js";
+import { $, esc, loadJSON, loadFreshJSON, getPat, ghHeaders, REPO } from "./shared.js";
 import { initScorecards } from "./trading.js";   // 个股分析 tab 复用交易台的 Scorecards 渲染(trading.js 自启动已守卫)
 
 const LAM = 10;            // L2 强度(与 factorlab/model.py 默认一致)
@@ -396,25 +396,33 @@ function netbuyHeatmap(J) {
 /* 散户流跑批标的多选器:写回 config/retail_syms.json(独立于 D/Q)。下次跑批生效。 */
 async function saveRetailSyms(symbols) {
   const pat = getPat();
-  if (!pat) return { ok: false, msg: "需要 fine-grained PAT(与交易台采集面板共用,存本机)" };
+  if (!pat) return { ok: false, msg: "需要 fine-grained PAT(Contents 读写;在交易台采集面板输入,存本机)" };
   const url = `https://api.github.com/repos/${REPO}/contents/config/retail_syms.json`;
   let sha;
   try {
-    const cur = await fetch(url + "?ref=main", { headers: ghHeaders(pat) });
+    // 现取最新 sha:cache:no-store + 时间戳,防浏览器缓存旧 sha 导致第二次保存 409(不匹配)
+    const cur = await fetch(`${url}?ref=main&t=${Date.now()}`, { headers: ghHeaders(pat), cache: "no-store" });
     if (cur.ok) sha = (await cur.json()).sha;
-  } catch { /* 新建 */ }
+    else if (cur.status !== 404) {
+      const j = await cur.json().catch(() => ({}));
+      return { ok: false, msg: `读 sha ${cur.status}: ${j.message || "(PAT 需 Contents 读写)"}` };
+    }
+  } catch (e) { return { ok: false, msg: "读 sha 异常 " + e }; }
   const body = { _note: "散户订单流引擎跑哪些票(独立于 D/Q;research 页多选下拉编辑)。逐笔成本 ~2-15min/票。", symbols };
   const content = btoa(unescape(encodeURIComponent(JSON.stringify(body, null, 2) + "\n")));
   try {
     const r = await fetch(url, { method: "PUT", headers: ghHeaders(pat),
       body: JSON.stringify({ message: "chore: update retail_syms via research UI", content, sha, branch: "main" }) });
-    return r.ok ? { ok: true } : { ok: false, msg: "PUT 失败 " + r.status };
+    if (r.ok) return { ok: true };
+    const j = await r.json().catch(() => ({}));       // 把 GitHub 的真实报错带出来(权限/sha/校验)
+    return { ok: false, msg: `PUT ${r.status}: ${j.message || ""}` };
   } catch (e) { return { ok: false, msg: String(e) }; }
 }
 
 async function renderPicker() {
   const el = $("rf-picker"); if (!el) return;
-  const [cfg, rs] = await Promise.all([loadJSON("config/tickers.json"), loadJSON("config/retail_syms.json")]);
+  // retail_syms 走 GitHub API 取 main 最新(带 PAT / cache-bust),否则保存后 Pages 未重部署会显示旧值 = 看着「没保存上」
+  const [cfg, rs] = await Promise.all([loadJSON("config/tickers.json"), loadFreshJSON("config/retail_syms.json")]);
   const wl = (cfg && cfg.watchlist) || [];
   const sel = new Set(((rs && rs.symbols) || []).map((s) => s.toUpperCase()));
   const label = (arr) => `⚙️ 跑批标的:${arr.length ? arr.join(", ") : "（无）"} (${arr.length}) — 点开选择`;
@@ -436,6 +444,7 @@ async function renderPicker() {
     const msg = $("rf-save-msg"); msg.textContent = "保存中…";
     const r = await saveRetailSyms(checked());
     msg.textContent = r.ok ? "✓ 已保存,下次跑批生效" : "✗ " + r.msg;
+    if (r.ok) setTimeout(renderPicker, 800);          // 重读 main 最新,确认真的写进去了
   });
 }
 
