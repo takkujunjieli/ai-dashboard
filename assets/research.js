@@ -738,10 +738,11 @@ const fmtB = (v) => {
   return a >= 1e9 ? (v / 1e9).toFixed(1) + "B" : a >= 1e6 ? (v / 1e6).toFixed(0) + "M" : Math.round(v).toLocaleString();
 };
 const fmtUsd = (v) => v == null ? "—" : (v < 0 ? "-$" : "$") + fmtB(Math.abs(v));
-let POS_J = null, POS_MKT = null;
+let POS_J = null, POS_MKT = null, POS_ETF = null;   // POS_ETF: QQQ/SOXX/IGV 周K,drawPosMarket 叠加用
 
 async function renderPositioning() {
   const J = await loadJSON("data/positioning.json");
+  POS_ETF = await loadJSON("data/etf_weekly.json");   // QQQ/SOXX/IGV 周K,叠加到 cohort z 图(可开关)
   if (!J || !J.markets || !Object.keys(J.markets).length) {
     $("pos-gauge").innerHTML = '<span class="muted small">缺 data/positioning.json(跑 scripts/fetch_cot.py + scripts/build_positioning.py)</span>';
     return;
@@ -811,6 +812,18 @@ function drawPosMarket() {
     }
     if (mk.divergence) addLine(mk.divergence.label, POS_DIV_COLOR, mk.divergence.series_z, { w: 2 });
     if (S.length) S[0].series.createPriceLine({ price: 0, color: "#3a4560", lineStyle: LWC.LineStyle.Dashed, lineWidth: 1, axisLabelVisible: false });   // 0=3年均值基线
+    // ETF 周K 叠加(QQQ/SOXX/IGV):各自独立隐藏价格轴 → 各自铺满、形态可比,不与 z 轴混;默认关,点图例开
+    const ETF_COLORS = { QQQ: "#60a5fa", SOXX: "#fbbf24", IGV: "#c084fc" };
+    const etfSeries = [];
+    for (const sym of ["QQQ", "SOXX", "IGV"]) {
+      const bars = POS_ETF && POS_ETF.series && POS_ETF.series[sym];
+      if (!bars || !bars.length) continue;
+      const sid = "etf_" + sym;
+      const cs = chart.addCandlestickSeries({ priceScaleId: sid, upColor: "#34d399", downColor: "#f87171", borderVisible: false, wickUpColor: "#34d399", wickDownColor: "#f87171", priceLineVisible: false, lastValueVisible: false, visible: false });
+      chart.priceScale(sid).applyOptions({ scaleMargins: { top: 0.08, bottom: 0.08 }, visible: false });
+      cs.setData(bars.map(([d, o, h, l, c]) => ({ time: d, open: o, high: h, low: l, close: c })));
+      etfSeries.push({ sym, series: cs, color: ETF_COLORS[sym], visible: false });
+    }
     chart.timeScale().fitContent();
     const leg = $("pos-legend");
     if (leg) {
@@ -820,6 +833,13 @@ function drawPosMarket() {
         chip.className = "rt-leg";
         chip.innerHTML = `<span class="rt-sw" style="background:${s.color}"></span>${esc(s.label)}`;
         chip.onclick = () => { s.visible = !s.visible; s.series.applyOptions({ visible: s.visible }); chip.classList.toggle("off", !s.visible); };
+        leg.appendChild(chip);
+      });
+      etfSeries.forEach((e) => {   // ETF 周K 开关(默认关)
+        const chip = document.createElement("span");
+        chip.className = "rt-leg off";
+        chip.innerHTML = `<span class="rt-sw" style="background:${e.color}"></span>${e.sym} 周K`;
+        chip.onclick = () => { e.visible = !e.visible; e.series.applyOptions({ visible: e.visible }); chip.classList.toggle("off", !e.visible); };
         leg.appendChild(chip);
       });
     }
@@ -832,6 +852,12 @@ function drawPosMarket() {
         const d = p.seriesData.get(s.series);
         if (!d || d.value == null) continue;
         rows.push(`<span style="color:${s.color}">● ${esc(s.label)} ${fmtZ(d.value)}</span>`);
+      }
+      for (const e of etfSeries) {   // 可见的 ETF 周K → 显示收盘
+        if (!e.visible) continue;
+        const d = p.seriesData.get(e.series);
+        if (!d || d.close == null) continue;
+        rows.push(`<span style="color:${e.color}">● ${e.sym} $${d.close.toFixed(2)}</span>`);
       }
       if (!rows.length) { hov.style.display = "none"; return; }
       hov.innerHTML = `<div class="muted" style="margin-bottom:2px">${p.time}</div>` + rows.join("<br>");

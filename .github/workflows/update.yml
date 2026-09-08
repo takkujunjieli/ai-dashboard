@@ -53,6 +53,9 @@ jobs:
       - name: 抓取利率/指数走势(FRED 免key + Yahoo,5Y 日频)
         run: python scripts/fetch_rates.py
 
+      - name: 抓取 ETF 周K(QQQ/SOXX/IGV,供仓位情报叠加)
+        run: python scripts/fetch_etf_weekly.py
+
       - name: 提交数据到 main(EOD 基线 + Pages 兜底)
         run: |
           git config user.name "github-actions[bot]"
