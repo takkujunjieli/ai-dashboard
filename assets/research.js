@@ -475,15 +475,46 @@ async function renderRetailflow() {
       <td class="${sgncls(p.ic_1d)}">${fmtIC(p.ic_1d)}</td>
       <td class="${sgncls(p.ic_5d)}">${fmtIC(p.ic_5d)}</td></tr>`;
   }).join("");
+  // 日历选择:范围从 2026-01 起(便于日后 backfill),只有有数据的日子可点,其余(周末/未回填)灰不可选。
+  const idxByDate = {};
+  validIdx.forEach((i) => { idxByDate[d[i]] = i; });
+  const pad2 = (n) => String(n).padStart(2, "0");
+  const latestI = validIdx.length ? validIdx[validIdx.length - 1] : d.length - 1;
+  const [maxY, maxM] = (d[latestI] || "2026-01-01").split("-").map(Number);
+  let calY = maxY, calM = maxM;                     // 当前显示的月
+  const canPrev = () => calY > 2026 || calM > 1;
+  const canNext = () => calY < maxY || (calY === maxY && calM < maxM);
+
   const drawNow = () => {
-    const opts = [...validIdx].reverse().map((i) =>
-      `<option value="${i}"${i === nowIdx ? " selected" : ""}>${d[i]}${i === validIdx[validIdx.length - 1] ? "(最新)" : ""}</option>`).join("");
-    set("rf-now", `<div style="margin-bottom:8px"><label class="muted small">日期
-        <select id="rf-now-date" style="background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:3px 8px;color:var(--text)">${opts}</select></label></div>
+    const lead = new Date(calY, calM - 1, 1).getDay();      // 首日星期(0=周日)
+    const dim = new Date(calY, calM, 0).getDate();          // 当月天数
+    const wk = ["日", "一", "二", "三", "四", "五", "六"]
+      .map((w) => `<div style="text-align:center;color:#8b96ad;font-size:11px;padding:2px">${w}</div>`).join("");
+    let cells = "";
+    for (let k = 0; k < lead; k++) cells += "<div></div>";
+    for (let day = 1; day <= dim; day++) {
+      const ds = `${calY}-${pad2(calM)}-${pad2(day)}`, has = ds in idxByDate, seld = idxByDate[ds] === nowIdx;
+      const base = "text-align:center;padding:5px 0;border-radius:5px;font-size:12px";
+      cells += has
+        ? `<div class="rf-cal-d" data-idx="${idxByDate[ds]}" style="${base};cursor:pointer;${seld ? "background:#2563eb;color:#fff;font-weight:600" : "background:var(--card-hover);color:var(--text)"}">${day}</div>`
+        : `<div style="${base};color:#3a4560">${day}</div>`;
+    }
+    set("rf-now", `<div style="max-width:280px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <button id="rf-cal-prev" class="tab" style="padding:1px 9px"${canPrev() ? "" : " disabled"}>‹</button>
+          <b>${calY}-${pad2(calM)}</b>
+          <button id="rf-cal-next" class="tab" style="padding:1px 9px"${canNext() ? "" : " disabled"}>›</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px">${wk}${cells}</div>
+      </div>
+      <div class="muted small" style="margin-bottom:6px">选中:<b>${d[nowIdx] || "—"}</b>${nowIdx === latestI ? "(最新)" : ""} · 灰色=无数据(周末/未回填)</div>
       <table class="bt-table"><tr><th>票</th><th>sentiment</th><th>activity</th><th>Google Trends</th><th>复合信号</th><th>IC次日</th><th>IC次周</th></tr>${rowsAt(nowIdx)}</table>
-      <div class="muted small">所选交易日值(默认最新)。sentiment=散户买卖不平衡 %(中点签名的场外散户,+净买/−净卖,∈[-100%,100%]);activity=散户量/总量;Google Trends=搜索热度(0-100);复合=三项时序 z 之积。<b>IC 两列为全历史统计,不随所选日变化</b>。</div>`);
-    const sel = $("rf-now-date");
-    if (sel) sel.onchange = () => { nowIdx = +sel.value; drawNow(); };
+      <div class="muted small">所选交易日值。sentiment=散户买卖不平衡 %(中点签名的场外散户,+净买/−净卖,∈[-100%,100%]);activity=散户量/总量;Google Trends=搜索热度(0-100);复合=三项时序 z 之积。<b>IC 两列为全历史统计,不随所选日变化</b>。</div>`);
+    const prev = $("rf-cal-prev"), next = $("rf-cal-next");
+    if (prev) prev.onclick = () => { if (canPrev()) { if (--calM < 1) { calM = 12; calY--; } drawNow(); } };
+    if (next) next.onclick = () => { if (canNext()) { if (++calM > 12) { calM = 1; calY++; } drawNow(); } };
+    document.querySelectorAll("#rf-now .rf-cal-d").forEach((el) =>
+      el.addEventListener("click", () => { nowIdx = +el.dataset.idx; drawNow(); }));
   };
   drawNow();
 
