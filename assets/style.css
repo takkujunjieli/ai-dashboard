@@ -240,6 +240,7 @@ footer { margin-top: 50px; text-align: center; }
 .rk-menu { position: absolute; top: calc(100% + 4px); left: 0; z-index: 20; min-width: 150px;
   background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 4px;
   box-shadow: 0 8px 24px rgba(0,0,0,.35); display: flex; flex-direction: column; gap: 2px; }
+.rk-menu[hidden] { display: none; }   /* 让 hidden 属性真正生效(否则上面的 display:flex 盖过默认 [hidden]) */
 .rk-menu-item { text-align: left; background: transparent; border: 0; color: var(--text);
   padding: 7px 10px; border-radius: 6px; font-size: 13px; cursor: pointer; white-space: nowrap; }
 .rk-menu-item:hover { background: var(--card-hover); }
