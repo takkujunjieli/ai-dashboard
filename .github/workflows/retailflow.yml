@@ -18,6 +18,10 @@ on:
         description: "显式日期列表 逗号分隔(覆盖 backfill/day)"
         required: false
         default: ""
+      force:
+        description: "1 = 强制重跑(覆盖已采集的 day,票;用于测试/纠正)"
+        required: false
+        default: "0"
   schedule:
     - cron: "0 3 * * 2-6"        # 夜间空闲:03:00 UTC(美股收盘后数小时、网关空闲)跑上一交易日;周二~周六覆盖周一~周五盘
 
@@ -44,6 +48,7 @@ jobs:
           RF_DAY: ${{ inputs.day }}
           RF_BACKFILL: ${{ inputs.backfill || '0' }}
           RF_DAYS: ${{ inputs.days }}
+          RF_FORCE: ${{ inputs.force || '0' }}
 
       - name: Attention(Google Trends, best-effort)
         if: always()
