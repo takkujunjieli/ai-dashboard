@@ -45,6 +45,8 @@ SESSION.mount("https://", _adapter)
 WINDOW = int(os.environ.get("RF_WINDOW", "30"))
 CAP = int(os.environ.get("RF_CAP", "120"))            # 单流最多翻页(×50k);120 页=6M 行,足够任何单名一天
 TICKER_SEC = int(os.environ.get("RF_TICKER_SEC", "600"))  # 单票硬墙:超时跳过(防弱网关卡死整跑)
+SAMPLE_SEC = int(os.environ.get("RF_SAMPLE_SEC", "1200"))  # 采样单票墙:几十个小请求,慢网关下给更宽
+VAL_SEC = int(os.environ.get("RF_VAL_SEC", "1800"))       # 验证全量墙:一晚只跑一只,给足时间
 SMALL = os.environ.get("RF_SMALL", "").lower() in ("1", "true")
 # 采样模式(RF_SAMPLE=1):先读免费分钟量 → 挑高价值窗口 → 只下这些窗口的 trades+quotes,
 # 用分层比率估计逼近全天散户净买入(见 research 页说明)。大幅降 IO,支持 28+ 只/夜。
@@ -173,12 +175,12 @@ def fetch_trades(sym, win, deadline=None):
     return rows, tot, npt
 
 
-def flow_for(sym, day, verbose=False):
-    """返回该票当日聚合 dict,或 None(数据不足)。
+def flow_for(sym, day, verbose=False, ticker_sec=None):
+    """返回该票当日聚合 dict,或 None(数据不足)。ticker_sec:单票硬墙秒(默认 TICKER_SEC;验证全量用更大)。
     每票内 trades ‖ quotes 两条独立流 2 并发拉(实测甜区:聚合吞吐 0.57→2.65 MB/s,~2×+;
     跨票仍串行,保证总并发 ≤2~3,不触网关上限——9 并发会全 Read timeout)。"""
     win = f"&timestamp.gte={day}T{RTH_GTE_H}Z&timestamp.lte={day}T{RTH_LTE_H}Z"
-    dl = time.time() + TICKER_SEC                  # 单票硬墙:两条流都到点即抛,跳过该票不拖垮整跑
+    dl = time.time() + (ticker_sec or TICKER_SEC)  # 单票硬墙:两条流都到点即抛,跳过该票不拖垮整跑
     with ThreadPoolExecutor(max_workers=2) as ex:
         fq = ex.submit(fetch_quotes, sym, win, dl)
         ft = ex.submit(fetch_trades, sym, win, dl)
@@ -457,7 +459,7 @@ def main():
                 ok += 1                            # 断点续跑:已采集的 (day,票) 跳过日常信号
             else:
                 try:
-                    r = (flow_for_sampled(s, day, time.time() + TICKER_SEC, verbose=True) if SAMPLE
+                    r = (flow_for_sampled(s, day, time.time() + SAMPLE_SEC, verbose=True) if SAMPLE
                          else flow_for(s, day, verbose=True))
                     if r:
                         dayrec[s] = r; ok += 1
@@ -466,7 +468,7 @@ def main():
             # 验证票:额外跑一次全量,与采样(naive/精确)三方对照
             if SAMPLE and s == val_tk and (day not in store["validation"] or force):
                 try:
-                    full = flow_for(s, day, verbose=False)
+                    full = flow_for(s, day, verbose=False, ticker_sec=VAL_SEC)   # 验证全量给足墙
                     samp = dayrec.get(s)
                     if full and samp:
                         store["validation"][day] = {
