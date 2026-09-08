@@ -460,9 +460,12 @@ async function renderRetailflow() {
   const d = J.dates, tks = J.tickers, D = J.data, E = J.eval;
   $("r-status").textContent = `Topic: 散户订单流 · ${d[0]}→${d[d.length - 1]} · ${tks.length} 票 × ${d.length} 天(${J.window_days || 30}d 滚动)· 更新 ${(J.updated || "").slice(0, 16)}`;
 
-  // ① 当前信号表
-  const rows = tks.map((tk) => {
-    const o = D[tk], nb = latest(o.netbuy), it = latest(o.intensity), at = o.attention ? latest(o.attention) : null, sg = latest(o.signal);
+  // ① 当前信号表(可在日历日间任选;默认最新)。只列有数据的日子。
+  const validIdx = d.map((_, i) => i).filter((i) => tks.some((tk) => D[tk].netbuy[i] != null));
+  let nowIdx = validIdx.length ? validIdx[validIdx.length - 1] : d.length - 1;
+  const rowsAt = (idx) => tks.map((tk) => {
+    const o = D[tk], nb = o.netbuy[idx], it = o.intensity[idx],
+      at = o.attention ? o.attention[idx] : null, sg = o.signal[idx];
     const p = (E.per_ticker || {})[tk] || {};
     return `<tr><td>${esc(tk)}</td>
       <td class="${sgncls(nb)}">${nb == null ? "—" : (nb > 0 ? "+" : "") + (nb * 100).toFixed(1) + "%"}</td>
@@ -472,8 +475,17 @@ async function renderRetailflow() {
       <td class="${sgncls(p.ic_1d)}">${fmtIC(p.ic_1d)}</td>
       <td class="${sgncls(p.ic_5d)}">${fmtIC(p.ic_5d)}</td></tr>`;
   }).join("");
-  set("rf-now", `<table class="bt-table"><tr><th>票</th><th>sentiment</th><th>activity</th><th>Google Trends</th><th>复合信号</th><th>IC次日</th><th>IC次周</th></tr>${rows}</table>
-    <div class="muted small">最新交易日值。sentiment=散户买卖不平衡 %(中点签名的场外散户,+净买/−净卖,∈[-100%,100%]);activity=散户量/总量;Google Trends=搜索热度(0-100);复合=三项时序 z 之积。逐票 IC=该票信号对前瞻收益的秩相关。</div>`);
+  const drawNow = () => {
+    const opts = [...validIdx].reverse().map((i) =>
+      `<option value="${i}"${i === nowIdx ? " selected" : ""}>${d[i]}${i === validIdx[validIdx.length - 1] ? "(最新)" : ""}</option>`).join("");
+    set("rf-now", `<div style="margin-bottom:8px"><label class="muted small">日期
+        <select id="rf-now-date" style="background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:3px 8px;color:var(--text)">${opts}</select></label></div>
+      <table class="bt-table"><tr><th>票</th><th>sentiment</th><th>activity</th><th>Google Trends</th><th>复合信号</th><th>IC次日</th><th>IC次周</th></tr>${rowsAt(nowIdx)}</table>
+      <div class="muted small">所选交易日值(默认最新)。sentiment=散户买卖不平衡 %(中点签名的场外散户,+净买/−净卖,∈[-100%,100%]);activity=散户量/总量;Google Trends=搜索热度(0-100);复合=三项时序 z 之积。<b>IC 两列为全历史统计,不随所选日变化</b>。</div>`);
+    const sel = $("rf-now-date");
+    if (sel) sel.onchange = () => { nowIdx = +sel.value; drawNow(); };
+  };
+  drawNow();
 
   // ② 散点:预测 vs 实际
   set("rf-scatter", `<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
