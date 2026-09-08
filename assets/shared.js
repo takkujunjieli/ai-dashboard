@@ -31,8 +31,11 @@ export const fmtMoney = (v) => {
 export const fmtNum = (v) => v == null ? "—" : v >= 1e6 ? (v / 1e6).toFixed(2) + "M" : v >= 1e3 ? (v / 1e3).toFixed(1) + "K" : String(Math.round(v));
 
 /* PAT: 采集控制与认证轮询共用,只存本机浏览器 */
-export const getPat = () => localStorage.getItem("ghPat") || "";
-export const setPat = (v) => localStorage.setItem("ghPat", v);
+// PAT 只含可打印 ASCII(GitHub token 是 [A-Za-z0-9_]);剔除粘贴带入的零宽/全角/引号等
+// 非 ISO-8859-1 字符,否则 fetch 构造 Authorization 头会抛 "non ISO-8859-1 code point"。
+const cleanPat = (v) => (v || "").replace(/[^\x21-\x7E]/g, "");
+export const getPat = () => cleanPat(localStorage.getItem("ghPat"));
+export const setPat = (v) => localStorage.setItem("ghPat", cleanPat(v));
 export const ghHeaders = (pat) => ({
   Accept: "application/vnd.github+json",
   Authorization: `Bearer ${pat}`,
