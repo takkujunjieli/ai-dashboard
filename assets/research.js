@@ -465,15 +465,15 @@ async function renderRetailflow() {
     const o = D[tk], nb = latest(o.netbuy), it = latest(o.intensity), at = o.attention ? latest(o.attention) : null, sg = latest(o.signal);
     const p = (E.per_ticker || {})[tk] || {};
     return `<tr><td>${esc(tk)}</td>
-      <td class="${sgncls(nb)}">${nb == null ? "—" : (nb > 0 ? "+" : "") + nb.toFixed(3)}</td>
+      <td class="${sgncls(nb)}">${nb == null ? "—" : (nb > 0 ? "+" : "") + (nb * 100).toFixed(1) + "%"}</td>
       <td>${it == null ? "—" : (it * 100).toFixed(1) + "%"}</td>
       <td>${at == null ? "—" : at.toFixed(0)}</td>
       <td class="${sgncls(sg)}">${sg == null ? "—" : (sg > 0 ? "+" : "") + sg.toFixed(2)}</td>
       <td class="${sgncls(p.ic_1d)}">${fmtIC(p.ic_1d)}</td>
       <td class="${sgncls(p.ic_5d)}">${fmtIC(p.ic_5d)}</td></tr>`;
   }).join("");
-  set("rf-now", `<table class="bt-table"><tr><th>票</th><th>净买入</th><th>强度</th><th>关注</th><th>复合信号</th><th>IC次日</th><th>IC次周</th></tr>${rows}</table>
-    <div class="muted small">最新交易日值。净买入∈[-1,1](中点签名的场外散户买卖不平衡);强度=散户量/总量;关注=Google Trends;复合=三项时序 z 之积。逐票 IC=该票信号对前瞻收益的秩相关。</div>`);
+  set("rf-now", `<table class="bt-table"><tr><th>票</th><th>sentiment</th><th>activity</th><th>Google Trends</th><th>复合信号</th><th>IC次日</th><th>IC次周</th></tr>${rows}</table>
+    <div class="muted small">最新交易日值。sentiment=散户买卖不平衡 %(中点签名的场外散户,+净买/−净卖,∈[-100%,100%]);activity=散户量/总量;Google Trends=搜索热度(0-100);复合=三项时序 z 之积。逐票 IC=该票信号对前瞻收益的秩相关。</div>`);
 
   // ② 散点:预测 vs 实际
   set("rf-scatter", `<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
