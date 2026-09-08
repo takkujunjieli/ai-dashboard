@@ -23,6 +23,7 @@
   <span class="tab" data-topic="retailflow">📊 散户订单流</span>
   <span class="tab" data-topic="rates">🏦 国债vs股市</span>
   <span class="tab" data-topic="gexvol">🌀 GEX→波动</span>
+  <span class="tab" data-topic="flowdir">🧲 期权流→方向</span>
   <span class="tab" data-topic="positioning">🧭 仓位情报</span>
   <span class="tab" data-topic="stocks">📊 个股分析</span>
 </nav>
@@ -79,6 +80,18 @@
 <section data-topic-panel="gexvol" hidden>
   <h2>🌀 净 GEX → 次日已实现波动 <span class="muted small" id="gx-sub"></span></h2>
   <div id="gx-study" class="card"><span class="muted small">计算中…</span></div>
+</section>
+
+<!-- ========== Topic 4.5:期权流 → 方向(逐票 rank-IC) ========== -->
+<section data-topic-panel="flowdir" hidden>
+  <h2>🧲 期权流 → 方向 <span class="muted small">逐票期权变量的横截面 rank-IC · entry_lag=1 无前视 · 用秩不拟合</span></h2>
+  <div id="fd-caveat" class="card" style="border-color:#a3620d"><span class="muted small">计算中…</span></div>
+  <h2>① IC 表 <span class="muted small">预测变量 × horizon(1/5/21 交易日)· 绿正红负 · ★=block-bootstrap CI 不含 0</span></h2>
+  <div id="fd-ic" class="card"></div>
+  <h2>② net_flow 分 dealer gamma 状态 <span class="muted small">空γ 追涨→动量 / 多γ 抑制;两组差异=免费聚合数据给不了的信号</span></h2>
+  <div id="fd-gamma" class="card"></div>
+  <h2>③ 扣成本 L/S 五档回测 <span class="muted small">net_flow · H=1 日频全换手 · 展示「可预测≠可盈利」</span></h2>
+  <div id="fd-ls" class="card"></div>
 </section>
 
 <!-- ========== Topic 5:仓位情报(免费版 JPM Positioning Intelligence) ========== -->

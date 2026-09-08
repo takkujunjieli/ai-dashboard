@@ -309,6 +309,9 @@ footer { margin-top: 50px; text-align: center; }
 .pf-cap-tot { color: var(--text); font-weight: 600; margin-left: 6px; }
 .pf-pager { display: flex; align-items: center; gap: 12px; margin: 8px 0 2px; }
 .pf-pager .mini-btn:disabled { opacity: .4; cursor: default; }
+/* 期权流→方向 IC 表 */
+.fd-tbl td, .fd-tbl th { text-align: center; padding: 6px 12px; border-radius: 3px; white-space: nowrap; }
+.fd-tbl td.fd-name, .fd-tbl th:first-child { text-align: left; white-space: normal; }
 /* 月历 */
 .pf-cal { margin-top: 14px; }
 .pf-cal-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }

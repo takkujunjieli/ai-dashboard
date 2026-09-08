@@ -56,6 +56,9 @@ jobs:
       - name: 抓取 ETF 周K(QQQ/SOXX/IGV,供仓位情报叠加)
         run: python scripts/fetch_etf_weekly.py
 
+      - name: 期权流→方向 rank-IC(纯计算,读累积的 gex_daily)
+        run: python scripts/analyze_flow_ic.py || echo "⚠️ flow_ic 生成跳过(gex_daily 不足)"
+
       - name: 提交数据到 main(EOD 基线 + Pages 兜底)
         run: |
           git config user.name "github-actions[bot]"

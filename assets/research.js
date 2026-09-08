@@ -960,7 +960,63 @@ function renderCta(J) {
 }
 
 /* ---------- Tab 调度 ---------- */
-const RENDER = { bearbull: renderBearbull, retailflow: renderRetailflow, rates: renderRates, gexvol: renderGexVol, positioning: renderPositioning, stocks: initScorecards };
+/* ---------- Topic 4.5:期权流 → 方向(逐票 rank-IC,读 data/flow_ic.json) ---------- */
+async function renderFlowDir() {
+  const d = await loadJSON("data/flow_ic.json");
+  if (!d || d.error || !d.predictors) {
+    $("fd-caveat").innerHTML = `<span class="muted small">暂无数据 — 本地跑 <code>scripts/analyze_flow_ic.py</code> 生成 <code>data/flow_ic.json</code>(读 gex_daily)。</span>`;
+    return;
+  }
+  const heat = (v) => v == null ? "" : `background:hsl(${v >= 0 ? 142 : 0} 65% 45% / ${(0.1 + Math.min(Math.abs(v) / 0.2, 1) * 0.4).toFixed(2)})`;
+  const icCell = (s) => {
+    if (!s || s.status !== "ok") return `<td class="muted small" title="n_eff ${s ? s.n_eff : "?"}(重叠后有效样本太少)">样本不足</td>`;
+    const v = s.mean_ic;
+    return `<td style="${heat(v)}" title="IR ${s.ir} · 95%CI [${(s.ci || []).join(", ")}] · n=${s.n_days} (eff ${s.n_eff})">${v >= 0 ? "+" : ""}${v.toFixed(3)}${s.sig ? " ★" : ""}</td>`;
+  };
+  const H = d.horizons.map((h) => `${h}d`);
+  // ① IC 表
+  const SIGN = { "1": "预期 +(看多流→涨)", "-1": "" };
+  const rows = Object.entries(d.predictors).map(([p, pd]) => {
+    const exp = pd.expected_sign > 0 ? "＋" : "－";
+    return `<tr><td class="fd-name"><b>${esc(p)}</b> <span class="muted small">${esc(pd.desc)} · 预期 ${exp}</span></td>`
+      + d.horizons.map((h) => icCell(pd.ic[String(h)])).join("") + "</tr>";
+  }).join("");
+  $("fd-ic").innerHTML = `<div class="sc-wrap"><table class="bt-table fd-tbl"><thead><tr><th>预测变量(横截面按秩)</th>${H.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>`
+    + `<div class="muted small" style="margin-top:6px">IC = 每日「预测变量名次 vs 后续收益名次」的 Spearman,再对天求均值。★ 只是 block-bootstrap CI 不含 0,样本小仍需谨慎。</div>`;
+  // ② gamma 分层(net_flow)
+  const gs = d.predictors.net_flow.gamma_split || {};
+  const gRow = (label, reg) => `<tr><td class="fd-name"><b>${label}</b></td>${d.horizons.map((h) => icCell((gs[reg] || {})[String(h)])).join("")}</tr>`;
+  $("fd-gamma").innerHTML = `<div class="sc-wrap"><table class="bt-table fd-tbl"><thead><tr><th>net_flow IC · 按 dealer gamma</th>${H.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>`
+    + gRow("空 gamma(dealer short,net_nom<0)", "short") + gRow("多 gamma(dealer long,net_nom≥0)", "long")
+    + `</tbody></table></div><div class="muted small" style="margin-top:6px">机制:空 gamma 时做市商顺势对冲→放大→flow 预示<b>同向</b>(动量);多 gamma 时抑制→flow 失效。两组 IC 明显不同,才是付费 tick 独有的边。</div>`;
+  // ③ L/S 扣成本回测
+  const ls = d.predictors.net_flow.ls_quintile_h1;
+  if (ls && ls.status === "ok") {
+    const cur = (arr) => (arr && arr.ann_pct >= 0 ? "up" : "down");
+    const spark = (() => {
+      const c = ls.curve_net_pct || []; if (c.length < 2) return "";
+      const W = 680, Hh = 130, pl = 40, pr = 10, pt = 10, pb = 16;
+      const ys = c.map((x) => x[1]), lo = Math.min(0, ...ys), hi = Math.max(0, ...ys);
+      const X = (i) => pl + i / (c.length - 1) * (W - pl - pr);
+      const Y = (v) => pt + (1 - (v - lo) / ((hi - lo) || 1)) * (Hh - pt - pb);
+      const pts = c.map((x, i) => `${X(i).toFixed(1)},${Y(x[1]).toFixed(1)}`).join(" ");
+      return `<svg viewBox="0 0 ${W} ${Hh}" width="100%" style="max-width:${W}px;margin-top:8px"><line x1="${pl}" y1="${Y(0).toFixed(1)}" x2="${W - pr}" y2="${Y(0).toFixed(1)}" stroke="var(--border)"/><polyline points="${pts}" fill="none" stroke="#f87171" stroke-width="1.5"/><text x="${pl - 4}" y="${(Y(hi) + 3).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--muted)">${hi.toFixed(0)}%</text><text x="${pl - 4}" y="${(Y(lo) + 3).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--muted)">${lo.toFixed(0)}%</text></svg>`;
+    })();
+    $("fd-ls").innerHTML = `<div class="opt-grid">`
+      + tile("多空档", `顶/底 各 ${ls.quintile} 票`, `${ls.n} 天`)
+      + tile("毛年化", `${ls.gross.ann_pct}%`, `Sharpe ${ls.gross.sharpe}`, cur(ls.gross))
+      + tile("扣成本年化", `${ls.net.ann_pct}%`, `${ls.cost_bps}bp/边 · Sharpe ${ls.net.sharpe}`, cur(ls.net))
+      + `</div>${spark}<div class="muted small" style="margin-top:6px">多头顶档 net_flow / 空头底档,H=1 日频全换手。net_flow 的 IC 现为<b>负/弱</b>,加上日换手成本极重 → 直接交易不可行(这是诚实结果,不是失败)。</div>`;
+  } else {
+    $("fd-ls").innerHTML = `<span class="muted small">回测样本不足。</span>`;
+  }
+  // caveat
+  const note = (d.notes || []).map((n) => `<li>${esc(n)}</li>`).join("");
+  $("fd-caveat").innerHTML = `<b>⚠️ 样本极小,现阶段主要看引擎与机制,别信绝对数值</b> · ${d.n_dates} 交易日(${(d.date_range || []).join("→")})`
+    + `<ul class="muted small" style="margin:6px 0 0;padding-left:18px">${note}</ul>`;
+}
+
+const RENDER = { bearbull: renderBearbull, retailflow: renderRetailflow, rates: renderRates, gexvol: renderGexVol, flowdir: renderFlowDir, positioning: renderPositioning, stocks: initScorecards };
 const rendered = {};
 async function showTopic(topic) {
   if (!RENDER[topic]) return;
