@@ -304,6 +304,7 @@ export async function renderRiskExposure() {
   const maxHeat = MAXHEAT;
   if (ASSIGN === null) ASSIGN = { ...((P && P.assignments) || {}), ...rLS("riskGroups", {}) };  // 本机 localStorage 覆盖(本地即时持久化,无需 PAT);「发布到 config」再推给 agent
   const stops = rLS("riskStops", {});
+  const targets = rLS("riskTargets", {});   // 每仓止盈目标价(本机,可空)
   // 账户净值直接从 portfolio.json 读:按账户(全部/各账户)汇总持仓市值
   const accounts = pf.accounts || [];
   const acctSel = rLS("riskAccount", "ALL");
@@ -364,6 +365,7 @@ export async function renderRiskExposure() {
   const pnlCell = (v) => { if (v == null) return "<td>—</td>"; const l = Math.min(Math.abs(v) / 40, 1), hue = v >= 0 ? 142 : 0; return `<td class="sc-num" style="background:hsl(${hue} 65% 45% / ${(0.06 + l * 0.34).toFixed(2)})">${v >= 0 ? "+" : ""}${v.toFixed(0)}%</td>`; };
   const grpSel = (r) => `<select class="rk-grp" data-sym="${esc(r.sym)}">${bnames.map((k) => `<option${k === r.bundleName ? " selected" : ""}>${esc(k)}</option>`).join("")}</select>`;
   const stopIn = (r) => `<input class="rk-stopin" data-sym="${esc(r.sym)}" type="number" step="0.01" value="${r.stop != null ? r.stop.toFixed(2) : ""}" placeholder="${r.isOpt ? "期权" : (r.atr != null ? "ATR" : "手填")}" style="width:70px">`;
+  const tpIn = (r) => `<input class="rk-tpin" data-sym="${esc(r.sym)}" type="number" step="0.01" value="${targets[r.sym] != null ? targets[r.sym] : ""}" placeholder="止盈价" style="width:70px">`;   // 止盈目标价,空=留白
   const tgtCell = (r) => {   // 距风控目标的股数:卖/补=需减仓,可买/可空=还有空间
     if (r.toTarget == null || !isFinite(r.toTarget)) return "<td>—</td>";
     const n = Math.round(r.toTarget);
@@ -376,7 +378,7 @@ export async function renderRiskExposure() {
   const body = disp.map((r) => `<tr>
     <td class="sc-tk"><b>${esc(r.sym)}</b> <span class="sc-dir ${r.long ? "up" : "down"}">${r.isOpt ? "期" : r.long ? "多" : "空"}</span></td>
     <td>${grpSel(r)}</td><td>${r.qty}</td><td>$${r.price != null ? r.price.toFixed(2) : "—"}</td>
-    <td class="muted">$${r.cost != null ? r.cost.toFixed(2) : "—"}</td><td>${stopIn(r)}</td>
+    <td class="muted">$${r.cost != null ? r.cost.toFixed(2) : "—"}</td><td>${stopIn(r)}</td><td>${tpIn(r)}</td>
     ${cell(r.riskPct != null ? r.riskPct.toFixed(2) + "%" : "—", r.riskPct == null ? null : Math.min(r.riskPct / 2, 1))}
     ${cell(r.ratio != null ? r.ratio.toFixed(2) + "×" : "—", r.ratio == null ? null : Math.min(r.ratio / 1.5, 1))}
     ${tgtCell(r)}
@@ -385,7 +387,7 @@ export async function renderRiskExposure() {
     ${pnlCell(r.pnlPct)}</tr>`).join("");
 
   host.innerHTML = `<div class="sc-wrap"><table class="sc-table">
-    <tr>${sth("sym", "标的")}${sth("bundleName", "Thesis")}<th>股数</th><th>现价</th><th>成本</th><th>止损</th>
+    <tr>${sth("sym", "标的")}${sth("bundleName", "Thesis")}<th>股数</th><th>现价</th><th>成本</th><th>止损</th><th>止盈</th>
         ${sth("riskPct", "在险%")}${sth("ratio", "在险/预算")}${sth("toTarget", "距目标")}${sth("posPct", "仓位%")}${sth("distPct", "距止损%")}${sth("pnlPct", "浮盈%")}</tr>${body}</table></div>
     <div class="muted small" style="margin-top:8px">在险%=|股数|×|现价−止损|÷净值 · 在险/预算=该仓在险÷所属 thesis 单笔预算(>1 超险)· <b>距目标</b>=到风控目标(在险=预算 且 ≤仓位上限,取更紧者)还需<span class="down">卖/补</span>或<span class="up">可买/可空</span>多少股 · 仓位%对比 thesis 上限 · 距止损%小=逼近止损 · 浮盈%仅参考(现价口径,成本不进风险)。止损默认 ATR 法,可每仓手填覆盖(存本机)。</div>`;
 
@@ -410,6 +412,7 @@ export async function renderRiskExposure() {
     renderRiskExposure();
   }));
   host.querySelectorAll(".rk-stopin").forEach((el) => el.addEventListener("change", () => { const s = rLS("riskStops", {}), v = el.value.trim(); if (v === "") delete s[el.dataset.sym]; else s[el.dataset.sym] = +v; rLSset("riskStops", s); renderRiskExposure(); }));
+  host.querySelectorAll(".rk-tpin").forEach((el) => el.addEventListener("change", () => { const t = rLS("riskTargets", {}), v = el.value.trim(); if (v === "") delete t[el.dataset.sym]; else t[el.dataset.sym] = +v; rLSset("riskTargets", t); renderRiskExposure(); }));   // 止盈价:空=删除→留白
   const ac = $("rk-acct"); if (ac) ac.addEventListener("change", () => { rLSset("riskAccount", ac.value); renderRiskExposure(); });
   const sp = $("rk-syncpx"); if (sp) sp.addEventListener("click", async () => {
     sp.textContent = "同步中…";
