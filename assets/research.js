@@ -499,10 +499,14 @@ async function renderRetailflow() {
         ? `<div class="rf-cal-d" data-idx="${idxByDate[ds]}" style="${base};cursor:pointer;${seld ? "background:#2563eb;color:#fff;font-weight:600" : "background:var(--card-hover);color:var(--text)"}">${day}</div>`
         : `<div style="${base};color:#3a4560">${day}</div>`;
     }
+    const selSt = "background:var(--card-hover);border:1px solid var(--border);border-radius:5px;padding:2px 6px;color:var(--text);font-size:12px";
+    let yOpts = "", mOpts = "";
+    for (let y = 2026; y <= maxY; y++) yOpts += `<option value="${y}"${y === calY ? " selected" : ""}>${y}</option>`;
+    for (let m = 1; m <= 12; m++) mOpts += `<option value="${m}"${m === calM ? " selected" : ""}>${pad2(m)} 月</option>`;
     set("rf-now", `<div style="max-width:280px;margin-bottom:10px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
           <button id="rf-cal-prev" class="tab" style="padding:1px 9px"${canPrev() ? "" : " disabled"}>‹</button>
-          <b>${calY}-${pad2(calM)}</b>
+          <span style="display:flex;gap:4px"><select id="rf-cal-y" style="${selSt}">${yOpts}</select><select id="rf-cal-m" style="${selSt}">${mOpts}</select></span>
           <button id="rf-cal-next" class="tab" style="padding:1px 9px"${canNext() ? "" : " disabled"}>›</button>
         </div>
         <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px">${wk}${cells}</div>
@@ -513,6 +517,15 @@ async function renderRetailflow() {
     const prev = $("rf-cal-prev"), next = $("rf-cal-next");
     if (prev) prev.onclick = () => { if (canPrev()) { if (--calM < 1) { calM = 12; calY--; } drawNow(); } };
     if (next) next.onclick = () => { if (canNext()) { if (++calM > 12) { calM = 1; calY++; } drawNow(); } };
+    const ysel = $("rf-cal-y"), msel = $("rf-cal-m");
+    const jump = () => {   // 下拉跳转,夹到 [2026-01, 最新数据月]
+      let y = +ysel.value, m = +msel.value;
+      if (y > maxY || (y === maxY && m > maxM)) { y = maxY; m = maxM; }
+      if (y < 2026) { y = 2026; m = 1; }
+      calY = y; calM = m; drawNow();
+    };
+    if (ysel) ysel.onchange = jump;
+    if (msel) msel.onchange = jump;
     document.querySelectorAll("#rf-now .rf-cal-d").forEach((el) =>
       el.addEventListener("click", () => { nowIdx = +el.dataset.idx; drawNow(); }));
   };
