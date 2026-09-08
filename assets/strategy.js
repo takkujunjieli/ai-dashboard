@@ -25,7 +25,8 @@ async function putPolicy(mutate) {
   try {
     let r = await once();
     if (r.status === 409) r = await once();   // sha 过期 → 重取最新再试一次
-    return r.ok ? { ok: true } : { ok: false, msg: "PUT 失败 " + r.status };
+    const hint = r.status === 404 ? "(PAT 无 stock-dashboard-private 写权限?)" : r.status === 401 ? "(PAT 无效/过期)" : r.status === 403 ? "(PAT 权限不足/限流)" : "";
+    return r.ok ? { ok: true } : { ok: false, msg: "PUT " + r.status + " " + hint };
   } catch (e) { return { ok: false, msg: String(e) }; }
 }
 
@@ -33,7 +34,7 @@ async function putPolicy(mutate) {
    再 debounce 把整份 policy(theses + assignments + max-heat + equity)提交到私有库。
    thesis 管理 + 风险敞口 两面板共用;状态显示在 #rk-sync。 */
 let rpSyncTimer = null;
-function rpStatus(txt, cls = "muted") { const el = document.getElementById("rk-sync"); if (el) el.innerHTML = `<span class="${cls}">${txt}</span>`; }
+function rpStatus(txt, cls = "muted", title = "") { const el = document.getElementById("rk-sync"); if (el) el.innerHTML = `<span class="${cls}"${title ? ` title="${esc(title)}"` : ""}>${txt}</span>`; }
 async function rpSyncNow() {
   clearTimeout(rpSyncTimer);
   if (!getPat()) { rpStatus("⚠ 未设 PAT · 点此设置", "down"); return; }
@@ -46,7 +47,7 @@ async function rpSyncNow() {
     L.assignments = ASSIGN ? { ...ASSIGN } : { ...(L.assignments || {}), ...groups };
     if (mh != null && !Number.isNaN(+mh)) L.portfolio = { ...(L.portfolio || {}), max_total_heat_pct: +mh };
   });
-  rpStatus(r.ok ? `✓ synced ${new Date().toTimeString().slice(0, 5)}` : "✗ 同步失败 · 点重试", r.ok ? "muted" : "down");
+  rpStatus(r.ok ? `✓ synced ${new Date().toTimeString().slice(0, 5)}` : `✗ 同步失败 · 点重试`, r.ok ? "muted" : "down", r.ok ? "" : (r.msg || ""));
 }
 function rpSchedule(now = false) {   // 改动即调度:now=结构性动作/失焦立刻,否则 2.5s debounce
   clearTimeout(rpSyncTimer);
