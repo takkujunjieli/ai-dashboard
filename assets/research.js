@@ -492,6 +492,66 @@ async function renderRetailflow() {
 
   // ④ 净买入热力图
   set("rf-series", netbuyHeatmap(J));
+
+  // ⑤ 采样验证:全量 vs naive vs 精确
+  set("rf-valid", renderRetailValidation(J));
+}
+
+/* 采样验证面板:每日轮一票同时跑「全量(真值)/ naive / 精确」。
+   散点:x=全量净买入,y=采样估计(精确=绿、naive=灰),越贴对角线越准;下方汇总平均绝对误差 + 明细表。 */
+function renderRetailValidation(J) {
+  const V = J.validation || {};
+  const days = Object.keys(V).sort();
+  if (!days.length) {
+    return `<span class="muted small">尚无验证记录。采样模式每晚会轮一只票额外跑一次全量,与 naive/精确 对照;${J.sampled ? "" : "(当前数据为全量模式,未开采样)"}攒几天后这里出现散点与误差表。</span>`;
+  }
+  const rows = days.map((d) => ({ d, ...V[d] })).filter((r) => r.full && r.precise);
+  const absErr = (a, b) => (a == null || b == null) ? null : Math.abs(a - b);
+  const pe = rows.map((r) => absErr(r.precise.netbuy, r.full.netbuy)).filter((x) => x != null);
+  const ne = rows.map((r) => absErr(r.naive && r.naive.netbuy, r.full.netbuy)).filter((x) => x != null);
+  const mean = (a) => a.length ? a.reduce((s, v) => s + v, 0) / a.length : null;
+  const inCI = rows.filter((r) => r.precise.ci && r.full.netbuy >= r.precise.ci[0] && r.full.netbuy <= r.precise.ci[1]).length;
+  const nCI = rows.filter((r) => r.precise.ci).length;
+
+  // 散点(自绘 SVG,netbuy∈[-1,1] 双轴 + y=x 对角线)
+  const S = 240, pad = 28, X = (v) => pad + (v + 1) / 2 * (S - 2 * pad), Y = (v) => S - pad - (v + 1) / 2 * (S - 2 * pad);
+  const pts = (sel, color) => rows.map((r) => {
+    const y = sel(r); if (y == null) return "";
+    return `<circle cx="${X(r.full.netbuy).toFixed(1)}" cy="${Y(y).toFixed(1)}" r="3" fill="${color}" fill-opacity="0.8"><title>${esc(r.ticker)} ${r.d}\n全量 ${r.full.netbuy.toFixed(3)} → ${(color === "#34d399" ? "精确" : "naive")} ${y.toFixed(3)}</title></circle>`;
+  }).join("");
+  const svg = `<svg viewBox="0 0 ${S} ${S}" width="${S}" height="${S}" style="background:#0d1526;border:1px solid #1e2941;border-radius:6px">
+    <line x1="${X(-1)}" y1="${Y(-1)}" x2="${X(1)}" y2="${Y(1)}" stroke="#3a4560" stroke-dasharray="4 3"/>
+    <line x1="${X(0)}" y1="${pad}" x2="${X(0)}" y2="${S - pad}" stroke="#1e2941"/>
+    <line x1="${pad}" y1="${Y(0)}" x2="${S - pad}" y2="${Y(0)}" stroke="#1e2941"/>
+    ${pts((r) => r.naive && r.naive.netbuy, "#8b96ad")}${pts((r) => r.precise.netbuy, "#34d399")}
+    <text x="${S / 2}" y="${S - 6}" fill="#8b96ad" font-size="10" text-anchor="middle">全量 netbuy (真值)</text>
+    <text x="10" y="${S / 2}" fill="#8b96ad" font-size="10" text-anchor="middle" transform="rotate(-90 10 ${S / 2})">采样估计</text></svg>`;
+
+  const fmt = (x) => x == null ? "—" : (x > 0 ? "+" : "") + x.toFixed(3);
+  const recent = rows.slice(-14).reverse();
+  const tbl = recent.map((r) => {
+    const pce = absErr(r.precise.netbuy, r.full.netbuy), nce = absErr(r.naive && r.naive.netbuy, r.full.netbuy);
+    const ci = r.precise.ci ? `[${r.precise.ci[0].toFixed(2)},${r.precise.ci[1].toFixed(2)}]` : "—";
+    return `<tr><td>${r.d.slice(5)}</td><td>${esc(r.ticker)}</td>
+      <td class="sc-num">${fmt(r.full.netbuy)}</td>
+      <td class="sc-num">${fmt(r.naive && r.naive.netbuy)}</td>
+      <td class="sc-num">${fmt(r.precise.netbuy)}</td>
+      <td class="muted small">${ci}</td>
+      <td class="sc-num ${nce != null && pce != null && pce <= nce ? "up" : ""}">${pce == null ? "—" : pce.toFixed(3)}</td>
+      <td class="sc-num">${nce == null ? "—" : nce.toFixed(3)}</td></tr>`;
+  }).join("");
+
+  return `<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+      <div>${svg}<div class="muted small" style="text-align:center"><span style="color:#34d399">●</span> 精确 <span style="color:#8b96ad">●</span> naive · 越贴虚线越准</div></div>
+      <div class="opt-grid" style="flex:1;min-width:220px">
+        ${tile("平均绝对误差·精确", pe.length ? mean(pe).toFixed(3) : "—", `n=${pe.length}`)}
+        ${tile("平均绝对误差·naive", ne.length ? mean(ne).toFixed(3) : "—", "越大说明采样偏差越需精确版纠正")}
+        ${tile("全量落入精确 CI", nCI ? `${inCI}/${nCI}` : "—", "≈95% 则 CI 校准良好")}
+        ${tile("验证样本", String(rows.length), `每票轮一次,共 ${J.tickers ? J.tickers.length : "?"} 票`)}
+      </div>
+    </div>
+    <table class="bt-table" style="margin-top:10px"><tr><th>日期</th><th>票</th><th>全量</th><th>naive</th><th>精确</th><th>精确CI</th><th>|精确−全量|</th><th>|naive−全量|</th></tr>${tbl}</table>
+    <div class="muted small">每日轮一只票额外跑全量(真值),对比 naive(池化)与精确(分层比率)。精确的绝对误差应小于 naive、且散点更贴对角线;全量落入 CI 的比例应≈95%。绿色=精确误差≤naive。</div>`;
 }
 
 /* Topic 3:国债 vs 股市 — 左轴=SPY/QQQ/IWM 归一100,右轴(虚线)=US 2/10/30Y 收益率%。

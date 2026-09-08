@@ -138,6 +138,9 @@ def main():
         "topic": "retailflow", "freq": "daily",
         "window_days": raw.get("window_days"), "updated": raw.get("updated"),
         "tickers": tickers, "dates": dates, "data": data,
+        "validation": raw.get("validation", {}),     # 采样验证:每日轮一票的 全量/naive/精确 三方对照
+        "sampled": any((days[d].get(t, {}) or {}).get("method") == "sample"
+                       for d in dates for t in tickers),
         "eval": {
             "ic_1d": round(ic1, 3) if ic1 is not None else None,
             "ic_5d": round(ic5, 3) if ic5 is not None else None,

@@ -19,7 +19,7 @@ on:
         required: false
         default: ""
   schedule:
-    - cron: "0 22 * * 1-5"        # 工作日 22:00 UTC(美股收盘后)增量跑当天
+    - cron: "0 3 * * 2-6"        # 夜间空闲:03:00 UTC(美股收盘后数小时、网关空闲)跑上一交易日;周二~周六覆盖周一~周五盘
 
 permissions:
   contents: write
@@ -33,12 +33,13 @@ jobs:
         with: { python-version: "3.12" }
       - run: pip install requests "urllib3<2" pytrends   # urllib3<2:修 pytrends method_whitelist
 
-      - name: 逐笔散户流(场外次美分 + 中点签名)
+      - name: 散户流·采样引擎(分钟量选窗 + 分层比率估计 + 每日一票全量验证)
         timeout-minutes: 300       # 5h 上限;超时被杀后仍走 always() 提交已完成的天
         run: python -u scripts/fetch_tick_flow.py   # -u:不缓冲,超时被杀也能看到已完成进度
         env:
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
           MASSIVE_BASE_URL: ${{ vars.MASSIVE_BASE_URL }}
+          RF_SAMPLE: "1"                  # 采样模式:只下高价值窗口(~50min/票),支持全组 28+ 只/夜
           RF_SYMS: ${{ inputs.sym }}      # 空=config/retail_syms.json(research 页多选下拉编辑,独立于 D/Q)
           RF_DAY: ${{ inputs.day }}
           RF_BACKFILL: ${{ inputs.backfill || '0' }}
