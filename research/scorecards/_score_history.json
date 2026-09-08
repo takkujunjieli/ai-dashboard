@@ -1,0 +1,442 @@
+{
+ "2026-09-04": {
+  "features": [
+   "Operation",
+   "Leadership",
+   "Externality",
+   "Valuation"
+  ],
+  "scores": {
+   "SKHY": {
+    "dir": "W",
+    "scores": {
+     "Operation": 3,
+     "Leadership": 0,
+     "Externality": 1,
+     "Valuation": 0
+    },
+    "mean": 1.0
+   },
+   "MU": {
+    "dir": "L",
+    "scores": {
+     "Operation": 3,
+     "Leadership": 0,
+     "Externality": 0,
+     "Valuation": 1
+    },
+    "mean": 1.0
+   },
+   "SNDK": {
+    "dir": "L",
+    "scores": {
+     "Operation": 4,
+     "Leadership": 0,
+     "Externality": 1,
+     "Valuation": -1
+    },
+    "mean": 1.0
+   },
+   "HOOD": {
+    "dir": "L",
+    "scores": {
+     "Operation": 4,
+     "Leadership": 3,
+     "Externality": -1,
+     "Valuation": -1
+    },
+    "mean": 1.25
+   },
+   "COHR": {
+    "dir": "W",
+    "scores": {
+     "Operation": 1,
+     "Leadership": 1,
+     "Externality": 1,
+     "Valuation": 0
+    },
+    "mean": 0.75
+   },
+   "GOOG": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 1,
+     "Externality": 2,
+     "Valuation": 1
+    },
+    "mean": 1.5
+   },
+   "NVDA": {
+    "dir": "W",
+    "scores": {
+     "Operation": 4,
+     "Leadership": 4,
+     "Externality": 2,
+     "Valuation": -1
+    },
+    "mean": 2.25
+   },
+   "CCL": {
+    "dir": "L",
+    "scores": {
+     "Operation": 4,
+     "Leadership": 2,
+     "Externality": 0,
+     "Valuation": 1
+    },
+    "mean": 1.75
+   },
+   "RKLB": {
+    "dir": "L",
+    "scores": {
+     "Operation": -2,
+     "Leadership": 4,
+     "Externality": 2,
+     "Valuation": -2
+    },
+    "mean": 0.5
+   },
+   "AMD": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 3,
+     "Externality": 2,
+     "Valuation": 0
+    },
+    "mean": 1.75
+   },
+   "CRWV": {
+    "dir": "W",
+    "scores": {
+     "Operation": -1,
+     "Leadership": -1,
+     "Externality": 0,
+     "Valuation": -2
+    },
+    "mean": -1.0
+   },
+   "NBIS": {
+    "dir": "W",
+    "scores": {
+     "Operation": 0,
+     "Leadership": 0,
+     "Externality": 0,
+     "Valuation": -2
+    },
+    "mean": -0.5
+   },
+   "CRWD": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 1,
+     "Externality": 1,
+     "Valuation": -2
+    },
+    "mean": 0.5
+   },
+   "NET": {
+    "dir": "W",
+    "scores": {
+     "Operation": 1,
+     "Leadership": 1,
+     "Externality": 1,
+     "Valuation": -3
+    },
+    "mean": 0.0
+   },
+   "PANW": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 3,
+     "Externality": 1,
+     "Valuation": -1
+    },
+    "mean": 1.25
+   },
+   "ABNB": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 2,
+     "Externality": 0,
+     "Valuation": 0
+    },
+    "mean": 1.0
+   },
+   "NOW": {
+    "dir": "W",
+    "scores": {
+     "Operation": 3,
+     "Leadership": 3,
+     "Externality": 1,
+     "Valuation": 0
+    },
+    "mean": 1.75
+   },
+   "COIN": {
+    "dir": "W",
+    "scores": {
+     "Operation": 1,
+     "Leadership": 2,
+     "Externality": 1,
+     "Valuation": 0
+    },
+    "mean": 1.0
+   },
+   "SNOW": {
+    "dir": "W",
+    "scores": {
+     "Operation": 3,
+     "Leadership": 1,
+     "Externality": 1,
+     "Valuation": -1
+    },
+    "mean": 1.0
+   },
+   "INTC": {
+    "dir": "W",
+    "scores": {
+     "Operation": -1,
+     "Leadership": -2,
+     "Externality": 1,
+     "Valuation": 1
+    },
+    "mean": -0.25
+   },
+   "SPCX": {
+    "dir": "W",
+    "scores": {
+     "Operation": 1,
+     "Leadership": 0,
+     "Externality": 0,
+     "Valuation": 3
+    },
+    "mean": 1.0
+   }
+  }
+ },
+ "2026-09-08": {
+  "features": [
+   "Operation",
+   "Leadership",
+   "Externality",
+   "Valuation"
+  ],
+  "scores": {
+   "SKHY": {
+    "dir": "W",
+    "scores": {
+     "Operation": 3,
+     "Leadership": 0,
+     "Externality": 1,
+     "Valuation": 0
+    },
+    "mean": 1.0
+   },
+   "MU": {
+    "dir": "L",
+    "scores": {
+     "Operation": 3,
+     "Leadership": 0,
+     "Externality": 0,
+     "Valuation": 1
+    },
+    "mean": 1.0
+   },
+   "SNDK": {
+    "dir": "L",
+    "scores": {
+     "Operation": 4,
+     "Leadership": 0,
+     "Externality": 1,
+     "Valuation": -1
+    },
+    "mean": 1.0
+   },
+   "HOOD": {
+    "dir": "L",
+    "scores": {
+     "Operation": 4,
+     "Leadership": 3,
+     "Externality": -1,
+     "Valuation": -1
+    },
+    "mean": 1.25
+   },
+   "COHR": {
+    "dir": "W",
+    "scores": {
+     "Operation": 3,
+     "Leadership": 3,
+     "Externality": 2,
+     "Valuation": -2
+    },
+    "mean": 1.5
+   },
+   "GOOG": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 1,
+     "Externality": 2,
+     "Valuation": 1
+    },
+    "mean": 1.5
+   },
+   "NVDA": {
+    "dir": "W",
+    "scores": {
+     "Operation": 4,
+     "Leadership": 4,
+     "Externality": 2,
+     "Valuation": -1
+    },
+    "mean": 2.25
+   },
+   "CCL": {
+    "dir": "L",
+    "scores": {
+     "Operation": 4,
+     "Leadership": 2,
+     "Externality": -1,
+     "Valuation": 1
+    },
+    "mean": 1.5
+   },
+   "RKLB": {
+    "dir": "L",
+    "scores": {
+     "Operation": -2,
+     "Leadership": 4,
+     "Externality": 2,
+     "Valuation": -2
+    },
+    "mean": 0.5
+   },
+   "AMD": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 3,
+     "Externality": 2,
+     "Valuation": 0
+    },
+    "mean": 1.75
+   },
+   "CRWV": {
+    "dir": "W",
+    "scores": {
+     "Operation": -1,
+     "Leadership": -1,
+     "Externality": 0,
+     "Valuation": -2
+    },
+    "mean": -1.0
+   },
+   "NBIS": {
+    "dir": "W",
+    "scores": {
+     "Operation": 0,
+     "Leadership": 0,
+     "Externality": 0,
+     "Valuation": -2
+    },
+    "mean": -0.5
+   },
+   "CRWD": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 1,
+     "Externality": 1,
+     "Valuation": -2
+    },
+    "mean": 0.5
+   },
+   "NET": {
+    "dir": "W",
+    "scores": {
+     "Operation": 1,
+     "Leadership": 1,
+     "Externality": 1,
+     "Valuation": -3
+    },
+    "mean": 0.0
+   },
+   "PANW": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 3,
+     "Externality": 1,
+     "Valuation": -1
+    },
+    "mean": 1.25
+   },
+   "ABNB": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 2,
+     "Externality": 0,
+     "Valuation": 0
+    },
+    "mean": 1.0
+   },
+   "NOW": {
+    "dir": "W",
+    "scores": {
+     "Operation": 3,
+     "Leadership": 3,
+     "Externality": 1,
+     "Valuation": 0
+    },
+    "mean": 1.75
+   },
+   "COIN": {
+    "dir": "W",
+    "scores": {
+     "Operation": 1,
+     "Leadership": 2,
+     "Externality": 1,
+     "Valuation": 0
+    },
+    "mean": 1.0
+   },
+   "SNOW": {
+    "dir": "W",
+    "scores": {
+     "Operation": 3,
+     "Leadership": 1,
+     "Externality": 1,
+     "Valuation": -1
+    },
+    "mean": 1.0
+   },
+   "INTC": {
+    "dir": "W",
+    "scores": {
+     "Operation": -1,
+     "Leadership": -2,
+     "Externality": 1,
+     "Valuation": 1
+    },
+    "mean": -0.25
+   },
+   "SPCX": {
+    "dir": "W",
+    "scores": {
+     "Operation": 1,
+     "Leadership": 0,
+     "Externality": 0,
+     "Valuation": 3
+    },
+    "mean": 1.0
+   }
+  }
+ }
+}

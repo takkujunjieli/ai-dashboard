@@ -15,11 +15,11 @@ data/risk_stops.json
 # 本地盈亏分析(含私人财务数据,绝不提交进公开 repo)
 analysis/
 
-# 个人研究/打分,本地专用不公开
-research/
+# research/ 下默认本地私有,但个股打分(scorecards)公开发布
+research/*
+!research/scorecards/
 
-# 打分脚本内嵌私有评分/理由,不进公开库(实体可放私有库)
-scripts/build_scorecards.py
+# build_scorecards.py 现随站点公开(个股分析非私密)
 data/atr.json
 
 # 组合稳健性(含仓位表现,私有)
