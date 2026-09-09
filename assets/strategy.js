@@ -96,10 +96,11 @@ export async function renderRiskControl() {
       <span id="rk-msg" class="muted small"></span>
     </div>
     <div class="risk-form" style="margin-top:10px">
-      <label>单笔风险 %<input id="rk-risk" type="number" step="0.05" style="width:82px"></label>
-      <label>ATR 倍数<input id="rk-mult" type="number" step="0.1" style="width:72px"></label>
-      <label>仓位上限 %<input id="rk-cap" type="number" step="1" style="width:82px"></label>
-      <label>总风险 % 约束<input id="rk-totrisk" type="number" step="0.5" style="width:96px" title="该 thesis 所有持仓在险之和上限(占账户净值%);热力图按此判超险"></label>
+      <label>单笔风险 %<input id="rk-risk" type="number" step="0.05" style="width:88px" placeholder="optional" title="单笔止损被打的亏损占净值%,决定仓位股数(留空默认 0.75)"></label>
+      <label>单笔仓位上限 %<input id="rk-cap" type="number" step="1" style="width:96px" placeholder="optional" title="单个持仓市值上限(占净值%;留空默认 20)"></label>
+      <label>总风险 %<input id="rk-totrisk" type="number" step="0.5" style="width:88px" placeholder="optional" title="该 thesis 所有持仓在险之和上限(占净值%);热力图按此判超险"></label>
+      <label>总仓位上限 %<input id="rk-totcap" type="number" step="1" style="width:96px" placeholder="optional" title="该 thesis 所有持仓市值之和上限(占净值%);热力图按此判超险"></label>
+      <label>ATR 倍数<input id="rk-mult" type="number" step="0.1" style="width:76px" placeholder="optional" title="留空默认 2.0"></label>
       <label>Target Profit %<input id="rk-goal" type="number" step="1" style="width:96px" placeholder="optional"></label>
       <label>Shelf life<input id="rk-shelf" type="date" style="width:150px" title="thesis 有效期(可选);过期未走出=复盘/离场"></label>
     </div>
@@ -117,15 +118,15 @@ export async function renderRiskControl() {
     <div id="rk-out" class="wb-statbar" style="margin-top:12px"></div>
     <div id="rk-note" class="muted small" style="margin-top:6px"></div>
     <div id="rk-done" class="muted small" style="margin-top:10px"></div>
-    <div class="muted small" style="margin-top:10px"><b>止损放在 thesis 被证伪处</b>(不是"亏 X% 就卖"):${(POLICY.stop_bases || []).map(esc).join(" · ")}。<br>核心:<b>止损位决定仓位</b>;每个 thesis 自带 单笔风险%/ATR倍数/仓位上限/总风险约束/Target Profit/Shelf life/Edge/Invalidation。改字段即自动同步到私有库(见右上状态),无需手动保存。ATR 法:止损=买入−倍数×ATR${atrP}。</div>`;
+    <div class="muted small" style="margin-top:10px"><b>止损放在 thesis 被证伪处</b>(不是"亏 X% 就卖"):${(POLICY.stop_bases || []).map(esc).join(" · ")}。<br>核心:<b>止损位决定仓位</b>;每个 thesis 自带 单笔风险%/单笔仓位上限%/总风险%/总仓位上限%/ATR倍数/Target Profit/Shelf life/Edge/Invalidation(均可选,留空 = 不约束/用默认)。改字段即自动同步到私有库(见右上状态),无需手动保存。ATR 法:止损=买入−倍数×ATR${atrP}。</div>`;
 
-  const loadBundle = () => { const b = POLICY.bundles[cur] || {};
-    $("rk-risk").value = b.risk_pct ?? 0.75; $("rk-mult").value = b.atr_mult ?? 2.0; $("rk-cap").value = b.max_position_pct ?? 20;
-    $("rk-totrisk").value = b.total_risk_pct ?? ""; $("rk-goal").value = b.target_profit_pct ?? "";
+  const loadBundle = () => { const b = POLICY.bundles[cur] || {};   // 全 optional:null → 空白(不再显默认值)
+    $("rk-risk").value = b.risk_pct ?? ""; $("rk-mult").value = b.atr_mult ?? ""; $("rk-cap").value = b.max_position_pct ?? "";
+    $("rk-totrisk").value = b.total_risk_pct ?? ""; $("rk-totcap").value = b.total_position_pct ?? ""; $("rk-goal").value = b.target_profit_pct ?? "";
     $("rk-shelf").value = b.shelf || ""; $("rk-edge").value = b.edge || ""; $("rk-invalid").value = b.invalid || ""; };
   const syncBundle = () => { const b = POLICY.bundles[cur] || (POLICY.bundles[cur] = {});
-    b.risk_pct = g("rk-risk"); b.atr_mult = g("rk-mult"); b.max_position_pct = g("rk-cap");
-    b.total_risk_pct = gt("rk-totrisk"); b.target_profit_pct = gt("rk-goal");
+    b.risk_pct = gt("rk-risk"); b.atr_mult = gt("rk-mult"); b.max_position_pct = gt("rk-cap");
+    b.total_risk_pct = gt("rk-totrisk"); b.total_position_pct = gt("rk-totcap"); b.target_profit_pct = gt("rk-goal");
     b.shelf = $("rk-shelf").value || null; b.edge = $("rk-edge").value.trim(); b.invalid = $("rk-invalid").value.trim(); };
 
   function compute() {
@@ -168,7 +169,7 @@ export async function renderRiskControl() {
   // ---- 字段编辑:落本机 + 调度自动同步(input 防抖);热力图在 change(失焦/回车)时刷新 ----
   const onEdit = (recompute) => () => { syncBundle(); if (recompute) compute(); persistLocal(); rpSchedule(); };
   ["rk-risk", "rk-mult", "rk-cap"].forEach((id) => { const el = $(id); el.addEventListener("input", onEdit(true)); el.addEventListener("change", () => { renderRiskExposure(); rpSchedule(true); }); });
-  ["rk-totrisk", "rk-goal"].forEach((id) => { const el = $(id); el.addEventListener("input", onEdit(false)); el.addEventListener("change", () => { renderRiskExposure(); rpSchedule(true); }); });
+  ["rk-totrisk", "rk-totcap", "rk-goal"].forEach((id) => { const el = $(id); el.addEventListener("input", onEdit(false)); el.addEventListener("change", () => { renderRiskExposure(); rpSchedule(true); }); });
   ["rk-shelf", "rk-edge", "rk-invalid"].forEach((id) => { const el = $(id); el.addEventListener("input", onEdit(false)); el.addEventListener("change", () => rpSchedule(true)); });
   ["rk-eq", "rk-entry", "rk-stop", "rk-atr"].forEach((id) => $(id).addEventListener("input", compute));
   $("rk-eq").addEventListener("input", () => { persistLocal(); rpSchedule(); });
@@ -200,7 +201,7 @@ export async function renderRiskControl() {
     const name = ($("rk-newname").value || "").trim();
     if (!name) return void ($("rk-msg").textContent = "先填 thesis 名");
     if (POLICY.bundles[name]) return void ($("rk-msg").textContent = "同名已存在");
-    POLICY.bundles[name] = { risk_pct: 0.75, atr_mult: 2.0, max_position_pct: 20, total_risk_pct: null, target_profit_pct: null, shelf: null, edge: "", invalid: "" };
+    POLICY.bundles[name] = { risk_pct: 0.75, atr_mult: 2.0, max_position_pct: 20, total_risk_pct: null, total_position_pct: null, target_profit_pct: null, shelf: null, edge: "", invalid: "" };
     cur = name; rebuildSel(); $("rk-newname").value = "";
     loadBundle(); compute(); persistLocal(); rpSchedule(true); $("rk-msg").textContent = `已建「${name}」`;
   });
@@ -324,7 +325,7 @@ export async function renderRiskExposure() {
   }
   if (!(equity > 0)) { equity = positions.reduce((s, p) => s + Math.abs(p.mkt_value || 0), 0) || 1; eqSrc = "持仓市值合计"; }
 
-  const rows = []; let totalHeat = 0; const heatByBundle = {};
+  const rows = []; let totalHeat = 0; const heatByBundle = {}, posByBundle = {};
   for (const p of positions) {
     const sym = p.sym, qty = p.qty || 0; if (!qty) continue;
     const isOpt = p.kind !== "equity", long = qty > 0;
@@ -333,12 +334,14 @@ export async function renderRiskExposure() {
     const price = (!isOpt && PRICE_OVERRIDE && PRICE_OVERRIDE[sym] != null) ? PRICE_OVERRIDE[sym] : p.price;
     const bundleName = ASSIGN[sym] || defB, b = bundles[bundleName] || bundles[defB];
     const budget = equity * (b.risk_pct || 0.75) / 100, atr = ATR[sym];
+    const mult = b.atr_mult || 2;   // optional:留空用默认 2×
     let stop = stops[sym] != null ? +stops[sym]
-             : (atr != null && price != null ? (long ? price - b.atr_mult * atr : price + b.atr_mult * atr) : null);
+             : (atr != null && price != null ? (long ? price - mult * atr : price + mult * atr) : null);
     const perShare = (stop != null && price != null) ? (long ? price - stop : stop - price) : null;
     let openRisk = isOpt ? Math.abs(p.mkt_value || 0) : (perShare != null ? Math.abs(qty) * perShare : null);
     if (openRisk != null && openRisk < 0) openRisk = 0;                 // 止损已锁利 → 不占风险
     const posPct = Math.abs(p.mkt_value || 0) / equity * 100;
+    posByBundle[bundleName] = (posByBundle[bundleName] || 0) + Math.abs(p.mkt_value || 0);   // 该 thesis 总仓位($)
     const riskPct = openRisk != null ? openRisk / equity * 100 : null;
     const ratio = openRisk != null ? openRisk / budget : null;
     const distPct = (perShare != null && price) ? perShare / price * 100 : null;
@@ -404,7 +407,14 @@ export async function renderRiskExposure() {
     <div class="opt-tile"><div class="opt-k">账户</div><div class="opt-v"><select id="rk-acct" style="background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text);font-size:13px">${["ALL", ...accounts.map((a) => a.id)].map((id) => `<option value="${esc(id)}"${id === acctSel ? " selected" : ""}>${esc(id === "ALL" ? "全部" : (accounts.find((a) => a.id === id) || {}).label || id)}</option>`).join("")}</select></div></div>
     <div class="opt-tile"><div class="opt-k">账户净值(portfolio)</div><div class="opt-v">$${Math.round(equity).toLocaleString()}</div><div class="opt-sub">${eqSrc}</div></div>
     <div class="opt-tile"><div class="opt-k">组合总在险 heat</div><div class="opt-v" style="${heatBg(Math.min(totalPct / maxHeat, 1))};border-radius:6px;padding:1px 8px">$${Math.round(totalHeat).toLocaleString()} · ${totalPct.toFixed(2)}%</div><div class="opt-sub">上限 <input id="rk-maxheat" type="number" step="0.5" value="${maxHeat}" style="width:52px;background:var(--card-hover);border:1px solid var(--border);border-radius:5px;padding:1px 5px;color:var(--text);font-size:12px"> % 净值</div></div>
-    ${bnames.filter((k) => heatByBundle[k]).map((k) => { const used = heatByBundle[k] / equity * 100, cap = bundles[k] && bundles[k].total_risk_pct, over = cap != null && used > cap; return `<div class="opt-tile"><div class="opt-k">${esc(k)} 在险</div><div class="opt-v"${over ? ' style="color:var(--down)"' : ""}>$${Math.round(heatByBundle[k]).toLocaleString()} · ${used.toFixed(2)}%${cap != null ? ` / 上限 ${cap}%${over ? " ⚠️超" : ""}` : ""}</div></div>`; }).join("")}</div>
+    ${bnames.filter((k) => heatByBundle[k] || posByBundle[k]).map((k) => {
+      const b = bundles[k] || {};
+      const usedR = (heatByBundle[k] || 0) / equity * 100, capR = b.total_risk_pct, overR = capR != null && usedR > capR;
+      const usedP = (posByBundle[k] || 0) / equity * 100, capP = b.total_position_pct, overP = capP != null && usedP > capP;
+      return `<div class="opt-tile"><div class="opt-k">${esc(k)}</div>`
+        + `<div class="opt-v"${overR ? ' style="color:var(--down)"' : ""}>在险 ${usedR.toFixed(1)}%${capR != null ? ` / ${capR}%${overR ? " ⚠️" : ""}` : ""}`
+        + `<span class="opt-sub"${overP ? ' style="color:var(--down)"' : ""}>仓位 ${usedP.toFixed(1)}%${capP != null ? ` / ${capP}%${overP ? " ⚠️" : ""}` : ""}</span></div></div>`;
+    }).join("")}</div>
     <div class="muted small" style="margin-top:6px">组合总在险 = 所有持仓在险之和(若止损全被打的总亏损)。${totalPct > maxHeat ? `<span class="down">⚠️ 超总上限 ${maxHeat}%,考虑减仓/收紧止损</span>` : "在上限内。"}</div>
     <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
       <button id="rk-syncpx" class="mini-btn">🔄 同步现价(K线)</button>
