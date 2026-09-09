@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-07T23:34:42+00:00",
+ "updated_at": "2026-09-08T23:28:05+00:00",
  "filers": {
   "0001067983": "Berkshire Hathaway",
   "0001037389": "Renaissance Technologies",
@@ -731,93 +731,6 @@
      "period": "2024-06-30",
      "shares": 13884406,
      "value": 430000054
-    }
-   ]
-  },
-  "U": {
-   "periods": [
-    "2026-06-30",
-    "2026-03-31",
-    "2025-12-31",
-    "2024-12-31"
-   ],
-   "holdings": [
-    {
-     "filer": "Vanguard Group",
-     "cik": "0000102909",
-     "period": "2025-12-31",
-     "shares": 2360514,
-     "value": 104263903
-    },
-    {
-     "filer": "Two Sigma",
-     "cik": "0001179392",
-     "period": "2026-06-30",
-     "shares": 6750900,
-     "value": 192940722
-    },
-    {
-     "filer": "State Street",
-     "cik": "0000093751",
-     "period": "2026-06-30",
-     "shares": 6816900,
-     "value": 229443286
-    },
-    {
-     "filer": "State Street",
-     "cik": "0000093751",
-     "period": "2026-03-31",
-     "shares": 0,
-     "value": 11872920
-    },
-    {
-     "filer": "Renaissance Technologies",
-     "cik": "0001037389",
-     "period": "2026-06-30",
-     "shares": 1527297,
-     "value": 43650148
-    },
-    {
-     "filer": "Renaissance Technologies",
-     "cik": "0001037389",
-     "period": "2026-03-31",
-     "shares": 2485597,
-     "value": 54534000
-    },
-    {
-     "filer": "Point72",
-     "cik": "0001603466",
-     "period": "2026-06-30",
-     "shares": 6805922,
-     "value": 194513251
-    },
-    {
-     "filer": "Point72",
-     "cik": "0001603466",
-     "period": "2026-03-31",
-     "shares": 6677309,
-     "value": 146500159
-    },
-    {
-     "filer": "Millennium Management",
-     "cik": "0001273087",
-     "period": "2026-06-30",
-     "shares": 4551519,
-     "value": 208520120
-    },
-    {
-     "filer": "D.E. Shaw",
-     "cik": "0001009207",
-     "period": "2026-06-30",
-     "shares": 9082560,
-     "value": 316639018
-    },
-    {
-     "filer": "Bridgewater Associates",
-     "cik": "0001350694",
-     "period": "2024-12-31",
-     "shares": 487696,
-     "value": 10958529
     }
    ]
   },
