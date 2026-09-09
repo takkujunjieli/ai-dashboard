@@ -325,7 +325,10 @@ export async function renderRiskExposure() {
   }
   if (!(equity > 0)) { equity = positions.reduce((s, p) => s + Math.abs(p.mkt_value || 0), 0) || 1; eqSrc = "持仓市值合计"; }
 
-  const rows = []; let totalHeat = 0; const heatByBundle = {}, posByBundle = {};
+  // 每 thesis 总仓位($):总仓位上限判超险 + 「距目标」都要用,须在主循环前算全(否则循环内只累加到当前仓)
+  const posByBundle = {};
+  for (const p of positions) { if (!(p.qty || 0)) continue; const bn = ASSIGN[p.sym] || defB; posByBundle[bn] = (posByBundle[bn] || 0) + Math.abs(p.mkt_value || 0); }
+  const rows = []; let totalHeat = 0; const heatByBundle = {};
   for (const p of positions) {
     const sym = p.sym, qty = p.qty || 0; if (!qty) continue;
     const isOpt = p.kind !== "equity", long = qty > 0;
@@ -341,7 +344,6 @@ export async function renderRiskExposure() {
     let openRisk = isOpt ? Math.abs(p.mkt_value || 0) : (perShare != null ? Math.abs(qty) * perShare : null);
     if (openRisk != null && openRisk < 0) openRisk = 0;                 // 止损已锁利 → 不占风险
     const posPct = Math.abs(p.mkt_value || 0) / equity * 100;
-    posByBundle[bundleName] = (posByBundle[bundleName] || 0) + Math.abs(p.mkt_value || 0);   // 该 thesis 总仓位($)
     const riskPct = openRisk != null ? openRisk / equity * 100 : null;
     const ratio = openRisk != null ? openRisk / budget : null;
     const distPct = (perShare != null && price) ? perShare / price * 100 : null;
@@ -354,9 +356,12 @@ export async function renderRiskExposure() {
     // toTarget = 目标|qty| − 当前|qty|:>0 还可加(买/空),<0 需减(卖/补)。期权按张(100股)不适用,置空。
     let toTarget = null;
     if (!isOpt && price > 0) {
-      const capQ = equity * (b.max_position_pct || 20) / 100 / price;
-      const riskQ = (perShare != null && perShare > 0) ? budget / perShare : Infinity;   // 止损锁利(perShare<=0)则风险不约束,只看上限
-      toTarget = Math.min(riskQ, capQ) - Math.abs(qty);
+      const capQ = equity * (b.max_position_pct || 20) / 100 / price;                             // 单笔仓位上限 → 股
+      const capTotQ = b.total_position_pct != null                                                 // 总仓位上限:扣掉同 thesis 其余仓后,给本仓留的空间
+        ? (equity * b.total_position_pct / 100 - (posByBundle[bundleName] - Math.abs(p.mkt_value || 0))) / price
+        : Infinity;                                                                                // 未设总上限 → 不约束
+      const riskQ = (perShare != null && perShare > 0) ? budget / perShare : Infinity;             // 止损锁利(perShare<=0)则风险不约束,只看上限
+      toTarget = Math.min(riskQ, capQ, capTotQ) - Math.abs(qty);   // 取最紧:风险预算 / 单笔上限 / 总仓位上限
     }
     rows.push({ sym, isOpt, long, qty, price, cost: p.avg_cost, stop, atr, bundleName, cap: b.max_position_pct || 20,
                 tpp: b.target_profit_pct, openRisk, riskPct, ratio, posPct, distPct, pnlPct, toTarget });
@@ -400,7 +405,7 @@ export async function renderRiskExposure() {
   host.innerHTML = `<div class="sc-wrap"><table class="sc-table">
     <tr>${sth("sym", "标的")}${sth("bundleName", "Thesis")}<th>股数</th><th>现价</th><th>成本</th><th>止损</th><th>止盈</th>
         ${sth("riskPct", "在险%")}${sth("ratio", "在险/预算")}${sth("toTarget", "距目标")}${sth("posPct", "仓位%")}${sth("distPct", "距止损%")}${sth("pnlPct", "浮盈%")}</tr>${body}</table></div>
-    <div class="muted small" style="margin-top:8px">在险%=|股数|×|现价−止损|÷净值 · 在险/预算=该仓在险÷所属 thesis 单笔预算(>1 超险)· <b>距目标</b>=到风控目标(在险=预算 且 ≤仓位上限,取更紧者)还需<span class="down">卖/补</span>或<span class="up">可买/可空</span>多少股 · 仓位%对比 thesis 上限 · 距止损%小=逼近止损 · 浮盈%仅参考(现价口径,成本不进风险)。止损默认 ATR 法,可每仓手填覆盖(存本机)。<b>止盈</b>:thesis 填了 Target Profit% 的,按成本×(1±%)自动预填(多加空减,灰色),可每仓手填覆盖;留空=无止盈。</div>`;
+    <div class="muted small" style="margin-top:8px">在险%=|股数|×|现价−止损|÷净值 · 在险/预算=该仓在险÷所属 thesis 单笔预算(>1 超险)· <b>距目标</b>=到风控目标(取最紧:在险=单笔预算 / ≤单笔仓位上限 / ≤总仓位上限)还需<span class="down">卖/补</span>或<span class="up">可买/可空</span>多少股 · 仓位%对比 thesis 上限 · 距止损%小=逼近止损 · 浮盈%仅参考(现价口径,成本不进风险)。止损默认 ATR 法,可每仓手填覆盖(存本机)。<b>止盈</b>:thesis 填了 Target Profit% 的,按成本×(1±%)自动预填(多加空减,灰色),可每仓手填覆盖;留空=无止盈。</div>`;
 
   const totalPct = totalHeat / equity * 100;
   heatEl.innerHTML = `<div class="wb-statbar">
