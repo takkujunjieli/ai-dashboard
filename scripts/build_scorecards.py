@@ -59,14 +59,14 @@ STOCKS = {
   (2, "EPYC 抢 Intel 份额+MI 放量;资产负债表干净/低杠杆/FCF 正;大额回购但 SBC 稀释偏高"),
   (3, "Lisa Su 执行力/turnaround 杰出、信誉高、适应力强"),
   (2, "AI 加速器需求强但 NVDA 主导+云 ASIC 蚕食,竞争位第二、两头受压")]),
- "CRWV": ("W", [
+ "CRWV": ("S", [
   (-4, "Q2'26 rev $2.575B +112%、GM ~66%、adj EBITDA $1.51B(~59%)、backlog $104.2B +246%(Q3 初再+$25B)=看着很美 +3;债均利率 ~11%=光利息吃~1/4 营收、FY26 capex $35-39B(>2.5x 营收)+GPU 折旧快 -4;市值$55B/P/B 9.8/亏损无 P/E、EV ~$75-90B 对 ~$13B 营收+深负 FCF(TTM -$10.6B) -3"),
   (0, "Intrator 联创/CEO(2017 挖矿转 AI 云)、爆发扩张+签 MSFT/OpenAI/Anthropic/Meta+2025-03 IPO=执行/拿单强 +2;内部人自 IPO 抛>$23 亿、CEO 每~2 周减持$25-38M(10b5-1)、lockup 解禁 83% Class A=alignment 差 -2"),
   (-1, "AI 云 capex 超级顺风+$104B 合约 backlog 背书 +2;客户极度集中 MSFT ~72% 1H26 营收(FY25 67%)、OpenAI 单笔$22.4B=前二撑绝大多数 -2;客户即对手(MSFT/Meta 自建产能)+neocloud(Nebius/Lambda/Crusoe)竞争 -1;债务融资模式对利率/信用极敏感+NVDA 供货/配额依赖 -1;新增 Anthropic/Meta 略分散 backlog +1")]),
- "NBIS": ("W", [
-  (0, "欧洲 GPU 云(ex-Yandex),重 capex、烧钱快,有 Yandex 出售现金垫"),
-  (0, "ex-Yandex 分拆,执行/获客未验证但有资本"),
-  (0, "neocloud 竞争激烈;AI capex+融资敏感")]),
+ "NBIS": ("S", [
+  (-1, "rev +454%($582M)、Nebius AI +514%、ARR $3B→FY26 guide $7-9B、adj EBITDA 转正 $236M/41% +3;资金优于 CRWV:$5.75B 可转债(0.5%'30/4.5%'34 低息)+Yandex $2.8B 现金垫+NVIDIA $2B 股权+客户预付款、现金~$8B≈债 $8.5B、Deloitte 审(2026 换掉小所 Reanda)+2;但代价是持续稀释:NVIDIA warrants 21M+$5.75B 可转债悬顶(转股价$313/$325)+债转股 15.8M+SBC(经济股 272M→293M)-1;capex $20-25B>>营收 $3-3.4B、FCF 深负 -2;mktcap $66B/P/E 856 on ~$3B 营收、52wk $63→$300→~$235 高 beta -3"),
+  (1, "Volozh(Yandex 创始人)技术深、把 Yandex 分拆快速重定位 AI 云、拿下 MSFT $17.5B/Meta $27B、EBITDA 转正=执行/拿单强 +2;Volozh 曾受欧盟制裁(2022-24 后撤销)+俄罗斯/Yandex legacy/治理地缘观感 -1;控股结构杂(Toloka 数据/Avride 自驾/TripleTen 教育+ClickHouse 股权)=聚焦/资本配置存疑 -0"),
+  (0, "AI 云 capex 超级顺风+$40-46B 合约 backlog(Meta $27B/MSFT $17.5B)+四笔~$10 亿级大单 +2;客户高度集中(MSFT/Meta 撑 backlog)+客户即对手(自建+TPU/MTIA 自研)-2;neocloud 混战(CRWV/Lambda/Crusoe)+NVIDIA 供货/配额依赖 -1;客户预付款(覆盖 50-60% capex)+现金垫(低息可转债非11%高息)→对利率/信用敏感度低于 CRWV +1")]),
  "CRWD": ("W", [
   (2, "云安全龙头、高毛利 SaaS、现金流强/净现金;回购有限、SBC 稀释"),
   (1, "Kurtz 创始人执行强,但 2024-07 全球宕机重创信誉;适应力尚可"),

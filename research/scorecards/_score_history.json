@@ -537,7 +537,7 @@
     "mean": 2.333
    },
    "CRWV": {
-    "dir": "W",
+    "dir": "S",
     "scores": {
      "Operation": -4,
      "Leadership": 0,
@@ -546,10 +546,10 @@
     "mean": -1.667
    },
    "NBIS": {
-    "dir": "W",
+    "dir": "S",
     "scores": {
-     "Operation": 0,
-     "Leadership": 0,
+     "Operation": -1,
+     "Leadership": 1,
      "Externality": 0
     },
     "mean": 0.0
