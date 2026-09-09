@@ -438,5 +438,203 @@
     "mean": 1.0
    }
   }
+ },
+ "2026-09-09": {
+  "features": [
+   "Operation",
+   "Leadership",
+   "Externality"
+  ],
+  "scores": {
+   "SKHY": {
+    "dir": "W",
+    "scores": {
+     "Operation": 3,
+     "Leadership": 0,
+     "Externality": 1
+    },
+    "mean": 1.333
+   },
+   "MU": {
+    "dir": "L",
+    "scores": {
+     "Operation": 3,
+     "Leadership": 0,
+     "Externality": 0
+    },
+    "mean": 1.0
+   },
+   "SNDK": {
+    "dir": "L",
+    "scores": {
+     "Operation": 4,
+     "Leadership": 0,
+     "Externality": 1
+    },
+    "mean": 1.667
+   },
+   "HOOD": {
+    "dir": "L",
+    "scores": {
+     "Operation": 4,
+     "Leadership": 3,
+     "Externality": -1
+    },
+    "mean": 2.0
+   },
+   "COHR": {
+    "dir": "L",
+    "scores": {
+     "Operation": 3,
+     "Leadership": 3,
+     "Externality": 2
+    },
+    "mean": 2.667
+   },
+   "GOOG": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 1,
+     "Externality": 2
+    },
+    "mean": 1.667
+   },
+   "NVDA": {
+    "dir": "W",
+    "scores": {
+     "Operation": 4,
+     "Leadership": 4,
+     "Externality": 2
+    },
+    "mean": 3.333
+   },
+   "CCL": {
+    "dir": "L",
+    "scores": {
+     "Operation": 4,
+     "Leadership": 2,
+     "Externality": -1
+    },
+    "mean": 1.667
+   },
+   "RKLB": {
+    "dir": "L",
+    "scores": {
+     "Operation": -2,
+     "Leadership": 4,
+     "Externality": 2
+    },
+    "mean": 1.333
+   },
+   "AMD": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 3,
+     "Externality": 2
+    },
+    "mean": 2.333
+   },
+   "CRWV": {
+    "dir": "W",
+    "scores": {
+     "Operation": -4,
+     "Leadership": 0,
+     "Externality": -1
+    },
+    "mean": -1.667
+   },
+   "NBIS": {
+    "dir": "W",
+    "scores": {
+     "Operation": 0,
+     "Leadership": 0,
+     "Externality": 0
+    },
+    "mean": 0.0
+   },
+   "CRWD": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 1,
+     "Externality": 1
+    },
+    "mean": 1.333
+   },
+   "NET": {
+    "dir": "W",
+    "scores": {
+     "Operation": 1,
+     "Leadership": 1,
+     "Externality": 1
+    },
+    "mean": 1.0
+   },
+   "PANW": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 3,
+     "Externality": 1
+    },
+    "mean": 2.0
+   },
+   "ABNB": {
+    "dir": "W",
+    "scores": {
+     "Operation": 2,
+     "Leadership": 2,
+     "Externality": 0
+    },
+    "mean": 1.333
+   },
+   "NOW": {
+    "dir": "W",
+    "scores": {
+     "Operation": 3,
+     "Leadership": 3,
+     "Externality": 1
+    },
+    "mean": 2.333
+   },
+   "COIN": {
+    "dir": "W",
+    "scores": {
+     "Operation": 1,
+     "Leadership": 2,
+     "Externality": 1
+    },
+    "mean": 1.333
+   },
+   "SNOW": {
+    "dir": "W",
+    "scores": {
+     "Operation": 3,
+     "Leadership": 1,
+     "Externality": 1
+    },
+    "mean": 1.667
+   },
+   "INTC": {
+    "dir": "W",
+    "scores": {
+     "Operation": -1,
+     "Leadership": -2,
+     "Externality": 1
+    },
+    "mean": -0.667
+   },
+   "SPCX": {
+    "dir": "W",
+    "scores": {
+     "Operation": 1,
+     "Leadership": 0,
+     "Externality": 0
+    },
+    "mean": 0.333
+   }
+  }
  }
 }
