@@ -357,7 +357,7 @@ export async function renderRiskExposure() {
       toTarget = Math.min(riskQ, capQ) - Math.abs(qty);
     }
     rows.push({ sym, isOpt, long, qty, price, cost: p.avg_cost, stop, atr, bundleName, cap: b.max_position_pct || 20,
-                openRisk, riskPct, ratio, posPct, distPct, pnlPct, toTarget });
+                tpp: b.target_profit_pct, openRisk, riskPct, ratio, posPct, distPct, pnlPct, toTarget });
   }
   const sorted = sortRows(rows);
   const disp = [...sorted.filter((r) => !r.isOpt), ...sorted.filter((r) => r.isOpt)];   // 期权统一排到最下方(各组内仍按当前排序)
@@ -366,7 +366,15 @@ export async function renderRiskExposure() {
   const pnlCell = (v) => { if (v == null) return "<td>—</td>"; const l = Math.min(Math.abs(v) / 40, 1), hue = v >= 0 ? 142 : 0; return `<td class="sc-num" style="background:hsl(${hue} 65% 45% / ${(0.06 + l * 0.34).toFixed(2)})">${v >= 0 ? "+" : ""}${v.toFixed(0)}%</td>`; };
   const grpSel = (r) => `<select class="rk-grp" data-sym="${esc(r.sym)}">${bnames.map((k) => `<option${k === r.bundleName ? " selected" : ""}>${esc(k)}</option>`).join("")}</select>`;
   const stopIn = (r) => `<input class="rk-stopin" data-sym="${esc(r.sym)}" type="number" step="0.01" value="${r.stop != null ? r.stop.toFixed(2) : ""}" placeholder="${r.isOpt ? "期权" : (r.atr != null ? "ATR" : "手填")}" style="width:70px">`;
-  const tpIn = (r) => `<input class="rk-tpin" data-sym="${esc(r.sym)}" type="number" step="0.01" value="${targets[r.sym] != null ? targets[r.sym] : ""}" placeholder="止盈价" style="width:70px">`;   // 止盈目标价,空=留白
+  // 止盈价:手填(riskTargets)覆盖优先;否则所属 thesis 填了 Target Profit% → 按成本×(1±%)自动预填(多加空减,灰色可覆盖)
+  const autoTp = (r) => {
+    if (targets[r.sym] != null) return { v: +targets[r.sym], auto: false };
+    if (r.tpp != null && r.tpp !== "" && r.cost != null)
+      return { v: +(r.cost * (r.long ? 1 + r.tpp / 100 : 1 - r.tpp / 100)).toFixed(2), auto: true };
+    return { v: null, auto: false };
+  };
+  const tpIn = (r) => { const t = autoTp(r);
+    return `<input class="rk-tpin" data-sym="${esc(r.sym)}" type="number" step="0.01" value="${t.v != null ? t.v : ""}"${t.auto ? ` data-auto="1" title="来自 thesis「${esc(r.bundleName)}」Target Profit ${r.tpp}%,按成本自动算,可手填覆盖"` : ""} placeholder="止盈价" style="width:70px${t.auto ? ";color:#8b96ad" : ""}">`; };
   const tgtCell = (r) => {   // 距风控目标的股数:卖/补=需减仓,可买/可空=还有空间
     if (r.toTarget == null || !isFinite(r.toTarget)) return "<td>—</td>";
     const n = Math.round(r.toTarget);
@@ -390,7 +398,7 @@ export async function renderRiskExposure() {
   host.innerHTML = `<div class="sc-wrap"><table class="sc-table">
     <tr>${sth("sym", "标的")}${sth("bundleName", "Thesis")}<th>股数</th><th>现价</th><th>成本</th><th>止损</th><th>止盈</th>
         ${sth("riskPct", "在险%")}${sth("ratio", "在险/预算")}${sth("toTarget", "距目标")}${sth("posPct", "仓位%")}${sth("distPct", "距止损%")}${sth("pnlPct", "浮盈%")}</tr>${body}</table></div>
-    <div class="muted small" style="margin-top:8px">在险%=|股数|×|现价−止损|÷净值 · 在险/预算=该仓在险÷所属 thesis 单笔预算(>1 超险)· <b>距目标</b>=到风控目标(在险=预算 且 ≤仓位上限,取更紧者)还需<span class="down">卖/补</span>或<span class="up">可买/可空</span>多少股 · 仓位%对比 thesis 上限 · 距止损%小=逼近止损 · 浮盈%仅参考(现价口径,成本不进风险)。止损默认 ATR 法,可每仓手填覆盖(存本机)。</div>`;
+    <div class="muted small" style="margin-top:8px">在险%=|股数|×|现价−止损|÷净值 · 在险/预算=该仓在险÷所属 thesis 单笔预算(>1 超险)· <b>距目标</b>=到风控目标(在险=预算 且 ≤仓位上限,取更紧者)还需<span class="down">卖/补</span>或<span class="up">可买/可空</span>多少股 · 仓位%对比 thesis 上限 · 距止损%小=逼近止损 · 浮盈%仅参考(现价口径,成本不进风险)。止损默认 ATR 法,可每仓手填覆盖(存本机)。<b>止盈</b>:thesis 填了 Target Profit% 的,按成本×(1±%)自动预填(多加空减,灰色),可每仓手填覆盖;留空=无止盈。</div>`;
 
   const totalPct = totalHeat / equity * 100;
   heatEl.innerHTML = `<div class="wb-statbar">
