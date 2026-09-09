@@ -329,9 +329,8 @@ export async function renderRiskExposure() {
     const sym = p.sym, qty = p.qty || 0; if (!qty) continue;
     const isOpt = p.kind !== "equity", long = qty > 0;
     if (!isOpt && Math.abs(qty) <= 1) continue;   // 去掉 |持股|<=1 的正股(±1 股噪声);期权不受此限(1 张=100 股敞口)
-    // 现价优先级:同步按钮拉到的 K线价 > research.json 本地快照 > portfolio.json(期权无 K线快照,仍用原价)
-    const price = (!isOpt && PRICE_OVERRIDE && PRICE_OVERRIDE[sym] != null) ? PRICE_OVERRIDE[sym]
-                : (!isOpt && snap[sym] && snap[sym].price != null) ? snap[sym].price : p.price;
+    // 现价:默认用 portfolio.json(MCP 刷新价),不自动同步 K线快照;须手动点「同步现价(K线)」才用 PRICE_OVERRIDE
+    const price = (!isOpt && PRICE_OVERRIDE && PRICE_OVERRIDE[sym] != null) ? PRICE_OVERRIDE[sym] : p.price;
     const bundleName = ASSIGN[sym] || defB, b = bundles[bundleName] || bundles[defB];
     const budget = equity * (b.risk_pct || 0.75) / 100, atr = ATR[sym];
     let stop = stops[sym] != null ? +stops[sym]
@@ -409,7 +408,7 @@ export async function renderRiskExposure() {
     <div class="muted small" style="margin-top:6px">组合总在险 = 所有持仓在险之和(若止损全被打的总亏损)。${totalPct > maxHeat ? `<span class="down">⚠️ 超总上限 ${maxHeat}%,考虑减仓/收紧止损</span>` : "在上限内。"}</div>
     <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
       <button id="rk-syncpx" class="mini-btn">🔄 同步现价(K线)</button>
-      <span class="muted small">现价源:${PRICE_OVERRIDE ? `K线同步 @ ${(PRICE_SYNCED_AT || "").slice(5, 16).replace("T", " ")}` : (Object.keys(snap).length ? `research.json 快照 @ ${((researchJ && researchJ.updated_at) || "").slice(5, 16).replace("T", " ")}` : "portfolio.json")}</span>
+      <span class="muted small">现价源:${PRICE_OVERRIDE ? `K线同步 @ ${(PRICE_SYNCED_AT || "").slice(5, 16).replace("T", " ")}` : "portfolio.json(MCP 刷新价;点 🔄 手动同步 K线)"}</span>
     </div>
     <div class="muted small" style="margin-top:6px">分组改动已本地自动保存(localStorage);点顶部「💾 保存到 config」把 thesis + 分组一起发布给 agent(需 PAT)。</div>`;
 
