@@ -1,11 +1,11 @@
 name: 熊市预测(bearbull 面板)
 # 复用公开的 factor-research/{bear_panel.py→export_web.py} 全量重算 research_bearbull.json,
 # 免手动跑 factor-research。数据源全公开免 key(Ken French / FRED fredgraph / Goyal xlsx / Fed EBP)。
-# 月频数据 → 每周一跑一次即可(也吃 FRED 修订)。
+# 月频数据 → 每月 2 号跑一次即可(上月宏观序列已发布)。
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: "0 13 * * 1"        # 每周一 13:00 UTC
+    - cron: "0 13 2 * *"        # 每月 2 号 13:00 UTC
 
 permissions:
   contents: write
