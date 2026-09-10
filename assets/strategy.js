@@ -34,6 +34,8 @@ async function putPolicy(mutate) {
    再 debounce 把整份 policy(theses + assignments + max-heat + equity)提交到私有库。
    thesis 管理 + 风险敞口 两面板共用;状态显示在 #rk-sync。 */
 let rpSyncTimer = null;
+const ARCHIVE_KEY = "completedTheses";
+const THESIS_EVENTS_KEY = "thesisEvents";
 function rpStatus(txt, cls = "muted", title = "") { const el = document.getElementById("rk-sync"); if (el) el.innerHTML = `<span class="${cls}"${title ? ` title="${esc(title)}"` : ""}>${txt}</span>`; }
 async function rpSyncNow() {
   clearTimeout(rpSyncTimer);
@@ -55,7 +57,85 @@ function rpSchedule(now = false) {   // 改动即调度:now=结构性动作/失�
   rpStatus("• 待同步…");
   if (now) rpSyncNow(); else rpSyncTimer = setTimeout(rpSyncNow, 2500);
 }
-async function rpSyncCompleted() { if (getPat()) await putPrivate("completed_theses.json", rLS("completedTheses", []), "chore: completed theses via UI"); }
+async function syncPrivateJSON(path, key, msg) {
+  if (getPat()) await putPrivate(path, rLS(key, []), msg);
+}
+
+async function loadLocalArray(key, path) {
+  let v = rLS(key, null);
+  if (!Array.isArray(v)) {
+    v = (await loadJSON(path)) || [];
+    rLSset(key, v);
+  }
+  return v;
+}
+
+function posSnapshotFor(sym, pf) {
+  const rows = ((pf && pf.positions) || []).filter((p) => p.sym === sym);
+  return rows.map((p) => ({
+    account: p.account || null, kind: p.kind || "equity", sym: p.sym,
+    qty: p.qty ?? null, price: p.price ?? null, avg_cost: p.avg_cost ?? null,
+    mkt_value: p.mkt_value ?? null, pnl: p.pnl ?? null, pnl_pct: p.pnl_pct ?? null,
+  }));
+}
+
+async function recordThesisMove(sym, fromThesis, toThesis, reason = "assignment_change") {
+  const pf = await loadJSON("data/portfolio.json");
+  const at = new Date().toISOString();
+  const snap = posSnapshotFor(sym, pf);
+  const events = await loadLocalArray(THESIS_EVENTS_KEY, "data/thesis_events.json");
+  if (fromThesis) events.unshift({ id: `${Date.now()}-${sym}-exit`, ts: at, type: "exit", reason, thesis: fromThesis, sym, positions: snap });
+  if (toThesis) events.unshift({ id: `${Date.now()}-${sym}-enter`, ts: at, type: "enter", reason, thesis: toThesis, sym, positions: snap });
+  rLSset(THESIS_EVENTS_KEY, events);
+  syncPrivateJSON("thesis_events.json", THESIS_EVENTS_KEY, "chore: thesis assignment events via UI");
+}
+
+async function archiveCurrentThesis(name, policy) {
+  const pf = await loadJSON("data/portfolio.json");
+  const at = new Date().toISOString();
+  const assignments = ASSIGN || { ...((policy && policy.assignments) || {}), ...rLS("riskGroups", {}) };
+  const tickers = Object.keys(assignments).filter((sym) => assignments[sym] === name).sort();
+  const archive = await loadLocalArray(ARCHIVE_KEY, "data/completed_theses.json");
+  archive.unshift({
+    id: `${Date.now()}-${name}`,
+    name,
+    completed_at: at,
+    thesis: JSON.parse(JSON.stringify((policy.bundles && policy.bundles[name]) || {})),
+    account_equity: policy.account_equity ?? null,
+    atr_period: policy.atr_period ?? null,
+    portfolio: policy.portfolio || null,
+    stop_bases: policy.stop_bases || [],
+    tickers: tickers.map((sym) => ({ sym, positions: posSnapshotFor(sym, pf) })),
+    notes: "",
+  });
+  rLSset(ARCHIVE_KEY, archive);
+  syncPrivateJSON("completed_theses.json", ARCHIVE_KEY, "chore: completed theses via UI");
+  const events = await loadLocalArray(THESIS_EVENTS_KEY, "data/thesis_events.json");
+  for (const sym of tickers) {
+    events.unshift({ id: `${Date.now()}-${sym}-archive-exit`, ts: at, type: "exit", reason: "thesis_archived", thesis: name, sym, positions: posSnapshotFor(sym, pf) });
+  }
+  rLSset(THESIS_EVENTS_KEY, events);
+  syncPrivateJSON("thesis_events.json", THESIS_EVENTS_KEY, "chore: thesis assignment events via UI");
+  return tickers;
+}
+
+async function ensureThesisBaselines(assignments, pf) {
+  const currentSyms = new Set(((pf && pf.positions) || []).map((p) => p.sym));
+  const events = await loadLocalArray(THESIS_EVENTS_KEY, "data/thesis_events.json");
+  const seen = new Set(events.filter((e) => e.type === "enter").map((e) => `${e.sym}|${e.thesis}`));
+  const at = new Date().toISOString();
+  let changed = false;
+  for (const [sym, thesis] of Object.entries(assignments || {})) {
+    if (!currentSyms.has(sym) || !thesis || seen.has(`${sym}|${thesis}`)) continue;
+    events.unshift({ id: `${Date.now()}-${sym}-baseline-enter`, ts: at, type: "enter", reason: "baseline_existing_assignment", thesis, sym, positions: posSnapshotFor(sym, pf) });
+    seen.add(`${sym}|${thesis}`);
+    changed = true;
+  }
+  if (changed) {
+    rLSset(THESIS_EVENTS_KEY, events);
+    syncPrivateJSON("thesis_events.json", THESIS_EVENTS_KEY, "chore: thesis assignment events via UI");
+  }
+}
 
 export async function renderRiskControl() {
   const host = $("risk-control"); if (!host) return;
@@ -159,10 +239,12 @@ export async function renderRiskControl() {
       + (mode === "atr" ? ` · ATR 止损 = ${entry} − ${mult}×${g("rk-atr")} = ${stop.toFixed(2)}` : "");
   }
 
-  const DONE = "completedTheses";   // 已完成 thesis 存档(本机;可发布到私有库)
-  const renderDone = () => { const done = rLS(DONE, []);
+  await loadLocalArray(ARCHIVE_KEY, "data/completed_theses.json");
+  await loadLocalArray(THESIS_EVENTS_KEY, "data/thesis_events.json");
+
+  const renderDone = () => { const done = rLS(ARCHIVE_KEY, []);
     $("rk-done").innerHTML = done.length
-      ? `<b>已完成 ${done.length}</b>(存档,不计入活跃):` + done.map((d) => `<span class="sc-dir muted" style="margin:2px 3px;display:inline-block">${esc(d.name)}${d.target_profit_pct != null ? ` · Target ${d.target_profit_pct}%` : ""} <span class="muted">${(d.completed_at || "").slice(0, 10)}</span></span>`).join("")
+      ? `<b>已完成 ${done.length}</b>(存档,不计入活跃):` + done.map((d) => `<span class="sc-dir muted" style="margin:2px 3px;display:inline-block">${esc(d.name)}${d.thesis?.target_profit_pct != null ? ` · Target ${d.thesis.target_profit_pct}%` : ""} <span class="muted">${(d.completed_at || "").slice(0, 10)}</span></span>`).join("")
       : ""; };
 
   const rebuildSel = () => { $("rk-sel-wrap").innerHTML = `<select id="rk-bundle">${bundleOpts()}</select>`; };
@@ -214,15 +296,18 @@ export async function renderRiskControl() {
     delete POLICY.bundles[cur]; cur = Object.keys(POLICY.bundles)[0];
     rebuildSel(); loadBundle(); compute(); persistLocal(); renderRiskExposure(); rpSchedule(true); $("rk-msg").textContent = "🗑 已删除";
   };
-  const doComplete = () => {
+  const doComplete = async () => {
     if (Object.keys(POLICY.bundles).length <= 1) return void ($("rk-msg").textContent = "至少保留 1 个活跃 thesis");
     syncBundle();
-    const name = cur, done = rLS(DONE, []);
-    done.unshift({ name, ...POLICY.bundles[cur], completed_at: new Date().toISOString() });
-    rLSset(DONE, done);
+    const name = cur;
+    const archivedTickers = await archiveCurrentThesis(name, POLICY);
     delete POLICY.bundles[cur]; cur = Object.keys(POLICY.bundles)[0];
+    if (ASSIGN) for (const sym of archivedTickers) delete ASSIGN[sym];
+    const rg = rLS("riskGroups", {});
+    for (const sym of archivedTickers) delete rg[sym];
+    rLSset("riskGroups", rg);
     rebuildSel(); loadBundle(); compute(); persistLocal(); renderDone(); renderRiskExposure();
-    rpSchedule(true); rpSyncCompleted();   // 活跃列表 + 已完成存档 都同步私有库
+    rpSchedule(true);   // 活跃列表同步私有库;归档与事件已写 completed_theses/thesis_events
     $("rk-msg").textContent = `✅ 已完成「${name}」并归档`;
   };
   $("rk-menu-btn").addEventListener("click", (e) => { e.stopPropagation(); menu.hidden = !menu.hidden; if (menu.hidden) resetMenu(); });
@@ -305,6 +390,7 @@ export async function renderRiskExposure() {
   if (MAXHEAT === null) MAXHEAT = +rLS("riskMaxHeat", (P && P.portfolio && P.portfolio.max_total_heat_pct) ?? 6);
   const maxHeat = MAXHEAT;
   if (ASSIGN === null) ASSIGN = { ...((P && P.assignments) || {}), ...rLS("riskGroups", {}) };  // 本机 localStorage 覆盖(本地即时持久化,无需 PAT);「发布到 config」再推给 agent
+  await ensureThesisBaselines(ASSIGN, pf);
   const stops = rLS("riskStops", {});
   const targets = rLS("riskTargets", {});   // 每仓止盈目标价(本机,可空)
   // 账户净值直接从 portfolio.json 读:按账户(全部/各账户)汇总持仓市值
@@ -371,7 +457,7 @@ export async function renderRiskExposure() {
 
   const cell = (txt, lvl) => `<td class="sc-num"${lvl == null ? "" : ` style="${heatBg(lvl)}"`}>${txt}</td>`;
   const pnlCell = (v) => { if (v == null) return "<td>—</td>"; const l = Math.min(Math.abs(v) / 40, 1), hue = v >= 0 ? 142 : 0; return `<td class="sc-num" style="background:hsl(${hue} 65% 45% / ${(0.06 + l * 0.34).toFixed(2)})">${v >= 0 ? "+" : ""}${v.toFixed(0)}%</td>`; };
-  const grpSel = (r) => `<select class="rk-grp" data-sym="${esc(r.sym)}">${bnames.map((k) => `<option${k === r.bundleName ? " selected" : ""}>${esc(k)}</option>`).join("")}</select>`;
+  const grpSel = (r) => `<select class="rk-grp" data-sym="${esc(r.sym)}" data-current="${esc(r.bundleName)}">${bnames.map((k) => `<option${k === r.bundleName ? " selected" : ""}>${esc(k)}</option>`).join("")}</select>`;
   const stopIn = (r) => `<input class="rk-stopin" data-sym="${esc(r.sym)}" type="number" step="0.01" value="${r.stop != null ? r.stop.toFixed(2) : ""}" placeholder="${r.isOpt ? "期权" : (r.atr != null ? "ATR" : "手填")}" style="width:70px">`;
   // 止盈价:手填(riskTargets)覆盖优先;否则所属 thesis 填了 Target Profit% → 按成本×(1±%)自动预填(多加空减,灰色可覆盖)
   const autoTp = (r) => {
@@ -425,9 +511,21 @@ export async function renderRiskExposure() {
       <button id="rk-syncpx" class="mini-btn">🔄 同步现价(K线)</button>
       <span class="muted small">现价源:${PRICE_OVERRIDE ? `K线同步 @ ${(PRICE_SYNCED_AT || "").slice(5, 16).replace("T", " ")}` : "portfolio.json(MCP 刷新价;点 🔄 手动同步 K线)"}</span>
     </div>
-    <div class="muted small" style="margin-top:6px">分组改动已本地自动保存(localStorage);点顶部「💾 保存到 config」把 thesis + 分组一起发布给 agent(需 PAT)。</div>`;
+    <div class="muted small" style="margin-top:6px">分组改动需确认;确认后会记录该标的离开旧 thesis / 进入新 thesis 时的价格和股数,并自动同步到私有库(需 PAT)。</div>`;
 
-  host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", () => { ASSIGN[el.dataset.sym] = el.value; const g = rLS("riskGroups", {}); g[el.dataset.sym] = el.value; rLSset("riskGroups", g); renderRiskExposure(); rpSchedule(true); }));   // 分组改动 → 自动同步私有库
+  host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", async () => {
+    const sym = el.dataset.sym, from = el.dataset.current, to = el.value;
+    if (from === to) return;
+    const ok = window.confirm(`确认把 ${sym} 从「${from}」改到「${to}」?\n\n会记录当前价格和股数到 thesis_events.json。`);
+    if (!ok) { el.value = from; return; }
+    ASSIGN[sym] = to;
+    const g = rLS("riskGroups", {});
+    g[sym] = to;
+    rLSset("riskGroups", g);
+    await recordThesisMove(sym, from, to);
+    renderRiskExposure();
+    rpSchedule(true);
+  }));   // 分组改动 → 确认 + 记录 enter/exit 快照 + 自动同步私有库
   const mh = $("rk-maxheat"); if (mh) mh.addEventListener("change", () => { MAXHEAT = +mh.value || 0; rLSset("riskMaxHeat", MAXHEAT); renderRiskExposure(); rpSchedule(true); });   // 本机即时持久化 + 自动同步私有库
   host.querySelectorAll(".rk-sort").forEach((th) => th.addEventListener("click", () => {   // 点表头排序:同列切方向,换列文本升/数值降
     const k = th.dataset.k;
@@ -543,108 +641,66 @@ async function putPrivate(path, obj, msg) {   // PAT PUT 到私有库(PAT 需含
 
 export async function renderJournal() {   // portfolio.js import 调用(交易复盘挂在 portfolio 页)
   const host = $("journal"); if (!host) return;
-  const pol = (await loadJSON("config/risk_policy.json")) || {};
-  const bopts = Object.keys(pol.bundles || {}).map((b) => `<option>${esc(b)}</option>`).join("");
-  let J = rLS("tradeJournal", null);
-  if (!Array.isArray(J)) J = (await loadJSON("data/trade_journal.json")) || [];   // 新机器/浏览器:回落私有库文件
-  const closed = J.filter((e) => e.status === "closed"), open = J.filter((e) => e.status !== "closed");
-  const foll = closed.filter((e) => e.followed === "是").length;
-  const stat = `共 ${J.length} · 持仓中 ${open.length} · 已平 ${closed.length}${closed.length ? ` · 守计划 ${Math.round(foll / closed.length * 100)}%` : ""}`;
-  const today = new Date().toISOString().slice(0, 10);
-  const dirOpts = (cur) => ["多", "空"].map((d) => `<option${d === cur ? " selected" : ""}>${d}</option>`).join("");
-  const bOpts = (cur) => Object.keys(pol.bundles || {}).map((b) => `<option${b === cur ? " selected" : ""}>${esc(b)}</option>`).join("");
-  const expired = (e) => e.shelf && e.status !== "closed" && e.shelf < today;   // 保质期已过且仍持仓
-  const form = `
-    <div class="risk-form" style="margin-bottom:8px">
-      <label>标的<input id="j-sym" style="width:78px" placeholder="TSLA"></label>
-      <label>方向<select id="j-dir"><option>多</option><option>空</option></select></label>
-      <label>Thesis<select id="j-bundle">${bopts}</select></label>
-      <label>进场<input id="j-entry" type="number" step="0.01" style="width:84px" placeholder="可选"></label>
-      <label>止损<input id="j-stop" type="number" step="0.01" style="width:84px" placeholder="可选"></label>
-      <label>目标<input id="j-target" type="number" step="0.01" style="width:84px" placeholder="可选"></label>
-      <label>股数<input id="j-size" type="number" style="width:72px" placeholder="可选"></label>
-      <label>Shelf life<input id="j-shelf" type="date" style="width:140px" title="thesis 有效期;过期未走出=复盘/离场(可选)"></label>
-    </div>
-    <div class="risk-form" style="margin-bottom:8px">
-      <label style="flex:1;min-width:260px">Edge (why enter)<input id="j-thesis" style="width:100%" placeholder="突破前高 $96 变支撑 + HBM 卡位…"></label>
-      <label style="flex:1;min-width:260px">Invalidation (thesis 被推翻=离场,非"亏X%")<input id="j-invalid" style="width:100%" placeholder="跌回 $96 下方 / 指引下调…"></label>
-    </div>
+  const archives = await loadLocalArray(ARCHIVE_KEY, "data/completed_theses.json");
+  const events = await loadLocalArray(THESIS_EVENTS_KEY, "data/thesis_events.json");
+  const chosen = localStorage.getItem("reviewThesisId") || (archives[0] && archives[0].id);
+  const cur = archives.find((a) => a.id === chosen) || archives[0];
+  if (!cur) {
+    host.innerHTML = `<div class="muted small">暂无已归档 thesis。点账户风险控制里的「完成并归档」后,这里会展示完整复盘记录。</div>`;
+    return;
+  }
+  const opts = archives.map((a) => `<option value="${esc(a.id)}"${a.id === cur.id ? " selected" : ""}>${esc(a.name)} · ${(a.completed_at || "").slice(0, 10)}</option>`).join("");
+  const b = cur.thesis || {};
+  const kv = (k, v) => `<div class="opt-tile"><div class="opt-k">${k}</div><div class="opt-v">${v == null || v === "" ? "—" : esc(String(v))}</div></div>`;
+  const rows = (cur.tickers || []).map((t) => {
+    const evs = events.filter((e) => e.sym === t.sym && e.thesis === cur.name);
+    const enter = evs.find((e) => e.type === "enter");
+    const exit = evs.find((e) => e.type === "exit");
+    const fmtSnap = (snap) => (snap || []).map((p) => `${esc(p.account || "")} ${esc(p.kind || "")} ${p.qty ?? "?"} @ ${p.price ?? "?"}`).join("<br>") || "—";
+    return `<tr><td class="sc-tk"><b>${esc(t.sym)}</b></td>
+      <td>${enter ? `<span class="muted small">${(enter.ts || "").slice(0, 16).replace("T", " ")}</span><br>${fmtSnap(enter.positions)}` : "—"}</td>
+      <td>${exit ? `<span class="muted small">${(exit.ts || "").slice(0, 16).replace("T", " ")}</span><br>${fmtSnap(exit.positions)}` : fmtSnap(t.positions)}</td></tr>`;
+  }).join("");
+  host.innerHTML = `
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
-      <button id="j-add" class="mini-btn">＋记录计划</button>
-      <button id="j-push" class="mini-btn">💾 存到私有库(换机器不丢)</button>
-      <button id="j-export" class="mini-btn">导出 JSON</button>
-      <span id="j-msg" class="muted small">${stat}</span>
+      <label>已归档 Thesis <select id="j-archive">${opts}</select></label>
+      <span id="j-msg" class="muted small">共 ${archives.length} 个归档 · ${(cur.tickers || []).length} 个 ticker</span>
+    </div>
+    <div class="wb-statbar">
+      ${kv("完成时间", (cur.completed_at || "").slice(0, 19).replace("T", " "))}
+      ${kv("单笔风险%", b.risk_pct)}
+      ${kv("ATR倍数", b.atr_mult)}
+      ${kv("单笔仓位上限%", b.max_position_pct)}
+      ${kv("总风险%", b.total_risk_pct)}
+      ${kv("总仓位上限%", b.total_position_pct)}
+      ${kv("Target Profit%", b.target_profit_pct)}
+      ${kv("Shelf life", b.shelf)}
+    </div>
+    <div class="risk-form" style="margin-top:10px">
+      <label style="flex:1;min-width:280px">Edge<input value="${esc(b.edge || "")}" disabled style="width:100%"></label>
+      <label style="flex:1;min-width:280px">Invalidation<input value="${esc(b.invalid || "")}" disabled style="width:100%"></label>
+    </div>
+    <div class="sc-wrap" style="margin-top:12px"><table class="sc-table">
+      <tr><th>标的</th><th>进入该 thesis 时</th><th>离开/归档时</th></tr>${rows || `<tr><td colspan="3" class="muted">没有记录到属于该 thesis 的 ticker。</td></tr>`}
+    </table></div>
+    <label style="display:block;margin-top:12px">Note<textarea id="j-note" style="width:100%;min-height:110px;background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:8px;color:var(--text)">${esc(cur.notes || "")}</textarea></label>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">
+      <button id="j-save-note" class="mini-btn">保存 note</button>
+      <button id="j-export" class="mini-btn">导出归档 JSON</button>
     </div>`;
-  const plan = (e) => `<b>${esc(e.sym)}</b> <span class="${e.dir === "空" ? "down" : "up"}">${e.dir}</span> · ${esc(e.bundle || "")} · 进 ${e.entry ?? "?"} / 止 ${e.stop ?? "?"} / 标 ${e.target ?? "?"} · ${e.size ?? "?"}股${e.shelf ? ` · Shelf life ${e.shelf}` : ""} <span class="muted small">${(e.ts || "").slice(0, 10)}</span><br><span class="muted small">Edge: ${esc(e.thesis || "—")} | Invalidation: ${esc(e.invalid || "—")}</span>`;
-  // 持仓中的计划:所有字段直接可编辑(执行中随时改),「保存修改」落本机;平仓归因也会一并保存当前编辑。
-  const openCard = (e) => `<div class="card" style="margin:6px 0" data-id="${e.id}">
-    <div class="muted small" style="margin-bottom:6px">计划(执行中可随时改)· 建于 ${(e.ts || "").slice(0, 10)}${e.shelf ? ` · Shelf life ${e.shelf}${expired(e) ? ' <span class="down">⏰ Expired</span>' : ""}` : ""}</div>
-    <div class="risk-form">
-      <label>标的<input class="je-sym" value="${esc(e.sym || "")}" style="width:78px"></label>
-      <label>方向<select class="je-dir">${dirOpts(e.dir)}</select></label>
-      <label>Thesis<select class="je-bundle">${bOpts(e.bundle)}</select></label>
-      <label>进场<input class="je-entry" type="number" step="0.01" value="${e.entry ?? ""}" style="width:84px" placeholder="可选"></label>
-      <label>止损<input class="je-stop" type="number" step="0.01" value="${e.stop ?? ""}" style="width:84px" placeholder="可选"></label>
-      <label>目标<input class="je-target" type="number" step="0.01" value="${e.target ?? ""}" style="width:84px" placeholder="可选"></label>
-      <label>股数<input class="je-size" type="number" value="${e.size ?? ""}" style="width:72px" placeholder="可选"></label>
-      <label>Shelf life<input class="je-shelf" type="date" value="${esc(e.shelf || "")}" style="width:140px"></label>
-    </div>
-    <div class="risk-form" style="margin-top:6px">
-      <label style="flex:1;min-width:260px">Edge<input class="je-thesis" value="${esc(e.thesis || "")}" style="width:100%"></label>
-      <label style="flex:1;min-width:260px">Invalidation<input class="je-invalid" value="${esc(e.invalid || "")}" style="width:100%"></label>
-    </div>
-    <div class="risk-form" style="margin-top:6px;align-items:flex-end">
-      <button class="jc-edit mini-btn">💾 保存修改</button>
-      <label>平仓价<input class="jc-exit" type="number" step="0.01" style="width:84px" placeholder="可选"></label>
-      <label>守计划?<select class="jc-foll"><option>是</option><option>否</option></select></label>
-      <label style="flex:1;min-width:220px">归因(用当时信息判决策)<input class="jc-attrib" style="width:100%" placeholder="止损位对/进早了/该减仓…"></label>
-      <button class="jc-close mini-btn">平仓归因</button><button class="jc-del mini-btn">删</button>
-    </div></div>`;
-  const closedCard = (e) => `<div class="card" style="margin:6px 0;opacity:.85" data-id="${e.id}">${plan(e)}
-    <div class="muted small" style="margin-top:4px">平仓 ${e.exit ?? "?"} · 守计划 <b class="${e.followed === "是" ? "up" : "down"}">${e.followed || "?"}</b> · 归因: ${esc(e.attrib || "—")} <button class="jc-del mini-btn" style="float:right">删</button></div></div>`;
-  host.innerHTML = form
-    + (open.length ? `<div class="muted small">持仓中</div>${open.map(openCard).join("")}` : "")
-    + (closed.length ? `<div class="muted small" style="margin-top:8px">已平仓</div>${closed.map(closedCard).join("")}` : "");
-
-  const save = (arr) => { rLSset("tradeJournal", arr); renderJournal(); };
-  const readPlan = (card) => {   // 从可编辑卡片读回全部计划字段(进/止/标/股/保质期均可选)
-    const q = (c) => card.querySelector(c);
-    return { sym: (q(".je-sym").value || "").trim().toUpperCase(), dir: q(".je-dir").value, bundle: q(".je-bundle").value,
-      entry: +q(".je-entry").value || null, stop: +q(".je-stop").value || null, target: +q(".je-target").value || null,
-      size: +q(".je-size").value || null, shelf: q(".je-shelf").value || null,
-      thesis: q(".je-thesis").value.trim(), invalid: q(".je-invalid").value.trim() };
-  };
-  $("j-add").addEventListener("click", () => {
-    const sym = ($("j-sym").value || "").trim().toUpperCase(); if (!sym) return;
-    const e = { id: Date.now(), ts: new Date().toISOString(), status: "open", sym, dir: $("j-dir").value,
-      bundle: $("j-bundle").value, entry: +$("j-entry").value || null, stop: +$("j-stop").value || null,
-      target: +$("j-target").value || null, size: +$("j-size").value || null, shelf: $("j-shelf").value || null,
-      thesis: $("j-thesis").value.trim(), invalid: $("j-invalid").value.trim() };
-    save([e, ...J]);
+  $("j-archive").addEventListener("change", (ev) => { localStorage.setItem("reviewThesisId", ev.target.value); renderJournal(); });
+  $("j-save-note").addEventListener("click", async () => {
+    const note = $("j-note").value;
+    const next = archives.map((a) => a.id === cur.id ? { ...a, notes: note, notes_updated_at: new Date().toISOString() } : a);
+    rLSset(ARCHIVE_KEY, next);
+    const m = $("j-msg"); m.textContent = "保存 note 中…";
+    const r = getPat() ? await putPrivate("completed_theses.json", next, "chore: update thesis review note") : { ok: true };
+    m.textContent = r.ok ? "✓ note 已保存" : "✗ " + r.msg;
   });
   $("j-export").addEventListener("click", () => {
-    const blob = new Blob([JSON.stringify(J, null, 2)], { type: "application/json" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "trade_journal.json"; a.click();
+    const blob = new Blob([JSON.stringify(archives, null, 2)], { type: "application/json" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "completed_theses.json"; a.click();
   });
-  $("j-push").addEventListener("click", async () => {
-    const m = $("j-msg"); m.textContent = "存到私有库中…";
-    const r = await putPrivate("trade_journal.json", rLS("tradeJournal", []), "chore: trade journal via UI");
-    m.textContent = r.ok ? "✓ 已存私有库(换机器 clone 即在)" : "✗ " + r.msg;
-  });
-  host.querySelectorAll(".jc-edit").forEach((btn) => btn.addEventListener("click", (ev) => {
-    const card = ev.target.closest("[data-id]"), id = +card.dataset.id, p = readPlan(card);
-    save(J.map((e) => e.id !== id ? e : { ...e, ...p, sym: p.sym || e.sym }));
-  }));
-  host.querySelectorAll(".jc-close").forEach((btn) => btn.addEventListener("click", (ev) => {
-    const card = ev.target.closest("[data-id]"), id = +card.dataset.id, p = readPlan(card);   // 平仓时一并保存当前编辑
-    const arr = J.map((e) => e.id !== id ? e : { ...e, ...p, sym: p.sym || e.sym, status: "closed", ts_close: new Date().toISOString(),
-      exit: +card.querySelector(".jc-exit").value || null, followed: card.querySelector(".jc-foll").value,
-      attrib: card.querySelector(".jc-attrib").value.trim() });
-    save(arr);
-  }));
-  host.querySelectorAll(".jc-del").forEach((btn) => btn.addEventListener("click", (ev) => {
-    const id = +ev.target.closest("[data-id]").dataset.id; save(J.filter((e) => e.id !== id));
-  }));
 }
 
 async function main() {
