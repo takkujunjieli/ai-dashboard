@@ -1,0 +1,72 @@
+name: 熊市预测(bearbull 面板)
+# 复用公开的 factor-research/{bear_panel.py→export_web.py} 全量重算 research_bearbull.json,
+# 免手动跑 factor-research。数据源全公开免 key(Ken French / FRED fredgraph / Goyal xlsx / Fed EBP)。
+# 月频数据 → 每周一跑一次即可(也吃 FRED 修订)。
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 13 * * 1"        # 每周一 13:00 UTC
+
+permissions:
+  contents: write
+
+jobs:
+  bearbull:
+    runs-on: ubuntu-latest
+    steps:
+      # 本仓 checkout 到 ai-dashboard/,factor-research checkout 到兄弟目录 factor-research/;
+      # export_web 的 OUT = ROOT.parent/ai-dashboard/data/ → 正好落到本仓 data/。
+      - uses: actions/checkout@v4
+        with: { path: ai-dashboard }
+      - uses: actions/checkout@v4
+        with: { repository: takkujunjieli/factor-research, path: factor-research }   # 公开仓,默认 token 可读
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r factor-research/requirements.txt openpyxl
+
+      - name: 重抓面板(French/FRED/Goyal/EBP → bear_panel.parquet)
+        working-directory: factor-research
+        run: python bear_panel.py
+
+      - name: 序列化 → ai-dashboard/data/research_bearbull.json
+        working-directory: factor-research
+        run: python export_web.py
+
+      - name: 提交数据到 main
+        working-directory: ai-dashboard
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/research_bearbull.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: bearbull 面板 $(date -u +%F)"
+            git pull --rebase -X theirs origin main
+            git push || { git pull --rebase -X theirs origin main && git push; }
+          else
+            echo "无数据变化"
+          fi
+
+      - name: 镜像数据到 data 分支(前端主数据源)
+        working-directory: ai-dashboard
+        run: |
+          python scripts/push_data.py data "chore: bearbull 面板 $(date -u +%F)"
+
+  deploy:
+    needs: bearbull
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - run: bash scripts/cache_bust.sh
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: . }
+      - id: deployment
+        uses: actions/deploy-pages@v4
