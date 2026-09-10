@@ -6,7 +6,7 @@
 - 只用 equity 成交(期权无日频收盘,先排除)。
 - 每日 P&L(sym) = qty_end·close_d − qty_end_prev·close_prev − Δqty_today·trade_price(含未实现,做空 qty 为负,符号自洽)。
 - 日收益 = 当日总 P&L / 前一日毛敞口 Σ|qty·close|(return on gross,L/S 组合标准口径)。
-- beta/alpha:日收益对 SPY 日简单收益 OLS。alpha 年化 ×252,vol 年化 ×√252,Sharpe(rf=0)。
+- beta/alpha:日收益对 SPY 日简单收益 OLS。alpha 年化 ×252,vol 年化 ×√252,Sharpe 减 rf(_cfg,默认4%)。
 纯 stdlib。"""
 import json
 import glob
@@ -17,6 +17,8 @@ from collections import defaultdict
 from statistics import median
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+from _cfg import RISK_FREE_ANNUAL   # 统一可配 rf(默认 4%)
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -197,7 +199,7 @@ def _regress(rp, rm):
         "r2": round(r2, 3), "corr": round(math.copysign(math.sqrt(r2), beta), 3),
         "ret_annual_pct": round(mp * 252 * 100, 2),
         "vol_annual_pct": round(sd * math.sqrt(252) * 100, 2),
-        "sharpe": round(mp / sd * math.sqrt(252), 2) if sd else None,
+        "sharpe": round((mp - RISK_FREE_ANNUAL / 252) / sd * math.sqrt(252), 2) if sd else None,   # 减 rf(日)
         "avg_net_gross": None,   # 填在外面
     }
 
@@ -359,8 +361,9 @@ def summarize(rows, label):
 out = {
     "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     "benchmark": BENCH,
-    "note": "M2M(含未实现),仅 equity;日收益=腿P&L/前日腿毛敞口;β/α 对 SPY,α 年化。"
+    "note": f"M2M(含未实现),仅 equity;日收益=腿P&L/前日腿毛敞口(分母=毛敞口,非净值);β/α 对 SPY,α 年化;Sharpe 减 rf={RISK_FREE_ANNUAL:.0%}。"
             "曲线=累计$P&L[总,多头,空头]。ci=bootstrap 95%(α_sig=CI不跨0=显著)。long/short=多空腿归因。",
+    "rf_annual": RISK_FREE_ANNUAL,
     "window_starts": WINDOWS,
     "missing_syms": missing,
     "accounts": {acct: summarize(rows, labels.get(acct, acct)) for acct, rows in accounts_out.items()},

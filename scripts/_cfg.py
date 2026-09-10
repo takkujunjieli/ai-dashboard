@@ -9,6 +9,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
+# ---- 风险指标统一口径(单一可配来源;analyze_pnl / analyze_robustness 都读这里)----
+RISK_FREE_ANNUAL = 0.04   # 无风险年化(Sharpe/Sortino 的 rf;也当 analyze_pnl 的 MAR 门槛)
+TRADING_DAYS = 252        # 年化交易日
+
 
 def load_tickers() -> tuple[list[str], list[str]]:
     """返回 (watchlist, deep)。deep 会被裁剪到 watchlist 内并去重保序。"""
