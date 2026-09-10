@@ -19,6 +19,7 @@ import math
 from collections import defaultdict
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+import urllib.request
 
 from _cfg import RISK_FREE_ANNUAL, TRADING_DAYS   # 统一可配 rf(默认 4%)+ 年化交易日
 
@@ -31,6 +32,249 @@ ACCOUNT_CAPITAL = {          # 账户资本基数≈当前市值(equity_value),�
     "rh-7159": 86746,        # hui
     "takku-rh-2566": 35150,  # Takku·个人(Margin)
 }
+HUI_ACCOUNT = "rh-7159"
+HUI_BACKFILL_START = "2026-01"
+PRICE_CACHE = ROOT / "data/.px_cache.json"
+UA = {"User-Agent": "Mozilla/5.0 (research-dashboard monthly netliq)"}
+
+
+def _month_end_dates(start_ym, through_date):
+    """Completed calendar month ends from start_ym before/at through_date."""
+    y, m = map(int, start_ym.split("-"))
+    cur = date(y, m, 1)
+    last = date.fromisoformat(through_date)
+    out = []
+    while cur <= last:
+        ny, nm = (cur.year + 1, 1) if cur.month == 12 else (cur.year, cur.month + 1)
+        end = date(ny, nm, 1) - timedelta(days=1)
+        if end <= last:
+            out.append((cur.strftime("%Y-%m"), end.isoformat()))
+        cur = date(ny, nm, 1)
+    return out
+
+
+def _month_end_for_ym(ym):
+    y, m = map(int, ym.split("-"))
+    ny, nm = (y + 1, 1) if m == 12 else (y, m + 1)
+    return date(ny, nm, 1) - timedelta(days=1)
+
+
+def _prune_incomplete_monthly_snapshots(monthly, through_date):
+    """Keep snapshots aligned to completed month-end observations for every account."""
+    through = date.fromisoformat(through_date)
+    for acct in (monthly.get("accounts") or {}).values():
+        snaps = acct.get("snapshots") or {}
+        for ym in list(snaps):
+            try:
+                complete = _month_end_for_ym(ym) <= through
+            except (TypeError, ValueError):
+                complete = False
+            if not complete:
+                snaps.pop(ym, None)
+
+
+def _load_price_cache():
+    if not PRICE_CACHE.exists():
+        return {}
+    try:
+        cj = json.loads(PRICE_CACHE.read_text(encoding="utf-8"))
+        return cj.get("prices", {}) or {}
+    except (json.JSONDecodeError, OSError):
+        return {}
+
+
+def _save_price_cache(prices):
+    try:
+        PRICE_CACHE.write_text(json.dumps({
+            "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "prices": prices,
+        }), encoding="utf-8")
+    except OSError:
+        pass
+
+
+def yahoo_daily(sym):
+    """Yahoo chart daily close. Used only as script fallback/cache for month-end marks."""
+    ysym = sym.replace(".", "-")
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ysym}?range=5y&interval=1d"
+    req = urllib.request.Request(url, headers=UA)
+    with urllib.request.urlopen(req, timeout=30) as r:
+        d = json.loads(r.read())
+    res = d["chart"]["result"][0]
+    out = {}
+    for ts, close in zip(res["timestamp"], res["indicators"]["quote"][0]["close"]):
+        if close is not None:
+            out[datetime.fromtimestamp(ts, timezone.utc).strftime("%Y-%m-%d")] = float(close)
+    return out
+
+
+def _close_on_or_before(prices, sym, dt):
+    px = prices.get(sym) or {}
+    if not px:
+        return None
+    if dt in px:
+        return px[dt]
+    prior = [d for d in px if d <= dt]
+    return px[max(prior)] if prior else None
+
+
+def _apply_trade_to_state(state, t):
+    """Average-cost state for equity positions plus cumulative realized P&L."""
+    sym = t.get("sym")
+    qty, price = t.get("qty"), t.get("price")
+    if not sym or qty is None or price is None:
+        return 0.0
+    side = (t.get("side") or "").lower()
+    dq = (1.0 if "buy" in side else -1.0) * float(qty)
+    price = float(price)
+    s = state[sym]
+    pos, avg = s["pos"], s["avg"]
+    realized = 0.0
+    if pos == 0 or (pos > 0) == (dq > 0):
+        newpos = pos + dq
+        s["avg"] = (avg * abs(pos) + price * abs(dq)) / abs(newpos) if newpos else 0.0
+        s["pos"] = newpos
+        return 0.0
+    closed = min(abs(dq), abs(pos))
+    realized = closed * (price - avg) * (1 if pos > 0 else -1)
+    newpos = pos + dq
+    if abs(dq) > abs(pos):
+        s["pos"], s["avg"] = newpos, price
+    elif newpos == 0:
+        s["pos"], s["avg"] = 0.0, 0.0
+    else:
+        s["pos"] = newpos
+    return realized
+
+
+def _load_monthly_returns():
+    p = ROOT / "data/monthly_returns.json"
+    if not p.exists():
+        return {"accounts": {}, "updated": None}
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {"accounts": {}, "updated": None}
+
+
+def backfill_hui_monthly_snapshots(raw_files=RAW_FILES):
+    """Backfill hui month-end unreal/netliq from equity trading history and month-end closes.
+
+    Net liq is anchored to the latest account equity in _rh_raw.json, then walked back by
+    reconstructed trading P&L. This avoids pretending old RH net-liq snapshots exist, while
+    making month-end estimates far closer than using current holdings against old prices.
+    """
+    raw = []
+    latest_equity = None
+    for rf in raw_files:
+        p = ROOT / rf
+        if not p.exists():
+            continue
+        d = json.loads(p.read_text(encoding="utf-8"))
+        for a in d.get("accounts", []):
+            if a.get("id") == HUI_ACCOUNT and a.get("equity") is not None:
+                latest_equity = float(a["equity"])
+        raw += [t for t in d.get("transactions", [])
+                if t.get("account") == HUI_ACCOUNT and t.get("kind", "equity") == "equity"]
+    if not raw or latest_equity is None:
+        return None
+    txs = sorted(raw, key=lambda t: t["ts"])
+    as_of = max(t["ts"][:10] for t in txs)
+    marks = _month_end_dates(HUI_BACKFILL_START, as_of)
+    monthly = _load_monthly_returns()
+    _prune_incomplete_monthly_snapshots(monthly, as_of)
+    realized_by_month = monthly.get("accounts", {}).get(HUI_ACCOUNT, {}).get("realized", {})
+
+    def realized_cum_through(ym):
+        return sum(float(v) for m, v in realized_by_month.items() if m <= ym)
+
+    syms = sorted({t.get("sym") for t in txs if t.get("sym") and " " not in t.get("sym")})
+    prices = _load_price_cache()
+    fetched = []
+    for sym in syms:
+        if sym in prices:
+            continue
+        try:
+            prices[sym] = yahoo_daily(sym)
+            fetched.append(sym)
+        except Exception:
+            prices[sym] = {}
+    if fetched:
+        _save_price_cache(prices)
+
+    state = defaultdict(lambda: {"pos": 0.0, "avg": 0.0})
+    cumulative_realized = 0.0
+    mark_i = 0
+    out = {}
+
+    def snapshot(ym, dt):
+        unreal = 0.0
+        mkt_value = 0.0
+        priced, missing = 0, []
+        for sym, s in state.items():
+            q = s["pos"]
+            if abs(q) < 1e-9:
+                continue
+            close = _close_on_or_before(prices, sym, dt)
+            if close is None:
+                missing.append(sym)
+                continue
+            priced += 1
+            mkt_value += q * close
+            unreal += q * (close - s["avg"])
+        out[ym] = {
+            "ts": f"{dt}T20:00:00Z",
+            "netliq": None,
+            "unreal": round(unreal, 2),
+            "mkt_value": round(mkt_value, 2),
+            "realized_cum": round(realized_cum_through(ym) if realized_by_month else cumulative_realized, 2),
+            "priced": priced,
+        }
+        if missing:
+            out[ym]["missing_prices"] = sorted(missing)
+
+    for t in txs:
+        d = t["ts"][:10]
+        while mark_i < len(marks) and marks[mark_i][1] < d:
+            snapshot(*marks[mark_i])
+            mark_i += 1
+        cumulative_realized += _apply_trade_to_state(state, t)
+    while mark_i < len(marks):
+        snapshot(*marks[mark_i])
+        mark_i += 1
+
+    if not out:
+        return None
+    current_unreal = 0.0
+    for sym, s in state.items():
+        q = s["pos"]
+        if abs(q) < 1e-9:
+            continue
+        close = _close_on_or_before(prices, sym, as_of)
+        if close is not None:
+            current_unreal += q * (close - s["avg"])
+    as_of_ym = as_of[:7]
+    current_realized = realized_cum_through(as_of_ym) if realized_by_month else cumulative_realized
+    current_total_pnl = current_realized + current_unreal
+    for ym, s in out.items():
+        total_pnl = s["realized_cum"] + s["unreal"]
+        s["netliq"] = round(latest_equity - (current_total_pnl - total_pnl), 2)
+
+    acct = monthly.setdefault("accounts", {}).setdefault(HUI_ACCOUNT, {})
+    acct.setdefault("realized", {})
+    snaps = acct.setdefault("snapshots", {})
+    completed_yms = {ym for ym, _ in marks}
+    for ym in list(snaps):
+        if ym >= as_of[:7] or ym not in completed_yms:
+            snaps.pop(ym, None)
+    for ym, s in out.items():
+        prev = snaps.get(ym, {})
+        if prev and prev.get("source") != "trading_history_month_end_prices":
+            continue
+        snaps[ym] = {**prev, **s, "source": "trading_history_month_end_prices"}
+    monthly["updated"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    (ROOT / "data/monthly_returns.json").write_text(json.dumps(monthly, ensure_ascii=False, indent=1), encoding="utf-8")
+    return {"months": len(out), "latest_ym": max(out), "fetched_prices": fetched}
 
 
 def realized_events(transactions):
@@ -154,7 +398,7 @@ def emit_json():
         p = ROOT / rf
         if not p.exists():
             continue
-        d = json.loads(p.read_text())
+        d = json.loads(p.read_text(encoding="utf-8"))
         for a in d.get("accounts", []):
             labels[a["id"]] = a.get("label", a["id"])
         all_ev += realized_events(d.get("transactions", []))
@@ -190,12 +434,15 @@ def emit_json():
             accounts["_all"] = {"label": "全部账户", "windows": wall}
     out = {"updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
            "as_of": as_of, "risk_free_annual": RISK_FREE_ANNUAL, "accounts": accounts}
-    (ROOT / "data/pnl.json").write_text(json.dumps(out, ensure_ascii=False, indent=1))
+    (ROOT / "data/pnl.json").write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"data/pnl.json: {len(accounts)} 账户 · as_of {as_of} · 窗口 {list(windows)}")
+    bf = backfill_hui_monthly_snapshots()
+    if bf:
+        print(f"data/monthly_returns.json: hui backfill {bf['months']} 月 · 最新 {bf['latest_ym']} · 新拉价格 {len(bf['fetched_prices'])} 只")
 
 
 def report(path: Path, year: str):
-    d = json.loads(path.read_text())
+    d = json.loads(path.read_text(encoding="utf-8"))
     events = realized_events(d.get("transactions", []))
     per_year = defaultdict(lambda: {"equity": 0.0, "option": 0.0})
     for dt, a, kind, sym, pnl in events:
