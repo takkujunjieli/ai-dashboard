@@ -411,10 +411,8 @@ export async function renderRiskExposure() {
   }
   if (!(equity > 0)) { equity = positions.reduce((s, p) => s + Math.abs(p.mkt_value || 0), 0) || 1; eqSrc = "持仓市值合计"; }
 
-  // 每 thesis 总仓位($):总仓位上限判超险 + 「距目标」都要用,须在主循环前算全(否则循环内只累加到当前仓)
-  const posByBundle = {};
-  for (const p of positions) { if (!(p.qty || 0)) continue; const bn = ASSIGN[p.sym] || defB; posByBundle[bn] = (posByBundle[bn] || 0) + Math.abs(p.mkt_value || 0); }
-  const rows = []; let totalHeat = 0; const heatByBundle = {};
+  // 先算每仓风险,再汇总 thesis;「距目标」须基于完整 thesis 总量统一分摊,不能让每只票各自承担全部超额。
+  const rows = []; let totalHeat = 0; const heatByBundle = {}, posByBundle = {};
   for (const p of positions) {
     const sym = p.sym, qty = p.qty || 0; if (!qty) continue;
     const isOpt = p.kind !== "equity", long = qty > 0;
@@ -434,23 +432,36 @@ export async function renderRiskExposure() {
     const ratio = openRisk != null ? openRisk / budget : null;
     const distPct = (perShare != null && price) ? perShare / price * 100 : null;
     if (openRisk != null) { totalHeat += openRisk; heatByBundle[bundleName] = (heatByBundle[bundleName] || 0) + openRisk; }
+    posByBundle[bundleName] = (posByBundle[bundleName] || 0) + Math.abs(p.mkt_value || 0);
     // 浮盈%:股票用现价算,做空取反(价跌为盈);期权回退 portfolio.json 的 pnl_pct
     const pnlPct = (!isOpt && p.avg_cost && price != null)
       ? (long ? (price / p.avg_cost - 1) : (1 - price / p.avg_cost)) * 100
       : (p.pnl_pct != null ? p.pnl_pct * 100 : null);
-    // 到风控目标的股数调整:目标 |qty| = min(在险=预算 → budget/每股风险, 仓位=上限 → 净值×上限%/现价);
-    // toTarget = 目标|qty| − 当前|qty|:>0 还可加(买/空),<0 需减(卖/补)。期权按张(100股)不适用,置空。
-    let toTarget = null;
-    if (!isOpt && price > 0) {
-      const capQ = equity * (b.max_position_pct || 20) / 100 / price;                             // 单笔仓位上限 → 股
-      const capTotQ = b.total_position_pct != null                                                 // 总仓位上限:扣掉同 thesis 其余仓后,给本仓留的空间
-        ? (equity * b.total_position_pct / 100 - (posByBundle[bundleName] - Math.abs(p.mkt_value || 0))) / price
-        : Infinity;                                                                                // 未设总上限 → 不约束
-      const riskQ = (perShare != null && perShare > 0) ? budget / perShare : Infinity;             // 止损锁利(perShare<=0)则风险不约束,只看上限
-      toTarget = Math.min(riskQ, capQ, capTotQ) - Math.abs(qty);   // 取最紧:风险预算 / 单笔上限 / 总仓位上限
-    }
     rows.push({ sym, isOpt, long, qty, price, cost: p.avg_cost, stop, atr, bundleName, cap: b.max_position_pct || 20,
-                tpp: b.target_profit_pct, openRisk, riskPct, ratio, posPct, distPct, pnlPct, toTarget });
+                totalRiskPct: b.total_risk_pct, totalPositionPct: b.total_position_pct,
+                riskBudget: budget, perShare, mktValue: Math.abs(p.mkt_value || 0),
+                tpp: b.target_profit_pct, openRisk, riskPct, ratio, posPct, distPct, pnlPct, toTarget: null });
+  }
+
+  // thesis 超总风险/总仓位时,所有股票按当前仓位同比例缩减;单票预算/上限仍可要求进一步减仓。
+  for (const r of rows) {
+    if (r.isOpt || !(r.price > 0)) continue;   // 期权按张且乘数不同,暂不输出股数建议
+    const currentQ = Math.abs(r.qty);
+    const capQ = equity * r.cap / 100 / r.price;
+    const riskQ = (r.perShare != null && r.perShare > 0) ? r.riskBudget / r.perShare : Infinity;
+    const bundlePos = posByBundle[r.bundleName] || 0, bundleRisk = heatByBundle[r.bundleName] || 0;
+    const posScale = r.totalPositionPct != null && bundlePos > equity * r.totalPositionPct / 100
+      ? equity * r.totalPositionPct / 100 / bundlePos : 1;
+    const riskScale = r.totalRiskPct != null && bundleRisk > equity * r.totalRiskPct / 100
+      ? equity * r.totalRiskPct / 100 / bundleRisk : 1;
+    const bundleScale = Math.min(posScale, riskScale);
+    // 未超 thesis 总上限时,沿用“若只调整本票还能加多少”的剩余额度;超限时改为统一比例分摊。
+    const bundleQ = bundleScale < 1
+      ? currentQ * bundleScale
+      : (r.totalPositionPct != null
+        ? (equity * r.totalPositionPct / 100 - (bundlePos - r.mktValue)) / r.price
+        : Infinity);
+    r.toTarget = Math.min(riskQ, capQ, bundleQ) - currentQ;
   }
   const sorted = sortRows(rows);
   const disp = [...sorted.filter((r) => !r.isOpt), ...sorted.filter((r) => r.isOpt)];   // 期权统一排到最下方(各组内仍按当前排序)
@@ -468,12 +479,14 @@ export async function renderRiskExposure() {
   };
   const tpIn = (r) => { const t = autoTp(r);
     return `<input class="rk-tpin" data-sym="${esc(r.sym)}" type="number" step="0.01" value="${t.v != null ? t.v : ""}"${t.auto ? ` data-auto="1" title="来自 thesis「${esc(r.bundleName)}」Target Profit ${r.tpp}%,按成本自动算,可手填覆盖"` : ""} placeholder="止盈价" style="width:70px${t.auto ? ";color:#8b96ad" : ""}">`; };
-  const tgtCell = (r) => {   // 距风控目标的股数:卖/补=需减仓,可买/可空=还有空间
+  const tgtCell = (r) => {   // 符号=交易方向(+买/-卖或做空);颜色=敞口变化(绿增仓/红减仓)
     if (r.toTarget == null || !isFinite(r.toTarget)) return "<td>—</td>";
-    const n = Math.round(r.toTarget);
-    if (n === 0) return `<td class="sc-num" title="已在目标仓位">✓</td>`;
-    const reduce = n < 0, act = reduce ? (r.long ? "卖" : "补") : (r.long ? "可买" : "可空");
-    return `<td class="sc-num ${reduce ? "down" : "up"}" title="到风控目标(在险=thesis预算且≤仓位上限)需${act} ${Math.abs(n)} 股">${act} ${Math.abs(n)}</td>`;
+    const tradeQty = r.long ? r.toTarget : -r.toTarget;
+    if (Math.abs(tradeQty) < 0.05) return `<td class="sc-num" title="已在目标仓位">0.0</td>`;
+    const increasing = r.toTarget > 0;
+    const signed = `${tradeQty > 0 ? "+" : "−"}${Math.abs(tradeQty).toFixed(1)}`;
+    const action = tradeQty > 0 ? (r.long ? "买入" : "买入平空") : (r.long ? "卖出" : "加空");
+    return `<td class="sc-num ${increasing ? "up" : "down"}" title="${action} ${Math.abs(tradeQty).toFixed(1)} 股;绿=增仓,红=减仓">${signed}</td>`;
   };
   const arrow = (k) => SORT.key === k ? (SORT.dir < 0 ? " ↓" : " ↑") : "";
   const sth = (k, label) => `<th class="rk-sort" data-k="${k}" style="cursor:pointer;user-select:none;white-space:nowrap">${label}${arrow(k)}</th>`;
@@ -491,7 +504,7 @@ export async function renderRiskExposure() {
   host.innerHTML = `<div class="sc-wrap"><table class="sc-table">
     <tr>${sth("sym", "标的")}${sth("bundleName", "Thesis")}<th>股数</th><th>现价</th><th>成本</th><th>止损</th><th>止盈</th>
         ${sth("riskPct", "在险%")}${sth("ratio", "在险/预算")}${sth("toTarget", "距目标")}${sth("posPct", "仓位%")}${sth("distPct", "距止损%")}${sth("pnlPct", "浮盈%")}</tr>${body}</table></div>
-    <div class="muted small" style="margin-top:8px">在险%=|股数|×|现价−止损|÷净值 · 在险/预算=该仓在险÷所属 thesis 单笔预算(>1 超险)· <b>距目标</b>=到风控目标(取最紧:在险=单笔预算 / ≤单笔仓位上限 / ≤总仓位上限)还需<span class="down">卖/补</span>或<span class="up">可买/可空</span>多少股 · 仓位%对比 thesis 上限 · 距止损%小=逼近止损 · 浮盈%仅参考(现价口径,成本不进风险)。止损默认 ATR 法,可每仓手填覆盖(存本机)。<b>止盈</b>:thesis 填了 Target Profit% 的,按成本×(1±%)自动预填(多加空减,灰色),可每仓手填覆盖;留空=无止盈。</div>`;
+    <div class="muted small" style="margin-top:8px">在险%=|股数|×|现价−止损|÷净值 · 在险/预算=该仓在险÷所属 thesis 单笔预算(>1 超险)· <b>距目标</b>:thesis 超总风险/总仓位时按各仓当前比例共同缩减,再叠加单票风险/仓位上限;未超总上限时显示单独调整本票的空间。符号是交易方向:<b>+</b>=买入、<b>−</b>=卖出/做空;颜色是仓位变化:<span class="up">绿=加大仓位</span>、<span class="down">红=减少仓位</span> · 仓位%对比 thesis 上限 · 距止损%小=逼近止损 · 浮盈%仅参考(现价口径,成本不进风险)。止损默认 ATR 法,可每仓手填覆盖(存本机)。<b>止盈</b>:thesis 填了 Target Profit% 的,按成本×(1±%)自动预填(多加空减,灰色),可每仓手填覆盖;留空=无止盈。</div>`;
 
   const totalPct = totalHeat / equity * 100;
   heatEl.innerHTML = `<div class="wb-statbar">
@@ -618,7 +631,7 @@ function drawRobust(win) {
     `<div class="sc-wrap"><table class="bt-table"><tr><th>账户</th><th>β</th><th>α年化(95%CI)</th><th>Sharpe</th><th>年化收益</th><th>净/毛</th><th>n</th></tr>${trs}</table></div>`
     + `<div class="muted small" style="margin:10px 0 4px"><b>多空腿归因</b> · 年化收益[95%CI]·β·n(空头 β 应为负=真做空;CI 极宽=贡献是噪声)</div>`
     + `<div class="sc-wrap"><table class="bt-table"><tr><th>账户</th><th>多头腿</th><th>空头腿</th></tr>${legRows}</table></div>`
-    + `<div class="muted small" style="margin-top:8px">窗口 <b>${wlabel}</b> · 曲线=累计$P&L(M2M 含未实现,仅正股,排除期权/分红,起点归零)。`
+    + `<div class="muted small" style="margin-top:8px">窗口 <b>${wlabel}</b> · 收益/β/α/Sharpe 的收益序列=每日P&L÷前日账户 net liq(不含 margin/buying power) · 曲线=累计$P&L(M2M 含未实现,仅正股,排除期权/分红,起点归零)。`
     + `<b>α 的 95%CI 跨 0(标 ≈0)= 选股超额与运气不可区分,别当 skill</b>;净/毛≈1=净多头。⚠ 小样本 CI 很宽 = 数据不足,勿过度解读。</div>`;
 }
 

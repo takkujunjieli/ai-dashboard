@@ -1153,10 +1153,13 @@ function renderPortfolio() {
     : (accounts.length > 1 ? `全部 ${accounts.length} 户` : ((p.brokers || []).join("/") || "—"));
   const total = pos.reduce((s, x) => s + x.mkt_value, 0);
   const pnl = pos.reduce((s, x) => s + (x.pnl || 0), 0);
-  const cost = total - pnl;
+  // 收益率统一以账户 net liq 为资本分母;不要用持仓成本或含 margin 的 buying power。
+  const netLiq = pfAccount
+    ? accounts.find((a) => a.id === pfAccount)?.equity
+    : accounts.reduce((s, a) => s + (a.equity || 0), 0);
   const tiles = [
     tile("总市值", fmtMoney(total)),
-    tile("未实现盈亏", `${pnl >= 0 ? "+" : ""}${fmtMoney(pnl)}`, cost ? `${(pnl / cost * 100).toFixed(1)}%` : "", pnl >= 0 ? "up" : "down"),
+    tile("未实现盈亏", `${pnl >= 0 ? "+" : ""}${fmtMoney(pnl)}`, netLiq > 0 ? `${(pnl / netLiq * 100).toFixed(1)}% net liq` : "", pnl >= 0 ? "up" : "down"),
     tile("持仓数", String(pos.length)),
     tile("账户", curAcct),
     tile("更新", p.updated_at ? fmtDT(p.updated_at) : "—"),

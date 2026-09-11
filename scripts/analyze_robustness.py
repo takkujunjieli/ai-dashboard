@@ -5,7 +5,7 @@
 口径:
 - 只用 equity 成交(期权无日频收盘,先排除)。
 - 每日 P&L(sym) = qty_end·close_d − qty_end_prev·close_prev − Δqty_today·trade_price(含未实现,做空 qty 为负,符号自洽)。
-- 日收益 = 当日总 P&L / 前一日毛敞口 Σ|qty·close|(return on gross,L/S 组合标准口径)。
+- 日收益 = 当日总 P&L / 前一日账户 net liq。多/空腿收益同样是对账户 net liq 的贡献率。
 - beta/alpha:日收益对 SPY 日简单收益 OLS。alpha 年化 ×252,vol 年化 ×√252,Sharpe 减 rf(_cfg,默认4%)。
 纯 stdlib。"""
 import json
@@ -49,11 +49,16 @@ def yahoo_daily(sym):
 # ---------- 1) 读交易(equity)----------
 tx_by_acct = defaultdict(list)   # acct -> [(date, sym, dqty, price)]
 labels = {}
+current_net_liq = {}
 syms = set()
 for f in sorted(glob.glob(str(DATA / "_*_raw.json"))):
     d = json.loads(Path(f).read_text())
     for a in d.get("accounts", []):
         labels[a["id"]] = a.get("label", a["id"])
+        # schema 中 equity 即 net liq;若采集器提供显式 net_liq,优先使用。绝不使用 buying power/margin。
+        v = a.get("net_liq", a.get("equity"))
+        if v is not None:
+            current_net_liq[a["id"]] = float(v)
     for t in d.get("transactions", []):
         if t.get("kind") != "equity":
             continue
@@ -139,8 +144,9 @@ def fwd_close(sym, d, last):
 
 
 # ---------- 3) 每账户重建日频 P&L / 毛敞口 / 收益 ----------
-def build_account(txs):
-    """txs: [(date,sym,dqty,price)] → {dates, ret[], pnl[], gross[], net[], long_pnl[], short_pnl[]}"""
+def build_account(txs, latest_net_liq):
+    """txs → [date,pnl,gross,net,long/short pnl+gross,net_liq]。
+    net_liq 以当前券商净值锚定,再用重建的累计 P&L 向前回推;不把 margin/buying power 加进分母。"""
     trades_on = defaultdict(list)      # date -> [(sym,dqty,price)]
     for dt, sym, dq, pr in txs:
         if dt in cal_set or dt <= cal[-1]:
@@ -177,6 +183,11 @@ def build_account(txs):
             else:
                 spnl += p; sgross += abs(mv1)
         rows.append([d, pnl, gross, net, lpnl, spnl, lgross, sgross])
+    final_cum = sum(r[1] for r in rows)
+    cum = 0.0
+    for r in rows:
+        cum += r[1]
+        r.append(latest_net_liq - (final_cum - cum) if latest_net_liq is not None else None)
     return rows
 
 
@@ -216,13 +227,15 @@ WINDOWS = {"all": "1900-01-01",
            "3m": (ad - timedelta(days=92)).isoformat()}
 
 accounts_out = {}
-all_rows_by_date = defaultdict(lambda: [0.0] * 7)   # date -> [pnl,gross,net,lpnl,spnl,lgross,sgross] 合并
+all_rows_by_date = defaultdict(lambda: [0.0] * 8)   # date -> [pnl,gross,net,lpnl,spnl,lgross,sgross,net_liq] 合并
 for acct, txs in tx_by_acct.items():
-    rows = build_account(txs)
+    rows = build_account(txs, current_net_liq.get(acct))
     for r in rows:
         agg = all_rows_by_date[r[0]]
         for i in range(7):
             agg[i] += r[i + 1]
+        if r[8] is not None:
+            agg[7] += r[8]
     accounts_out[acct] = rows
 
 # 合并账户
@@ -290,24 +303,25 @@ def bootstrap_mean_annual(series, B=800, block=5):
 
 
 def summarize(rows, label):
-    """rows: [date,pnl,gross,net,lpnl,spnl,lgross,sgross] → {label,curve,windows}。
-    ① 总/多头/空头 三条日收益(各 =腿P&L/前日腿毛敞口,腿毛敞口≥floor 才计,winsorize)。
+    """rows: [date,pnl,gross,net,lpnl,spnl,lgross,sgross,net_liq] → {label,curve,windows}。
+    ① 总/多头/空头 三条日收益(各=P&L/前日账户 net liq;毛敞口≥floor 才计,winsorize)。
     ② 每窗口 总收益 β/α/Sharpe 带 bootstrap CI;多/空腿 年化收益带 CI + β。曲线含累计$(总/多/空)。"""
     if not any(r[2] > 0 for r in rows):
         return {"label": label, "curve": [], "windows": {}}
     gf, lf, sf = _floor([r[2] for r in rows]), _floor([r[6] for r in rows]), _floor([r[7] for r in rows])
-    series = []       # (date, rt, rl, rs, gross, net, cum, cum_l, cum_s)
-    pg = lg = sg = 0.0; cum = cl = cs = 0.0
-    for d, pnl, gross, net, lpnl, spnl, lgross, sgross in rows:
+    series = []       # (date, rt, rl,rs,gross,net,cum,cum_l,cum_s,net_liq)
+    pg = lg = sg = 0.0; prev_nl = None; cum = cl = cs = 0.0
+    for d, pnl, gross, net, lpnl, spnl, lgross, sgross, net_liq in rows:
         cum += pnl; cl += lpnl; cs += spnl
-        rt = _clip(pnl / pg) if pg >= gf else None
-        rl = _clip(lpnl / lg) if lg >= lf else None
-        rs = _clip(spnl / sg) if sg >= sf else None
-        series.append((d, rt, rl, rs, gross, net, cum, cl, cs))
-        pg, lg, sg = gross, lgross, sgross
+        valid_nl = prev_nl is not None and prev_nl > 0
+        rt = _clip(pnl / prev_nl) if valid_nl and pg >= gf else None
+        rl = _clip(lpnl / prev_nl) if valid_nl and lg >= lf else None
+        rs = _clip(spnl / prev_nl) if valid_nl and sg >= sf else None
+        series.append((d, rt, rl, rs, gross, net, cum, cl, cs, net_liq))
+        pg, lg, sg, prev_nl = gross, lgross, sgross, net_liq
     # 曲线:累计 $P&L(总/多/空);仅从有有效总收益日起画
     curve = []; started = False
-    for d, rt, rl, rs, gross, net, cum, cl, cs in series:
+    for d, rt, rl, rs, gross, net, cum, cl, cs, net_liq in series:
         if rt is not None:
             started = True
         if started:
@@ -316,7 +330,7 @@ def summarize(rows, label):
     # 只从 2026 起(prev_cum 跨年继续累加,故 2026-01 = 1月末累计 − 2025年末累计,跨年 P&L 正确)。
     monthly, mmap = [], {}
     started = False; prev_cum = 0.0
-    for d, rt, rl, rs, gross, net, cum, cl, cs in series:
+    for d, rt, rl, rs, gross, net, cum, cl, cs, net_liq in series:
         if rt is not None:
             started = True
         if not started:
@@ -338,7 +352,7 @@ def summarize(rows, label):
     for wn, start in WINDOWS.items():
         rp, rm, nets, grosses, rl_, rml, rs_, rms = [], [], [], [], [], [], [], []
         sp = None
-        for d, rt, rl, rs, gross, net, cum, cl, cs in series:
+        for d, rt, rl, rs, gross, net, cum, cl, cs, net_liq in series:
             srr, sp = spy_ret(d, sp)   # sp 逐日推进(即使窗口外),保证相邻日 SPY 收益正确
             if d < start or srr is None:
                 continue
@@ -361,7 +375,7 @@ def summarize(rows, label):
 out = {
     "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     "benchmark": BENCH,
-    "note": f"M2M(含未实现),仅 equity;日收益=腿P&L/前日腿毛敞口(分母=毛敞口,非净值);β/α 对 SPY,α 年化;Sharpe 减 rf={RISK_FREE_ANNUAL:.0%}。"
+    "note": f"M2M(含未实现),仅 equity;总/多/空收益=各自P&L/前日账户 net liq(不含 margin/buying power);β/α 对 SPY,α 年化;Sharpe 减 rf={RISK_FREE_ANNUAL:.0%}。"
             "曲线=累计$P&L[总,多头,空头]。ci=bootstrap 95%(α_sig=CI不跨0=显著)。long/short=多空腿归因。",
     "rf_annual": RISK_FREE_ANNUAL,
     "window_starts": WINDOWS,
