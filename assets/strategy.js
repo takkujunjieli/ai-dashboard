@@ -30,16 +30,16 @@ async function putPolicy(mutate) {
   } catch (e) { return { ok: false, msg: String(e) }; }
 }
 
-/* 风险策略自动同步(hybrid):任何改动先落本机 localStorage(即时、免 PAT、离线不丢),
-   再 debounce 把整份 policy(theses + assignments + max-heat + equity)提交到私有库。
-   thesis 管理 + 风险敞口 两面板共用;状态显示在 #rk-sync。 */
-let rpSyncTimer = null;
+/* 风险策略手动批量同步:任何改动先落本机 localStorage(即时、免 PAT、离线不丢),
+   只标记为待同步;用户点击按钮时才把整份 policy(theses + assignments + max-heat + equity)
+   一次提交到私有库,避免每次编辑都产生 Git commit。 */
+const RISK_POLICY_DIRTY_KEY = "riskPolicyDirty";
 const ARCHIVE_KEY = "completedTheses";
 const THESIS_EVENTS_KEY = "thesisEvents";
 function rpStatus(txt, cls = "muted", title = "") { const el = document.getElementById("rk-sync"); if (el) el.innerHTML = `<span class="${cls}"${title ? ` title="${esc(title)}"` : ""}>${txt}</span>`; }
 async function rpSyncNow() {
-  clearTimeout(rpSyncTimer);
   if (!getPat()) { rpStatus("⚠ 未设 PAT · 点此设置", "down"); return; }
+  if (!rLS(RISK_POLICY_DIRTY_KEY, false)) { rpStatus("✓ 无待同步改动"); return; }
   rpStatus("syncing…");
   const LP = rLS("riskPolicy", {}), groups = rLS("riskGroups", {}), mh = rLS("riskMaxHeat", null);
   const r = await putPolicy((L) => {
@@ -49,13 +49,12 @@ async function rpSyncNow() {
     L.assignments = ASSIGN ? { ...ASSIGN } : { ...(L.assignments || {}), ...groups };
     if (mh != null && !Number.isNaN(+mh)) L.portfolio = { ...(L.portfolio || {}), max_total_heat_pct: +mh };
   });
-  rpStatus(r.ok ? `✓ synced ${new Date().toTimeString().slice(0, 5)}` : `✗ 同步失败 · 点重试`, r.ok ? "muted" : "down", r.ok ? "" : (r.msg || ""));
+  if (r.ok) rLSset(RISK_POLICY_DIRTY_KEY, false);
+  rpStatus(r.ok ? `✓ 已同步 ${new Date().toTimeString().slice(0, 5)}` : `✗ 同步失败 · 点重试`, r.ok ? "muted" : "down", r.ok ? "" : (r.msg || ""));
 }
-function rpSchedule(now = false) {   // 改动即调度:now=结构性动作/失焦立刻,否则 2.5s debounce
-  clearTimeout(rpSyncTimer);
-  if (!getPat()) { rpStatus("⚠ 未设 PAT · 点此设置", "down"); return; }
-  rpStatus("• 待同步…");
-  if (now) rpSyncNow(); else rpSyncTimer = setTimeout(rpSyncNow, 2500);
+function rpSchedule() {
+  rLSset(RISK_POLICY_DIRTY_KEY, true);
+  rpStatus(getPat() ? "↑ 有未同步改动 · 点击同步" : "⚠ 有未同步改动 · 需 PAT", getPat() ? "" : "down");
 }
 async function syncPrivateJSON(path, key, msg) {
   if (getPat()) await putPrivate(path, rLS(key, []), msg);
@@ -172,7 +171,7 @@ export async function renderRiskControl() {
           <button class="rk-menu-item rk-danger" data-act="delete">🗑 删除</button>
         </div></span>
       <input id="rk-pat" type="password" value="${esc(getPat() || "")}" placeholder="粘贴 fine-grained PAT(含私有库写权限)" hidden style="width:230px;background:var(--card-hover);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px">
-      <span id="rk-sync" class="muted small" style="margin-left:auto;cursor:pointer" title="点击:未设 PAT→设置;失败→重试">同步就绪</span>
+      <button id="rk-sync" class="mini-btn" style="margin-left:auto" title="把本机累计的风险策略改动一次提交到私有库">同步到远端</button>
       <span id="rk-msg" class="muted small"></span>
     </div>
     <div class="risk-form" style="margin-top:10px">
@@ -198,7 +197,7 @@ export async function renderRiskControl() {
     <div id="rk-out" class="wb-statbar" style="margin-top:12px"></div>
     <div id="rk-note" class="muted small" style="margin-top:6px"></div>
     <div id="rk-done" class="muted small" style="margin-top:10px"></div>
-    <div class="muted small" style="margin-top:10px"><b>止损放在 thesis 被证伪处</b>(不是"亏 X% 就卖"):${(POLICY.stop_bases || []).map(esc).join(" · ")}。<br>核心:<b>止损位决定仓位</b>;每个 thesis 自带 单笔风险%/单笔仓位上限%/总风险%/总仓位上限%/ATR倍数/Target Profit/Shelf life/Edge/Invalidation(均可选,留空 = 不约束/用默认)。改字段即自动同步到私有库(见右上状态),无需手动保存。ATR 法:止损=买入−倍数×ATR${atrP}。</div>`;
+    <div class="muted small" style="margin-top:10px"><b>止损放在 thesis 被证伪处</b>(不是"亏 X% 就卖"):${(POLICY.stop_bases || []).map(esc).join(" · ")}。<br>核心:<b>止损位决定仓位</b>;每个 thesis 自带 单笔风险%/单笔仓位上限%/总风险%/总仓位上限%/ATR倍数/Target Profit/Shelf life/Edge/Invalidation(均可选,留空 = 不约束/用默认)。改动即时保存在本机;完成一批编辑后点右上「同步到远端」,只产生一次 commit。ATR 法:止损=买入−倍数×ATR${atrP}。</div>`;
 
   const loadBundle = () => { const b = POLICY.bundles[cur] || {};   // 全 optional:null → 空白(不再显默认值)
     $("rk-risk").value = b.risk_pct ?? ""; $("rk-mult").value = b.atr_mult ?? ""; $("rk-cap").value = b.max_position_pct ?? "";
@@ -248,7 +247,7 @@ export async function renderRiskControl() {
       : ""; };
 
   const rebuildSel = () => { $("rk-sel-wrap").innerHTML = `<select id="rk-bundle">${bundleOpts()}</select>`; };
-  // ---- 字段编辑:落本机 + 调度自动同步(input 防抖);热力图在 change(失焦/回车)时刷新 ----
+  // ---- 字段编辑:即时落本机并标记待同步;热力图在 change(失焦/回车)时刷新 ----
   const onEdit = (recompute) => () => { syncBundle(); if (recompute) compute(); persistLocal(); rpSchedule(); };
   ["rk-risk", "rk-mult", "rk-cap"].forEach((id) => { const el = $(id); el.addEventListener("input", onEdit(true)); el.addEventListener("change", () => { renderRiskExposure(); rpSchedule(true); }); });
   ["rk-totrisk", "rk-totcap", "rk-goal"].forEach((id) => { const el = $(id); el.addEventListener("input", onEdit(false)); el.addEventListener("change", () => { renderRiskExposure(); rpSchedule(true); }); });
@@ -307,7 +306,7 @@ export async function renderRiskControl() {
     for (const sym of archivedTickers) delete rg[sym];
     rLSset("riskGroups", rg);
     rebuildSel(); loadBundle(); compute(); persistLocal(); renderDone(); renderRiskExposure();
-    rpSchedule(true);   // 活跃列表同步私有库;归档与事件已写 completed_theses/thesis_events
+    rpSchedule();   // 活跃列表留待手动同步;归档与事件已写 completed_theses/thesis_events
     $("rk-msg").textContent = `✅ 已完成「${name}」并归档`;
   };
   $("rk-menu-btn").addEventListener("click", (e) => { e.stopPropagation(); menu.hidden = !menu.hidden; if (menu.hidden) resetMenu(); });
@@ -326,10 +325,11 @@ export async function renderRiskControl() {
   document.addEventListener("click", (e) => { if (!menu.hidden && !e.target.closest(".rk-menu-wrap")) closeMenu(); });
   // ---- 同步状态 / PAT ----
   $("rk-sync").addEventListener("click", () => { if (!getPat()) { const p = $("rk-pat"); p.hidden = false; p.focus(); } else rpSyncNow(); });
-  $("rk-pat").addEventListener("change", () => { const v = $("rk-pat").value.trim(); setPat(v); $("rk-pat").hidden = true; if (v) rpSchedule(true); else rpStatus("⚠ 未设 PAT · 点此设置", "down"); });
+  $("rk-pat").addEventListener("change", () => { const v = $("rk-pat").value.trim(); setPat(v); $("rk-pat").hidden = true; if (v) rpStatus(rLS(RISK_POLICY_DIRTY_KEY, false) ? "↑ 有未同步改动 · 点击同步" : "✓ 无待同步改动"); else rpStatus("⚠ 未设 PAT · 点此设置", "down"); });
 
   loadBundle(); compute(); renderDone();
-  rpStatus(getPat() ? "✓ 就绪 · 改动自动同步" : "⚠ 未设 PAT · 点此设置", getPat() ? "muted" : "down");
+  const dirty = rLS(RISK_POLICY_DIRTY_KEY, false);
+  rpStatus(dirty ? (getPat() ? "↑ 有未同步改动 · 点击同步" : "⚠ 有未同步改动 · 需 PAT") : (getPat() ? "✓ 无待同步改动" : "⚠ 未设 PAT · 点此设置"), dirty && !getPat() ? "down" : "muted");
 }
 
 const tile = (k, v, sub = "", cls = "") =>
@@ -511,7 +511,7 @@ export async function renderRiskExposure() {
       <button id="rk-syncpx" class="mini-btn">🔄 同步现价(K线)</button>
       <span class="muted small">现价源:${PRICE_OVERRIDE ? `K线同步 @ ${(PRICE_SYNCED_AT || "").slice(5, 16).replace("T", " ")}` : "portfolio.json(MCP 刷新价;点 🔄 手动同步 K线)"}</span>
     </div>
-    <div class="muted small" style="margin-top:6px">分组改动需确认;确认后会记录该标的离开旧 thesis / 进入新 thesis 时的价格和股数,并自动同步到私有库(需 PAT)。</div>`;
+    <div class="muted small" style="margin-top:6px">分组改动需确认;确认后会记录该标的离开旧 thesis / 进入新 thesis 时的价格和股数。事件记录会同步到私有库(需 PAT),风险策略留待手动批量同步。</div>`;
 
   host.querySelectorAll(".rk-grp").forEach((el) => el.addEventListener("change", async () => {
     const sym = el.dataset.sym, from = el.dataset.current, to = el.value;
@@ -525,8 +525,8 @@ export async function renderRiskExposure() {
     await recordThesisMove(sym, from, to);
     renderRiskExposure();
     rpSchedule(true);
-  }));   // 分组改动 → 确认 + 记录 enter/exit 快照 + 自动同步私有库
-  const mh = $("rk-maxheat"); if (mh) mh.addEventListener("change", () => { MAXHEAT = +mh.value || 0; rLSset("riskMaxHeat", MAXHEAT); renderRiskExposure(); rpSchedule(true); });   // 本机即时持久化 + 自动同步私有库
+  }));   // 分组改动 → 确认 + 记录 enter/exit 快照;风险策略标记待手动同步
+  const mh = $("rk-maxheat"); if (mh) mh.addEventListener("change", () => { MAXHEAT = +mh.value || 0; rLSset("riskMaxHeat", MAXHEAT); renderRiskExposure(); rpSchedule(); });   // 本机即时持久化 + 标记待同步
   host.querySelectorAll(".rk-sort").forEach((th) => th.addEventListener("click", () => {   // 点表头排序:同列切方向,换列文本升/数值降
     const k = th.dataset.k;
     SORT = SORT.key === k ? { key: k, dir: -SORT.dir } : { key: k, dir: (k === "sym" || k === "bundleName") ? 1 : -1 };
