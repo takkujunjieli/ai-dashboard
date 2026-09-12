@@ -3,7 +3,7 @@ Set-Location (Join-Path $PSScriptRoot "..")
 
 $private = Resolve-Path "..\stock-dashboard-private" -ErrorAction SilentlyContinue
 if (-not $private) {
-  throw "缺 ..\stock-dashboard-private -- 先把私有库 clone 到 noetic-dashboard 的同级目录"
+  throw "Missing ..\stock-dashboard-private -- clone the private repo next to noetic-dashboard first"
 }
 $private = $private.Path
 
